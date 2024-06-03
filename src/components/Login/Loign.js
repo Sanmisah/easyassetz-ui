@@ -7,8 +7,7 @@ import { Input } from "@com/ui/input";
 import { Label } from "@com/ui/label";
 import Background from "@/components/image/background.jpg";
 import Confirmagedialog from "./Confirmagedialog";
-import Logo from "@/components/image/Logo.png";
-import axios from "axios";
+
 const phoneRegex = new RegExp(
   /^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
 );
@@ -20,29 +19,33 @@ const loginSchema = z.object({
 
 const registerSchema = z
   .object({
-    full_name: z.string().min(1, "First name is required"),
-    mobile_number: z
+    firstName: z.string().min(1, "First name is required"),
+    middleName: z.string().optional(),
+    lastName: z.string().min(1, "Last name is required"),
+    mobileNumber: z
       .string()
       .min(10, "Invalid mobile number")
       .max(10, "Invalid mobile number"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    password_confirmation: z.string().min(6, "Please confirm your password"),
+    confirmPassword: z.string().min(6, "Please confirm your password"),
   })
-  .refine((data) => data.password === data.password_confirmation, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
-    path: ["password_confirmation"],
+    path: ["confirmPassword"],
   });
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [alertDialog, setAlertDialog] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: "",
-    mobile_number: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    mobileNumber: "",
     email: "",
     password: "",
-    password_confirmation: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -86,12 +89,6 @@ const Auth = () => {
     if (isLogin) {
       if (validateLogin()) {
         // Call login API
-        axios
-          .post("http://127.0.0.1:8000/api/login", { ...formData })
-          .then((res) => {
-            console.log(res);
-          });
-
         console.log("Login data:", {
           email: formData.email,
           password: formData.password,
@@ -105,35 +102,20 @@ const Auth = () => {
   };
 
   const handleRegisterConfirm = () => {
-    if (!validateRegister()) return;
-    axios
-      .post("http://127.0.0.1:8000/api/register", { ...formData })
-      .then((res) => {
-        console.log(res);
-      });
-
     setAlertDialog(false);
     // Call register API
-
     console.log("Registering user:", formData);
   };
 
   const getFieldError = (field) => errors?.[field]?._errors?.[0];
 
   return (
-    <div className="w-full lg:grid lg:min-h-[500px] lg:grid-cols-2 xl:min-h-[720px]">
+    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           {isLogin ? (
             <>
-              <div className="relative grid gap-2 text-center">
-                <div>
-                  <img
-                    className="relative bottom-2  mx-auto w-[200px]"
-                    src={Logo}
-                    alt=""
-                  />
-                </div>
+              <div className="grid gap-2 text-center">
                 <h1 className="text-3xl font-bold">Login</h1>
                 <p className="text-balance text-muted-foreground">
                   Enter your email below to login to your account
@@ -199,50 +181,75 @@ const Auth = () => {
                 />
               )}
               <div className="grid gap-2 text-center">
-                <div>
-                  <img
-                    className="relative bottom-2  mx-auto w-[200px]"
-                    src={Logo}
-                    alt=""
-                  />
-                </div>
-                <h1 className="text-3xl font-bold">Sign Up</h1>
+                <h1 className="text-3xl font-bold">Register</h1>
                 <p className="text-balance text-muted-foreground">
                   Fill in the details below to create a new account
                 </p>
               </div>
               <form onSubmit={handleSubmit} className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="full_name">Full Name</Label>
-                  <Input
-                    id="full_name"
-                    type="text"
-                    placeholder="Full Name"
-                    value={formData.full_name}
-                    onChange={handleInputChange}
-                    className={
-                      getFieldError("full_name") ? "border-red-500" : ""
-                    }
-                  />
-                  {getFieldError("full_name") && (
-                    <p className="text-red-500">{getFieldError("full_name")}</p>
-                  )}
+                <div className="flex gap-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="First Name"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      className={
+                        getFieldError("firstName") ? "border-red-500" : ""
+                      }
+                    />
+                    {getFieldError("firstName") && (
+                      <p className="text-red-500">
+                        {getFieldError("firstName")}
+                      </p>
+                    )}
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="middleName">Middle Name</Label>
+                    <Input
+                      id="middleName"
+                      type="text"
+                      placeholder="Middle Name"
+                      value={formData.middleName}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Last Name"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      className={
+                        getFieldError("lastName") ? "border-red-500" : ""
+                      }
+                    />
+                    {getFieldError("lastName") && (
+                      <p className="text-red-500">
+                        {getFieldError("lastName")}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="mobile_number">Mobile Number</Label>
+                  <Label htmlFor="mobileNumber">Mobile Number</Label>
                   <Input
-                    id="mobile_number"
+                    id="mobileNumber"
                     type="text"
                     placeholder="Mobile Number"
-                    value={formData.mobile_number}
+                    value={formData.mobileNumber}
                     onChange={handleInputChange}
                     className={
-                      getFieldError("mobile_number") ? "border-red-500" : ""
+                      getFieldError("mobileNumber") ? "border-red-500" : ""
                     }
                   />
-                  {getFieldError("mobile_number") && (
+                  {getFieldError("mobileNumber") && (
                     <p className="text-red-500">
-                      {getFieldError("mobile_number")}
+                      {getFieldError("mobileNumber")}
                     </p>
                   )}
                 </div>
@@ -276,28 +283,24 @@ const Auth = () => {
                   )}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="password_confirmation">
-                    Re-enter Password
-                  </Label>
+                  <Label htmlFor="confirmPassword">Re-enter Password</Label>
                   <Input
-                    id="password_confirmation"
+                    id="confirmPassword"
                     type="password"
-                    value={formData.password_confirmation}
+                    value={formData.confirmPassword}
                     onChange={handleInputChange}
                     className={
-                      getFieldError("password_confirmation")
-                        ? "border-red-500"
-                        : ""
+                      getFieldError("confirmPassword") ? "border-red-500" : ""
                     }
                   />
-                  {getFieldError("password_confirmation") && (
+                  {getFieldError("confirmPassword") && (
                     <p className="text-red-500">
-                      {getFieldError("password_confirmation")}
+                      {getFieldError("confirmPassword")}
                     </p>
                   )}
                 </div>
                 <Button type="submit" className="w-full">
-                  Sign Up
+                  Register
                 </Button>
               </form>
               <div className="mt-4 text-center text-sm">
@@ -310,11 +313,13 @@ const Auth = () => {
           )}
         </div>
       </div>
-      <div className="hidden bg-muted lg:block  max-h-[750px]">
+      <div className="hidden bg-muted lg:block max-h-[930px]">
         <img
           src={Background}
           alt="Image"
-          className="h-[800px] w-[1920px] object-cover dark:brightness-[0.2] dark:grayscale"
+          width="1920"
+          height="1080"
+          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
     </div>

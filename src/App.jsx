@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Loginpage from "@/Pages/Login/LoginPage";
 import Personalpage from "@/Pages/personaldetailpage/Personalpage";
+import Benificiary from "@/Pages/Benificiary/Benificiary";
 import { Routes, Route } from "react-router-dom";
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Loginpage />} />
         <Route path="/personal" element={<Personalpage />} />
+        <Route path="/benificiary" element={<Personalpage />} />
       </Routes>
     </>
   );

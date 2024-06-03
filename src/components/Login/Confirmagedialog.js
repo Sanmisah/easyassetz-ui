@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@com/ui/alert-dialog";
 
-const Confirmagedialog = ({ alertDialog, setAlertDialog, onConfirm }) => {
+const Confirmagedialog = ({ alertDialog, setAlertDialog }) => {
   return (
     <AlertDialog open={alertDialog} onOpenChange={setAlertDialog}>
       <AlertDialogContent>
@@ -24,7 +24,7 @@ const Confirmagedialog = ({ alertDialog, setAlertDialog, onConfirm }) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          <AlertDialogAction>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
