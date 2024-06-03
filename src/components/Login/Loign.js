@@ -23,17 +23,17 @@ const loginSchema = z.object({
 const registerSchema = z
   .object({
     full_name: z.string().min(1, "Full Legal name is required"),
-    mobileNumber: z
+    mobile_number: z
       .string()
       .min(10, "Invalid mobile number")
       .max(10, "Invalid mobile number"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Please confirm your password"),
+    password_confirmation: z.string().min(6, "Please confirm your password"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password_confirmation, {
     message: "Passwords do not match",
-    path: ["confirmPassword"],
+    path: ["password_confirmation"],
   });
 
 const Auth = () => {
@@ -42,10 +42,10 @@ const Auth = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const [formData, setFormData] = useState({
     full_name: "",
-    mobileNumber: "",
+    mobile_number: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -89,7 +89,7 @@ const Auth = () => {
     if (isLogin) {
       if (validateLogin()) {
         // Call login API
-        const response = await axios.post("/api/login", {
+        const response = await axios.post("http://127.0.0.1:8000/api/login", {
           email: formData.email,
           password: formData.password,
         });
@@ -115,9 +115,11 @@ const Auth = () => {
   const handleRegisterConfirm = async () => {
     setAlertDialog(false);
     try {
-      const response = await axios.post("/api/register", { ...formData });
+      const response = await axios.post("http://127.0.0.1:8000/api/register", {
+        ...formData,
+      });
       console.log("Registering user:", response.data);
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigate("/personal");
       } else {
         alert("Registration failed: " + response.data.message);
@@ -238,20 +240,20 @@ const Auth = () => {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="mobileNumber">Mobile Number</Label>
+                  <Label htmlFor="mobile_number">Mobile Number</Label>
                   <Input
-                    id="mobileNumber"
+                    id="mobile_number"
                     type="text"
                     placeholder="Mobile Number"
-                    value={formData.mobileNumber}
+                    value={formData.mobile_number}
                     onChange={handleInputChange}
                     className={
-                      getFieldError("mobileNumber") ? "border-red-500" : ""
+                      getFieldError("mobile_number") ? "border-red-500" : ""
                     }
                   />
-                  {getFieldError("mobileNumber") && (
+                  {getFieldError("mobile_number") && (
                     <p className="text-red-500">
-                      {getFieldError("mobileNumber")}
+                      {getFieldError("mobile_number")}
                     </p>
                   )}
                 </div>
@@ -285,19 +287,23 @@ const Auth = () => {
                   )}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Label htmlFor="password_confirmation">
+                    Confirm Password
+                  </Label>
                   <Input
-                    id="confirmPassword"
+                    id="password_confirmation"
                     type="password"
-                    value={formData.confirmPassword}
+                    value={formData.password_confirmation}
                     onChange={handleInputChange}
                     className={
-                      getFieldError("confirmPassword") ? "border-red-500" : ""
+                      getFieldError("password_confirmation")
+                        ? "border-red-500"
+                        : ""
                     }
                   />
-                  {getFieldError("confirmPassword") && (
+                  {getFieldError("password_confirmation") && (
                     <p className="text-red-500">
-                      {getFieldError("confirmPassword")}
+                      {getFieldError("password_confirmation")}
                     </p>
                   )}
                 </div>

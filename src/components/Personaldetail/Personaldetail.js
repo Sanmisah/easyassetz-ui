@@ -46,8 +46,13 @@ const Personaldetail = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+    await axios
+      .post("http://127.0.0.1:8000/api/profile", { ...data, user_id: 1 })
+      .then((res) => {
+        console.log(res);
+      });
     // Handle form submission
   };
 
@@ -101,12 +106,12 @@ const Personaldetail = () => {
             id="full-name"
             placeholder="John Doe"
             type="text"
-            {...register("fullName", {
+            {...register("fullLegalName", {
               required: "Full Legal Name is required",
             })}
           />
-          {errors.fullName && (
-            <span className="text-red-500">{errors.fullName.message}</span>
+          {errors.fullLegalName && (
+            <span className="text-red-500">{errors.fullLegalName.message}</span>
           )}
         </div>
         <div className="space-y-2">
@@ -221,7 +226,7 @@ const Personaldetail = () => {
         <div className="space-y-2">
           <Label htmlFor="country">Country of Residence</Label>
           <Controller
-            name="country"
+            name="countryOfResidence"
             control={control}
             rules={{ required: "Country of Residence is required" }}
             render={({ field }) => (
@@ -308,7 +313,7 @@ const Personaldetail = () => {
           <Checkbox
             className="mt-2"
             id="married-under-act"
-            {...register("marriedUnderAct")}
+            {...register("marriedUnderSpecialAct")}
           />
           <Label
             className="flex items-center gap-2 mt-2"
@@ -320,7 +325,7 @@ const Personaldetail = () => {
         <div className="space-y-2">
           <Label htmlFor="correspondence-email">Correspondence Email</Label>
           <Controller
-            name="correspondenceEmail"
+            name="cuscorrespondenceEmail"
             control={control}
             render={({ field }) => (
               <RadioGroup
@@ -362,7 +367,7 @@ const Personaldetail = () => {
                 id="custom-email"
                 placeholder="example@email.com"
                 type="email"
-                {...register("customEmail", {
+                {...register("correspondenceEmail", {
                   required: !sameAsLoginEmail && "Custom Email is required",
                 })}
               />
