@@ -7,6 +7,7 @@ import { Input } from "@com/ui/input";
 import { Label } from "@com/ui/label";
 import Background from "@/components/image/background.jpg";
 import Confirmagedialog from "./Confirmagedialog";
+import { useNavigate } from "react-router-dom";
 
 const phoneRegex = new RegExp(
   /^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
@@ -34,6 +35,7 @@ const registerSchema = z
   });
 
 const Auth = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [alertDialog, setAlertDialog] = useState(false);
   const [formData, setFormData] = useState({
@@ -91,7 +93,7 @@ const Auth = () => {
         });
         console.log("Logging in user:", response.data);
         if (response.status === 200) {
-          alert("Login successful!");
+          navigate("/personal");
         } else {
           alert("Login failed: " + response.data.message);
         }
@@ -121,7 +123,7 @@ const Auth = () => {
       const data = await response.json();
       console.log("Registering user:", data);
       if (response.ok) {
-        alert("Registration successful!");
+        navigate("/personal");
       } else {
         alert("Registration failed: " + data.message);
       }
