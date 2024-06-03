@@ -28,14 +28,14 @@ const Layout = () => {
       <nav className="space-y-4">
         <Link
           className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
-          to="#"
+          to="/personal"
         >
           <UserIcon className="h-5 w-5" />
           Personal Details
         </Link>
         <Link
           className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-          to="#"
+          to="/benificiary"
         >
           <HandHelpingIcon className="h-5 w-5" />
           Beneficiary Details

@@ -19,9 +19,7 @@ const loginSchema = z.object({
 
 const registerSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    middleName: z.string().optional(),
-    lastName: z.string().min(1, "Last name is required"),
+    fullLegalName: z.string().min(1, "Full Legal name is required"),
     mobileNumber: z
       .string()
       .min(10, "Invalid mobile number")
@@ -39,9 +37,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [alertDialog, setAlertDialog] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
-    middleName: "",
-    lastName: "",
+    fullLegalName: "",
     mobileNumber: "",
     email: "",
     password: "",
@@ -84,11 +80,22 @@ const Auth = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogin) {
       if (validateLogin()) {
         // Call login API
+        const response = await axios.post("/api/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+        console.log("Logging in user:", response.data);
+        if (response.status === 200) {
+          alert("Login successful!");
+        } else {
+          alert("Login failed: " + response.data.message);
+        }
+
         console.log("Login data:", {
           email: formData.email,
           password: formData.password,
@@ -101,16 +108,51 @@ const Auth = () => {
     }
   };
 
-  const handleRegisterConfirm = () => {
+  const handleRegisterConfirm = async () => {
     setAlertDialog(false);
-    // Call register API
-    console.log("Registering user:", formData);
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log("Registering user:", data);
+      if (response.ok) {
+        alert("Registration successful!");
+      } else {
+        alert("Registration failed: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error registering user:", error);
+      alert("Failed to register user.");
+    }
   };
 
   const getFieldError = (field) => errors?.[field]?._errors?.[0];
 
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+      <div className="relative flex min-h-[400px] items-center justify-center lg:order-first lg:min-h-full">
+        <img
+          src={Background}
+          alt="Authentication image"
+          className="max-h-[1000px] w-full absolute inset-0 object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70" />
+        <div className="h-[1000px] relative z-10 flex items-center text-center">
+          <div className=" max-h-[930px] max-w-[600px]  ">
+            <h1 className="text-3xl font-bold text-white">
+              Welcome to Eassy Asset
+            </h1>
+            <p className="mt-2 text-lg text-white/80">
+              Sign up or login to access amazing features.
+            </p>
+          </div>
+        </div>
+      </div>
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           {isLogin ? (
@@ -187,54 +229,25 @@ const Auth = () => {
                 </p>
               </div>
               <form onSubmit={handleSubmit} className="grid gap-4">
-                <div className="flex gap-2">
-                  <div className="grid gap-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      placeholder="First Name"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className={
-                        getFieldError("firstName") ? "border-red-500" : ""
-                      }
-                    />
-                    {getFieldError("firstName") && (
-                      <p className="text-red-500">
-                        {getFieldError("firstName")}
-                      </p>
-                    )}
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="middleName">Middle Name</Label>
-                    <Input
-                      id="middleName"
-                      type="text"
-                      placeholder="Middle Name"
-                      value={formData.middleName}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Last Name"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className={
-                        getFieldError("lastName") ? "border-red-500" : ""
-                      }
-                    />
-                    {getFieldError("lastName") && (
-                      <p className="text-red-500">
-                        {getFieldError("lastName")}
-                      </p>
-                    )}
-                  </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="fullLegalName">Full Legal Name</Label>
+                  <Input
+                    id="fullLegalName"
+                    type="text"
+                    placeholder="First Name"
+                    value={formData.fullLegalName}
+                    onChange={handleInputChange}
+                    className={
+                      getFieldError("fullLegalName") ? "border-red-500" : ""
+                    }
+                  />
+                  {getFieldError("fullLegalName") && (
+                    <p className="text-red-500">
+                      {getFieldError("fullLegalName")}
+                    </p>
+                  )}
                 </div>
+
                 <div className="grid gap-2">
                   <Label htmlFor="mobileNumber">Mobile Number</Label>
                   <Input
@@ -283,7 +296,7 @@ const Auth = () => {
                   )}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="confirmPassword">Re-enter Password</Label>
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
@@ -312,15 +325,6 @@ const Auth = () => {
             </>
           )}
         </div>
-      </div>
-      <div className="hidden bg-muted lg:block max-h-[930px]">
-        <img
-          src={Background}
-          alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
       </div>
     </div>
   );
