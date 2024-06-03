@@ -8,6 +8,7 @@ import { Label } from "@com/ui/label";
 import Background from "@/components/image/background.jpg";
 import Confirmagedialog from "./Confirmagedialog";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const phoneRegex = new RegExp(
   /^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
@@ -20,7 +21,7 @@ const loginSchema = z.object({
 
 const registerSchema = z
   .object({
-    fullLegalName: z.string().min(1, "Full Legal name is required"),
+    full_name: z.string().min(1, "Full Legal name is required"),
     mobileNumber: z
       .string()
       .min(10, "Invalid mobile number")
@@ -39,7 +40,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [alertDialog, setAlertDialog] = useState(false);
   const [formData, setFormData] = useState({
-    fullLegalName: "",
+    full_name: "",
     mobileNumber: "",
     email: "",
     password: "",
@@ -113,19 +114,12 @@ const Auth = () => {
   const handleRegisterConfirm = async () => {
     setAlertDialog(false);
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      console.log("Registering user:", data);
-      if (response.ok) {
+      const response = await axios.post("/api/register", { ...formData });
+      console.log("Registering user:", response.data);
+      if (response.status === 200) {
         navigate("/personal");
       } else {
-        alert("Registration failed: " + data.message);
+        alert("Registration failed: " + response.data.message);
       }
     } catch (error) {
       console.error("Error registering user:", error);
@@ -232,21 +226,19 @@ const Auth = () => {
               </div>
               <form onSubmit={handleSubmit} className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="fullLegalName">Full Legal Name</Label>
+                  <Label htmlFor="full_name">Full Legal Name</Label>
                   <Input
-                    id="fullLegalName"
+                    id="full_name"
                     type="text"
                     placeholder="First Name"
-                    value={formData.fullLegalName}
+                    value={formData.full_name}
                     onChange={handleInputChange}
                     className={
-                      getFieldError("fullLegalName") ? "border-red-500" : ""
+                      getFieldError("full_name") ? "border-red-500" : ""
                     }
                   />
-                  {getFieldError("fullLegalName") && (
-                    <p className="text-red-500">
-                      {getFieldError("fullLegalName")}
-                    </p>
+                  {getFieldError("full_name") && (
+                    <p className="text-red-500">{getFieldError("full_name")}</p>
                   )}
                 </div>
 
