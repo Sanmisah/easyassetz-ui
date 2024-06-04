@@ -32,7 +32,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
             Fill Out Details for Charity
           </SheetDescription>
         </SheetHeader>
-        <ScrollArea className="w-full h-[44rem] rounded-md ">
+        <ScrollArea className="w-full h-[38rem] rounded-md ">
           <div className="grid gap-6 py-6 p-2 mr-2">
             <div className="space-y-2">
               <Label htmlFor="org-name" className="text-base font-medium">

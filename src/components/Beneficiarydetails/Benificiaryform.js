@@ -84,7 +84,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
           <SheetHeader>
             <SheetTitle>Add Beneficiary</SheetTitle>
             <SheetDescription className="flex flex-col justify-center">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)} className="scrollable">
                 <Card className="w-full max-w-3xl">
                   <CardHeader>
                     <CardTitle>Beneficiary Form</CardTitle>
@@ -92,7 +92,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       Please fill out the following details.
                     </CardDescription>
                   </CardHeader>
-                  <ScrollArea className="w-full h-[44rem] rounded-md">
+                  <ScrollArea className="w-full h-[32rem] rounded-md">
                     <CardContent className="space-y-8">
                       <div>
                         <h3 className="text-lg font-medium">Basic Details</h3>
@@ -269,6 +269,21 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               </p>
                             )}
                           </div>
+                          {passportopen && (
+                            <div className="space-y-2">
+                              <Label htmlFor="full-name">Full Legal Name</Label>
+                              <Input
+                                id="full-name"
+                                placeholder="Enter your full legal name"
+                                {...register("fullName")}
+                              />
+                              {errors.fullName && (
+                                <p className="text-red-500">
+                                  {errors.fullName.message}
+                                </p>
+                              )}
+                            </div>
+                          )}
                           <div className="space-y-2">
                             <Label htmlFor="guardian-religion">Religion</Label>
                             <Select {...register("guardianReligion")}>
@@ -430,7 +445,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       </div>
                     </CardContent>
                   </ScrollArea>
-                  <CardFooter>
+                  <CardFooter className="flex items-center ">
                     <Button type="submit" className="ml-auto">
                       Submit
                     </Button>

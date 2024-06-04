@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { Label } from "@com/ui/label";
-import Background from "@/components/image/5.png";
+import Background from "@/components/image/7.png";
 import Logo from "@/components/image/Logo.png";
 import Confirmagedialog from "./Confirmagedialog";
 import { useNavigate } from "react-router-dom";
@@ -140,7 +140,7 @@ const Auth = () => {
           alt="Image"
           width="1920"
           height="1080"
-          className="opacity-70 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className=" h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
       <div className="flex items-center justify-center py-12">
