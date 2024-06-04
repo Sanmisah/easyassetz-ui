@@ -47,7 +47,7 @@ const Datepicker = forwardRef(({ value, onChange }, ref) => {
 
   return (
     <Popover>
-      <div className="relative w-[440px] max-md:w-[240px]">
+      <div className="relative w-[300px] max-md:w-[220px]">
         <InputMask
           mask="99/99/9999"
           value={stringDate}

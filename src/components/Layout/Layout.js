@@ -20,41 +20,78 @@ import Datepicker from "../Personaldetail/Datepicker";
 import PersonalDetails from "@/components/Personaldetail/Personaldetail";
 import BeneficiaryDetails from "@/components/Beneficiarydetails/Benificiarydetails";
 import { useLocation } from "react-router-dom";
+import Logo from "../image/Logo.png";
+import Hamburger from "../image/hamburger.svg";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@com/ui/sheet";
+
 const Layout = () => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggle = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <div className="flex flex-col md:grid md:grid-cols-[300px_1fr] gap-8 p-4 sm:p-8 md:p-12 lg:p-16">
-      <nav className="space-y-4">
-        <Link
-          className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
-          to="/personal"
-        >
-          <UserIcon className="h-5 w-5" />
-          Personal Details
-        </Link>
-        <Link
-          className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-          to="/benificiary"
-        >
-          <HandHelpingIcon className="h-5 w-5" />
-          Beneficiary Details
-        </Link>
-        <Link
-          className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-          to="#"
-        >
-          <UserIcon className="h-5 w-5" />
-          Nomination Module
-        </Link>
-        <Link
-          className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-          to="#"
-        >
-          <HomeIcon className="h-5 w-5" />
-          Financial assets
-        </Link>
-      </nav>
+      <div className="flex items-center justify-between">
+        <img src={Logo} alt="Logo" width="190" height="100" />
+        <img
+          src={Hamburger}
+          alt="Hamburger"
+          width="30"
+          height="30"
+          onClick={toggle}
+        />
+      </div>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetContent side="left">
+          <SheetHeader>
+            <SheetTitle></SheetTitle>
+            <SheetDescription>
+              <nav className="space-y-4">
+                <img src={Logo} alt="Logo" width="190" height="100" />
+
+                <Link
+                  className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
+                  to="/personal"
+                >
+                  <UserIcon className="h-5 w-5" />
+                  Personal Details
+                </Link>
+                <Link
+                  className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                  to="/benificiary"
+                >
+                  <HandHelpingIcon className="h-5 w-5" />
+                  Beneficiary Details
+                </Link>
+                <Link
+                  className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                  to="#"
+                >
+                  <UserIcon className="h-5 w-5" />
+                  Nomination Module
+                </Link>
+                <Link
+                  className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                  to="#"
+                >
+                  <HomeIcon className="h-5 w-5" />
+                  Financial assets
+                </Link>
+              </nav>
+            </SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
+
       {location.pathname === "/personal" && <PersonalDetails />}
       {location.pathname === "/benificiary" && <BeneficiaryDetails />}
     </div>

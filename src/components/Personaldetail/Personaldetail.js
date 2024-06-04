@@ -96,6 +96,7 @@ const Personaldetail = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Personal Details</h2>
+      <h3 className="text-lg font-medium">Basic Details</h3>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 sm:grid-cols-3 gap-4"
@@ -382,7 +383,8 @@ const Personaldetail = () => {
 
         {/* Permanent Address Section */}
         <div className="col-span-full space-y-4">
-          <h2 className="text-2xl font-bold">Permanent Address</h2>
+          <h2 className="text-2xl font-bold mt-4">Address Details</h2>
+          <h2 className="text-lg font-medium">Permanent Address</h2>
           <div className="space-y-2">
             <Label htmlFor="permanent-house-flat-no">House / Flat No.</Label>
             <Input
@@ -498,7 +500,7 @@ const Personaldetail = () => {
 
         {/* Current Address Section */}
         <div className="col-span-full space-y-4">
-          <h2 className="text-2xl font-bold">Current Address</h2>
+          <h2 className="text-2xl font-medium mt-4">Current Address</h2>
           <Label
             className="flex items-center gap-2 mt-2"
             htmlFor="same-as-permanent"
@@ -636,7 +638,8 @@ const Personaldetail = () => {
 
         {/* Adhar Section */}
         <div className="col-span-full space-y-4">
-          <h2 className="text-2xl font-bold">Adhar</h2>
+          <h2 className="text-2xl font-bold mt-4">Optional Documents</h2>
+          <h2 className="text-2xl font-medium">Aadhar</h2>
           <div className="space-y-2">
             <Label htmlFor="adhar">Do you have an Adhar?</Label>
             <Controller
@@ -741,7 +744,7 @@ const Personaldetail = () => {
 
         {/* PAN Section */}
         <div className="col-span-full space-y-4">
-          <h2 className="text-2xl font-bold">PAN</h2>
+          <h2 className="text-2xl font-medium">PAN</h2>
           <div className="space-y-2">
             <Label htmlFor="pan">Do you have a PAN?</Label>
             <Controller
@@ -831,7 +834,7 @@ const Personaldetail = () => {
 
         {/* Driving License Section */}
         <div className="col-span-full space-y-4">
-          <h2 className="text-2xl font-bold">Driving License</h2>
+          <h2 className="text-2xl font-medium">Driving License</h2>
           <div className="space-y-2">
             <Label htmlFor="driving-license">
               Do you have a Driving License?
@@ -963,7 +966,7 @@ const Personaldetail = () => {
 
         {/* Passport Section */}
         <div className="col-span-full space-y-4">
-          <h2 className="text-2xl font-bold">Passport</h2>
+          <h2 className="text-2xl font-medium">Passport</h2>
           <div className="space-y-2">
             <Label htmlFor="passport">Do you have a Passport?</Label>
             <Controller
