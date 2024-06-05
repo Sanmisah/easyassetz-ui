@@ -30,29 +30,51 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import Datepicker from "./Datepicker";
-import { PhoneInput } from "@/components/Login/Phonenumberinput";
-import Logo from "../image/Logo.png";
+import { PhoneInput } from "../Login/Phonenumberinput"; // Import the updated PhoneInput component
 
-const beneficiarySchema = z.object({
-  fullName: z.string().nonempty("Full Legal Name is required"),
-  relationship: z.string().nonempty("Relationship is required"),
-  gender: z.string().nonempty("Gender is required"),
-  dob: z.date().optional(),
-  guardianName: z.string().optional(),
-  guardianMobile: z.string().optional(),
-  guardianEmail: z.string().optional(),
-  guardianCity: z.string().optional(),
-  guardianState: z.string().optional(),
-  guardianDocument: z.string().optional(),
-  guardianDocumentData: z.string().optional(),
-  guardianReligion: z.string().optional(),
-  guardianNationality: z.string().optional(),
-  guardianHouseNo: z.string().optional(),
-  guardianAddress1: z.string().optional(),
-  guardianAddress2: z.string().optional(),
-  guardianPincode: z.string().optional(),
-  guardianCountry: z.string().optional(),
-});
+const beneficiarySchema = z
+  .object({
+    fullName: z.string().nonempty("Full Legal Name is required"),
+    relationship: z.string().nonempty("Relationship is required"),
+    gender: z.string().nonempty("Gender is required"),
+    dob: z.date().optional(),
+    guardianName: z.string().optional(),
+    guardianMobile: z.string().optional(),
+    guardianEmail: z.string().optional(),
+    guardianCity: z.string().optional(),
+    guardianState: z.string().optional(),
+    guardianDocument: z.string().optional(),
+    guardianDocumentData: z.string().optional(),
+    guardianReligion: z.string().optional(),
+    guardianNationality: z.string().optional(),
+    guardianHouseNo: z.string().optional(),
+    guardianAddress1: z.string().optional(),
+    guardianAddress2: z.string().optional(),
+    guardianPincode: z.string().optional(),
+    guardianCountry: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.dob) {
+        const age = Math.abs(
+          new Date(Date.now() - new Date(data.dob).getTime()).getUTCFullYear() -
+            1970
+        );
+        if (age < 18) {
+          return !!(
+            data.guardianName &&
+            data.guardianMobile &&
+            data.guardianEmail
+          );
+        }
+      }
+      return true;
+    },
+    {
+      message: "Guardian fields are required for minors.",
+      path: ["guardianName"], // this will highlight the guardianName field in case of error
+    }
+  );
 
 const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   const {
@@ -79,7 +101,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
       }
     }
   }, [watchDOB]);
-  const [countrycode, setCountrycode] = useState("");
 
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
@@ -286,8 +307,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                     placeholder="Enter guardian's mobile number"
                                     value={field.value}
                                     onChange={field.onChange}
-                                    countrycode={countrycode}
-                                    setCountrycode={setCountrycode}
                                   />
                                 )}
                               />

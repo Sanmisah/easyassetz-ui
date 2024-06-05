@@ -41,15 +41,18 @@ const Layout = () => {
   return (
     <div className="flex flex-col md:grid md:grid-cols-[300px_1fr] gap-8 p-4 sm:p-8 md:p-12 lg:p-16">
       <div className="flex items-center justify-between">
-        <img src={Logo} alt="Logo" width="190" height="100" />
-        <img
-          src={Hamburger}
-          alt="Hamburger"
-          width="30"
-          height="30"
-          onClick={toggle}
-        />
+        <>
+          <img src={Logo} alt="Logo" width="190" height="100" />
+          <img
+            src={Hamburger}
+            alt="Hamburger"
+            width="30"
+            height="30"
+            onClick={toggle}
+          />
+        </>
       </div>
+
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent side="left">
           <SheetHeader>
