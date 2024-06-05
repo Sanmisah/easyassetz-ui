@@ -4,6 +4,7 @@ import { useForm, Controller, useWatch } from "react-hook-form";
 import axios from "axios";
 import { Label } from "@com/ui/label";
 import { Input } from "@com/ui/input";
+
 import {
   SelectValue,
   SelectTrigger,
@@ -26,7 +27,7 @@ const Personaldetail = () => {
   const [isForeign, setIsForeign] = useState(false);
   const [sameAsLoginEmail, setSameAsLoginEmail] = useState(true);
   const [sameAsPermanentAddress, setSameAsPermanentAddress] = useState(false);
-
+  const [marriedUnderAct, setMarriedUnderAct] = useState(true);
   const {
     register,
     handleSubmit,
@@ -94,14 +95,14 @@ const Personaldetail = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 min-w-[300px]">
       <h2 className="text-2xl font-bold">Personal Details</h2>
       <h3 className="text-lg font-medium">Basic Details</h3>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-[300px]"
       >
-        <div className="space-y-2">
+        <div className="space-y-2 col-span-2 min-w-[300px]">
           <Label htmlFor="full-name">Full Legal Name</Label>
           <Input
             id="full-name"
@@ -115,7 +116,7 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.fullLegalName.message}</span>
           )}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 max-md:col-span-2 min-w-[300px]">
           <Label htmlFor="gender">Gender</Label>
           <Controller
             name="gender"
@@ -141,7 +142,7 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.gender.message}</span>
           )}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 mb-2 min-w-[300px]">
           <Label htmlFor="dob">Date of Birth</Label>
           <Controller
             name="dob"
@@ -154,9 +155,9 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.dob.message}</span>
           )}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 max-md:col-span-2">
           <Label htmlFor="nationality">Nationality</Label>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col  gap-4">
             <Controller
               name="nationality"
               control={control}
@@ -164,6 +165,7 @@ const Personaldetail = () => {
               render={({ field }) => (
                 <RadioGroup
                   {...field}
+                  className="flex"
                   onValueChange={(value) => {
                     field.onChange(value);
                     setIsForeign(value === "foreign");
@@ -224,7 +226,7 @@ const Personaldetail = () => {
             )}
           </div>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 min-w-[300px] max-md:col-span-2">
           <Label htmlFor="country">Country of Residence</Label>
           <Controller
             name="countryOfResidence"
@@ -252,7 +254,7 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.country.message}</span>
           )}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 max-md:col-span-2">
           <Label htmlFor="religion">Religion</Label>
           <Controller
             name="religion"
@@ -283,7 +285,7 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.religion.message}</span>
           )}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 min-w-[300px] max-md:col-span-2">
           <Label htmlFor="marital-status">Marital Status</Label>
           <Controller
             name="maritalStatus"
@@ -292,7 +294,21 @@ const Personaldetail = () => {
             render={({ field }) => (
               <Select
                 {...field}
-                onValueChange={(value) => field.onChange(value)}
+                onValueChange={(value) => {
+                  if (value === "single") {
+                    setMarriedUnderAct(false);
+                  }
+                  if (
+                    value === "married" ||
+                    value === "widowed" ||
+                    value === "divorced" ||
+                    value === "other"
+                  ) {
+                    setMarriedUnderAct(true);
+                  }
+
+                  field.onChange(value);
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select marital status" />
@@ -310,87 +326,94 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.maritalStatus.message}</span>
           )}
         </div>
-        <div className="space-y-2 mt-6 gap-2 flex items-center">
-          <Checkbox
-            className="mt-2"
-            id="married-under-act"
-            {...register("marriedUnderSpecialAct")}
-          />
-          <Label
-            className="flex items-center gap-2 mt-2"
-            htmlFor="married-under-act"
-          >
-            Married under Special Marriage Act
-          </Label>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="correspondence-email">Correspondence Email</Label>
-          <Controller
-            name="cuscorrespondenceEmail"
-            control={control}
-            render={({ field }) => (
-              <RadioGroup
-                {...field}
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  setSameAsLoginEmail(value === "same");
-                }}
-              >
-                <div className="flex items-center gap-4">
-                  <Label
-                    className="flex items-center gap-2"
-                    htmlFor="email-same"
-                  >
-                    Same as your login ID
-                  </Label>
-                  <Label
-                    className="flex items-center gap-2"
-                    htmlFor="email-same"
-                  >
-                    Yes
-                    <RadioGroupItem id="email-same" value="same" />
-                  </Label>
-                  <Label
-                    className="flex items-center gap-2"
-                    htmlFor="email-different"
-                  >
-                    No
-                    <RadioGroupItem id="email-different" value="different" />
-                  </Label>
-                </div>
-              </RadioGroup>
-            )}
-          />
-          {!sameAsLoginEmail && (
-            <div className="space-y-2 mt-2">
-              <Label htmlFor="custom-email">Custom Email</Label>
-              <Input
-                id="custom-email"
-                placeholder="example@email.com"
-                type="email"
-                {...register("correspondenceEmail", {
-                  required: !sameAsLoginEmail && "Custom Email is required",
-                })}
-              />
-              {errors.customEmail && (
-                <span className="text-red-500">
-                  {errors.customEmail.message}
-                </span>
+        {marriedUnderAct && (
+          <div className="space-y-2 mt-6 gap-2 flex items-center">
+            <Checkbox
+              className="mt-2"
+              id="married-under-act"
+              {...register("marriedUnderSpecialAct")}
+            />
+            <Label
+              className="flex items-center gap-2 mt-2"
+              htmlFor="married-under-act"
+            >
+              Married under Special Marriage Act
+            </Label>
+          </div>
+        )}
+
+        <div className="space-y-4 col-span-full mt-6 min-w-[300px]">
+          <h2 className="text-2xl font-bold">Contact Details</h2>
+          <div className="space-y-2">
+            <Label htmlFor="correspondence-email">Correspondence Email</Label>
+            <Controller
+              name="cuscorrespondenceEmail"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  {...field}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    setSameAsLoginEmail(value === "same");
+                  }}
+                >
+                  <div className="flex items-center gap-4">
+                    <Label
+                      className="flex items-center gap-2"
+                      htmlFor="email-same"
+                    >
+                      Same as your login ID
+                    </Label>
+                    <Label
+                      className="flex items-center gap-2"
+                      htmlFor="email-same"
+                    >
+                      Yes
+                      <RadioGroupItem id="email-same" value="same" />
+                    </Label>
+                    <Label
+                      className="flex items-center gap-2"
+                      htmlFor="email-different"
+                    >
+                      No
+                      <RadioGroupItem id="email-different" value="different" />
+                    </Label>
+                  </div>
+                </RadioGroup>
               )}
-            </div>
-          )}
+            />
+            {!sameAsLoginEmail && (
+              <div className="space-y-2 mt-2">
+                <Label htmlFor="custom-email">correspondence Email</Label>
+                <Input
+                  id="custom-email"
+                  placeholder="example@email.com"
+                  type="email"
+                  {...register("correspondenceEmail", {
+                    required: !sameAsLoginEmail && "Custom Email is required",
+                  })}
+                />
+                {errors.customEmail && (
+                  <span className="text-red-500">
+                    {errors.customEmail.message}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Permanent Address Section */}
-        <div className="col-span-full space-y-4">
+        <div className="col-span-full space-y-4 min-w-[300px]">
           <h2 className="text-2xl font-bold mt-4">Address Details</h2>
           <h2 className="text-lg font-medium">Permanent Address</h2>
-          <div className="space-y-2">
+          <div className="space-y-2 min-w-[300px]">
             <Label htmlFor="permanent-house-flat-no">House / Flat No.</Label>
             <Input
               id="permanent-house-flat-no"
               placeholder="House / Flat No."
               type="text"
+              className="min-w-[300px]"
               {...register("permanentHouseFlatNo", {
                 required: "House / Flat No. is required",
               })}
@@ -499,7 +522,7 @@ const Personaldetail = () => {
         </div>
 
         {/* Current Address Section */}
-        <div className="col-span-full space-y-4">
+        <div className="col-span-full space-y-4 min-w-[300px]">
           <h2 className="text-2xl font-medium mt-4">Current Address</h2>
           <Label
             className="flex items-center gap-2 mt-2"
@@ -637,7 +660,7 @@ const Personaldetail = () => {
         </div>
 
         {/* Adhar Section */}
-        <div className="col-span-full space-y-4">
+        <div className="col-span-full space-y-4 min-w-[300px]">
           <h2 className="text-2xl font-bold mt-4">Optional Documents</h2>
           <h2 className="text-2xl font-medium">Aadhar</h2>
           <div className="space-y-2">
@@ -743,7 +766,7 @@ const Personaldetail = () => {
         </div>
 
         {/* PAN Section */}
-        <div className="col-span-full space-y-4">
+        <div className="col-span-full space-y-4 min-w-[300px]">
           <h2 className="text-2xl font-medium">PAN</h2>
           <div className="space-y-2">
             <Label htmlFor="pan">Do you have a PAN?</Label>
@@ -833,7 +856,7 @@ const Personaldetail = () => {
         </div>
 
         {/* Driving License Section */}
-        <div className="col-span-full space-y-4">
+        <div className="col-span-full space-y-4 min-w-[300px]">
           <h2 className="text-2xl font-medium">Driving License</h2>
           <div className="space-y-2">
             <Label htmlFor="driving-license">
@@ -965,7 +988,7 @@ const Personaldetail = () => {
         </div>
 
         {/* Passport Section */}
-        <div className="col-span-full space-y-4">
+        <div className="col-span-full space-y-4 min-w-[300px]">
           <h2 className="text-2xl font-medium">Passport</h2>
           <div className="space-y-2">
             <Label htmlFor="passport">Do you have a Passport?</Label>
@@ -1092,7 +1115,7 @@ const Personaldetail = () => {
           )}
         </div>
 
-        <div className="col-span-full flex justify-end">
+        <div className="col-span-full flex justify-end min-w-[200px] max-md:mt-2">
           <Button className="w-full max-w-[200px]" type="submit">
             Save Changes
           </Button>

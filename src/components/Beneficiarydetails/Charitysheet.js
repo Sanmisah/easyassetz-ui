@@ -23,6 +23,8 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
+import "react-international-phone/style.css";
+import { PhoneInput } from "react-international-phone";
 
 const charitySchema = z.object({
   orgName: z.string().nonempty("Organization name is required"),
@@ -158,7 +160,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Label htmlFor="phone" className="text-base font-medium">
                 Phone Number
               </Label>
-              <Input
+              <PhoneInput
                 id="phone"
                 type="tel"
                 placeholder="Enter phone number"

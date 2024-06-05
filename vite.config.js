@@ -40,4 +40,13 @@ export default defineConfig({
       // Add more aliases as needed
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

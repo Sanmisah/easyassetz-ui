@@ -22,8 +22,8 @@ const loginSchema = z.object({
 
 const registerSchema = z
   .object({
-    full_name: z.string().min(1, "Full Legal name is required"),
-    mobile_number: z
+    name: z.string().min(1, "Full Legal name is required"),
+    mobile: z
       .string()
       .min(10, "Invalid mobile number")
       .max(10, "Invalid mobile number"),
@@ -41,8 +41,8 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [alertDialog, setAlertDialog] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: "",
-    mobile_number: "",
+    name: "",
+    mobile: "",
     email: "",
     password: "",
     password_confirmation: "",
@@ -200,6 +200,18 @@ const Auth = () => {
                   Sign up
                 </button>
               </div>
+              <div className="mt-4 text-center text-sm">
+                <p className="text-sm text-gray-500">
+                  By signing in, you agree to our{" "}
+                  <a className="underline text-blue-500" href="#">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a className="underline text-blue-500" href="#">
+                    Privacy Policy
+                  </a>
+                </p>
+              </div>
             </>
           ) : (
             <>
@@ -221,38 +233,32 @@ const Auth = () => {
               </div>
               <form onSubmit={handleSubmit} className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="full_name">Full Legal Name</Label>
+                  <Label htmlFor="name">Full Legal Name</Label>
                   <Input
-                    id="full_name"
+                    id="name"
                     type="text"
                     placeholder="First Name"
-                    value={formData.full_name}
+                    value={formData.name}
                     onChange={handleInputChange}
-                    className={
-                      getFieldError("full_name") ? "border-red-500" : ""
-                    }
+                    className={getFieldError("name") ? "border-red-500" : ""}
                   />
-                  {getFieldError("full_name") && (
-                    <p className="text-red-500">{getFieldError("full_name")}</p>
+                  {getFieldError("name") && (
+                    <p className="text-red-500">{getFieldError("name")}</p>
                   )}
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="mobile_number">Mobile Number</Label>
+                  <Label htmlFor="mobile">Mobile Number</Label>
                   <Input
-                    id="mobile_number"
+                    id="mobile"
                     type="text"
                     placeholder="Mobile Number"
-                    value={formData.mobile_number}
+                    value={formData.mobile}
                     onChange={handleInputChange}
-                    className={
-                      getFieldError("mobile_number") ? "border-red-500" : ""
-                    }
+                    className={getFieldError("mobile") ? "border-red-500" : ""}
                   />
-                  {getFieldError("mobile_number") && (
-                    <p className="text-red-500">
-                      {getFieldError("mobile_number")}
-                    </p>
+                  {getFieldError("mobile") && (
+                    <p className="text-red-500">{getFieldError("mobile")}</p>
                   )}
                 </div>
                 <div className="grid gap-2">
@@ -309,11 +315,24 @@ const Auth = () => {
                   Register
                 </Button>
               </form>
+
               <div className="mt-4 text-center text-sm">
                 Already have an account?{" "}
                 <button onClick={toggleAuthMode} className="underline">
                   Login
                 </button>
+              </div>
+              <div className="mt-4 text-center text-sm">
+                <p className="text-sm text-gray-500">
+                  By signing in, you agree to our{" "}
+                  <a className="underline text-blue-500" href="#">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a className="underline text-blue-500" href="#">
+                    Privacy Policy
+                  </a>
+                </p>
               </div>
             </>
           )}

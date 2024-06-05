@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Loginpage from "@/Pages/Login/LoginPage";
 import Personalpage from "@/Pages/personaldetailpage/Personalpage";
-import Benificiary from "@/Pages/Benificiary/Benificiary";
 import { Routes, Route } from "react-router-dom";
 function App() {
   return (

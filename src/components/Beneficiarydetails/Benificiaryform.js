@@ -16,6 +16,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@com/ui/select";
+import "react-international-phone/style.css";
+
 import { Button } from "@com/ui/button";
 import {
   Sheet,
@@ -30,7 +32,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import Datepicker from "./Datepicker";
-import { PhoneInput } from "../Login/Phonenumberinput"; // Import the updated PhoneInput component
+import { PhoneInput } from "react-international-phone";
 
 const beneficiarySchema = z
   .object({
@@ -90,6 +92,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   });
 
   const [selectedDocument, setSelectedDocument] = useState("");
+  const [dateCountryCode, setDateCountryCode] = useState("+91");
 
   const watchDOB = watch("dob", null);
 
@@ -305,7 +308,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                     id="guardian-mobile"
                                     type="tel"
                                     placeholder="Enter guardian's mobile number"
-                                    value={field.value}
+                                    setDateCountryCode={setDateCountryCode}
+                                    defaultCountry="ua"
+                                    value={dateCountryCode}
                                     onChange={field.onChange}
                                   />
                                 )}
