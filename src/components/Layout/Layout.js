@@ -24,7 +24,7 @@ const Layout = () => {
   return (
     <div className="flex flex-col md:grid md:grid-cols-[300px_1fr] gap-8 p-2 sm:p-8 md:p-12 lg:p-16">
       <div className="flex flex-col">
-        <div className="flex gap-10 item-center space-x-[60px] justify-center max-h-[100px] mr-6 ml-8">
+        <div className="flex item-center space-x-[40%] justify-center max-h-[100px] mr-6 ml-8">
           <img
             src={Logo}
             alt="Logo"
