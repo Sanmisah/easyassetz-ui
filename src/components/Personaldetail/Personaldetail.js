@@ -52,7 +52,7 @@ const Personaldetail = () => {
         },
       }
     );
-    setDefaultData(response.data.profile);
+    setDefaultData(response.data.data.profile);
     console.log(response.data.data.profile);
     return response.data.data.profile;
   };
