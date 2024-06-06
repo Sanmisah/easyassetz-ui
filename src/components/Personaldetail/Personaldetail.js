@@ -83,7 +83,7 @@ const Personaldetail = () => {
     mutationFn: async (data) => {
       // Merge data with defaultData to ensure default values are sent if no new value is provided
       const mergedData = { ...defaultData, ...data };
-      const response = await axios.post(
+      const response = await axios.put(
         `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
         mergedData,
         {
