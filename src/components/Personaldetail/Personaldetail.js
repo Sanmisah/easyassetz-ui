@@ -41,7 +41,9 @@ const Personaldetail = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   console.log(user);
-  const getPersonalData = async (user) => {
+
+  const getPersonalData = async () => {
+    if (!user) return; // Check if user is defined
     const response = await axios.get(
       `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
       {
@@ -54,9 +56,10 @@ const Personaldetail = () => {
     console.log(response.data);
     return response.data;
   };
+
   const query = useQuery({
     queryKey: ["todos"],
-    queryFn: getPersonalData(user),
+    queryFn: getPersonalData, // Pass the function reference
   });
 
   const {
