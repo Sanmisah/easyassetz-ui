@@ -10,6 +10,13 @@ import Logo from "@/components/image/Logo.png";
 import Confirmagedialog from "./Confirmagedialog";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "react-query";
 
 const phoneRegex = new RegExp(
   /^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
@@ -40,6 +47,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [alertDialog, setAlertDialog] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -48,6 +56,8 @@ const Auth = () => {
     password_confirmation: "",
   });
   const [errors, setErrors] = useState({});
+
+  const queryClient = useQueryClient();
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
@@ -88,22 +98,28 @@ const Auth = () => {
     e.preventDefault();
     if (isLogin) {
       if (validateLogin()) {
-        // Call login API
-        const response = await axios.post("http://127.0.0.1:8000/api/login", {
-          email: formData.email,
-          password: formData.password,
+        const mutation = useMutation({
+          mutationKey: ["login"],
+          mutationFn: Loginfun,
         });
-        console.log("Logging in user:", response.data);
-        if (response.status === 200) {
-          navigate("/personal");
-        } else {
-          alert("Login failed: " + response.data.message);
-        }
-
+        mutation.mutate({ email: formData.email, password: formData.password });
         console.log("Login data:", {
           email: formData.email,
           password: formData.password,
         });
+        // const query = useQuery({ queryKey: ['user'], queryFn: Loginfun });
+
+        // Call login API
+        // const response = await axios.post("http://127.0.0.1:8000/api/login", {
+        //   email: formData.email,
+        //   password: formData.password,
+        // });
+        // console.log("Logging in user:", response.data);
+        // if (response.status === 200) {
+        //   navigate("/personal");
+        // } else {
+        //   alert("Login failed: " + response.data.message);
+        // }
       }
     } else {
       if (validateRegister()) {
