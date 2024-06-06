@@ -104,6 +104,7 @@ const Auth = () => {
     },
     onSuccess: (data) => {
       console.log("Logging in user:", data);
+      queryClient.setQueryData("user", data);
       navigate("/personal");
     },
     onError: (error) => {
