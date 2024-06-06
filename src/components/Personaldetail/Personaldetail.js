@@ -413,6 +413,15 @@ const Personaldetail = () => {
                 <RadioGroup
                   {...field}
                   onValueChange={(value) => {
+                    const user = JSON.parse(getitem);
+                    console.log("user:", user);
+                    if (value === "same") {
+                      setValue(
+                        "cuscorrespondenceEmail",
+                        user.data.user.profile.email
+                      );
+                    }
+
                     field.onChange(value);
                     setSameAsLoginEmail(value === "same");
                   }}
