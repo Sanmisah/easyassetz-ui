@@ -28,6 +28,7 @@ const Personaldetail = () => {
   const [sameAsLoginEmail, setSameAsLoginEmail] = useState(true);
   const [sameAsPermanentAddress, setSameAsPermanentAddress] = useState(false);
   const [marriedUnderAct, setMarriedUnderAct] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -49,8 +50,9 @@ const Personaldetail = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
+
     await axios
-      .post("http://127.0.0.1:8000/api/profile", { ...data, user_id: 1 })
+      .post(`http://127.0.0.1:8000/api/profiles/1`, { ...data, user_id: 1 })
       .then((res) => {
         console.log(res);
       });
