@@ -58,7 +58,7 @@ const Personaldetail = () => {
   };
 
   const query = useQuery({
-    queryKey: ["todos"],
+    queryKey: ["personalData"],
     queryFn: getPersonalData, // Pass the function reference
   });
 
@@ -81,14 +81,28 @@ const Personaldetail = () => {
     },
   });
 
+  const Profilemutate = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
+        { ...data, user_id: user.data.user.id }
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries("personalData");
+      // Handle form submission
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+    },
+  });
+
   const onSubmit = async (data) => {
     console.log(data);
+    Profilemutate.mutate(data);
 
-    await axios
-      .post(`http://127.0.0.1:8000/api/profiles/1`, { ...data, user_id: 1 })
-      .then((res) => {
-        console.log(res);
-      });
     // Handle form submission
   };
 
