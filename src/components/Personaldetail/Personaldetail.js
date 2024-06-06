@@ -43,10 +43,10 @@ const Personaldetail = () => {
   console.log(user);
   const getPersonalData = async () => {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/profiles/${user.id}`,
+      `http://127.0.0.1:8000/api/profiles/${data.user.id}`,
       {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
