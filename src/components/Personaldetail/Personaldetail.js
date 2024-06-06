@@ -41,6 +41,7 @@ const Personaldetail = () => {
   const getPersonalData = async () => {
     const response = await axios.get("/api/profiles/1");
     setDefaultData(response.data);
+    return response.data;
   };
   const query = useQuery({ queryKey: ["todos"], queryFn: getPersonalData });
 
