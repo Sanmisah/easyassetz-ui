@@ -156,6 +156,7 @@ const Personaldetail = () => {
           <Input
             id="full-name"
             placeholder="John Doe"
+            defaultValue={defaultData?.fullLegalName}
             type="text"
             {...register("fullLegalName", {
               required: "Full Legal Name is required",
