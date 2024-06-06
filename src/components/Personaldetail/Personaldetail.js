@@ -35,12 +35,11 @@ const Personaldetail = () => {
   const [sameAsLoginEmail, setSameAsLoginEmail] = useState(true);
   const [sameAsPermanentAddress, setSameAsPermanentAddress] = useState(false);
   const [marriedUnderAct, setMarriedUnderAct] = useState(true);
-  const [defaultData, setDefaultData] = useState([]);
+  const [defaultData, setDefaultData] = useState({});
   const queryClient = useQueryClient();
 
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  console.log(user);
 
   const getPersonalData = async () => {
     if (!user) return; // Check if user is defined
@@ -53,7 +52,6 @@ const Personaldetail = () => {
       }
     );
     setDefaultData(response.data.data.profile);
-    console.log(response.data.data.profile);
     return response.data.data.profile;
   };
 
@@ -83,9 +81,11 @@ const Personaldetail = () => {
 
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
+      // Merge data with defaultData to ensure default values are sent if no new value is provided
+      const mergedData = { ...defaultData, ...data };
       const response = await axios.post(
         `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
-        data,
+        mergedData,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
@@ -96,9 +96,7 @@ const Personaldetail = () => {
     },
 
     onSuccess: (data) => {
-      console.log(data);
       queryClient.invalidateQueries("personalData");
-      // Handle form submission
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -106,10 +104,7 @@ const Personaldetail = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
     Profilemutate.mutate(data);
-
-    // Handle form submission
   };
 
   const permanentAddress = watch([
@@ -478,7 +473,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-house-flat-no"
               placeholder="House / Flat No."
-              value={defaultData?.permanentHouseFlatNo}
+              defaultValue={defaultData?.permanentHouseFlatNo}
               type="text"
               className="min-w-[300px]"
               {...register("permanentHouseFlatNo", {
@@ -496,7 +491,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-address-line-1"
               placeholder="Address Line 1"
-              value={defaultData?.permanentAddressLine1}
+              defaultValue={defaultData?.permanentAddressLine1}
               type="text"
               {...register("permanentAddressLine1", {
                 required: "Address Line 1 is required",
@@ -513,7 +508,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-address-line-2"
               placeholder="Address Line 2"
-              value={defaultData?.permanentAddressLine2}
+              defaultValue={defaultData?.permanentAddressLine2}
               type="text"
               {...register("permanentAddressLine2", {
                 required: "Address Line 2 is required",
@@ -530,7 +525,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-pincode"
               placeholder="Pincode"
-              value={defaultData?.permanentPincode}
+              defaultValue={defaultData?.permanentPincode}
               type="text"
               {...register("permanentPincode", {
                 required: "Pincode is required",
@@ -547,7 +542,7 @@ const Personaldetail = () => {
             <Label htmlFor="permanent-city">City</Label>
             <Input
               id="permanent-city"
-              value={defaultData?.permanentCity}
+              defaultValue={defaultData?.permanentCity}
               placeholder="City"
               type="text"
               {...register("permanentCity", { required: "City is required" })}
@@ -563,7 +558,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-state"
               placeholder="State"
-              value={defaultData?.permanentState}
+              defaultValue={defaultData?.permanentState}
               type="text"
               {...register("permanentState", {
                 required: "State is required",
@@ -580,7 +575,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-country"
               placeholder="Country"
-              value={defaultData?.permanentCountry}
+              defaultValue={defaultData?.permanentCountry}
               type="text"
               {...register("permanentCountry", {
                 required: "Country is required",
@@ -621,7 +616,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-house-flat-no"
                   placeholder="House / Flat No."
-                  value={defaultData?.currentHouseFlatNo}
+                  defaultValue={defaultData?.currentHouseFlatNo}
                   type="text"
                   {...register("currentHouseFlatNo", {
                     required: "House / Flat No. is required",
@@ -638,7 +633,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-address-line-1"
                   placeholder="Address Line 1"
-                  value={defaultData?.currentAddressLine1}
+                  defaultValue={defaultData?.currentAddressLine1}
                   type="text"
                   {...register("currentAddressLine1", {
                     required: "Address Line 1 is required",
@@ -655,7 +650,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-address-line-2"
                   placeholder="Address Line 2"
-                  value={defaultData?.currentAddressLine2}
+                  defaultValue={defaultData?.currentAddressLine2}
                   type="text"
                   {...register("currentAddressLine2", {
                     required: "Address Line 2 is required",
@@ -672,7 +667,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-pincode"
                   placeholder="Pincode"
-                  value={defaultData?.currentPincode}
+                  defaultValue={defaultData?.currentPincode}
                   type="text"
                   {...register("currentPincode", {
                     required: "Pincode is required",
@@ -691,7 +686,7 @@ const Personaldetail = () => {
                   id="current-city"
                   placeholder="City"
                   type="text"
-                  value={defaultData?.currentCity}
+                  defaultValue={defaultData?.currentCity}
                   {...register("currentCity", {
                     required: "City is required",
                   })}
@@ -708,7 +703,7 @@ const Personaldetail = () => {
                   id="current-state"
                   placeholder="State"
                   type="text"
-                  value={defaultData?.currentState}
+                  defaultValue={defaultData?.currentState}
                   {...register("currentState", {
                     required: "State is required",
                   })}
@@ -726,7 +721,6 @@ const Personaldetail = () => {
                   placeholder="Country"
                   defaultValue={defaultData?.currentCountry}
                   type="text"
-                  value={defaultData?.currentCountry}
                   {...register("currentCountry", {
                     required: "Country is required",
                   })}
@@ -803,10 +797,13 @@ const Personaldetail = () => {
                   id="adhar-number"
                   defaultValue={defaultData?.adharNumber}
                   placeholder="Adhar Number"
-                  value={defaultData?.adharNumber}
                   type="text"
                   {...register("adharNumber", {
                     required: "Adhar Number is required",
+                    pattern: {
+                      value: /^[2-9]{1}[0-9]{11}$/,
+                      message: "Invalid Aadhar Number",
+                    },
                   })}
                 />
                 {errors.adharNumber && (
@@ -824,7 +821,6 @@ const Personaldetail = () => {
                   placeholder="Full Name - Name as per Adhar"
                   type="text"
                   defaultValue={defaultData?.adharName}
-                  value={defaultData?.adharName}
                   {...register("adharName", {
                     required: "Full Name is required",
                   })}
@@ -835,21 +831,6 @@ const Personaldetail = () => {
                   </span>
                 )}
               </div>
-              {/* <div className="space-y-2">
-                <Label htmlFor="adhar-file">Upload File</Label>
-                <Input
-                  id="adhar-file"
-                  type="file"
-                  {...register("adharFile", {
-                    required: "File upload is required",
-                  })}
-                />
-                {errors.adharFile && (
-                  <span className="text-red-500">
-                    {errors.adharFile.message}
-                  </span>
-                )}
-              </div> */}
             </>
           )}
         </div>
@@ -907,6 +888,10 @@ const Personaldetail = () => {
                   type="text"
                   {...register("panNumber", {
                     required: "PAN Number is required",
+                    pattern: {
+                      value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+                      message: "Invalid PAN Number",
+                    },
                   })}
                 />
                 {errors.panNumber && (
@@ -930,19 +915,6 @@ const Personaldetail = () => {
                   <span className="text-red-500">{errors.panName.message}</span>
                 )}
               </div>
-              {/* <div className="space-y-2">
-                <Label htmlFor="pan-file">Upload File</Label>
-                <Input
-                  id="pan-file"
-                  type="file"
-                  {...register("panFile", {
-                    required: "File upload is required",
-                  })}
-                />
-                {errors.panFile && (
-                  <span className="text-red-500">{errors.panFile.message}</span>
-                )}
-              </div> */}
             </>
           )}
         </div>
@@ -1002,11 +974,15 @@ const Personaldetail = () => {
                 <Label htmlFor="driving-license-number">DL Number</Label>
                 <Input
                   id="driving-license-number"
-                  placeholder="DL Number"
                   defaultValue={defaultData?.drivingLicenseNumber}
+                  placeholder="DL Number"
                   type="text"
                   {...register("drivingLicenseNumber", {
                     required: "DL Number is required",
+                    pattern: {
+                      value: /^[A-Z0-9-]{15}$/,
+                      message: "Invalid Driving License Number",
+                    },
                   })}
                 />
                 {errors.drivingLicenseNumber && (
@@ -1065,21 +1041,6 @@ const Personaldetail = () => {
                   </span>
                 )}
               </div>
-              {/* <div className="space-y-2">
-                <Label htmlFor="driving-license-file">Upload File</Label>
-                <Input
-                  id="driving-license-file"
-                  type="file"
-                  {...register("drivingLicenseFile", {
-                    required: "File upload is required",
-                  })}
-                />
-                {errors.drivingLicenseFile && (
-                  <span className="text-red-500">
-                    {errors.drivingLicenseFile.message}
-                  </span>
-                )}
-              </div> */}
             </>
           )}
         </div>
@@ -1140,6 +1101,10 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.passportNumber}
                   {...register("passportNumber", {
                     required: "Passport Number is required",
+                    pattern: {
+                      value: /^[A-Z][0-9]{7}$/,
+                      message: "Invalid Passport Number",
+                    },
                   })}
                 />
                 {errors.passportNumber && (
@@ -1198,21 +1163,6 @@ const Personaldetail = () => {
                   </span>
                 )}
               </div>
-              {/* <div className="space-y-2">
-                <Label htmlFor="pp-file">Upload File</Label>
-                <Input
-                  id="pp-file"
-                  type="file"
-                  {...register("passportFile", {
-                    required: "File upload is required",
-                  })}
-                />
-                {errors.passportFile && (
-                  <span className="text-red-500">
-                    {errors.passportFile.message}
-                  </span>
-                )}
-              </div> */}
             </>
           )}
         </div>
