@@ -39,8 +39,9 @@ const Personaldetail = () => {
   const queryClient = useQueryClient();
 
   const getPersonalData = async () => {
-    const response = await axios.get("/api/profiles/1");
+    const response = await axios.get("http://127.0.0.1:8000/api/profiles/1");
     setDefaultData(response.data);
+    console.log(response.data);
     return response.data;
   };
   const query = useQuery({ queryKey: ["todos"], queryFn: getPersonalData });
