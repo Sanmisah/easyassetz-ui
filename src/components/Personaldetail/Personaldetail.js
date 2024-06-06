@@ -54,7 +54,7 @@ const Personaldetail = () => {
     );
     setDefaultData(response.data.profile);
     console.log(response.data.data.profile);
-    return response.data.profile;
+    return response.data.data.profile;
   };
 
   const query = useQuery({
