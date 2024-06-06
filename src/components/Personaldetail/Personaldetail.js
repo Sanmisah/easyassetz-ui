@@ -83,17 +83,18 @@ const Personaldetail = () => {
 
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
+      const response = await axios.post(
         `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
-        data, // Move data here
+        data,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         }
       );
-      return response.data;
+      return response.data.data.profile;
     },
+
     onSuccess: (data) => {
       console.log(data);
       queryClient.invalidateQueries("personalData");
