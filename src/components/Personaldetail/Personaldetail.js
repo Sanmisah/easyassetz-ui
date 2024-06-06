@@ -38,8 +38,18 @@ const Personaldetail = () => {
   const [defaultData, setDefaultData] = useState([]);
   const queryClient = useQueryClient();
 
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
+  console.log(user);
   const getPersonalData = async () => {
-    const response = await axios.get("http://127.0.0.1:8000/api/profiles/1");
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/profiles/${user.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
     setDefaultData(response.data);
     console.log(response.data);
     return response.data;
