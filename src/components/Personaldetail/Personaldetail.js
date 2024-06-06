@@ -706,7 +706,7 @@ const Personaldetail = () => {
                   placeholder="Country"
                   defaultValue={defaultData?.currentCountry}
                   type="text"
-                  value={defaultData.currentCountry}
+                  value={defaultData?.currentCountry}
                   {...register("currentCountry", {
                     required: "Country is required",
                   })}
@@ -736,7 +736,7 @@ const Personaldetail = () => {
                 <RadioGroup
                   {...field}
                   value={field.value}
-                  defaultValue={defaultData.adhar}
+                  defaultValue={defaultData?.adhar}
                   onValueChange={(value) => {
                     field.onChange(value);
                     setShowAdharFields(value === "yes");
@@ -748,7 +748,7 @@ const Personaldetail = () => {
                       htmlFor="adhar-yes"
                     >
                       <RadioGroupItem
-                        defaultChecked={defaultData.adhar}
+                        defaultChecked={defaultData?.adhar}
                         defaultValue="no"
                         id="adhar-yes"
                         value="yes"
@@ -783,7 +783,7 @@ const Personaldetail = () => {
                   id="adhar-number"
                   defaultValue={defaultData?.adharNumber}
                   placeholder="Adhar Number"
-                  value={defaultData.adharNumber}
+                  value={defaultData?.adharNumber}
                   type="text"
                   {...register("adharNumber", {
                     required: "Adhar Number is required",
@@ -804,7 +804,7 @@ const Personaldetail = () => {
                   placeholder="Full Name - Name as per Adhar"
                   type="text"
                   defaultValue={defaultData?.adharName}
-                  value={defaultData.adharName}
+                  value={defaultData?.adharName}
                   {...register("adharName", {
                     required: "Full Name is required",
                   })}
