@@ -245,7 +245,6 @@ const Personaldetail = () => {
                 <RadioGroup
                   {...field}
                   className="flex"
-                  value={defaultData?.nationality}
                   onValueChange={(value) => {
                     field.onChange(value);
                     setIsForeign(value === "foreign");
@@ -256,7 +255,7 @@ const Personaldetail = () => {
                     htmlFor="nationality-indian"
                   >
                     <RadioGroupItem
-                      checked
+                      checked={defaultData?.nationality === "indian"}
                       id="nationality-indian"
                       value="indian"
                     />
