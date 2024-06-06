@@ -160,7 +160,7 @@ const Auth = () => {
   const handleRegisterConfirm = async () => {
     setAlertDialog(false);
     try {
-      Registermutation.mutate(...formData);
+      Registermutation.mutate(formData);
       //   const response = await axios.post("http://127.0.0.1:8000/api/register", {
       //     ...formData,
       //   });
