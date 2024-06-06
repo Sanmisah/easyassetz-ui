@@ -178,11 +178,11 @@ const Personaldetail = () => {
             name="gender"
             control={control}
             rules={{ required: "Gender is required" }}
-            defaultValue={defaultData?.gender}
             render={({ field }) => (
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value)}
+                defaultValue={defaultData?.gender}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select gender" />
@@ -223,12 +223,12 @@ const Personaldetail = () => {
             <Controller
               name="nationality"
               control={control}
-              defaultValue={defaultData?.nationality}
               rules={{ required: "Nationality is required" }}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
                   className="flex"
+                  defaultValue={defaultData?.nationality}
                   onValueChange={(value) => {
                     field.onChange(value);
                     setIsForeign(value === "foreign");
@@ -265,6 +265,7 @@ const Personaldetail = () => {
                     {...field}
                     onValueChange={(value) => field.onChange(value)}
                     className="ml-4"
+                    defaultValue={defaultData?.specificNationality}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select nationality" />
@@ -295,12 +296,12 @@ const Personaldetail = () => {
           <Controller
             name="countryOfResidence"
             control={control}
-            defaultValue={defaultData?.countryOfResidence}
             rules={{ required: "Country of Residence is required" }}
             render={({ field }) => (
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value)}
+                defaultValue={defaultData?.countryOfResidence}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select country" />
@@ -324,12 +325,12 @@ const Personaldetail = () => {
           <Controller
             name="religion"
             control={control}
-            defaultValue={defaultData?.religion}
             rules={{ required: "Religion is required" }}
             render={({ field }) => (
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value)}
+                defaultValue={defaultData?.religion}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select religion" />
@@ -356,11 +357,11 @@ const Personaldetail = () => {
           <Controller
             name="maritalStatus"
             control={control}
-            defaultValue={defaultData?.maritalStatus}
             rules={{ required: "Marital Status is required" }}
             render={({ field }) => (
               <Select
                 {...field}
+                defaultValue={defaultData?.maritalStatus}
                 onValueChange={(value) => {
                   if (value === "single") {
                     setMarriedUnderAct(false);
@@ -393,7 +394,7 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.maritalStatus.message}</span>
           )}
         </div>
-        {marriedUnderAct && (
+        {marriedUnderAct && defaultData?.maritalStatus !== "single" && (
           <div className="space-y-2 mt-6 gap-2 flex items-center">
             <Checkbox
               className="mt-2"
