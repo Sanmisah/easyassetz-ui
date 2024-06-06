@@ -52,9 +52,9 @@ const Personaldetail = () => {
         },
       }
     );
-    setDefaultData(response.data);
+    setDefaultData(response.data.profile);
     console.log(response.data);
-    return response.data;
+    return response.data.profile;
   };
 
   const query = useQuery({
