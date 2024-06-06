@@ -76,6 +76,7 @@ const Personaldetail = () => {
     formState: { errors },
     control,
     watch,
+    reset,
     setValue,
   } = useForm({
     defaultValues: {
@@ -88,6 +89,12 @@ const Personaldetail = () => {
       passportExpiry: null,
     },
   });
+
+  useEffect(() => {
+    if (defaultData) {
+      reset(defaultData); // Reset the form with the fetched data
+    }
+  }, [defaultData, reset]);
 
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
@@ -308,7 +315,7 @@ const Personaldetail = () => {
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value)}
-                value={defaultData?.countryOfResidence}
+                value={field.value}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select country" />
@@ -332,9 +339,7 @@ const Personaldetail = () => {
           <Controller
             name="religion"
             control={control}
-            rules={
-              defaultData?.religion ? {} : { required: "Religion is required" }
-            }
+            rules={{ required: "Religion is required" }}
             render={({ field }) => (
               <Select
                 {...field}
