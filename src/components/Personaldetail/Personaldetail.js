@@ -36,6 +36,8 @@ const Personaldetail = () => {
   const [sameAsPermanentAddress, setSameAsPermanentAddress] = useState(false);
   const [marriedUnderAct, setMarriedUnderAct] = useState(true);
   const [defaultData, setDefaultData] = useState({});
+  const [defaultDate, setdefaultDate] = useState(null);
+
   const queryClient = useQueryClient();
 
   const getitem = localStorage.getItem("user");
@@ -52,6 +54,9 @@ const Personaldetail = () => {
       }
     );
     setDefaultData(response.data.data.profile);
+    if (response.data.data.profile?.dob) {
+      setdefaultDate(new Date(response.data.data.profile.dob));
+    }
     return response.data.data.profile;
   };
 
@@ -183,17 +188,13 @@ const Personaldetail = () => {
                 {...field}
                 onValueChange={(value) => field.onChange(value)}
                 defaultValue={defaultData?.gender}
+                value={defaultData?.gender}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem
-                    value="male"
-                    checked={defaultData?.gender === "male"}
-                  >
-                    Male
-                  </SelectItem>
+                  <SelectItem value="male">Male</SelectItem>
                   <SelectItem value="female">Female</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
@@ -208,7 +209,7 @@ const Personaldetail = () => {
           <Label htmlFor="dob">Date of Birth</Label>
           <Controller
             name="dob"
-            defaultValue={defaultData?.dob}
+            defaultValue={defaultDate}
             control={control}
             render={({ field }) => (
               <Datepicker

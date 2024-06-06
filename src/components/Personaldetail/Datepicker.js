@@ -1,4 +1,9 @@
-import React, { useState, useImperativeHandle, forwardRef } from "react";
+import React, {
+  useState,
+  useImperativeHandle,
+  useEffect,
+  forwardRef,
+} from "react";
 import { PopoverTrigger, PopoverContent, Popover } from "@com/ui/popover";
 import { Calendar } from "@com/ui/calendar";
 import { Input } from "@com/ui/input";
@@ -10,10 +15,17 @@ import InputMask from "react-input-mask";
 
 const Datepicker = forwardRef(({ value, onChange, defaultValue }, ref) => {
   const [stringDate, setStringDate] = useState(
-    value ? format(value, "dd/MM/yyyy") : ""
+    defaultValue ? format(defaultValue, "dd/MM/yyyy") : ""
   );
-  const [date, setDate] = useState(value || null);
+  const [date, setDate] = useState(defaultValue || null);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (defaultValue) {
+      setStringDate(format(defaultValue, "dd/MM/yyyy"));
+      setDate(defaultValue);
+    }
+  }, [defaultValue]);
 
   useImperativeHandle(ref, () => ({
     clear() {
