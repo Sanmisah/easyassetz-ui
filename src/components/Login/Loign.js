@@ -16,7 +16,7 @@ import {
   useQueryClient,
   QueryClient,
   QueryClientProvider,
-} from "react-query";
+} from "@tanstack/react-query";
 
 const phoneRegex = new RegExp(
   /^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
@@ -94,30 +94,28 @@ const Auth = () => {
     return true;
   };
 
-  const loginMutation = useMutation(
-    async ({ email, password }) => {
+  const Loginmutation = useMutation({
+    mutationFn: async ({ email, password }) => {
       const response = await axios.post("http://127.0.0.1:8000/api/login", {
         email,
         password,
       });
       return response.data;
     },
-    {
-      onSuccess: (data) => {
-        console.log("Logging in user:", data);
-        navigate("/personal");
-      },
-      onError: (error) => {
-        alert("Login failed: " + error.message);
-      },
-    }
-  );
+    onSuccess: (data) => {
+      console.log("Logging in user:", data);
+      navigate("/personal");
+    },
+    onError: (error) => {
+      alert("Login failed: " + error.message);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogin) {
       if (validateLogin()) {
-        loginMutation.mutate({
+        Loginmutation.mutate({
           email: formData.email,
           password: formData.password,
         });
@@ -142,30 +140,27 @@ const Auth = () => {
       }
     }
   };
-  const registerMutation = useMutation(
-    async (data) => {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/register",
-        data
-      );
+  const Registermutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post("http://127.0.0.1:8000/api/register", {
+        ...data,
+      });
       return response.data;
     },
-    {
-      onSuccess: (data) => {
-        console.log("Registering user:", data);
-        navigate("/personal");
-      },
-      onError: (error) => {
-        console.error("Error registering user:", error);
-        alert("Failed to register user.");
-      },
-    }
-  );
+    onSuccess: (data) => {
+      console.log("Registering user:", data);
+      navigate("/personal");
+    },
+    onError: (error) => {
+      console.error("Error registering user:", error);
+      alert("Failed to register user.");
+    },
+  });
 
   const handleRegisterConfirm = async () => {
     setAlertDialog(false);
     try {
-      registerMutation.mutate(...formData);
+      Registermutation.mutate(...formData);
       //   const response = await axios.post("http://127.0.0.1:8000/api/register", {
       //     ...formData,
       //   });
