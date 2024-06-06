@@ -235,6 +235,7 @@ const Personaldetail = () => {
                   {...field}
                   className="flex"
                   defaultValue={defaultData?.nationality}
+                  value={defaultData?.nationality}
                   onValueChange={(value) => {
                     field.onChange(value);
                     setIsForeign(value === "foreign");
@@ -307,7 +308,7 @@ const Personaldetail = () => {
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value)}
-                defaultValue={defaultData?.countryOfResidence}
+                value={defaultData?.countryOfResidence}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select country" />
@@ -336,7 +337,7 @@ const Personaldetail = () => {
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value)}
-                defaultValue={defaultData?.religion}
+                value={defaultData?.religion}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select religion" />
@@ -367,7 +368,7 @@ const Personaldetail = () => {
             render={({ field }) => (
               <Select
                 {...field}
-                defaultValue={defaultData?.maritalStatus}
+                value={defaultData?.maritalStatus}
                 onValueChange={(value) => {
                   if (value === "single") {
                     setMarriedUnderAct(false);
