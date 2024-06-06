@@ -60,6 +60,11 @@ const Personaldetail = () => {
     queryFn: getPersonalData, // Pass the function reference
   });
 
+  useEffect(() => {
+    if (sameAsLoginEmail) {
+      setValue("cuscorrespondenceEmail", user.data.user.profile.email);
+    }
+  }, [sameAsLoginEmail, user]);
   const {
     register,
     handleSubmit,
