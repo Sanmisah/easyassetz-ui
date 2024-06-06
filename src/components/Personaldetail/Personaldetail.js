@@ -314,10 +314,10 @@ const Personaldetail = () => {
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="us">United States</SelectItem>
-                  <SelectItem value="ca">Canada</SelectItem>
-                  <SelectItem value="uk">United Kingdom</SelectItem>
-                  <SelectItem value="au">Australia</SelectItem>
+                  <SelectItem value="united-states">United States</SelectItem>
+                  <SelectItem value="canada">Canada</SelectItem>
+                  <SelectItem value="united-kingdom">United Kingdom</SelectItem>
+                  <SelectItem value="australia">Australia</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
@@ -332,7 +332,9 @@ const Personaldetail = () => {
           <Controller
             name="religion"
             control={control}
-            rules={{ required: "Religion is required" }}
+            rules={
+              defaultData?.religion ? {} : { required: "Religion is required" }
+            }
             render={({ field }) => (
               <Select
                 {...field}
