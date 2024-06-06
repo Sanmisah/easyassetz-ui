@@ -168,7 +168,7 @@ const Personaldetail = () => {
               required: "Full Legal Name is required",
             })}
           />
-          {errors.fullLegalName && (
+          {errors.fullLegalName && !defaultData?.fullLegalName && (
             <span className="text-red-500">{errors.fullLegalName.message}</span>
           )}
         </div>
@@ -188,7 +188,12 @@ const Personaldetail = () => {
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem
+                    value="male"
+                    checked={defaultData?.gender === "male"}
+                  >
+                    Male
+                  </SelectItem>
                   <SelectItem value="female">Female</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
