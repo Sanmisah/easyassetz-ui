@@ -98,6 +98,18 @@ const Auth = () => {
     e.preventDefault();
     if (isLogin) {
       if (validateLogin()) {
+        const Loginfun = async (email, password) => {
+          const response = await axios.post("http://127.0.0.1:8000/api/login", {
+            email: email,
+            password: password,
+          });
+          console.log("Logging in user:", response.data);
+          if (response.status === 200) {
+            navigate("/personal");
+          } else {
+            alert("Login failed: " + response.data.message);
+          }
+        };
         const mutation = useMutation({
           mutationKey: ["login"],
           mutationFn: Loginfun,
@@ -107,6 +119,7 @@ const Auth = () => {
           email: formData.email,
           password: formData.password,
         });
+
         // const query = useQuery({ queryKey: ['user'], queryFn: Loginfun });
 
         // Call login API
