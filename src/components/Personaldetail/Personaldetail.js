@@ -24,7 +24,7 @@ import {
   useQueryClient,
   QueryClient,
   QueryClientProvider,
-} from "react-query";
+} from "@tanstack/react-query";
 
 const Personaldetail = () => {
   const [showAdharFields, setShowAdharFields] = useState(false);
@@ -38,19 +38,11 @@ const Personaldetail = () => {
   const [defaultData, setDefaultData] = useState([]);
   const queryClient = useQueryClient();
 
-  const { data: personalData } = useQuery(
-    "personalData",
-    () => axios.get("/api/profiles/1"),
-    {
-      onSuccess: (data) => {
-        setDefaultData(data.data);
-        console.log(data.data);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    }
-  );
+  const getPersonalData = async () => {
+    const response = await axios.get("/api/profiles/1");
+    setDefaultData(response.data);
+  };
+  const query = useQuery({ queryKey: ["todos"], queryFn: getPersonalData });
 
   const {
     register,
