@@ -100,6 +100,7 @@ const Auth = () => {
         email,
         password,
       });
+
       return response.data;
     },
     onSuccess: (data) => {
@@ -273,7 +274,7 @@ const Auth = () => {
                 />
               )}
               <div className="grid gap-2 text-center">
-                <h1 className="text-3xl font-bold">Register</h1>
+                <h1 className="text-3xl font-bold">Sign Up</h1>
                 <p className="text-balance text-muted-foreground">
                   Fill in the details below to create a new account
                 </p>
@@ -359,7 +360,7 @@ const Auth = () => {
                   )}
                 </div>
                 <Button type="submit" className="w-full">
-                  Register
+                  Sign Up
                 </Button>
               </form>
 

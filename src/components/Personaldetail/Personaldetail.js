@@ -41,12 +41,12 @@ const Personaldetail = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   console.log(user);
-  const getPersonalData = async () => {
+  const getPersonalData = async (user) => {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/profiles/${data.user.id}`,
+      `http://127.0.0.1:8000/api/profiles/${user.user.id}`,
       {
         headers: {
-          Authorization: `Bearer ${user.data.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
       }
     );
@@ -54,7 +54,10 @@ const Personaldetail = () => {
     console.log(response.data);
     return response.data;
   };
-  const query = useQuery({ queryKey: ["todos"], queryFn: getPersonalData });
+  const query = useQuery({
+    queryKey: ["todos"],
+    queryFn: getPersonalData(user),
+  });
 
   const {
     register,
