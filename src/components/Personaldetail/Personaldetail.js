@@ -245,6 +245,7 @@ const Personaldetail = () => {
                 <RadioGroup
                   {...field}
                   className="flex"
+                  value={defaultData?.nationality}
                   onValueChange={(value) => {
                     field.onChange(value);
                     setIsForeign(value === "foreign");
@@ -255,7 +256,10 @@ const Personaldetail = () => {
                     htmlFor="nationality-indian"
                   >
                     <RadioGroupItem
-                      checked={defaultData?.nationality === "indian"}
+                      checked={
+                        defaultData?.nationality === "indian" ||
+                        defaultData?.nationality === undefined
+                      }
                       id="nationality-indian"
                       value="indian"
                     />
@@ -274,44 +278,43 @@ const Personaldetail = () => {
             {errors.nationality && (
               <span className="text-red-500">{errors.nationality.message}</span>
             )}
-            {isForeign ||
-              (defaultData?.nationality === "foreign" && (
-                <Controller
-                  name="nationality"
-                  control={control}
-                  defaultValue={defaultData?.nationality}
-                  rules={{
-                    required: !defaultData?.nationality && isForeign,
-                  }}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      onValueChange={(value) => field.onChange(value)}
-                      className="ml-4"
-                      value={defaultData?.nationality}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select nationality" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="afghan">Afghan</SelectItem>
-                        <SelectItem value="argentine">Argentine</SelectItem>
-                        <SelectItem value="australian">Australian</SelectItem>
-                        <SelectItem value="austrian">Austrian</SelectItem>
-                        <SelectItem value="bangladeshi">Bangladeshi</SelectItem>
-                        <SelectItem value="belgian">Belgian</SelectItem>
-                        <SelectItem value="brazilian">Brazilian</SelectItem>
-                        <SelectItem value="british">British</SelectItem>
-                        <SelectItem value="canadian">Canadian</SelectItem>
-                        <SelectItem value="chilean">Chilean</SelectItem>
-                        <SelectItem value="colombian">Colombian</SelectItem>
-                        <SelectItem value="costa-rican">Costa Rican</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              ))}
+            {isForeign && (
+              <Controller
+                name="specificNationality"
+                control={control}
+                defaultValue={defaultData?.specificNationality}
+                rules={{
+                  required: !defaultData?.specificNationality && isForeign,
+                }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    onValueChange={(value) => field.onChange(value)}
+                    className="ml-4"
+                    defaultValue={defaultData?.specificNationality}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select nationality" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="afghan">Afghan</SelectItem>
+                      <SelectItem value="argentine">Argentine</SelectItem>
+                      <SelectItem value="australian">Australian</SelectItem>
+                      <SelectItem value="austrian">Austrian</SelectItem>
+                      <SelectItem value="bangladeshi">Bangladeshi</SelectItem>
+                      <SelectItem value="belgian">Belgian</SelectItem>
+                      <SelectItem value="brazilian">Brazilian</SelectItem>
+                      <SelectItem value="british">British</SelectItem>
+                      <SelectItem value="canadian">Canadian</SelectItem>
+                      <SelectItem value="chilean">Chilean</SelectItem>
+                      <SelectItem value="colombian">Colombian</SelectItem>
+                      <SelectItem value="costa-rican">Costa Rican</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            )}
           </div>
         </div>
         <div className="space-y-2 min-w-[300px] max-md:col-span-2">
