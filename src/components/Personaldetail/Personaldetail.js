@@ -143,7 +143,7 @@ const Personaldetail = () => {
             id="full-name"
             placeholder="John Doe"
             type="text"
-            value={defaultData.fullLegalName}
+            value={defaultData?.fullLegalName}
             {...register("fullLegalName", {
               required: "Full Legal Name is required",
             })}
@@ -158,7 +158,7 @@ const Personaldetail = () => {
             name="gender"
             control={control}
             rules={{ required: "Gender is required" }}
-            defaultValue={defaultData.gender}
+            defaultValue={defaultData?.gender}
             render={({ field }) => (
               <Select
                 {...field}
@@ -183,7 +183,7 @@ const Personaldetail = () => {
           <Label htmlFor="dob">Date of Birth</Label>
           <Controller
             name="dob"
-            defaultValue={defaultData.dob}
+            defaultValue={defaultData?.dob}
             control={control}
             render={({ field }) => (
               <Datepicker value={field.value} onChange={field.onChange} />
@@ -199,7 +199,7 @@ const Personaldetail = () => {
             <Controller
               name="nationality"
               control={control}
-              defaultValue={defaultData.nationality}
+              defaultValue={defaultData?.nationality}
               rules={{ required: "Nationality is required" }}
               render={({ field }) => (
                 <RadioGroup
