@@ -18,6 +18,13 @@ import { Calendar } from "@com/ui/calendar";
 import { RadioGroupItem, RadioGroup } from "@com/ui/radio-group";
 import { Checkbox } from "@com/ui/checkbox";
 import Datepicker from "./Datepicker";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "react-query";
 
 const Personaldetail = () => {
   const [showAdharFields, setShowAdharFields] = useState(false);
@@ -28,6 +35,22 @@ const Personaldetail = () => {
   const [sameAsLoginEmail, setSameAsLoginEmail] = useState(true);
   const [sameAsPermanentAddress, setSameAsPermanentAddress] = useState(false);
   const [marriedUnderAct, setMarriedUnderAct] = useState(true);
+  const [defaultData, setDefaultData] = useState([]);
+  const queryClient = useQueryClient();
+
+  const { data: personalData } = useQuery(
+    "personalData",
+    () => axios.get("/api/profiles/1"),
+    {
+      onSuccess: (data) => {
+        setDefaultData(data.data);
+        console.log(data.data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
 
   const {
     register,
@@ -110,6 +133,7 @@ const Personaldetail = () => {
             id="full-name"
             placeholder="John Doe"
             type="text"
+            value={defaultData.fullLegalName}
             {...register("fullLegalName", {
               required: "Full Legal Name is required",
             })}
@@ -124,6 +148,7 @@ const Personaldetail = () => {
             name="gender"
             control={control}
             rules={{ required: "Gender is required" }}
+            defaultValue={defaultData.gender}
             render={({ field }) => (
               <Select
                 {...field}
@@ -148,6 +173,7 @@ const Personaldetail = () => {
           <Label htmlFor="dob">Date of Birth</Label>
           <Controller
             name="dob"
+            defaultValue={defaultData.dob}
             control={control}
             render={({ field }) => (
               <Datepicker value={field.value} onChange={field.onChange} />
@@ -163,6 +189,7 @@ const Personaldetail = () => {
             <Controller
               name="nationality"
               control={control}
+              defaultValue={defaultData.nationality}
               rules={{ required: "Nationality is required" }}
               render={({ field }) => (
                 <RadioGroup
@@ -197,6 +224,7 @@ const Personaldetail = () => {
               <Controller
                 name="specificNationality"
                 control={control}
+                defaultValue={defaultData.specificNationality}
                 rules={{ required: isForeign }}
                 render={({ field }) => (
                   <Select
@@ -233,6 +261,7 @@ const Personaldetail = () => {
           <Controller
             name="countryOfResidence"
             control={control}
+            defaultValue={defaultData.countryOfResidence}
             rules={{ required: "Country of Residence is required" }}
             render={({ field }) => (
               <Select
@@ -261,6 +290,7 @@ const Personaldetail = () => {
           <Controller
             name="religion"
             control={control}
+            defaultValue={defaultData.religion}
             rules={{ required: "Religion is required" }}
             render={({ field }) => (
               <Select
@@ -292,6 +322,7 @@ const Personaldetail = () => {
           <Controller
             name="maritalStatus"
             control={control}
+            defaultValue={defaultData.maritalStatus}
             rules={{ required: "Marital Status is required" }}
             render={({ field }) => (
               <Select
@@ -333,6 +364,7 @@ const Personaldetail = () => {
             <Checkbox
               className="mt-2"
               id="married-under-act"
+              defaultChecked={defaultData.marriedUnderSpecialAct}
               {...register("marriedUnderSpecialAct")}
             />
             <Label
@@ -351,6 +383,7 @@ const Personaldetail = () => {
             <Controller
               name="cuscorrespondenceEmail"
               control={control}
+              defaultValue={defaultData.correspondenceEmail}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
@@ -389,6 +422,7 @@ const Personaldetail = () => {
                 <Label htmlFor="custom-email">correspondence Email</Label>
                 <Input
                   id="custom-email"
+                  value={defaultData.customEmail}
                   placeholder="example@email.com"
                   type="email"
                   {...register("correspondenceEmail", {
@@ -414,6 +448,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-house-flat-no"
               placeholder="House / Flat No."
+              value={defaultData.permanentHouseFlatNo}
               type="text"
               className="min-w-[300px]"
               {...register("permanentHouseFlatNo", {
@@ -431,6 +466,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-address-line-1"
               placeholder="Address Line 1"
+              value={defaultData.permanentAddressLine1}
               type="text"
               {...register("permanentAddressLine1", {
                 required: "Address Line 1 is required",
@@ -447,6 +483,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-address-line-2"
               placeholder="Address Line 2"
+              value={defaultData.permanentAddressLine2}
               type="text"
               {...register("permanentAddressLine2", {
                 required: "Address Line 2 is required",
@@ -463,6 +500,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-pincode"
               placeholder="Pincode"
+              value={defaultData.permanentPincode}
               type="text"
               {...register("permanentPincode", {
                 required: "Pincode is required",
@@ -479,6 +517,7 @@ const Personaldetail = () => {
             <Label htmlFor="permanent-city">City</Label>
             <Input
               id="permanent-city"
+              value={defaultData.permanentCity}
               placeholder="City"
               type="text"
               {...register("permanentCity", { required: "City is required" })}
@@ -494,6 +533,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-state"
               placeholder="State"
+              value={defaultData.permanentState}
               type="text"
               {...register("permanentState", {
                 required: "State is required",
@@ -510,6 +550,7 @@ const Personaldetail = () => {
             <Input
               id="permanent-country"
               placeholder="Country"
+              value={defaultData.permanentCountry}
               type="text"
               {...register("permanentCountry", {
                 required: "Country is required",
@@ -535,6 +576,7 @@ const Personaldetail = () => {
 
           <Checkbox
             id="same-as-permanent"
+            defaultChecked={defaultData.sameAsPermanentAddress}
             checked={sameAsPermanentAddress}
             onCheckedChange={() =>
               setSameAsPermanentAddress(!sameAsPermanentAddress)
@@ -549,6 +591,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-house-flat-no"
                   placeholder="House / Flat No."
+                  value={defaultData.currentHouseFlatNo}
                   type="text"
                   {...register("currentHouseFlatNo", {
                     required: "House / Flat No. is required",
@@ -565,6 +608,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-address-line-1"
                   placeholder="Address Line 1"
+                  value={defaultData.currentAddressLine1}
                   type="text"
                   {...register("currentAddressLine1", {
                     required: "Address Line 1 is required",
@@ -581,6 +625,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-address-line-2"
                   placeholder="Address Line 2"
+                  value={defaultData.currentAddressLine2}
                   type="text"
                   {...register("currentAddressLine2", {
                     required: "Address Line 2 is required",
@@ -597,6 +642,7 @@ const Personaldetail = () => {
                 <Input
                   id="current-pincode"
                   placeholder="Pincode"
+                  value={defaultData.currentPincode}
                   type="text"
                   {...register("currentPincode", {
                     required: "Pincode is required",
@@ -615,6 +661,7 @@ const Personaldetail = () => {
                   id="current-city"
                   placeholder="City"
                   type="text"
+                  value={defaultData.currentCity}
                   {...register("currentCity", {
                     required: "City is required",
                   })}
@@ -631,6 +678,7 @@ const Personaldetail = () => {
                   id="current-state"
                   placeholder="State"
                   type="text"
+                  value={defaultData.currentState}
                   {...register("currentState", {
                     required: "State is required",
                   })}
@@ -646,7 +694,9 @@ const Personaldetail = () => {
                 <Input
                   id="current-country"
                   placeholder="Country"
+                  defaultValue={defaultData.currentCountry}
                   type="text"
+                  value={defaultData.currentCountry}
                   {...register("currentCountry", {
                     required: "Country is required",
                   })}
@@ -670,11 +720,13 @@ const Personaldetail = () => {
             <Controller
               name="adhar"
               control={control}
+              defaultChecked={defaultData.adhar}
               rules={{ required: "This field is required" }}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
                   value={field.value}
+                  defaultValue={defaultData.adhar}
                   onValueChange={(value) => {
                     field.onChange(value);
                     setShowAdharFields(value === "yes");
@@ -686,6 +738,7 @@ const Personaldetail = () => {
                       htmlFor="adhar-yes"
                     >
                       <RadioGroupItem
+                        defaultChecked={defaultData.adhar}
                         defaultValue="no"
                         id="adhar-yes"
                         value="yes"
@@ -718,7 +771,9 @@ const Personaldetail = () => {
                 <Label htmlFor="adhar-number">Adhar Number</Label>
                 <Input
                   id="adhar-number"
+                  defaultValue={defaultData.adharNumber}
                   placeholder="Adhar Number"
+                  value={defaultData.adharNumber}
                   type="text"
                   {...register("adharNumber", {
                     required: "Adhar Number is required",
@@ -738,6 +793,8 @@ const Personaldetail = () => {
                   id="adhar-name"
                   placeholder="Full Name - Name as per Adhar"
                   type="text"
+                  defaultValue={defaultData.adharName}
+                  value={defaultData.adharName}
                   {...register("adharName", {
                     required: "Full Name is required",
                   })}
@@ -775,6 +832,7 @@ const Personaldetail = () => {
             <Controller
               name="pan"
               control={control}
+              defaultChecked={defaultData.pan}
               rules={{ required: "This field is required" }}
               render={({ field }) => (
                 <RadioGroup
@@ -814,6 +872,7 @@ const Personaldetail = () => {
                 <Label htmlFor="pan-number">PAN Number</Label>
                 <Input
                   id="pan-number"
+                  defaultValue={defaultData.panNumber}
                   placeholder="PAN Number"
                   type="text"
                   {...register("panNumber", {
@@ -830,6 +889,7 @@ const Personaldetail = () => {
                 <Label htmlFor="pan-name">Full Name - Name as per PAN</Label>
                 <Input
                   id="pan-name"
+                  defaultValue={defaultData.panName}
                   placeholder="Full Name - Name as per PAN"
                   type="text"
                   {...register("panName", {
@@ -867,6 +927,7 @@ const Personaldetail = () => {
             <Controller
               name="drivingLicense"
               control={control}
+              defaultChecked={defaultData.drivingLicense}
               rules={{ required: "This field is required" }}
               render={({ field }) => (
                 <RadioGroup
@@ -912,6 +973,7 @@ const Personaldetail = () => {
                 <Input
                   id="driving-license-number"
                   placeholder="DL Number"
+                  defaultValue={defaultData.drivingLicenseNumber}
                   type="text"
                   {...register("drivingLicenseNumber", {
                     required: "DL Number is required",
@@ -928,6 +990,7 @@ const Personaldetail = () => {
                 <Input
                   id="driving-license-name"
                   placeholder="Name as per DL"
+                  defaultValue={defaultData.drivingLicenseName}
                   type="text"
                   {...register("drivingLicenseName", {
                     required: "Name as per DL is required",
@@ -944,6 +1007,7 @@ const Personaldetail = () => {
                 <Controller
                   name="drivingLicenseExpiry"
                   control={control}
+                  defaultValue={defaultData.drivingLicenseExpiry}
                   render={({ field }) => (
                     <Datepicker value={field.value} onChange={field.onChange} />
                   )}
@@ -959,6 +1023,7 @@ const Personaldetail = () => {
                 <Input
                   id="driving-license-place"
                   placeholder="Place of issue"
+                  defaultValue={defaultData.drivingLicensePlace}
                   type="text"
                   {...register("drivingLicensePlace", {
                     required: "Place of issue is required",
@@ -996,6 +1061,7 @@ const Personaldetail = () => {
             <Label htmlFor="passport">Do you have a Passport?</Label>
             <Controller
               name="passport"
+              defaultChecked={defaultData.passport}
               control={control}
               rules={{ required: "This field is required" }}
               render={({ field }) => (
@@ -1041,6 +1107,7 @@ const Personaldetail = () => {
                   id="pp-number"
                   placeholder="PP Number"
                   type="text"
+                  defaultValue={defaultData.passportNumber}
                   {...register("passportNumber", {
                     required: "Passport Number is required",
                   })}
@@ -1057,6 +1124,7 @@ const Personaldetail = () => {
                   id="pp-name"
                   placeholder="Name as per PP"
                   type="text"
+                  defaultValue={defaultData.passportName}
                   {...register("passportName", {
                     required: "Name as per Passport is required",
                   })}
@@ -1072,6 +1140,7 @@ const Personaldetail = () => {
                 <Controller
                   name="passportExpiry"
                   control={control}
+                  defaultValue={defaultData.passportExpiry}
                   render={({ field }) => (
                     <Datepicker value={field.value} onChange={field.onChange} />
                   )}
@@ -1087,6 +1156,7 @@ const Personaldetail = () => {
                 <Input
                   id="pp-place"
                   placeholder="Place of issue"
+                  defaultValue={defaultData.passportPlace}
                   type="text"
                   {...register("passportPlace", {
                     required: "Place of issue is required",
