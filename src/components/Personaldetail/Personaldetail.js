@@ -67,7 +67,7 @@ const Personaldetail = () => {
 
   useEffect(() => {
     if (sameAsLoginEmail) {
-      setValue("cuscorrespondenceEmail", user.data.user.profile.email);
+      setValue("cuscorrespondenceEmail", user?.data.user.profile.email);
     }
   }, [sameAsLoginEmail, user]);
   const {
@@ -245,7 +245,6 @@ const Personaldetail = () => {
                 <RadioGroup
                   {...field}
                   className="flex"
-                  defaultValue={defaultData?.nationality}
                   value={defaultData?.nationality}
                   onValueChange={(value) => {
                     field.onChange(value);
@@ -278,18 +277,18 @@ const Personaldetail = () => {
             )}
             {isForeign && (
               <Controller
-                name="specificNationality"
+                name="nationality"
                 control={control}
-                defaultValue={defaultData?.specificNationality}
+                defaultValue={defaultData?.nationality}
                 rules={{
-                  required: !defaultData?.specificNationality && isForeign,
+                  required: !defaultData?.nationality && isForeign,
                 }}
                 render={({ field }) => (
                   <Select
                     {...field}
                     onValueChange={(value) => field.onChange(value)}
                     className="ml-4"
-                    defaultValue={defaultData?.specificNationality}
+                    value={defaultData?.nationality}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select nationality" />
