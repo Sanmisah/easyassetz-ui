@@ -88,7 +88,14 @@ const Personaldetail = () => {
       passportExpiry: null,
     },
   });
-
+  useEffect(() => {
+    // Set default values programmatically if they exist
+    if (defaultData) {
+      for (const [key, value] of Object.entries(defaultData)) {
+        setValue(key, value);
+      }
+    }
+  }, [defaultData, setValue]);
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
       // Merge data with defaultData to ensure default values are sent if no new value is provided
@@ -170,7 +177,8 @@ const Personaldetail = () => {
             defaultValue={defaultData?.fullLegalName}
             type="text"
             {...register("fullLegalName", {
-              required: "Full Legal Name is required",
+              required:
+                !defaultData?.fullLegalName && "Full Legal Name is required",
             })}
           />
           {errors.fullLegalName && !defaultData?.fullLegalName && (
@@ -182,7 +190,7 @@ const Personaldetail = () => {
           <Controller
             name="gender"
             control={control}
-            rules={{ required: "Gender is required" }}
+            rules={{ required: !defaultData?.gender && "Gender is required" }}
             render={({ field }) => (
               <Select
                 {...field}
@@ -229,7 +237,10 @@ const Personaldetail = () => {
             <Controller
               name="nationality"
               control={control}
-              rules={{ required: "Nationality is required" }}
+              rules={{
+                required:
+                  !defaultData?.nationality && "Nationality is required",
+              }}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
@@ -245,7 +256,11 @@ const Personaldetail = () => {
                     className="flex items-center gap-2"
                     htmlFor="nationality-indian"
                   >
-                    <RadioGroupItem id="nationality-indian" value="indian" />
+                    <RadioGroupItem
+                      checked
+                      id="nationality-indian"
+                      value="indian"
+                    />
                     Indian
                   </Label>
                   <Label
@@ -266,7 +281,9 @@ const Personaldetail = () => {
                 name="specificNationality"
                 control={control}
                 defaultValue={defaultData?.specificNationality}
-                rules={{ required: isForeign }}
+                rules={{
+                  required: !defaultData?.specificNationality && isForeign,
+                }}
                 render={({ field }) => (
                   <Select
                     {...field}
@@ -303,7 +320,11 @@ const Personaldetail = () => {
           <Controller
             name="countryOfResidence"
             control={control}
-            rules={{ required: "Country of Residence is required" }}
+            rules={{
+              required:
+                !defaultData?.countryOfResidence &&
+                "Country of Residence is required",
+            }}
             render={({ field }) => (
               <Select
                 {...field}
@@ -332,7 +353,9 @@ const Personaldetail = () => {
           <Controller
             name="religion"
             control={control}
-            rules={{ required: "Religion is required" }}
+            rules={{
+              required: !defaultData?.religion && "Religion is required",
+            }}
             render={({ field }) => (
               <Select
                 {...field}
@@ -364,7 +387,10 @@ const Personaldetail = () => {
           <Controller
             name="maritalStatus"
             control={control}
-            rules={{ required: "Marital Status is required" }}
+            rules={{
+              required:
+                !defaultData?.maritalStatus && "Marital Status is required",
+            }}
             render={({ field }) => (
               <Select
                 {...field}
@@ -389,7 +415,7 @@ const Personaldetail = () => {
                   <SelectValue placeholder="Select marital status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="single">Single</SelectItem>
+                  <SelectItem value="single">Bachelor</SelectItem>
                   <SelectItem value="married">Married</SelectItem>
                   <SelectItem value="divorced">Divorced</SelectItem>
                   <SelectItem value="widowed">Widowed</SelectItem>
@@ -407,7 +433,7 @@ const Personaldetail = () => {
               className="mt-2"
               id="married-under-act"
               defaultChecked={defaultData?.marriedUnderSpecialAct}
-              {...register("marriedUnderSpecialAct")}
+              {...register("marriedUnderAct")}
             />
             <Label
               className="flex items-center gap-2 mt-2"
@@ -477,7 +503,10 @@ const Personaldetail = () => {
                   placeholder="example@email.com"
                   type="email"
                   {...register("correspondenceEmail", {
-                    required: !sameAsLoginEmail && "Custom Email is required",
+                    required:
+                      !defaultData.correspondenceEmail &&
+                      !sameAsLoginEmail &&
+                      "Correspondence Email is required",
                   })}
                 />
                 {errors.customEmail && (
@@ -503,7 +532,9 @@ const Personaldetail = () => {
               type="text"
               className="min-w-[300px]"
               {...register("permanentHouseFlatNo", {
-                required: "House / Flat No. is required",
+                required:
+                  !defaultData?.permanentHouseFlatNo &&
+                  "House / Flat No. is required",
               })}
             />
             {errors.permanentHouseFlatNo && (
@@ -520,7 +551,9 @@ const Personaldetail = () => {
               defaultValue={defaultData?.permanentAddressLine1}
               type="text"
               {...register("permanentAddressLine1", {
-                required: "Address Line 1 is required",
+                required:
+                  !defaultData?.permanentAddressLine1 &&
+                  "Address Line 1 is required",
               })}
             />
             {errors.permanentAddressLine1 && (
@@ -537,7 +570,9 @@ const Personaldetail = () => {
               defaultValue={defaultData?.permanentAddressLine2}
               type="text"
               {...register("permanentAddressLine2", {
-                required: "Address Line 2 is required",
+                required:
+                  !defaultData?.permanentAddressLine2 &&
+                  "Address Line 2 is required",
               })}
             />
             {errors.permanentAddressLine2 && (
@@ -554,7 +589,8 @@ const Personaldetail = () => {
               defaultValue={defaultData?.permanentPincode}
               type="text"
               {...register("permanentPincode", {
-                required: "Pincode is required",
+                required:
+                  !defaultData?.permanentPincode && "Pincode is required",
                 onChange: (e) => handlePincodeChange(e.target.value),
               })}
             />
@@ -571,7 +607,9 @@ const Personaldetail = () => {
               defaultValue={defaultData?.permanentCity}
               placeholder="City"
               type="text"
-              {...register("permanentCity", { required: "City is required" })}
+              {...register("permanentCity", {
+                required: !defaultData?.permanentCity && "City is required",
+              })}
             />
             {errors.permanentCity && (
               <span className="text-red-500">
@@ -587,7 +625,7 @@ const Personaldetail = () => {
               defaultValue={defaultData?.permanentState}
               type="text"
               {...register("permanentState", {
-                required: "State is required",
+                required: !defaultData?.permanentState && "State is required",
               })}
             />
             {errors.permanentState && (
@@ -604,7 +642,8 @@ const Personaldetail = () => {
               defaultValue={defaultData?.permanentCountry}
               type="text"
               {...register("permanentCountry", {
-                required: "Country is required",
+                required:
+                  !defaultData?.permanentCountry && "Country is required",
               })}
             />
             {errors.permanentCountry && (
@@ -645,7 +684,9 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.currentHouseFlatNo}
                   type="text"
                   {...register("currentHouseFlatNo", {
-                    required: "House / Flat No. is required",
+                    required:
+                      !defaultData?.currentHouseFlatNo &&
+                      "House / Flat No. is required",
                   })}
                 />
                 {errors.currentHouseFlatNo && (
@@ -662,7 +703,9 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.currentAddressLine1}
                   type="text"
                   {...register("currentAddressLine1", {
-                    required: "Address Line 1 is required",
+                    required:
+                      !defaultData?.currentAddressLine1 &&
+                      "Address Line 1 is required",
                   })}
                 />
                 {errors.currentAddressLine1 && (
@@ -679,7 +722,9 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.currentAddressLine2}
                   type="text"
                   {...register("currentAddressLine2", {
-                    required: "Address Line 2 is required",
+                    required:
+                      !defaultData?.currentAddressLine2 &&
+                      "Address Line 2 is required",
                   })}
                 />
                 {errors.currentAddressLine2 && (
@@ -696,7 +741,8 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.currentPincode}
                   type="text"
                   {...register("currentPincode", {
-                    required: "Pincode is required",
+                    required:
+                      !defaultData?.currentPincode && "Pincode is required",
                     onChange: (e) => handlePincodeChange(e.target.value),
                   })}
                 />
@@ -714,7 +760,7 @@ const Personaldetail = () => {
                   type="text"
                   defaultValue={defaultData?.currentCity}
                   {...register("currentCity", {
-                    required: "City is required",
+                    required: !defaultData?.currentCity && "City is required",
                   })}
                 />
                 {errors.currentCity && (
@@ -731,7 +777,7 @@ const Personaldetail = () => {
                   type="text"
                   defaultValue={defaultData?.currentState}
                   {...register("currentState", {
-                    required: "State is required",
+                    required: !defaultData?.currentState && "State is required",
                   })}
                 />
                 {errors.currentState && (
@@ -748,7 +794,8 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.currentCountry}
                   type="text"
                   {...register("currentCountry", {
-                    required: "Country is required",
+                    required:
+                      !defaultData?.currentCountry && "Country is required",
                   })}
                 />
                 {errors.currentCountry && (
@@ -771,7 +818,9 @@ const Personaldetail = () => {
               name="adhar"
               control={control}
               defaultChecked={defaultData?.adhar}
-              rules={{ required: "This field is required" }}
+              rules={{
+                required: !defaultData?.adhar && "This field is required",
+              }}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
@@ -825,7 +874,8 @@ const Personaldetail = () => {
                   placeholder="Adhar Number"
                   type="text"
                   {...register("adharNumber", {
-                    required: "Adhar Number is required",
+                    required:
+                      !defaultData?.adharNumber && "Adhar Number is required",
                     pattern: {
                       value: /^[2-9]{1}[0-9]{11}$/,
                       message: "Invalid Aadhar Number",
@@ -848,7 +898,8 @@ const Personaldetail = () => {
                   type="text"
                   defaultValue={defaultData?.adharName}
                   {...register("adharName", {
-                    required: "Full Name is required",
+                    required:
+                      !defaultData?.adharName && "Full Name is required",
                   })}
                 />
                 {errors.adharName && (
@@ -870,7 +921,9 @@ const Personaldetail = () => {
               name="pan"
               control={control}
               defaultChecked={defaultData?.pan}
-              rules={{ required: "This field is required" }}
+              rules={{
+                required: !defaultData?.pan && "This field is required",
+              }}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
@@ -913,7 +966,8 @@ const Personaldetail = () => {
                   placeholder="PAN Number"
                   type="text"
                   {...register("panNumber", {
-                    required: "PAN Number is required",
+                    required:
+                      !defaultData?.panNumber && "PAN Number is required",
                     pattern: {
                       value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
                       message: "Invalid PAN Number",
@@ -934,7 +988,7 @@ const Personaldetail = () => {
                   placeholder="Full Name - Name as per PAN"
                   type="text"
                   {...register("panName", {
-                    required: "Full Name is required",
+                    required: !defaultData?.panName && "Full Name is required",
                   })}
                 />
                 {errors.panName && (
@@ -956,7 +1010,10 @@ const Personaldetail = () => {
               name="drivingLicense"
               control={control}
               defaultChecked={defaultData?.drivingLicense}
-              rules={{ required: "This field is required" }}
+              rules={{
+                required:
+                  !defaultData?.drivingLicense && "This field is required",
+              }}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
@@ -1004,7 +1061,9 @@ const Personaldetail = () => {
                   placeholder="DL Number"
                   type="text"
                   {...register("drivingLicenseNumber", {
-                    required: "DL Number is required",
+                    required:
+                      !defaultData?.drivingLicenseNumber &&
+                      "DL Number is required",
                     pattern: {
                       value: /^[A-Z0-9-]{15}$/,
                       message: "Invalid Driving License Number",
@@ -1025,7 +1084,9 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.drivingLicenseName}
                   type="text"
                   {...register("drivingLicenseName", {
-                    required: "Name as per DL is required",
+                    required:
+                      !defaultData?.drivingLicenseName &&
+                      "Name as per DL is required",
                   })}
                 />
                 {errors.drivingLicenseName && (
@@ -1058,7 +1119,9 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.drivingLicensePlace}
                   type="text"
                   {...register("drivingLicensePlace", {
-                    required: "Place of issue is required",
+                    required:
+                      !defaultData?.drivingLicensePlace &&
+                      "Place of issue is required",
                   })}
                 />
                 {errors.drivingLicensePlace && (
@@ -1080,7 +1143,9 @@ const Personaldetail = () => {
               name="passport"
               defaultChecked={defaultData?.passport}
               control={control}
-              rules={{ required: "This field is required" }}
+              rules={{
+                required: !defaultData?.passport && "This field is required",
+              }}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
@@ -1126,7 +1191,9 @@ const Personaldetail = () => {
                   type="text"
                   defaultValue={defaultData?.passportNumber}
                   {...register("passportNumber", {
-                    required: "Passport Number is required",
+                    required:
+                      !defaultData?.passportNumber &&
+                      "Passport Number is required",
                     pattern: {
                       value: /^[A-Z][0-9]{7}$/,
                       message: "Invalid Passport Number",
@@ -1147,7 +1214,9 @@ const Personaldetail = () => {
                   type="text"
                   defaultValue={defaultData?.passportName}
                   {...register("passportName", {
-                    required: "Name as per Passport is required",
+                    required:
+                      !defaultData?.passportName &&
+                      "Name as per Passport is required",
                   })}
                 />
                 {errors.passportName && (
@@ -1180,7 +1249,9 @@ const Personaldetail = () => {
                   defaultValue={defaultData?.passportPlace}
                   type="text"
                   {...register("passportPlace", {
-                    required: "Place of issue is required",
+                    required:
+                      !defaultData?.passportPlace &&
+                      "Place of issue is required",
                   })}
                 />
                 {errors.passportPlace && (
