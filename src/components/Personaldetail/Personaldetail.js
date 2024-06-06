@@ -85,7 +85,12 @@ const Personaldetail = () => {
     mutationFn: async (data) => {
       const response = await axios.put(
         `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
-        { ...data, user_id: user.data.user.id }
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+          data,
+        }
       );
       return response.data;
     },
