@@ -206,7 +206,11 @@ const Personaldetail = () => {
             defaultValue={defaultData?.dob}
             control={control}
             render={({ field }) => (
-              <Datepicker value={field.value} onChange={field.onChange} />
+              <Datepicker
+                defaultValue={defaultData?.dob}
+                value={field.value}
+                onChange={field.onChange}
+              />
             )}
           />
           {errors.dob && (

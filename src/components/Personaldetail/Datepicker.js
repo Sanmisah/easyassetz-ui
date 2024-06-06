@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import InputMask from "react-input-mask";
 
-const Datepicker = forwardRef(({ value, onChange }, ref) => {
+const Datepicker = forwardRef(({ value, onChange, defaultValue }, ref) => {
   const [stringDate, setStringDate] = useState(
     value ? format(value, "dd/MM/yyyy") : ""
   );
@@ -75,6 +75,8 @@ const Datepicker = forwardRef(({ value, onChange }, ref) => {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
+          defaultMonth={defaultValue}
+          initialFocus
           selected={date}
           onSelect={(selectedDate) => {
             if (!selectedDate) return;
@@ -83,8 +85,6 @@ const Datepicker = forwardRef(({ value, onChange }, ref) => {
             setErrorMessage("");
             onChange(selectedDate);
           }}
-          defaultMonth={date}
-          initialFocus
         />
       </PopoverContent>
     </Popover>
