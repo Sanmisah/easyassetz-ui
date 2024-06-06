@@ -143,7 +143,6 @@ const Personaldetail = () => {
             id="full-name"
             placeholder="John Doe"
             type="text"
-            value={defaultData?.fullLegalName}
             {...register("fullLegalName", {
               required: "Full Legal Name is required",
             })}
