@@ -94,28 +94,30 @@ const Auth = () => {
     return true;
   };
 
+  const loginMutation = useMutation(
+    async ({ email, password }) => {
+      const response = await axios.post("http://127.0.0.1:8000/api/login", {
+        email,
+        password,
+      });
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        console.log("Logging in user:", data);
+        navigate("/personal");
+      },
+      onError: (error) => {
+        alert("Login failed: " + error.message);
+      },
+    }
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogin) {
       if (validateLogin()) {
-        const Loginfun = async (email, password) => {
-          const response = await axios.post("http://127.0.0.1:8000/api/login", {
-            email: email,
-            password: password,
-          });
-          console.log("Logging in user:", response.data);
-          if (response.status === 200) {
-            navigate("/personal");
-          } else {
-            alert("Login failed: " + response.data.message);
-          }
-        };
-        const mutation = useMutation({
-          mutationKey: ["login"],
-          mutationFn: Loginfun,
-        });
-        mutation.mutate({ email: formData.email, password: formData.password });
-        console.log("Login data:", {
+        loginMutation.mutate({
           email: formData.email,
           password: formData.password,
         });
@@ -140,19 +142,39 @@ const Auth = () => {
       }
     }
   };
+  const registerMutation = useMutation(
+    async (data) => {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/register",
+        data
+      );
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        console.log("Registering user:", data);
+        navigate("/personal");
+      },
+      onError: (error) => {
+        console.error("Error registering user:", error);
+        alert("Failed to register user.");
+      },
+    }
+  );
 
   const handleRegisterConfirm = async () => {
     setAlertDialog(false);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/register", {
-        ...formData,
-      });
-      console.log("Registering user:", response.data);
-      if (response.status === 201) {
-        navigate("/personal");
-      } else {
-        alert("Registration failed: " + response.data.message);
-      }
+      registerMutation.mutate(...formData);
+      //   const response = await axios.post("http://127.0.0.1:8000/api/register", {
+      //     ...formData,
+      //   });
+      //   console.log("Registering user:", response.data);
+      //   if (response.status === 201) {
+      //     navigate("/personal");
+      //   } else {
+      //     alert("Registration failed: " + response.data.message);
+      //   }
     } catch (error) {
       console.error("Error registering user:", error);
       alert("Failed to register user.");
