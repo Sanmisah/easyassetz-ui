@@ -246,7 +246,7 @@ const Personaldetail = () => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    onValueChange={(value) => field.onChange(field.value)}
+                    onValueChange={(value) => field.onChange(value)}
                     defaultValue={defaultData?.gender}
                     value={defaultData?.gender || field.value}
                   >
@@ -267,6 +267,7 @@ const Personaldetail = () => {
                 <span className="text-red-500">{errors.gender.message}</span>
               )}
             </div>
+
             <div className="space-y-2 mb-2 min-w-[300px]">
               <Label htmlFor="dob">Date of Birth</Label>
               <Controller
