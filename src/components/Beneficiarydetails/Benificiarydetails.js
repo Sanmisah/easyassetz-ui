@@ -23,7 +23,7 @@ const Benificiarydetails = () => {
   const [benficiaryopen, setbenficiaryopen] = useState(false);
   const [charityopen, setcharityopen] = useState(false);
   const [benificiaryData, setBenificiaryData] = useState([]);
-  const [alertDialog, setAlertDialog] = useState([]);
+  const [alertDialog, setAlertDialog] = useState(false);
   const queryClient = useQueryClient();
 
   const getitem = localStorage.getItem("user");
@@ -68,14 +68,7 @@ const Benificiarydetails = () => {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="font-bold">Benificiary Details</h1>
-      {alertDialog && (
-        <ConfirmDelete
-          alertDialog={alertDialog}
-          setAlertDialog={setAlertDialog}
-          onConfirm={Deletebenificiary}
-          onCancel={() => setAlertDialog(false)}
-        />
-      )}
+
       <p>
         Add your family members or friends who may have a role to play in your
         Will.PS: Don't worry about filling in all the details if you are at the
@@ -100,9 +93,19 @@ const Benificiarydetails = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setAlertDialog(true)}
+                  ></DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              {alertDialog && (
+                <ConfirmDelete
+                  alertDialog={alertDialog}
+                  setAlertDialog={setAlertDialog}
+                  onConfirm={Deletebenificiary(data.id)}
+                  onCancel={() => setAlertDialog(false)}
+                />
+              )}
             </div>
           </div>
         ))}
