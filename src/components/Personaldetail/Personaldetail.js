@@ -248,7 +248,7 @@ const Personaldetail = () => {
                     {...field}
                     onValueChange={(value) => field.onChange(field.value)}
                     defaultValue={defaultData?.gender}
-                    value={defaultData?.gender}
+                    value={defaultData?.gender || field.value}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender" />
