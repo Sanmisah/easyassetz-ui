@@ -316,6 +316,7 @@ const Personaldetail = () => {
                         >
                           <RadioGroupItem
                             id={`nationality-${nationality}`}
+                            checked={defaultData?.nationality === nationality}
                             value={nationality}
                           />
                           {nationality.charAt(0).toUpperCase() +
