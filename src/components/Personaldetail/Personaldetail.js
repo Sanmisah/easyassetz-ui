@@ -290,7 +290,7 @@ const Personaldetail = () => {
             </div>
             <div className="space-y-2 max-md:col-span-2">
               <Label htmlFor="nationality">Nationality</Label>
-              <div className="flex flex-col  gap-4">
+              <div className="flex flex-col gap-4">
                 <Controller
                   name="nationality"
                   control={control}
@@ -302,7 +302,7 @@ const Personaldetail = () => {
                     <RadioGroup
                       {...field}
                       className="flex"
-                      value={defaultData?.nationality}
+                      value={field.value} // Use the field's value
                       onValueChange={(value) => {
                         field.onChange(value);
                         setIsForeign(value === "foreign");
@@ -316,8 +316,8 @@ const Personaldetail = () => {
                         >
                           <RadioGroupItem
                             id={`nationality-${nationality}`}
-                            checked={defaultData?.nationality === nationality}
                             value={nationality}
+                            checked={field.value === nationality} // Use the field's value to check the correct radio button
                           />
                           {nationality.charAt(0).toUpperCase() +
                             nationality.slice(1)}
@@ -368,6 +368,7 @@ const Personaldetail = () => {
                 )}
               </div>
             </div>
+
             <div className="space-y-2 min-w-[300px] max-md:col-span-2">
               <Label htmlFor="country">Country of Residence</Label>
               <Controller
@@ -385,7 +386,9 @@ const Personaldetail = () => {
                     value={defaultData?.countryOfResidence}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select country" />
+                      <SelectValue placeholder="Select country of residence">
+                        {field.value || "Select country of residence"}
+                      </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
                       {dropdownData.countries?.map((country) => (
