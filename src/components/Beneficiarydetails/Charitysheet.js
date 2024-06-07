@@ -37,7 +37,7 @@ const charitySchema = z.object({
   state: z.string().nonempty("State is required"),
   phone: z
     .string()
-    .regex(/^[0-9]{10}$/, "Phone number must be 10 digits")
+    .regex(/^[0-9]{12}$/, "Phone number must be 10 digits")
     .nonempty("Phone number is required"),
   email: z.string().email("Invalid email address"),
   contactName: z.string().nonempty("Contact person name is required"),

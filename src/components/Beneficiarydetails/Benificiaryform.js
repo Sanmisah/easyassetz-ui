@@ -168,8 +168,21 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    data.dob = data.dob.toISOString(); // Convert Date object to ISO string
 
+    data.dob = data.dob.toISOString(); // Convert Date object to ISO string
+    if (data.dob > new Date() === 18) {
+      delete data.guardianCity;
+      delete data.guardianState;
+      delete data.guardianDocument;
+      delete data.guardianDocumentData;
+      delete data.guardianReligion;
+      delete data.guardianNationality;
+      delete data.guardianHouseNo;
+      delete data.guardianAddress1;
+      delete data.guardianAddress2;
+      delete data.guardianPincode;
+      delete data.guardianCountry;
+    }
     try {
       benificiaryMutate.mutate(data);
     } catch (error) {
@@ -457,7 +470,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           Identification Document
                         </Label>
                         <Controller
-                          name="guardianDocument"
+                          name="document"
                           control={control}
                           render={({ field }) => (
                             <Select
