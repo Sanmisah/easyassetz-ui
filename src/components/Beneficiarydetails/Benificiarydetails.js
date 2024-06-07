@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/shadcncomponents/ui/button";
 import Sheetbenificiary from "./Sheetbenificiary";
 import Benificairyform from "./Benificiaryform";
+import { MoreHorizontal } from "lucide-react";
 import Charitysheet from "./Charitysheet";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@com/ui/dropdown-menu";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 const Benificiarydetails = () => {
-  const [Sheetopen, setsheetopen] = React.useState(false);
-  const [benficiaryopen, setbenficiaryopen] = React.useState(false);
-  const [charityopen, setcharityopen] = React.useState(false);
+  const [Sheetopen, setsheetopen] = useState(false);
+  const [benficiaryopen, setbenficiaryopen] = useState(false);
+  const [charityopen, setcharityopen] = useState(false);
+  const [benificiaryData, setBenificiaryData] = useState([]);
+  const queryClient = useQueryClient();
+
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
+
+  const getBenificiaryData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/beneficiaries`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    setBenificiaryData(response.data.data.Beneficiary);
+
+    return response.data.data.profile;
+  };
+  const query = useQuery({
+    queryKey: ["benificiaryData"],
+    queryFn: getBenificiaryData,
+    onSuccess: () => {},
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
+  });
   return (
     <div className="flex flex-col gap-4">
       <h1 className="font-bold">Benificiary Details</h1>
@@ -16,6 +57,29 @@ const Benificiarydetails = () => {
         start of your Will journey. You can always come back and add more people
         or edit and add any information.
       </p>
+      {benificiaryData.map((data) => (
+        <div className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md">
+          <div className="flex flex-col items-center ml-8">
+            <h1 className="font-bold">Yash</h1>
+            <p className="text-sm">Child</p>
+          </div>
+          <div className="flex items-center mr-8">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button aria-haspopup="true" size="icon" variant="ghost">
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      ))}
       <div>
         <div className="mt-4 ml-2 flex items-center">
           <Button
