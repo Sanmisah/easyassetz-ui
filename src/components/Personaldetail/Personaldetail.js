@@ -101,12 +101,17 @@ const Personaldetail = () => {
     getDropdownData();
   }, []);
 
-  const query = useQuery({
+  const { isLoading, isError } = useQuery({
     queryKey: ["personalData"],
     queryFn: getPersonalData,
     onSuccess: () => setLoading(false),
   });
 
+  useEffect(() => {
+    if (isLoading) {
+      alert("FisLoading");
+    }
+  }, [isLoading]);
   const {
     register,
     handleSubmit,
