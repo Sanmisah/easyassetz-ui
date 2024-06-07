@@ -93,9 +93,9 @@ const Benificiarydetails = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setAlertDialog(true)}
-                  ></DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setAlertDialog(true)}>
+                    Delete
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               {alertDialog && (
