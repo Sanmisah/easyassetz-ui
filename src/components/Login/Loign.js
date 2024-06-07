@@ -17,6 +17,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const phoneRegex = new RegExp(
   /^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
@@ -110,6 +111,7 @@ const Auth = () => {
     },
     onError: (error) => {
       alert("Login failed: " + error.message);
+      toast.error("Login failed: " + error.message);
     },
   });
 
@@ -155,7 +157,7 @@ const Auth = () => {
     },
     onError: (error) => {
       console.error("Error registering user:", error);
-      alert("Failed to register user.");
+      toast.error("Failed to register user.", error.message);
     },
   });
 
