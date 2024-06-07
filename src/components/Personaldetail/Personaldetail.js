@@ -251,7 +251,9 @@ const Personaldetail = () => {
                     value={defaultData?.gender || field.value}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
+                      <SelectValue placeholder="Select gender">
+                        {field.value || "Select gender"}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {dropdownData.genders?.map((gender) => (
