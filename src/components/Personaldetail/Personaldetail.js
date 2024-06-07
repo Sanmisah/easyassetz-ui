@@ -107,11 +107,6 @@ const Personaldetail = () => {
     onSuccess: () => setLoading(false),
   });
 
-  useEffect(() => {
-    if (isLoading) {
-      alert("FisLoading");
-    }
-  }, [isLoading]);
   const {
     register,
     handleSubmit,
@@ -211,7 +206,7 @@ const Personaldetail = () => {
 
   return (
     <Suspense fallback={<Skletonpersonal />}>
-      {loading ? (
+      {isLoading ? (
         <Skletonpersonal />
       ) : (
         <div className="space-y-4 min-w-[300px]">
