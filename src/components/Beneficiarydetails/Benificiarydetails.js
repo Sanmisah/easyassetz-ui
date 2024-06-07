@@ -15,6 +15,7 @@ import {
 } from "@com/ui/dropdown-menu";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const Benificiarydetails = () => {
   const [Sheetopen, setsheetopen] = useState(false);
