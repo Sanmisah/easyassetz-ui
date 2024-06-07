@@ -169,7 +169,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   const onSubmit = async (data) => {
     console.log(data);
 
-    data.dob = data.dob.toISOString(); // Convert Date object to ISO string
     if (data.dob > new Date() === 18) {
       delete data.guardianCity;
       delete data.guardianState;

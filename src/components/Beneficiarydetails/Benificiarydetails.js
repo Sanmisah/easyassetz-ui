@@ -16,12 +16,14 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import ConfirmDelete from "./ConfirmDelete";
 
 const Benificiarydetails = () => {
   const [Sheetopen, setsheetopen] = useState(false);
   const [benficiaryopen, setbenficiaryopen] = useState(false);
   const [charityopen, setcharityopen] = useState(false);
   const [benificiaryData, setBenificiaryData] = useState([]);
+  const [alertDialog, setAlertDialog] = useState([]);
   const queryClient = useQueryClient();
 
   const getitem = localStorage.getItem("user");
@@ -66,6 +68,14 @@ const Benificiarydetails = () => {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="font-bold">Benificiary Details</h1>
+      {alertDialog && (
+        <ConfirmDelete
+          alertDialog={alertDialog}
+          setAlertDialog={setAlertDialog}
+          onConfirm={Deletebenificiary}
+          onCancel={() => setAlertDialog(false)}
+        />
+      )}
       <p>
         Add your family members or friends who may have a role to play in your
         Will.PS: Don't worry about filling in all the details if you are at the
@@ -90,9 +100,7 @@ const Benificiarydetails = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => Deletebenificiary(data.id)}>
-                    Delete
-                  </DropdownMenuItem>
+                  <DropdownMenuItem>Delete</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
