@@ -155,7 +155,7 @@ const Personaldetail = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("personalData");
-      toast.sucess("Profile updated successfully!");
+      toast.success("Profile updated successfully");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -300,6 +300,7 @@ const Personaldetail = () => {
               <div className="flex flex-col gap-4">
                 <Controller
                   name="nationality"
+                  defaultValue={defaultData?.nationality}
                   control={control}
                   rules={{
                     required:
@@ -309,6 +310,7 @@ const Personaldetail = () => {
                     <RadioGroup
                       {...field}
                       className="flex"
+                      defaultValue={defaultData?.nationality}
                       value={field.value} // Use the field's value
                       onValueChange={(value) => {
                         field.onChange(value);
