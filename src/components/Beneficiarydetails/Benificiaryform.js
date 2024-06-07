@@ -38,6 +38,7 @@ const beneficiarySchema = z
   .object({
     fullName: z.string().nonempty("Full Legal Name is required"),
     relationship: z.string().nonempty("Relationship is required"),
+    specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
     dob: z.date().optional(),
     guardianName: z.string().optional(),
@@ -49,11 +50,22 @@ const beneficiarySchema = z
     guardianDocumentData: z.string().optional(),
     guardianReligion: z.string().optional(),
     guardianNationality: z.string().optional(),
-    guardianHouseNo: z.string().optional(),
     guardianAddress1: z.string().optional(),
     guardianAddress2: z.string().optional(),
     guardianPincode: z.string().optional(),
     guardianCountry: z.string().optional(),
+    mobile: z.string().optional(),
+    email: z.string().optional(),
+    documentData: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    houseNo: z.string().optional(),
+    address1: z.string().optional(),
+    address2: z.string().optional(),
+    pincode: z.string().optional(),
+    country: z.string().optional(),
+    religion: z.string().optional(),
+    nationality: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -85,7 +97,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     control,
     watch,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(beneficiarySchema),
@@ -93,6 +104,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
   const [selectedDocument, setSelectedDocument] = useState("");
   const [dateCountryCode, setDateCountryCode] = useState("+91");
+  const [relationship, setRelationship] = useState("");
 
   const watchDOB = watch("dob", null);
 
@@ -192,7 +204,10 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
-                                  onValueChange={field.onChange}
+                                  onValueChange={(value) => {
+                                    field.onChange(value);
+                                    setRelationship(value);
+                                  }}
                                 >
                                   <SelectTrigger
                                     id="relationship"
@@ -223,6 +238,23 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               </p>
                             )}
                           </div>
+                          {relationship === "other" && (
+                            <div className="space-y-2">
+                              <Label htmlFor="specific-relationship">
+                                Specific Relationship
+                              </Label>
+                              <Input
+                                id="specific-relationship"
+                                placeholder="Enter specific relationship"
+                                {...register("specificRelationship")}
+                              />
+                              {errors.specificRelationship && (
+                                <p className="text-red-500">
+                                  {errors.specificRelationship.message}
+                                </p>
+                              )}
+                            </div>
+                          )}
                           <div className="space-y-2">
                             <Label htmlFor="gender">Gender</Label>
                             <Controller
@@ -273,6 +305,42 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               </p>
                             )}
                           </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="mobile">Mobile Number</Label>
+                            <Controller
+                              name="mobile"
+                              control={control}
+                              render={({ field }) => (
+                                <PhoneInput
+                                  id="mobile"
+                                  type="tel"
+                                  placeholder="Enter mobile number"
+                                  defaultCountry="in"
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                />
+                              )}
+                            />
+                            {errors.mobile && (
+                              <p className="text-red-500">
+                                {errors.mobile.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              placeholder="Enter email"
+                              {...register("email")}
+                            />
+                            {errors.email && (
+                              <p className="text-red-500">
+                                {errors.email.message}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
                       {isMinor && (
@@ -308,9 +376,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                     id="guardian-mobile"
                                     type="tel"
                                     placeholder="Enter guardian's mobile number"
-                                    setDateCountryCode={setDateCountryCode}
-                                    defaultCountry="ua"
-                                    value={dateCountryCode}
+                                    defaultCountry="in"
+                                    value={field.value}
                                     onChange={field.onChange}
                                   />
                                 )}
@@ -361,171 +428,194 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                 </p>
                               )}
                             </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-document">
-                                Identification Document
-                              </Label>
-                              <Controller
-                                name="guardianDocument"
-                                control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    value={field.value}
-                                    onValueChange={(value) => {
-                                      setSelectedDocument(value);
-                                      field.onChange(value);
-                                    }}
-                                  >
-                                    <SelectTrigger
-                                      id="guardian-document"
-                                      aria-label="Identification Document"
-                                    >
-                                      <SelectValue placeholder="Select document" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="aadhaar">
-                                        Aadhaar
-                                      </SelectItem>
-                                      <SelectItem value="passport">
-                                        Passport
-                                      </SelectItem>
-                                      <SelectItem value="driving-license">
-                                        Driving License
-                                      </SelectItem>
-                                      <SelectItem value="voter-id">
-                                        Voter ID
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                )}
-                              />
-                              {errors.guardianDocument && (
-                                <p className="text-red-500">
-                                  {errors.guardianDocument.message}
-                                </p>
-                              )}
-                            </div>
-                            {selectedDocument && (
-                              <div className="space-y-2">
-                                <Label htmlFor="guardian-document-data">
-                                  {selectedDocument} Number
-                                </Label>
-                                <Input
-                                  id="guardian-document-data"
-                                  placeholder={`Enter guardian's ${selectedDocument} number`}
-                                  {...register("guardianDocumentData")}
-                                />
-                                {errors.guardianDocumentData && (
-                                  <p className="text-red-500">
-                                    {errors.guardianDocumentData.message}
-                                  </p>
-                                )}
-                              </div>
-                            )}
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-religion">
-                                Religion
-                              </Label>
-                              <Input
-                                id="guardian-religion"
-                                placeholder="Enter guardian's religion"
-                                {...register("guardianReligion")}
-                              />
-                              {errors.guardianReligion && (
-                                <p className="text-red-500">
-                                  {errors.guardianReligion.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-nationality">
-                                Nationality
-                              </Label>
-                              <Input
-                                id="guardian-nationality"
-                                placeholder="Enter guardian's nationality"
-                                {...register("guardianNationality")}
-                              />
-                              {errors.guardianNationality && (
-                                <p className="text-red-500">
-                                  {errors.guardianNationality.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-house-no">
-                                House/Flat No.
-                              </Label>
-                              <Input
-                                id="guardian-house-no"
-                                placeholder="Enter house/flat number"
-                                {...register("guardianHouseNo")}
-                              />
-                              {errors.guardianHouseNo && (
-                                <p className="text-red-500">
-                                  {errors.guardianHouseNo.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-address1">
-                                Address Line 1
-                              </Label>
-                              <Input
-                                id="guardian-address1"
-                                placeholder="Enter address line 1"
-                                {...register("guardianAddress1")}
-                              />
-                              {errors.guardianAddress1 && (
-                                <p className="text-red-500">
-                                  {errors.guardianAddress1.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-address2">
-                                Address Line 2
-                              </Label>
-                              <Input
-                                id="guardian-address2"
-                                placeholder="Enter address line 2"
-                                {...register("guardianAddress2")}
-                              />
-                              {errors.guardianAddress2 && (
-                                <p className="text-red-500">
-                                  {errors.guardianAddress2.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-pincode">Pincode</Label>
-                              <Input
-                                id="guardian-pincode"
-                                placeholder="Enter pincode"
-                                {...register("guardianPincode")}
-                              />
-                              {errors.guardianPincode && (
-                                <p className="text-red-500">
-                                  {errors.guardianPincode.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-country">Country</Label>
-                              <Input
-                                id="guardian-country"
-                                placeholder="Enter country"
-                                {...register("guardianCountry")}
-                              />
-                              {errors.guardianCountry && (
-                                <p className="text-red-500">
-                                  {errors.guardianCountry.message}
-                                </p>
-                              )}
-                            </div>
                           </div>
                         </div>
                       )}
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-document">
+                          Identification Document
+                        </Label>
+                        <Controller
+                          name="guardianDocument"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={(value) => {
+                                setSelectedDocument(value);
+                                field.onChange(value);
+                              }}
+                            >
+                              <SelectTrigger
+                                id="guardian-document"
+                                aria-label="Identification Document"
+                              >
+                                <SelectValue placeholder="Select document" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="aadhaar">Aadhaar</SelectItem>
+                                <SelectItem value="passport">
+                                  Passport
+                                </SelectItem>
+                                <SelectItem value="driving-license">
+                                  Driving License
+                                </SelectItem>
+                                <SelectItem value="voter-id">
+                                  Voter ID
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.guardianDocument && (
+                          <p className="text-red-500">
+                            {errors.guardianDocument.message}
+                          </p>
+                        )}
+                      </div>
+                      {selectedDocument && (
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-document-data">
+                            {selectedDocument} Number
+                          </Label>
+                          <Input
+                            id="guardian-document-data"
+                            placeholder={`Enter guardian's ${selectedDocument} number`}
+                            {...register("documentData")}
+                          />
+                          {errors.guardianDocumentData && (
+                            <p className="text-red-500">
+                              {errors.guardianDocumentData.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-religion">Religion</Label>
+                        <Input
+                          id="guardian-religion"
+                          placeholder="Enter guardian's religion"
+                          {...register("religion")}
+                        />
+                        {errors.guardianReligion && (
+                          <p className="text-red-500">
+                            {errors.guardianReligion.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-nationality">
+                          Nationality
+                        </Label>
+                        <Input
+                          id="guardian-nationality"
+                          placeholder="Enter guardian's nationality"
+                          {...register("nationality")}
+                        />
+                        {errors.guardianNationality && (
+                          <p className="text-red-500">
+                            {errors.guardianNationality.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-house-no">
+                          House/Flat No.
+                        </Label>
+                        <Input
+                          id="guardian-house-no"
+                          placeholder="Enter house/flat number"
+                          {...register("houseNo")}
+                        />
+                        {errors.guardianHouseNo && (
+                          <p className="text-red-500">
+                            {errors.guardianHouseNo.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-address1">
+                          Address Line 1
+                        </Label>
+                        <Input
+                          id="guardian-address1"
+                          placeholder="Enter address line 1"
+                          {...register("Address1")}
+                        />
+                        {errors.guardianAddress1 && (
+                          <p className="text-red-500">
+                            {errors.guardianAddress1.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-address2">
+                          Address Line 2
+                        </Label>
+                        <Input
+                          id="guardian-address2"
+                          placeholder="Enter address line 2"
+                          {...register("address2")}
+                        />
+                        {errors.guardianAddress2 && (
+                          <p className="text-red-500">
+                            {errors.guardianAddress2.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-pincode">Pincode</Label>
+                        <Input
+                          id="guardian-pincode"
+                          placeholder="Enter pincode"
+                          {...register("guardianPincode")}
+                        />
+                        {errors.guardianPincode && (
+                          <p className="text-red-500">
+                            {errors.guardianPincode.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-country">Country</Label>
+                        <Input
+                          id="guardian-country"
+                          placeholder="Enter country"
+                          {...register("country")}
+                        />
+                        {errors.guardianCountry && (
+                          <p className="text-red-500">
+                            {errors.guardianCountry.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-city">City</Label>
+                        <Input
+                          id="guardian-city"
+                          placeholder="Enter guardian's city"
+                          {...register("city")}
+                        />
+                        {errors.guardianCity && (
+                          <p className="text-red-500">
+                            {errors.guardianCity.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-state">State</Label>
+                        <Input
+                          id="guardian-state"
+                          placeholder="Enter guardian's state"
+                          {...register("state")}
+                        />
+                        {errors.guardianState && (
+                          <p className="text-red-500">
+                            {errors.guardianState.message}
+                          </p>
+                        )}
+                      </div>
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
                       <Button type="submit">Submit</Button>

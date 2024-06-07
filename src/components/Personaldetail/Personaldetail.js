@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import axios from "axios";
+import InputMask from "react-input-mask";
 import { Label } from "@com/ui/label";
 import { Input } from "@com/ui/input";
 
@@ -37,6 +38,7 @@ const Personaldetail = () => {
   const [marriedUnderAct, setMarriedUnderAct] = useState(true);
   const [defaultData, setDefaultData] = useState({});
   const [defaultDate, setdefaultDate] = useState(null);
+  const [showMoreInfo, setShowMoreInfo] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -65,16 +67,12 @@ const Personaldetail = () => {
     queryFn: getPersonalData, // Pass the function reference
   });
 
-  useEffect(() => {
-    if (sameAsLoginEmail) {
-      setValue("cuscorrespondenceEmail", user?.data.user.profile.email);
-    }
-  }, [sameAsLoginEmail, user]);
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+
     watch,
     setValue,
   } = useForm({
@@ -121,6 +119,17 @@ const Personaldetail = () => {
   });
 
   const onSubmit = async (data) => {
+    if (isForeign && data.specificNationality) {
+      data.nationality = data.specificNationality;
+    }
+    if (marriedUnderAct && data.maritalStatus === "bachelor") {
+      data.maritalStatus = "bachelor";
+      data.marriedUnderSpecialAct = "false";
+    }
+
+    delete data.specificNationality;
+
+    console.log("data:", data);
     Profilemutate.mutate(data);
   };
 
@@ -149,13 +158,15 @@ const Personaldetail = () => {
   const handlePincodeChange = async (pincode) => {
     try {
       const response = await axios.get(
-        `https://api.example.com/pincode/${pincode}`
+        `https://api.postalpincode.in/pincode/${pincode}`
       );
-      const { city, state, country } = response.data;
-
-      setValue("permanentCity", city);
-      setValue("permanentState", state);
-      setValue("permanentCountry", country);
+      console.log(response.data[0].PostOffice);
+      const { Block, State, Country } = response.data[0].PostOffice[0];
+      console.log("state:", State);
+      console.log("country:", Country);
+      setValue("permanentCity", Block);
+      setValue("permanentState", State);
+      setValue("permanentCountry", Country);
     } catch (error) {
       console.error("Failed to fetch pincode details:", error);
     }
@@ -255,14 +266,7 @@ const Personaldetail = () => {
                     className="flex items-center gap-2"
                     htmlFor="nationality-indian"
                   >
-                    <RadioGroupItem
-                      checked={
-                        defaultData?.nationality === "indian" ||
-                        defaultData?.nationality === undefined
-                      }
-                      id="nationality-indian"
-                      value="indian"
-                    />
+                    <RadioGroupItem id="nationality-indian" value="indian" />
                     Indian
                   </Label>
                   <Label
@@ -398,7 +402,7 @@ const Personaldetail = () => {
                 {...field}
                 value={defaultData?.maritalStatus}
                 onValueChange={(value) => {
-                  if (value === "single") {
+                  if (value === "bachelor") {
                     setMarriedUnderAct(false);
                   }
                   if (
@@ -417,7 +421,7 @@ const Personaldetail = () => {
                   <SelectValue placeholder="Select marital status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="single">Bachelor</SelectItem>
+                  <SelectItem value="bachelor">Bachelor</SelectItem>
                   <SelectItem value="married">Married</SelectItem>
                   <SelectItem value="divorced">Divorced</SelectItem>
                   <SelectItem value="widowed">Widowed</SelectItem>
@@ -429,97 +433,59 @@ const Personaldetail = () => {
             <span className="text-red-500">{errors.maritalStatus.message}</span>
           )}
         </div>
-        {marriedUnderAct && defaultData?.maritalStatus !== "single" && (
-          <div className="space-y-2 mt-6 gap-2 flex items-center">
-            <Checkbox
-              className="mt-2"
-              id="married-under-act"
-              defaultChecked={defaultData?.marriedUnderSpecialAct}
-              {...register("marriedUnderAct")}
-            />
-            <Label
-              className="flex items-center gap-2 mt-2"
-              htmlFor="married-under-act"
-            >
-              Married under Special Marriage Act
-            </Label>
-          </div>
-        )}
-
-        <div className="space-y-4 col-span-full mt-6 min-w-[300px]">
-          <h2 className="text-2xl font-bold">Contact Details</h2>
-          <div className="space-y-2">
-            <Label htmlFor="correspondence-email">Correspondence Email</Label>
-            <Controller
-              name="cuscorrespondenceEmail"
-              control={control}
-              defaultValue={defaultData?.correspondenceEmail}
-              render={({ field }) => (
-                <RadioGroup
-                  {...field}
-                  onValueChange={(value) => {
-                    const user = JSON.parse(getitem);
-                    console.log("user:", user);
-                    if (value === "same") {
-                      setValue(
-                        "cuscorrespondenceEmail",
-                        user.data.user.profile.email
-                      );
-                    }
-
-                    field.onChange(value);
-                    setSameAsLoginEmail(value === "same");
-                  }}
-                >
-                  <div className="flex items-center gap-4">
-                    <Label
-                      className="flex items-center gap-2"
-                      htmlFor="email-same"
-                    >
-                      Same as your login ID
-                    </Label>
-                    <Label
-                      className="flex items-center gap-2"
-                      htmlFor="email-same"
-                    >
-                      Yes
-                      <RadioGroupItem id="email-same" value="same" />
-                    </Label>
-                    <Label
-                      className="flex items-center gap-2"
-                      htmlFor="email-different"
-                    >
-                      No
-                      <RadioGroupItem id="email-different" value="different" />
-                    </Label>
-                  </div>
-                </RadioGroup>
-              )}
-            />
-            {!sameAsLoginEmail && (
-              <div className="space-y-2 mt-2">
-                <Label htmlFor="custom-email">correspondence Email</Label>
-                <Input
-                  id="custom-email"
-                  value={defaultData?.customEmail}
-                  placeholder="example@email.com"
-                  type="email"
-                  {...register("correspondenceEmail", {
-                    required:
-                      !defaultData.correspondenceEmail &&
-                      !sameAsLoginEmail &&
-                      "Correspondence Email is required",
-                  })}
-                />
-                {errors.customEmail && (
-                  <span className="text-red-500">
-                    {errors.customEmail.message}
-                  </span>
-                )}
+        {marriedUnderAct && defaultData?.maritalStatus !== "bachelor" && (
+          <div className="space-y-2 mt-6 gap-2 flex  flex-col ">
+            <div div className="flex justify-start item-center  gap-2">
+              <Checkbox
+                className="mt-2"
+                id="married-under-act"
+                value="true"
+                defaultChecked={defaultData?.marriedUnderSpecialAct}
+                {...register("marriedUnderSpecialAct")}
+              />
+              <Label
+                className="flex items-center gap-2 mt-2 mb-2"
+                htmlFor="married-under-act"
+              >
+                Married under Special Marriage Act
+              </Label>
+              <button
+                type="button"
+                className="text-blue-500 hover:text-blue-700 focus:text-blue-700 self-center  px-4 rounded-md"
+                onClick={() => setShowMoreInfo(!showMoreInfo)}
+              >
+                {showMoreInfo ? "Read Less" : "Read More"}
+              </button>
+            </div>
+            {showMoreInfo && (
+              <div className="mt-2 bg-gray-100 p-4 rounded-md">
+                <p>
+                  A brief overview of the Special Marriage Act, 1954 As one of
+                  independent India’s most significant secular initiatives, the
+                  Special Marriage Act, 1954 was brought into the Indian legal
+                  system in 1954. The Act was intended to be a piece of
+                  legislation that controls weddings that could not be
+                  solemnised due to religious traditions. The Act applies to all
+                  Indian nationals, whether they live in India or outside. The
+                  State of Jammu and Kashmir is not included in the scope of
+                  this Act, although persons domiciled in other states but
+                  residing in Jammu and Kashmir would be eligible for these
+                  provisions. It is a piece of law that establishes a special
+                  type of marriage by registration. Marriage is unique in that
+                  there is no requirement to convert or reject one’s religion.
+                  Unlike conventional arranged weddings, which include two
+                  families from the same caste or community, the Act aspires to
+                  legalise interreligious or inter-caste marriages. The Act’s
+                  Certificate of Registration has been regarded as universal
+                  evidence of marriage. As stated in the Preamble, the Act
+                  allows for a special form of marriage in specific
+                  circumstances, registration of such and other marriages, and
+                  divorce. Objectives of the Special Marriage Act, 1954
+                </p>
               </div>
             )}
           </div>
-        </div>
+        )}
 
         {/* Permanent Address Section */}
         <div className="col-span-full space-y-4 min-w-[300px]">
@@ -870,19 +836,28 @@ const Personaldetail = () => {
             <>
               <div className="space-y-2">
                 <Label htmlFor="adhar-number">Adhar Number</Label>
-                <Input
-                  id="adhar-number"
+                <Controller
+                  name="adharNumber"
+                  control={control}
                   defaultValue={defaultData?.adharNumber}
-                  placeholder="Adhar Number"
-                  type="text"
-                  {...register("adharNumber", {
+                  render={({ field }) => (
+                    <InputMask
+                      id="adhar-number"
+                      placeholder="1234 5678 9012"
+                      mask="9999 9999 9999"
+                      {...field}
+                    >
+                      {(inputProps) => <Input {...inputProps} type="text" />}
+                    </InputMask>
+                  )}
+                  rules={{
                     required:
                       !defaultData?.adharNumber && "Adhar Number is required",
                     pattern: {
                       value: /^[2-9]{1}[0-9]{11}$/,
                       message: "Invalid Aadhar Number",
                     },
-                  })}
+                  }}
                 />
                 {errors.adharNumber && (
                   <span className="text-red-500">
@@ -962,19 +937,36 @@ const Personaldetail = () => {
             <>
               <div className="space-y-2">
                 <Label htmlFor="pan-number">PAN Number</Label>
-                <Input
-                  id="pan-number"
+                <Controller
+                  name="panNumber"
+                  control={control}
                   defaultValue={defaultData?.panNumber}
-                  placeholder="PAN Number"
-                  type="text"
-                  {...register("panNumber", {
+                  render={({ field }) => (
+                    <InputMask
+                      id="pan-number"
+                      placeholder="ABCDE1234F"
+                      mask="aaaa9999a"
+                      className="text-transform: uppercase;"
+                      maskChar={null}
+                      {...field}
+                    >
+                      {(inputProps) => (
+                        <Input
+                          {...inputProps}
+                          className="uppercase"
+                          type="text"
+                        />
+                      )}
+                    </InputMask>
+                  )}
+                  rules={{
                     required:
                       !defaultData?.panNumber && "PAN Number is required",
                     pattern: {
                       value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
                       message: "Invalid PAN Number",
                     },
-                  })}
+                  }}
                 />
                 {errors.panNumber && (
                   <span className="text-red-500">
@@ -1057,12 +1049,28 @@ const Personaldetail = () => {
             <>
               <div className="space-y-2">
                 <Label htmlFor="driving-license-number">DL Number</Label>
-                <Input
-                  id="driving-license-number"
+                <Controller
+                  name="drivingLicenseNumber"
+                  control={control}
                   defaultValue={defaultData?.drivingLicenseNumber}
-                  placeholder="DL Number"
-                  type="text"
-                  {...register("drivingLicenseNumber", {
+                  render={({ field }) => (
+                    <InputMask
+                      id="driving-license-number"
+                      placeholder="DL Number"
+                      mask="aa99-99999999999"
+                      maskChar={null}
+                      {...field}
+                    >
+                      {(inputProps) => (
+                        <Input
+                          {...inputProps}
+                          className="uppercase"
+                          type="text"
+                        />
+                      )}
+                    </InputMask>
+                  )}
+                  rules={{
                     required:
                       !defaultData?.drivingLicenseNumber &&
                       "DL Number is required",
@@ -1070,7 +1078,7 @@ const Personaldetail = () => {
                       value: /^[A-Z0-9-]{15}$/,
                       message: "Invalid Driving License Number",
                     },
-                  })}
+                  }}
                 />
                 {errors.drivingLicenseNumber && (
                   <span className="text-red-500">
@@ -1187,12 +1195,22 @@ const Personaldetail = () => {
             <>
               <div className="space-y-2">
                 <Label htmlFor="pp-number">PP Number</Label>
-                <Input
-                  id="pp-number"
-                  placeholder="PP Number"
-                  type="text"
+                <Controller
+                  name="passportNumber"
+                  control={control}
                   defaultValue={defaultData?.passportNumber}
-                  {...register("passportNumber", {
+                  render={({ field }) => (
+                    <InputMask
+                      id="pp-number"
+                      placeholder="A1234567"
+                      mask="a9999999"
+                      maskChar={null}
+                      {...field}
+                    >
+                      {(inputProps) => <Input {...inputProps} type="text" />}
+                    </InputMask>
+                  )}
+                  rules={{
                     required:
                       !defaultData?.passportNumber &&
                       "Passport Number is required",
@@ -1200,7 +1218,7 @@ const Personaldetail = () => {
                       value: /^[A-Z][0-9]{7}$/,
                       message: "Invalid Passport Number",
                     },
-                  })}
+                  }}
                 />
                 {errors.passportNumber && (
                   <span className="text-red-500">
