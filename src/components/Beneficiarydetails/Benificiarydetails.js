@@ -36,7 +36,7 @@ const Benificiarydetails = () => {
         },
       }
     );
-    setBenificiaryData(response.data.data.Beneficiary);
+    setBenificiaryData(response.data.data.Beneficiaries);
 
     return response.data.data.Beneficiary;
   };
