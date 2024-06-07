@@ -153,7 +153,8 @@ const Benificiarydetails = () => {
         <ConfirmDelete
           alertDialog={alertDialog}
           setAlertDialog={setAlertDialog}
-          onConfirm={() => Deletebenificiary(deleteId)}
+          onConfirm={() => Deletebenificiary(deleteid)}
+          onCancel={() => setAlertDialog(false)}
         />
       )}
     </div>
