@@ -311,6 +311,7 @@ const Personaldetail = () => {
                       {...field}
                       className="flex"
                       defaultValue={defaultData?.nationality}
+                      defaultChecked={defaultData?.nationality}
                       value={field.value} // Use the field's value
                       onValueChange={(value) => {
                         field.onChange(value);
