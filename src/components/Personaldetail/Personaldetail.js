@@ -425,7 +425,9 @@ const Personaldetail = () => {
                     value={defaultData?.religion}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select religion" />
+                      <SelectValue placeholder="Select religion">
+                        {field.value || "Select religion"}
+                      </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
                       {dropdownData.religions?.map((religion) => (
@@ -470,7 +472,9 @@ const Personaldetail = () => {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select marital status" />
+                      <SelectValue placeholder="Select marital status">
+                        {field.value || "Select marital status"}
+                      </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
                       {dropdownData.maritalStatuses?.map((status) => (
@@ -513,7 +517,7 @@ const Personaldetail = () => {
                   </button>
                 </div>
                 {showMoreInfo && (
-                  <div className="mt-2 bg-gray-100 p-4 rounded-md">
+                  <div className="min-w-[60vw] max-md:min-w-[90%] mt-2 bg-gray-100 p-4 rounded-md">
                     <p>
                       A brief overview of the Special Marriage Act, 1954 As one
                       of independent India’s most significant secular
@@ -836,10 +840,10 @@ const Personaldetail = () => {
                 </>
               )}
             </div>
-            <div className="space-y-4 min-w-[300px] mt-6">
+            <div className="relative col-span-full space-y-4 mt-6 min-w-full md:min-w-[300px]">
               <h2 className="text-2xl font-bold mt-4">Optional Documents</h2>
               <h2 className="text-2xl font-medium">Aadhar</h2>
-              <div className="space-y-2">
+              <div className="col-span-full space-y-4 min-w-[300px]">
                 <Label htmlFor="adhar">Do you have an Adhar?</Label>
                 <Controller
                   name="adhar"
