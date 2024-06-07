@@ -246,7 +246,7 @@ const Personaldetail = () => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    onValueChange={(value) => field.onChange(value)}
+                    onValueChange={(value) => field.onChange(field.value)}
                     defaultValue={defaultData?.gender}
                     value={defaultData?.gender}
                   >
