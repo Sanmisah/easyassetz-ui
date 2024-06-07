@@ -49,6 +49,18 @@ const Benificiarydetails = () => {
       toast.error("Failed to submit profile");
     },
   });
+
+  const Deletebenificiary = async (id) => {
+    const response = await axios.delete(
+      `http://127.0.0.1:8000/api/beneficiaries/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    toast.success("Beneficiary deleted successfully!");
+  };
   return (
     <div className="flex flex-col gap-4">
       <h1 className="font-bold">Benificiary Details</h1>
@@ -58,29 +70,32 @@ const Benificiarydetails = () => {
         start of your Will journey. You can always come back and add more people
         or edit and add any information.
       </p>
-      {benificiaryData.map((data) => (
-        <div className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md">
-          <div className="flex flex-col items-center ml-8">
-            <h1 className="font-bold">{data?.fullLegalName}</h1>
-            <p className="text-sm">{data?.relationship}</p>
+      {benificiaryData &&
+        benificiaryData.map((data) => (
+          <div className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md">
+            <div className="flex flex-col items-center ml-8">
+              <h1 className="font-bold">{data?.fullLegalName}</h1>
+              <p className="text-sm">{data?.relationship}</p>
+            </div>
+            <div className="flex items-center mr-8">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button aria-haspopup="true" size="icon" variant="ghost">
+                    <MoreHorizontal className="h-4 w-4" />
+                    <span className="sr-only">Toggle menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => Deletebenificiary(data.id)}>
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-          <div className="flex items-center mr-8">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button aria-haspopup="true" size="icon" variant="ghost">
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">Toggle menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      ))}
+        ))}
       <div>
         <div className="mt-4 ml-2 flex items-center">
           <Button
