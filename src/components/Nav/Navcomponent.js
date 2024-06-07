@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Navcomponent = () => {
   return (
-    <div className="flex sticky backdrop-blur-md top-0 justify-between item-center gap-10 max-h-[100px] mt-2  py-2 max-md:hidden">
+    <div className="z-50 flex sticky backdrop-blur-md top-0 justify-between item-center gap-10 max-h-[100px] mt-2  py-2 max-md:hidden">
       <div>
         <img
           className="ml-[70px] w-[180px] max-h-[180px]"
