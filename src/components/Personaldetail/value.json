@@ -1,0 +1,47 @@
+{
+    "genders": ["male", "female", "other"],
+    "nationalities": [
+      "indian",
+      "foreign"
+    ],
+    "specificNationalities": [
+      "afghan",
+      "argentine",
+      "australian",
+      "austrian",
+      "bangladeshi",
+      "belgian",
+      "brazilian",
+      "british",
+      "canadian",
+      "chilean",
+      "colombian",
+      "costa-rican",
+      "other"
+    ],
+    "countries": [
+      "united-states",
+      "canada",
+      "united-kingdom",
+      "australia",
+      "other"
+    ],
+    "religions": [
+      "christian",
+      "islam",
+      "muslim",
+      "jain",
+      "sikh",
+      "hinduism",
+      "buddhism",
+      "other"
+    ],
+    "maritalStatuses": [
+      "bachelor",
+      "married",
+      "divorced",
+      "widowed"
+    ]
+  }
+
+ 
