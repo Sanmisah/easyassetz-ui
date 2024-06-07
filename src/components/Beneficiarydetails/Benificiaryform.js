@@ -17,6 +17,7 @@ import {
   SelectItem,
 } from "@com/ui/select";
 import "react-international-phone/style.css";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@com/ui/button";
 import {
@@ -157,7 +158,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
       return response.data.data.profile;
     },
     onSuccess: () => {
-      toast.sucess("Beneficiary added successfully!");
+      toast.success("Beneficiary added successfully!");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

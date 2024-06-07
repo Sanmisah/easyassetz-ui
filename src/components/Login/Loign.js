@@ -153,7 +153,7 @@ const Auth = () => {
     },
     onSuccess: (data) => {
       console.log("Registering user:", data);
-      toast.sucess("Registered successfully!");
+      toast.success("Registered successfully!");
     },
     onError: (error) => {
       console.error("Error registering user:", error);

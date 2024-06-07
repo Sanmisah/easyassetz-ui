@@ -22,6 +22,8 @@ import { ScrollArea } from "@com/ui/scroll-area";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import axios from "axios";
 import "react-international-phone/style.css";
 import { PhoneInput } from "react-international-phone";
@@ -69,7 +71,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
       return response.data.data.Benificiary;
     },
     onSuccess: () => {
-      toast.sucess("Beneficiary added successfully!");
+      toast.success("Beneficiary added successfully!");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
