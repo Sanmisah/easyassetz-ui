@@ -24,6 +24,7 @@ const Benificiarydetails = () => {
   const [charityopen, setcharityopen] = useState(false);
   const [benificiaryData, setBenificiaryData] = useState([]);
   const [alertDialog, setAlertDialog] = useState(false);
+  const [deleteid, setdeleteid] = useState("");
   const queryClient = useQueryClient();
 
   const getitem = localStorage.getItem("user");
@@ -93,19 +94,16 @@ const Benificiarydetails = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setAlertDialog(true)}>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setdeleteid(data.id);
+                      setAlertDialog(true);
+                    }}
+                  >
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {alertDialog && (
-                <ConfirmDelete
-                  alertDialog={alertDialog}
-                  setAlertDialog={setAlertDialog}
-                  onConfirm={Deletebenificiary(data.id)}
-                  onCancel={() => setAlertDialog(false)}
-                />
-              )}
             </div>
           </div>
         ))}
@@ -149,6 +147,13 @@ const Benificiarydetails = () => {
         <Charitysheet
           charityopen={charityopen}
           setcharityopen={setcharityopen}
+        />
+      )}
+      {alertDialog && (
+        <ConfirmDelete
+          alertDialog={alertDialog}
+          setAlertDialog={setAlertDialog}
+          onConfirm={() => Deletebenificiary(deleteId)}
         />
       )}
     </div>
