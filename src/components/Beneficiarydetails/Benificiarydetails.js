@@ -60,6 +60,7 @@ const Benificiarydetails = () => {
         },
       }
     );
+    queryClient.invalidateQueries("benificiaryData");
     toast.success("Beneficiary deleted successfully!");
   };
   return (
