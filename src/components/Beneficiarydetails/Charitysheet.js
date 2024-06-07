@@ -51,17 +51,37 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
   } = useForm({
     resolver: zodResolver(charitySchema),
   });
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
+
+  const charityMutate = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/beneficiaries`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.Benificiary;
+    },
+    onSuccess: () => {
+      toast.sucess("Beneficiary added successfully!");
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
+  });
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post("/api/charity", data);
-      if (response.status === 200) {
-        alert("Charity details submitted successfully!");
-        setcharityopen(false);
-      }
+      charityMutate.mutate(data);
     } catch (error) {
       console.error("Error submitting charity details:", error);
-      alert("Failed to submit charity details.");
+      toast.error("Failed to submit charity details.");
     }
   };
 

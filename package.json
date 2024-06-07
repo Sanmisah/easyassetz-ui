@@ -38,6 +38,7 @@
     "react-international-phone": "^4.3.0",
     "react-phone-number-input": "^3.4.3",
     "react-router-dom": "^6.23.1",
+    "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

@@ -107,6 +107,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   const [relationship, setRelationship] = useState("");
 
   const watchDOB = watch("dob", null);
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
 
   useEffect(() => {
     if (watchDOB) {
@@ -140,20 +142,37 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianPincode", "");
     setValue("guardianCountry", "");
   };
+  const benificiaryMutate = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/beneficiaries`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.profile;
+    },
+    onSuccess: () => {
+      toast.sucess("Beneficiary added successfully!");
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
+  });
 
   const onSubmit = async (data) => {
     console.log(data);
     data.dob = data.dob.toISOString(); // Convert Date object to ISO string
 
     try {
-      const response = await axios.post("/api/beneficiary", data);
-      if (response.status === 200) {
-        alert("Beneficiary added successfully!");
-        setbenficiaryopen(false);
-      }
+      benificiaryMutate.mutate(data);
     } catch (error) {
+      toast.error("Failed to add beneficiary");
       console.error("Error adding beneficiary:", error);
-      alert("Failed to add beneficiary.");
     }
   };
 

@@ -17,6 +17,7 @@ import { RadioGroupItem, RadioGroup } from "@com/ui/radio-group";
 import Datepicker from "./Datepicker";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Skletonpersonal from "./Skletonpersonal";
+import { toast } from "sonner";
 
 const dropdownData = {
   genders: ["male", "female", "other"],
@@ -104,7 +105,11 @@ const Personaldetail = () => {
   const { isLoading, isError } = useQuery({
     queryKey: ["personalData"],
     queryFn: getPersonalData,
-    onSuccess: () => setLoading(false),
+    onSuccess: () => {},
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
   });
 
   const {
@@ -150,9 +155,11 @@ const Personaldetail = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("personalData");
+      toast.sucess("Profile updated successfully!");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
     },
   });
 
