@@ -58,7 +58,7 @@ const beneficiarySchema = z
     mobile: z.string().optional(),
     email: z.string().optional(),
     documentData: z.string().optional(),
-    city: z.string().optional(), 
+    city: z.string().optional(),
     state: z.string().optional(),
     houseNo: z.string().optional(),
     address1: z.string().optional(),
@@ -91,13 +91,13 @@ const beneficiarySchema = z
     }
   );
 
+const queryClient = useQueryClient();
+w;
 const Benificiaryform = ({
   updateBenificiaryOpen,
   setUpdateBenificiaryOpen,
   benificiaryId,
 }) => {
-  const queryClient = useQueryClient();
-
   const [dummy, setdummy] = useState([]);
   const {
     register,
@@ -146,6 +146,9 @@ const Benificiaryform = ({
       console.log("Data:", data);
       if (data.dob) {
         const age = calculateAge(data.dob);
+        if (age >= 18) {
+          clearGuardianFields();
+        }
       }
       setdummy(data);
       setValue("dob", new Date(data.dob));
@@ -183,6 +186,10 @@ const Benificiaryform = ({
   useEffect(() => {
     if (watchDOB) {
       const age = calculateAge(watchDOB);
+      if (age >= 18) {
+        clearGuardianFields();
+        isMinor = true;
+      }
     }
   }, [watchDOB]);
 
@@ -193,6 +200,7 @@ const Benificiaryform = ({
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
+  const clearGuardianFields = () => {};
   useEffect(() => {
     console.log("Beneficiary ID:", benificiaryId); // Add this line before useQuery to check the value of benificiaryId
 
@@ -399,11 +407,7 @@ const Benificiaryform = ({
                                   international
                                   countryCallingCodeEditable={false}
                                   defaultCountry={dateCountryCode}
-                                  value={
-                                    field.value
-                                      ? field.value
-                                      : Benifyciary.mobile
-                                  }
+                                  value={field.value}
                                   defaultValue={Benifyciary.mobile}
                                   onChange={(value) => {
                                     field.onChange(value);
