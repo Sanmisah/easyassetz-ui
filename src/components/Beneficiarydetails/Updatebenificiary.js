@@ -233,7 +233,6 @@ const Benificiaryform = ({
 
   const onSubmit = (data) => {
     console.log(data);
-    data.dob = data.dob.toISOString(); // Convert Date object to ISO string
     benificiaryMutate.mutate(data);
   };
 
