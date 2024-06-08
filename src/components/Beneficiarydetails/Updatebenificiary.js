@@ -138,6 +138,7 @@ const Benificiaryform = ({
     enabled: !!beneficiaryId,
 
     onSuccess: (data) => {
+      console.log("Data:", data);
       // Prefill the form with the fetched data
       for (const [key, value] of Object.entries(data)) {
         if (key === "dob") {
