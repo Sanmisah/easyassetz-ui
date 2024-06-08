@@ -20,7 +20,7 @@ import "react-phone-number-input/style.css"; // Ensure to include the styles for
 const PhoneInput = React.forwardRef(
   ({ className, onChange, value, defaultValue, ...props }, ref) => {
     const handleChange = (value) => {
-      onChange(value || "");
+      onChange(defaultValue || value || "");
     };
 
     return (
