@@ -87,9 +87,9 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
       //   }
       // }
 
-      for (const [key, value] of Object.entries(data)) {
-        setValue(key, value);
-      }
+      // for (const [key, value] of Object.entries(data)) {
+      //   setValue(key, value);
+      // }
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
