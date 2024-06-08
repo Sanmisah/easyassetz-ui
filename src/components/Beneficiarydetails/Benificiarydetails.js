@@ -58,6 +58,25 @@ const Benificiarydetails = () => {
       toast.error("Failed to submit profile");
     },
   });
+  const getCharityData = async () => {
+    if (!user) return;
+    const response = await axios.get(`http://127.0.0.1:8000/api/charities`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
+
+    return response.data.data.Beneficiary;
+  };
+  const charityData = useQuery({
+    queryKey: ["charityData"],
+    queryFn: getCharityData,
+    onSuccess: () => {},
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
+  });
 
   const Deletebenificiary = async (id) => {
     const response = await axios.delete(
@@ -102,6 +121,44 @@ const Benificiarydetails = () => {
                     onClick={() => {
                       setbenificiaryid(data.id);
                       setUpdateBenificiaryOpen(true);
+                    }}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setdeleteid(data.id);
+                      setAlertDialog(true);
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        ))}
+      {charityData &&
+        charityData.map((data) => (
+          <div className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md">
+            <div className="flex flex-col items-center ml-8">
+              <h1 className="font-bold">{data?.charityName}</h1>
+              <p className="text-sm">{data?.charityEmail}</p>
+            </div>
+            <div className="flex items-center mr-8">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button aria-haspopup="true" size="icon" variant="ghost">
+                    <MoreHorizontal className="h-4 w-4" />
+                    <span className="sr-only">Toggle menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setbenificiaryid(data.id);
+                      setUpdateCharityOpen(true);
                     }}
                   >
                     Edit
