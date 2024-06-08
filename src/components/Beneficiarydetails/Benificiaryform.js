@@ -48,7 +48,7 @@ const beneficiarySchema = z
     guardianEmail: z.string().optional(),
     guardianCity: z.string().optional(),
     guardianState: z.string().optional(),
-    guardianDocument: z.string().optional(),
+    document: z.string().optional(),
     documentData: z.string().optional(),
     guardianReligion: z.string().optional(),
     guardianNationality: z.string().optional(),
@@ -134,7 +134,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianEmail", "");
     setValue("guardianCity", "");
     setValue("guardianState", "");
-    setValue("guardianDocument", "");
+    setValue("document", "");
     setValue("documentData", "");
     setValue("guardianReligion", "");
     setValue("guardianNationality", "");
@@ -172,7 +172,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     if (data.dob > new Date() === 18) {
       delete data.guardianCity;
       delete data.guardianState;
-      delete data.guardianDocument;
+      delete data.document;
       delete data.documentData;
       delete data.guardianReligion;
       delete data.guardianNationality;
@@ -279,7 +279,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Input
                                 id="specific-relationship"
                                 placeholder="Enter specific relationship"
-                                {...register("specificRelationship")}
+                                {...register("specificRelationship", {
+                                  required: relationship === "other",
+                                })}
                               />
                               {errors.specificRelationship && (
                                 <p className="text-red-500">
@@ -500,9 +502,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             </Select>
                           )}
                         />
-                        {errors.guardianDocument && (
+                        {errors.document && (
                           <p className="text-red-500">
-                            {errors.guardianDocument.message}
+                            {errors.document.message}
                           </p>
                         )}
                       </div>
@@ -514,7 +516,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           <Input
                             id="guardian-document-data"
                             placeholder={`Enter guardian's ${selectedDocument} number`}
-                            {...register("documentData")}
+                            {...register(`${selectedDocument}Data`)}
                           />
                           {errors.documentData && (
                             <p className="text-red-500">
