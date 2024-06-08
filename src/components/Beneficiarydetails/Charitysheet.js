@@ -183,6 +183,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <PhoneInput
                 id="phone"
                 type="tel"
+                defaultCountry="in"
                 placeholder="Enter phone number"
                 {...register("phone")}
                 className="w-full"
