@@ -34,7 +34,7 @@ const charitySchema = z.object({
   charityCity: z.string().nonempty("City is required"),
   charityState: z.string().nonempty("State is required"),
   charityNumber: z.string().nonempty("Phone number is required"),
-  charityEmail: z.string().charityEmail("Invalid charityEmail address"),
+  charityEmail: z.string().email("Invalid charityEmail address"),
   charityContactPerson: z.string().nonempty("Contact person name is required"),
   charityWebsite: z.string().url("Invalid URL").optional(),
   charityspecificInstrucion: z.string().optional(),
