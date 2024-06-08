@@ -122,6 +122,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
   });
 
   const onSubmit = (data) => {
+    data.type = "charity";
     benificiaryMutate.mutate(data);
   };
 

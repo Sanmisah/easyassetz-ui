@@ -232,6 +232,7 @@ const Benificiaryform = ({
   });
 
   const onSubmit = (data) => {
+    data.type = "beneficiary";
     console.log(data);
     benificiaryMutate.mutate(data);
   };

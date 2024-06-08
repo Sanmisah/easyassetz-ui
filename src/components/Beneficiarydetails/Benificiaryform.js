@@ -168,6 +168,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
   const onSubmit = async (data) => {
     console.log(data);
+    data.type = "beneficiary";
     if (relationship === "other") {
       data.relationship = data.specificRelationship;
     }
