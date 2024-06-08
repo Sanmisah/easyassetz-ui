@@ -78,9 +78,9 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["charityData", benificiaryId],
+    queryKey: ["charityData", charityId],
     queryFn: getPersonalData,
-    enabled: !!benificiaryId,
+    enabled: !!charityId,
 
     onSuccess: (data) => {
       console.log("Data:", data);
