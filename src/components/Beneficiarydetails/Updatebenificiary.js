@@ -168,13 +168,13 @@ const Benificiaryform = ({
       setValue("nationality", data.nationality);
       setValue("fullLegalName", data.fullLegalName);
       // Prefill the form with the fetched data
-      for (const [key, value] of Object.entries(data)) {
-        if (key === "dob") {
-          setValue(key, new Date(value)); // Convert ISO string to Date object
-        } else {
-          setValue(key, value);
-        }
-      }
+      // for (const [key, value] of Object.entries(data)) {
+      //   if (key === "dob") {
+      //     setValue(key, new Date(value)); // Convert ISO string to Date object
+      //   } else {
+      //     setValue(key, value);
+      //   }
+      // }
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -199,22 +199,7 @@ const Benificiaryform = ({
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
-  const clearGuardianFields = () => {
-    setValue("guardianName", "");
-    setValue("guardianMobile", "");
-    setValue("guardianEmail", "");
-    setValue("guardianCity", "");
-    setValue("guardianState", "");
-    setValue("guardianDocument", "");
-    setValue("guardianDocumentData", "");
-    setValue("guardianReligion", "");
-    setValue("guardianNationality", "");
-    setValue("guardianHouseNo", "");
-    setValue("guardianAddress1", "");
-    setValue("guardianAddress2", "");
-    setValue("guardianPincode", "");
-    setValue("guardianCountry", "");
-  };
+  const clearGuardianFields = () => {};
   useEffect(() => {
     console.log("Beneficiary ID:", benificiaryId); // Add this line before useQuery to check the value of benificiaryId
 
