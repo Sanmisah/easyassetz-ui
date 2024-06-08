@@ -39,7 +39,7 @@ const Datepicker = forwardRef(({ value, onChange, defaultValue }, ref) => {
     const value = e.target.value;
     setStringDate(value);
 
-    if (value.length === 10) {
+    if (value?.length === 10) {
       const parsedDate = parse(value, "dd/MM/yyyy", new Date());
       if (!isNaN(parsedDate)) {
         setErrorMessage("");
