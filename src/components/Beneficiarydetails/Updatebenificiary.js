@@ -92,8 +92,8 @@ const beneficiarySchema = z
   );
 
 const Benificiaryform = ({
-  updateBenificiaryOpen,
-  setUpdateBenificiaryOpen,
+  benficiaryopen,
+  setbenficiaryopen,
   beneficiaryId,
 }) => {
   const queryClient = useQueryClient();
@@ -202,7 +202,7 @@ const Benificiaryform = ({
     onSuccess: () => {
       queryClient.invalidateQueries(["beneficiaryDataUpdate", beneficiaryId]);
       toast.success("Beneficiary updated successfully!");
-      setUpdateBenificiaryOpen(false);
+      setbenficiaryopen(false);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -225,8 +225,8 @@ const Benificiaryform = ({
     <div>
       <Sheet
         className="w-[800px]"
-        open={updateBenificiaryOpen}
-        onOpenChange={setUpdateBenificiaryOpen}
+        open={benficiaryopen}
+        onOpenChange={setbenficiaryopen}
       >
         <SheetContent>
           <SheetHeader>
@@ -738,7 +738,7 @@ const Benificiaryform = ({
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setUpdateBenificiaryOpen(false)}
+                        onClick={() => setbenficiaryopen(false)}
                       >
                         Cancel
                       </Button>
