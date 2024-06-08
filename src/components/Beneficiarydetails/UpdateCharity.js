@@ -42,8 +42,6 @@ const charitySchema = z.object({
 });
 
 const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
-  const queryClient = useQueryClient();
-
   const {
     register,
     handleSubmit,
@@ -114,7 +112,6 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
       return response.data.data.Beneficiary;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["charityData", charityId]);
       toast.success("Charity details updated successfully!");
       setcharityopen(false);
     },

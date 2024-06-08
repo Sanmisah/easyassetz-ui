@@ -41,9 +41,10 @@ const charitySchema = z.object({
   charityWebsite: z.string().url("Invalid URL").optional(),
   charitySpecificInstruction: z.string().optional(),
 });
-const queryClient = useQueryClient();
 
 const Charitysheet = ({ charityopen, setcharityopen }) => {
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
