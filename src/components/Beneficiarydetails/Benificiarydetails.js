@@ -17,6 +17,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import ConfirmDelete from "./ConfirmDelete";
+import UpdateBenificiary from "./Updatebenificiary";
+import UpdateCharity from "./UpdateCharity";
 
 const Benificiarydetails = () => {
   const [Sheetopen, setsheetopen] = useState(false);
@@ -25,6 +27,8 @@ const Benificiarydetails = () => {
   const [benificiaryData, setBenificiaryData] = useState([]);
   const [alertDialog, setAlertDialog] = useState(false);
   const [deleteid, setdeleteid] = useState("");
+  const [updateBenificiaryOpen, setUpdateBenificiaryOpen] = useState(false);
+  const [updateCharityOpen, setUpdateCharityOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const getitem = localStorage.getItem("user");
@@ -93,7 +97,11 @@ const Benificiarydetails = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setUpdateBenificiaryOpen(true)}
+                  >
+                    Edit
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       setdeleteid(data.id);
@@ -155,6 +163,20 @@ const Benificiarydetails = () => {
           setAlertDialog={setAlertDialog}
           onConfirm={() => Deletebenificiary(deleteid)}
           onCancel={() => setAlertDialog(false)}
+        />
+      )}
+      {updateBenificiaryOpen && (
+        <UpdateBenificiary
+          benificiaryopen={updateBenificiaryOpen}
+          setbenificiaryopen={setUpdateBenificiaryOpen}
+          benificiaryId={benificiaryData[0].id}
+        />
+      )}
+      {updateCharityOpen && (
+        <UpdateCharity
+          charityopen={updateCharityOpen}
+          setcharityopen={setUpdateCharityOpen}
+          charityId={benificiaryData[0].id}
         />
       )}
     </div>
