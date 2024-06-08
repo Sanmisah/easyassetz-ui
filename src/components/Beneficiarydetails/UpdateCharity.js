@@ -51,7 +51,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
   } = useForm({
     resolver: zodResolver(charitySchema),
   });
-
+  const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
 
@@ -79,6 +79,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     enabled: !!charityId,
 
     onSuccess: (data) => {
+      queryClient.invalidateQueries("charityData");
       console.log("Data:", data);
       if (data.dob) {
         const age = calculateAge(data.dob);

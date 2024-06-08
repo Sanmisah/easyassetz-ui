@@ -93,6 +93,7 @@ const beneficiarySchema = z
   );
 
 const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -158,6 +159,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
       return response.data.data.profile;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries("benificiaryData");
       toast.success("Beneficiary added successfully!");
     },
     onError: (error) => {
