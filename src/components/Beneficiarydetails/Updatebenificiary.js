@@ -161,7 +161,7 @@ const Benificiaryform = ({
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile");
+      toast.error("Failed to submit profile", error.message);
     },
   });
 
@@ -224,7 +224,7 @@ const Benificiaryform = ({
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile");
+      toast.error("Failed to submit profile ", error.message);
     },
   });
 
