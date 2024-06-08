@@ -210,7 +210,7 @@ const Benificiaryform = ({
     mutationFn: async (data) => {
       console.log("data:", data);
       const response = await axios.put(
-        `/api/beneficiaries/${benificiaryId}`,
+        `http://127.0.0.1:8000/api/beneficiaries/${benificiaryId}`,
         data,
         {
           headers: {
