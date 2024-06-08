@@ -25,6 +25,7 @@ const Benificiarydetails = () => {
   const [benficiaryopen, setbenficiaryopen] = useState(false);
   const [charityopen, setcharityopen] = useState(false);
   const [benificiaryData, setBenificiaryData] = useState([]);
+  const [charityData, setCharityData] = useState([]);
   const [alertDialog, setAlertDialog] = useState(false);
   const [deleteid, setdeleteid] = useState("");
   const [updateBenificiaryOpen, setUpdateBenificiaryOpen] = useState(false);
@@ -65,10 +66,11 @@ const Benificiarydetails = () => {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
+    setCharityData(response.data.data.Beneficiary);
 
     return response.data.data.Beneficiary;
   };
-  const charityData = useQuery({
+  const chairty = useQuery({
     queryKey: ["charityData"],
     queryFn: getCharityData,
     onSuccess: () => {},
