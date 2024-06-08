@@ -102,7 +102,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     mutationFn: async (data) => {
       console.log("data:", data);
       const response = await axios.put(
-        `127.0.0.1:8000/api/beneficiaries/${charityId}`,
+        `http://127.0.0.1:8000/api/beneficiaries/${charityId}`,
         data,
         {
           headers: {
