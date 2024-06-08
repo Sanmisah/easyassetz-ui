@@ -143,6 +143,12 @@ const Benificiaryform = ({
 
     onSuccess: (data) => {
       console.log("Data:", data);
+      if (data.dob) {
+        const age = calculateAge(data.dob);
+        if (age >= 18) {
+          clearGuardianFields();
+        }
+      }
       setdummy(data);
       // Prefill the form with the fetched data
       for (const [key, value] of Object.entries(data)) {
@@ -164,6 +170,7 @@ const Benificiaryform = ({
       const age = calculateAge(watchDOB);
       if (age >= 18) {
         clearGuardianFields();
+        isMinor = true;
       }
     }
   }, [watchDOB]);
@@ -538,6 +545,36 @@ const Benificiaryform = ({
                         </div>
                       </div>
 
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-religion">Religion</Label>
+                        <Input
+                          id="guardian-religion"
+                          defaultValue={Benifyciary.religion}
+                          placeholder="Enter guardian's religion"
+                          {...register("guardianReligion")}
+                        />
+                        {errors.guardianReligion && (
+                          <p className="text-red-500">
+                            {errors.guardianReligion.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-nationality">
+                          Nationality
+                        </Label>
+                        <Input
+                          id="guardian-nationality"
+                          defaultValue={Benifyciary.nationality}
+                          placeholder="Enter guardian's nationality"
+                          {...register("guardianNationality")}
+                        />
+                        {errors.guardianNationality && (
+                          <p className="text-red-500">
+                            {errors.guardianNationality.message}
+                          </p>
+                        )}
+                      </div>
                       {isMinor && (
                         <div>
                           <h3 className="text-lg font-medium">
@@ -661,56 +698,6 @@ const Benificiaryform = ({
                               {errors.guardianState && (
                                 <p className="text-red-500">
                                   {errors.guardianState.message}
-                                </p>
-                              )}
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-religion">
-                                Religion
-                              </Label>
-                              <Input
-                                id="guardian-religion"
-                                defaultValue={Benifyciary.religion}
-                                placeholder="Enter guardian's religion"
-                                {...register("guardianReligion")}
-                              />
-                              {errors.guardianReligion && (
-                                <p className="text-red-500">
-                                  {errors.guardianReligion.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-nationality">
-                                Nationality
-                              </Label>
-                              <Input
-                                id="guardian-nationality"
-                                defaultValue={Benifyciary.nationality}
-                                placeholder="Enter guardian's nationality"
-                                {...register("guardianNationality")}
-                              />
-                              {errors.guardianNationality && (
-                                <p className="text-red-500">
-                                  {errors.guardianNationality.message}
-                                </p>
-                              )}
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-house-no">
-                                House Number
-                              </Label>
-                              <Input
-                                id="guardian-house-no"
-                                defaultValue={Benifyciary.houseNo}
-                                placeholder="Enter house number"
-                                {...register("houseNo")}
-                              />
-                              {errors.guardianHouseNo && (
-                                <p className="text-red-500">
-                                  {errors.guardianHouseNo.message}
                                 </p>
                               )}
                             </div>
