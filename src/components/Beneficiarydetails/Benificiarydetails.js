@@ -29,6 +29,7 @@ const Benificiarydetails = () => {
   const [deleteid, setdeleteid] = useState("");
   const [updateBenificiaryOpen, setUpdateBenificiaryOpen] = useState(false);
   const [updateCharityOpen, setUpdateCharityOpen] = useState(false);
+  const [benificiaryid, setbenificiaryid] = useState("");
   const queryClient = useQueryClient();
 
   const getitem = localStorage.getItem("user");
@@ -98,7 +99,10 @@ const Benificiarydetails = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuItem
-                    onClick={() => setUpdateBenificiaryOpen(true)}
+                    onClick={() => {
+                      setbenificiaryid(data.id);
+                      setUpdateBenificiaryOpen(true);
+                    }}
                   >
                     Edit
                   </DropdownMenuItem>
@@ -169,14 +173,15 @@ const Benificiarydetails = () => {
         <UpdateBenificiary
           updateBenificiaryOpen={updateBenificiaryOpen}
           setUpdateBenificiaryOpen={setUpdateBenificiaryOpen}
-          benificiaryId={benificiaryData[0].id}
+          benificiaryId={benificiaryid}
         />
       )}
+      {console.log(benificiaryid)}
       {updateCharityOpen && (
         <UpdateCharity
           charityopen={updateCharityOpen}
           setcharityopen={setUpdateCharityOpen}
-          charityId={benificiaryData[0].id}
+          charityId={benificiaryid}
         />
       )}
     </div>

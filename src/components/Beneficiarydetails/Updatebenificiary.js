@@ -94,10 +94,10 @@ const beneficiarySchema = z
 const Benificiaryform = ({
   updateBenificiaryOpen,
   setUpdateBenificiaryOpen,
-  beneficiaryId,
+  benificiaryId,
 }) => {
   const queryClient = useQueryClient();
-
+  const [dummy, setdummy] = useState([]);
   const {
     register,
     handleSubmit,
@@ -121,7 +121,7 @@ const Benificiaryform = ({
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries/${beneficiaryId}`,
+      `http://127.0.0.1:8000/api/beneficiaries/${benificiaryId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -129,16 +129,21 @@ const Benificiaryform = ({
       }
     );
 
-    return response.data.data.Benificiary;
+    return response.data.data.Beneficiary;
   };
 
-  const { isLoading, isError } = useQuery({
-    queryKey: ["beneficiaryDataUpdate", beneficiaryId],
+  const {
+    data: Benifyciary,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["beneficiaryDataUpdate", benificiaryId],
     queryFn: getPersonalData,
-    enabled: !!beneficiaryId,
+    enabled: !!benificiaryId,
 
     onSuccess: (data) => {
       console.log("Data:", data);
+      setdummy(data);
       // Prefill the form with the fetched data
       for (const [key, value] of Object.entries(data)) {
         if (key === "dob") {
@@ -186,11 +191,16 @@ const Benificiaryform = ({
     setValue("guardianPincode", "");
     setValue("guardianCountry", "");
   };
+  useEffect(() => {
+    console.log("Beneficiary ID:", benificiaryId); // Add this line before useQuery to check the value of benificiaryId
+
+    console.log(dummy);
+  }, [dummy, benificiaryId]);
 
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/beneficiaries/${beneficiaryId}`,
+        `/api/beneficiaries/${benificiaryId}`,
         data,
         {
           headers: {
@@ -201,7 +211,7 @@ const Benificiaryform = ({
       return response.data.data.Beneficiary;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["beneficiaryDataUpdate", beneficiaryId]);
+      queryClient.invalidateQueries(["beneficiaryDataUpdate", benificiaryId]);
       toast.success("Beneficiary updated successfully!");
       setbenficiaryopen(false);
     },
@@ -229,7 +239,7 @@ const Benificiaryform = ({
         open={updateBenificiaryOpen}
         onOpenChange={setUpdateBenificiaryOpen}
       >
-        <SheetContent>
+        <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Update Beneficiary</SheetTitle>
             <SheetDescription className="flex flex-col justify-center">
