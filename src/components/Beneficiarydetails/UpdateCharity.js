@@ -56,47 +56,78 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     resolver: zodResolver(charitySchema),
   });
 
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
+
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/beneficiaries/${benificiaryId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+
+    return response.data.data.Beneficiary;
+  };
+
   const {
-    data: charityData,
+    data: Charitydata,
     isLoading,
     isError,
-  } = useQuery(
-    ["charity", charityId],
-    async () => {
-      const { data } = await axios.get(`/api/charity/${charityId}`);
-      return data;
-    },
-    {
-      enabled: !!charityId,
-      onSuccess: (data) => {
-        // Prefill the form with the fetched data
-        for (const [key, value] of Object.entries(data)) {
-          setValue(key, value);
-        }
-      },
-    }
-  );
+  } = useQuery({
+    queryKey: ["charityData", benificiaryId],
+    queryFn: getPersonalData,
+    enabled: !!benificiaryId,
 
-  const mutation = useMutation(
-    async (data) => {
-      const response = await axios.put(`/api/charity/${charityId}`, data);
-      return response.data;
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      if (data.dob) {
+        const age = calculateAge(data.dob);
+        if (age >= 18) {
+          clearGuardianFields();
+        }
+      }
+
+      for (const [key, value] of Object.entries(data)) {
+        setValue(key, value);
+      }
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["charity", charityId]);
-        alert("Charity details updated successfully!");
-        setcharityopen(false);
-      },
-      onError: (error) => {
-        console.error("Error updating charity details:", error);
-        alert("Failed to update charity details.");
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
+    },
+  });
+
+  const benificiaryMutate = useMutation({
+    mutationFn: async (data) => {
+      console.log("data:", data);
+      const response = await axios.put(
+        `/api/beneficiaries/${charityId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.Beneficiary;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["charityData", charityId]);
+      alert("Charity details updated successfully!");
+      setcharityopen(false);
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile ", error.message);
+    },
+  });
 
   const onSubmit = (data) => {
-    mutation.mutate(data);
+    benificiaryMutate.mutate(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -124,6 +155,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 id="org-name"
                 placeholder="Enter organization name"
                 {...register("orgName")}
+                defaultValue={Charitydata?.orgName}
                 className="w-full"
               />
               {errors.orgName && (
@@ -138,6 +170,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 id="address-1"
                 placeholder="Enter address"
                 {...register("address1")}
+                defaultValue={Charitydata?.address1}
                 className="w-full"
               />
               {errors.address1 && (
@@ -152,6 +185,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 id="address-2"
                 placeholder="Enter address"
                 {...register("address2")}
+                defaultValue={Charitydata?.address2}
                 className="w-full"
               />
             </div>
@@ -162,6 +196,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="city"
                 placeholder="Enter city"
+                defaultValue={Charitydata?.city}
                 {...register("city")}
                 className="w-full"
               />
@@ -176,8 +211,14 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Controller
                 name="state"
                 control={control}
+                defaultValue={Charitydata?.state}
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select
+                    {...field}
+                    defaultValue={Charitydata?.state}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
@@ -206,7 +247,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                     international
                     countryCallingCodeEditable={false}
                     defaultCountry="US"
-                    value={field.value}
+                    value={field.value ? field.value : Charitydata?.phone}
                     onChange={field.onChange}
                     className="w-full"
                   />
@@ -224,6 +265,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 id="email"
                 type="email"
                 placeholder="Enter email"
+                defaultValue={Charitydata?.email}
                 {...register("email")}
                 className="w-full"
               />
@@ -238,6 +280,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="contact-name"
                 placeholder="Enter full legal name"
+                defaultValue={Charitydata?.contactName}
                 {...register("contactName")}
                 className="w-full"
               />
@@ -253,6 +296,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 id="website"
                 type="url"
                 placeholder="Enter website"
+                defaultValue={Charitydata?.website}
                 {...register("website")}
                 className="w-full"
               />
@@ -267,6 +311,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Textarea
                 id="instructions"
                 placeholder="Enter any specific instructions"
+                defaultValue={Charitydata?.instructions}
                 {...register("instructions")}
                 className="w-full"
               />
