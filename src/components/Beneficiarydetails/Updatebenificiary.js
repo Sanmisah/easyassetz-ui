@@ -186,31 +186,34 @@ const Benificiaryform = ({
     setValue("guardianCountry", "");
   };
 
-  const mutation = useMutation(
-    async (data) => {
+  const benificiaryMutate = useMutation({
+    mutationFn: async (data) => {
       const response = await axios.put(
         `/api/beneficiaries/${beneficiaryId}`,
-        data
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
       );
-      return response.data;
+      return response.data.data.Beneficiary;
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["beneficiary", beneficiaryId]);
-        toast.success("Beneficiary updated successfully!");
-        setbenficiaryopen(false);
-      },
-      onError: (error) => {
-        console.error("Error updating beneficiary:", error);
-        alert("Failed to update beneficiary.");
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries(["beneficiaryDataUpdate", beneficiaryId]);
+      toast.success("Beneficiary updated successfully!");
+      setbenficiaryopen(false);
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
+  });
 
   const onSubmit = (data) => {
     console.log(data);
     data.dob = data.dob.toISOString(); // Convert Date object to ISO string
-    mutation.mutate(data);
+    benificiaryMutate.mutate(data);
   };
 
   const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
