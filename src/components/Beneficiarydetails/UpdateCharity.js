@@ -37,7 +37,7 @@ const charitySchema = z.object({
   charityEmail: z.string().email("Invalid charityEmail address"),
   charityContactPerson: z.string().nonempty("Contact person name is required"),
   charityWebsite: z.string().url("Invalid URL").optional(),
-  charityspecificInstrucion: z.string().optional(),
+  charitySpecificInstrucion: z.string().optional(),
 });
 
 const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
@@ -102,7 +102,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     mutationFn: async (data) => {
       console.log("data:", data);
       const response = await axios.put(
-        `/api/beneficiaries/${charityId}`,
+        `127.0.0.1:8000/api/beneficiaries/${charityId}`,
         data,
         {
           headers: {
