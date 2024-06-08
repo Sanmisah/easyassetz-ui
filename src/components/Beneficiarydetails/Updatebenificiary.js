@@ -91,13 +91,12 @@ const beneficiarySchema = z
     }
   );
 
-const queryClient = useQueryClient();
-w;
 const Benificiaryform = ({
   updateBenificiaryOpen,
   setUpdateBenificiaryOpen,
   benificiaryId,
 }) => {
+  const queryClient = useQueryClient();
   const [dummy, setdummy] = useState([]);
   const {
     register,
