@@ -37,7 +37,7 @@ import { toast } from "sonner";
 
 const beneficiarySchema = z
   .object({
-    fullName: z.string().nonempty("Full Legal Name is required"),
+    fullLegalName: z.string().nonempty("Full Legal Name is required"),
     relationship: z.string().nonempty("Relationship is required"),
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
@@ -150,6 +150,23 @@ const Benificiaryform = ({
         }
       }
       setdummy(data);
+      setValue("dob", new Date(data.dob));
+      setValue("gender", data.gender);
+      setValue("relationship", data.relationship);
+      setValue("specificRelationship", data.specificRelationship);
+      setValue("mobile", data.mobile);
+      setValue("email", data.email);
+      setValue("documentData", data.documentData);
+      setValue("houseNo", data.houseNo);
+      setValue("addressLine1", data.addressLine1);
+      setValue("addressLine2", data.addressLine2);
+      setValue("pincode", data.pincode);
+      setValue("country", data.country);
+      setValue("city", data.city);
+      setValue("state", data.state);
+      setValue("religion", data.religion);
+      setValue("nationality", data.nationality);
+      setValue("fullLegalName", data.fullLegalName);
       // Prefill the form with the fetched data
       for (const [key, value] of Object.entries(data)) {
         if (key === "dob") {
@@ -272,11 +289,11 @@ const Benificiaryform = ({
                               id="full-name"
                               placeholder="Enter your full legal name"
                               defaultValue={Benifyciary.fullLegalName}
-                              {...register("fullName")}
+                              {...register("fullLegalName")}
                             />
-                            {errors.fullName && (
+                            {errors.fullLegalName && (
                               <p className="text-red-500">
-                                {errors.fullName.message}
+                                {errors.fullLegalName.message}
                               </p>
                             )}
                           </div>
