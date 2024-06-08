@@ -114,7 +114,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["charityData", charityId]);
-      alert("Charity details updated successfully!");
+      toast.success("Charity details updated successfully!");
       setcharityopen(false);
     },
     onError: (error) => {
