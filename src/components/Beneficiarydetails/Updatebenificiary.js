@@ -278,6 +278,7 @@ const Benificiaryform = ({
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
+                                  defaultValue={Benifyciary.relationship}
                                   onValueChange={(value) => {
                                     field.onChange(value);
                                     setRelationship(value);
@@ -319,6 +320,7 @@ const Benificiaryform = ({
                               </Label>
                               <Input
                                 id="specific-relationship"
+                                defaultValue={Benifyciary.specificRelationship}
                                 placeholder="Enter specific relationship"
                                 {...register("specificRelationship")}
                               />
@@ -334,9 +336,11 @@ const Benificiaryform = ({
                             <Controller
                               name="gender"
                               control={control}
+                              defaultValue={Benifyciary.gender}
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
+                                  defaultValue={Benifyciary.gender}
                                   onValueChange={field.onChange}
                                 >
                                   <SelectTrigger
@@ -369,6 +373,7 @@ const Benificiaryform = ({
                               render={({ field }) => (
                                 <Datepicker
                                   selected={field.value}
+                                  defaultValue={Benifyciary.dob}
                                   onChange={field.onChange}
                                   id="dob"
                                 />
@@ -391,6 +396,7 @@ const Benificiaryform = ({
                                   countryCallingCodeEditable={false}
                                   defaultCountry={dateCountryCode}
                                   value={field.value}
+                                  defaultValue={Benifyciary.mobile}
                                   onChange={(value) => {
                                     field.onChange(value);
                                   }}
@@ -409,6 +415,7 @@ const Benificiaryform = ({
                               id="email"
                               placeholder="Enter your email address"
                               {...register("email")}
+                              defaultValue={Benifyciary.email}
                             />
                             {errors.email && (
                               <p className="text-red-500">
@@ -422,6 +429,7 @@ const Benificiaryform = ({
                               id="documentData"
                               placeholder="Enter document data"
                               {...register("documentData")}
+                              defaultValue={Benifyciary.documentData}
                             />
                             {errors.documentData && (
                               <p className="text-red-500">
@@ -435,6 +443,7 @@ const Benificiaryform = ({
                               id="houseNo"
                               placeholder="Enter house number"
                               {...register("houseNo")}
+                              defaultValue={Benifyciary.houseNo}
                             />
                             {errors.houseNo && (
                               <p className="text-red-500">
@@ -448,6 +457,7 @@ const Benificiaryform = ({
                               id="address1"
                               placeholder="Enter address line 1"
                               {...register("address1")}
+                              defaultValue={Benifyciary.address1}
                             />
                             {errors.address1 && (
                               <p className="text-red-500">
@@ -473,6 +483,7 @@ const Benificiaryform = ({
                             <Input
                               id="pincode"
                               placeholder="Enter pincode"
+                              defaultValue={Benifyciary.pincode}
                               {...register("pincode")}
                             />
                             {errors.pincode && (
@@ -486,6 +497,7 @@ const Benificiaryform = ({
                             <Input
                               id="country"
                               placeholder="Enter country"
+                              defaultValue={Benifyciary.country}
                               {...register("country")}
                             />
                             {errors.country && (
@@ -499,6 +511,7 @@ const Benificiaryform = ({
                             <Input
                               id="city"
                               placeholder="Enter city"
+                              defaultValue={Benifyciary.city}
                               {...register("city")}
                             />
                             {errors.city && (
@@ -512,6 +525,7 @@ const Benificiaryform = ({
                             <Input
                               id="state"
                               placeholder="Enter state"
+                              defaultValue={Benifyciary.state}
                               {...register("state")}
                             />
                             {errors.state && (
@@ -536,6 +550,7 @@ const Benificiaryform = ({
                               <Input
                                 id="guardian-name"
                                 placeholder="Enter guardian's full name"
+                                defaultValue={Benifyciary.guardianName}
                                 {...register("guardianName")}
                               />
                               {errors.guardianName && (
@@ -556,6 +571,7 @@ const Benificiaryform = ({
                                     international
                                     countryCallingCodeEditable={false}
                                     defaultCountry={dateCountryCode}
+                                    defaultValue={Benifyciary.guardianMobile}
                                     value={field.value}
                                     onChange={(value) => {
                                       field.onChange(value);
@@ -576,6 +592,7 @@ const Benificiaryform = ({
                               <Input
                                 id="guardian-email"
                                 placeholder="Enter guardian's email address"
+                                defaultValue={Benifyciary.guardianEmail}
                                 {...register("guardianEmail")}
                               />
                               {errors.guardianEmail && (
@@ -590,6 +607,7 @@ const Benificiaryform = ({
                               </Label>
                               <Input
                                 id="guardian-document"
+                                defaultValue={Benifyciary.guardianDocument}
                                 placeholder="Enter guardian's document"
                                 {...register("guardianDocument")}
                               />
@@ -605,6 +623,7 @@ const Benificiaryform = ({
                               </Label>
                               <Input
                                 id="guardian-document-data"
+                                defaultValue={Benifyciary.guardianDocumentData}
                                 placeholder="Enter guardian's document data"
                                 {...register("guardianDocumentData")}
                               />
@@ -620,6 +639,7 @@ const Benificiaryform = ({
                               </Label>
                               <Input
                                 id="guardian-religion"
+                                defaultValue={Benifyciary.guardianReligion}
                                 placeholder="Enter guardian's religion"
                                 {...register("guardianReligion")}
                               />
@@ -635,6 +655,7 @@ const Benificiaryform = ({
                               </Label>
                               <Input
                                 id="guardian-nationality"
+                                defaultValue={Benifyciary.guardianNationality}
                                 placeholder="Enter guardian's nationality"
                                 {...register("guardianNationality")}
                               />
@@ -648,6 +669,7 @@ const Benificiaryform = ({
                               <Label htmlFor="guardian-city">City</Label>
                               <Input
                                 id="guardian-city"
+                                defaultValue={Benifyciary.guardianCity}
                                 placeholder="Enter guardian's city"
                                 {...register("guardianCity")}
                               />
@@ -661,6 +683,7 @@ const Benificiaryform = ({
                               <Label htmlFor="guardian-state">State</Label>
                               <Input
                                 id="guardian-state"
+                                defaultValue={Benifyciary.guardianState}
                                 placeholder="Enter guardian's state"
                                 {...register("guardianState")}
                               />
@@ -676,6 +699,7 @@ const Benificiaryform = ({
                               </Label>
                               <Input
                                 id="guardian-house-no"
+                                defaultValue={Benifyciary.guardianHouseNo}
                                 placeholder="Enter house number"
                                 {...register("guardianHouseNo")}
                               />
@@ -692,6 +716,7 @@ const Benificiaryform = ({
                               <Input
                                 id="guardian-address1"
                                 placeholder="Enter address line 1"
+                                defaultValue={Benifyciary.guardianAddress1}
                                 {...register("guardianAddress1")}
                               />
                               {errors.guardianAddress1 && (
@@ -707,6 +732,7 @@ const Benificiaryform = ({
                               <Input
                                 id="guardian-address2"
                                 placeholder="Enter address line 2"
+                                defaultValue={Benifyciary.guardianAddress2}
                                 {...register("guardianAddress2")}
                               />
                               {errors.guardianAddress2 && (
@@ -720,6 +746,7 @@ const Benificiaryform = ({
                               <Input
                                 id="guardian-pincode"
                                 placeholder="Enter pincode"
+                                defaultValue={Benifyciary.guardianPincode}
                                 {...register("guardianPincode")}
                               />
                               {errors.guardianPincode && (
@@ -733,6 +760,7 @@ const Benificiaryform = ({
                               <Input
                                 id="guardian-country"
                                 placeholder="Enter country"
+                                defaultValue={Benifyciary.guardianCountry}
                                 {...register("guardianCountry")}
                               />
                               {errors.guardianCountry && (
