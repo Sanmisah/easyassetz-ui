@@ -66,9 +66,9 @@ const Benificiarydetails = () => {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-    setCharityData(response.data.data.Beneficiary);
+    setCharityData(response.data.data.Charity);
 
-    return response.data.data.Beneficiary;
+    return response.data.data.Charity;
   };
   const chairty = useQuery({
     queryKey: ["charityData"],
