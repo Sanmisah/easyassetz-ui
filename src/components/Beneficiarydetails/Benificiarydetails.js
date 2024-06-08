@@ -46,7 +46,7 @@ const Benificiarydetails = () => {
     );
     setBenificiaryData(response.data.data.Beneficiaries);
 
-    return response.data.data.Beneficiary;
+    return response.data.data.Beneficiaries;
   };
   const query = useQuery({
     queryKey: ["benificiaryData"],
