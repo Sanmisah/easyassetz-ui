@@ -41,6 +41,7 @@ const charitySchema = z.object({
   charityWebsite: z.string().url("Invalid URL").optional(),
   charitySpecificInstruction: z.string().optional(),
 });
+const queryClient = useQueryClient();
 
 const Charitysheet = ({ charityopen, setcharityopen }) => {
   const {
@@ -68,6 +69,8 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
       return response.data.data.Benificiary;
     },
     onSuccess: () => {
+      setcharityopen(false);
+      queryClient.invalidateQueries("charityData");
       toast.success("Beneficiary added successfully!");
     },
     onError: (error) => {
