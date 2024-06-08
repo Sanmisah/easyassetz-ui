@@ -456,12 +456,12 @@ const Benificiaryform = ({
                             <Input
                               id="address1"
                               placeholder="Enter address line 1"
-                              {...register("address1")}
-                              defaultValue={Benifyciary.address1}
+                              {...register("addressLine1")}
+                              defaultValue={Benifyciary.addressLine1}
                             />
-                            {errors.address1 && (
+                            {errors.addressLine1 && (
                               <p className="text-red-500">
-                                {errors.address1.message}
+                                {errors.addressLine1.message}
                               </p>
                             )}
                           </div>
@@ -470,11 +470,12 @@ const Benificiaryform = ({
                             <Input
                               id="address2"
                               placeholder="Enter address line 2"
-                              {...register("address2")}
+                              defaultValue={Benifyciary.addressLine2}
+                              {...register("addressLine2")}
                             />
-                            {errors.address2 && (
+                            {errors.addressLine2 && (
                               <p className="text-red-500">
-                                {errors.address2.message}
+                                {errors.addressLine2.message}
                               </p>
                             )}
                           </div>
@@ -601,7 +602,7 @@ const Benificiaryform = ({
                                 </p>
                               )}
                             </div>
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                               <Label htmlFor="guardian-document">
                                 Guardian's Document
                               </Label>
@@ -616,7 +617,7 @@ const Benificiaryform = ({
                                   {errors.guardianDocument.message}
                                 </p>
                               )}
-                            </div>
+                            </div> */}
                             <div className="space-y-2">
                               <Label htmlFor="guardian-document-data">
                                 Guardian's Document Data
@@ -630,38 +631,6 @@ const Benificiaryform = ({
                               {errors.guardianDocumentData && (
                                 <p className="text-red-500">
                                   {errors.guardianDocumentData.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-religion">
-                                Guardian's Religion
-                              </Label>
-                              <Input
-                                id="guardian-religion"
-                                defaultValue={Benifyciary.guardianReligion}
-                                placeholder="Enter guardian's religion"
-                                {...register("guardianReligion")}
-                              />
-                              {errors.guardianReligion && (
-                                <p className="text-red-500">
-                                  {errors.guardianReligion.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-nationality">
-                                Guardian's Nationality
-                              </Label>
-                              <Input
-                                id="guardian-nationality"
-                                defaultValue={Benifyciary.guardianNationality}
-                                placeholder="Enter guardian's nationality"
-                                {...register("guardianNationality")}
-                              />
-                              {errors.guardianNationality && (
-                                <p className="text-red-500">
-                                  {errors.guardianNationality.message}
                                 </p>
                               )}
                             </div>
@@ -680,10 +649,12 @@ const Benificiaryform = ({
                               )}
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="guardian-state">State</Label>
+                              <Label htmlFor="guardian-state">
+                                Guardian State
+                              </Label>
                               <Input
                                 id="guardian-state"
-                                defaultValue={Benifyciary.guardianState}
+                                defaultValue={Benifyciary.state}
                                 placeholder="Enter guardian's state"
                                 {...register("guardianState")}
                               />
@@ -693,79 +664,53 @@ const Benificiaryform = ({
                                 </p>
                               )}
                             </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-religion">
+                                Religion
+                              </Label>
+                              <Input
+                                id="guardian-religion"
+                                defaultValue={Benifyciary.religion}
+                                placeholder="Enter guardian's religion"
+                                {...register("guardianReligion")}
+                              />
+                              {errors.guardianReligion && (
+                                <p className="text-red-500">
+                                  {errors.guardianReligion.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-nationality">
+                                Nationality
+                              </Label>
+                              <Input
+                                id="guardian-nationality"
+                                defaultValue={Benifyciary.nationality}
+                                placeholder="Enter guardian's nationality"
+                                {...register("guardianNationality")}
+                              />
+                              {errors.guardianNationality && (
+                                <p className="text-red-500">
+                                  {errors.guardianNationality.message}
+                                </p>
+                              )}
+                            </div>
+
                             <div className="space-y-2">
                               <Label htmlFor="guardian-house-no">
                                 House Number
                               </Label>
                               <Input
                                 id="guardian-house-no"
-                                defaultValue={Benifyciary.guardianHouseNo}
+                                defaultValue={Benifyciary.houseNo}
                                 placeholder="Enter house number"
-                                {...register("guardianHouseNo")}
+                                {...register("houseNo")}
                               />
                               {errors.guardianHouseNo && (
                                 <p className="text-red-500">
                                   {errors.guardianHouseNo.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-address1">
-                                Address Line 1
-                              </Label>
-                              <Input
-                                id="guardian-address1"
-                                placeholder="Enter address line 1"
-                                defaultValue={Benifyciary.guardianAddress1}
-                                {...register("guardianAddress1")}
-                              />
-                              {errors.guardianAddress1 && (
-                                <p className="text-red-500">
-                                  {errors.guardianAddress1.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-address2">
-                                Address Line 2
-                              </Label>
-                              <Input
-                                id="guardian-address2"
-                                placeholder="Enter address line 2"
-                                defaultValue={Benifyciary.guardianAddress2}
-                                {...register("guardianAddress2")}
-                              />
-                              {errors.guardianAddress2 && (
-                                <p className="text-red-500">
-                                  {errors.guardianAddress2.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-pincode">Pincode</Label>
-                              <Input
-                                id="guardian-pincode"
-                                placeholder="Enter pincode"
-                                defaultValue={Benifyciary.guardianPincode}
-                                {...register("guardianPincode")}
-                              />
-                              {errors.guardianPincode && (
-                                <p className="text-red-500">
-                                  {errors.guardianPincode.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-country">Country</Label>
-                              <Input
-                                id="guardian-country"
-                                placeholder="Enter country"
-                                defaultValue={Benifyciary.guardianCountry}
-                                {...register("guardianCountry")}
-                              />
-                              {errors.guardianCountry && (
-                                <p className="text-red-500">
-                                  {errors.guardianCountry.message}
                                 </p>
                               )}
                             </div>

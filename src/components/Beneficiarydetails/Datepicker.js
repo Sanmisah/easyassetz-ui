@@ -1,4 +1,9 @@
-import React, { useState, useImperativeHandle, forwardRef } from "react";
+import React, {
+  useState,
+  useImperativeHandle,
+  useEffect,
+  forwardRef,
+} from "react";
 import { PopoverTrigger, PopoverContent, Popover } from "@com/ui/popover";
 import { Calendar } from "@com/ui/calendar";
 import { Input } from "@com/ui/input";
@@ -8,12 +13,19 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import InputMask from "react-input-mask";
 
-const Datepicker = forwardRef(({ value, onChange }, ref) => {
+const Datepicker = forwardRef(({ value, onChange, defaultValue }, ref) => {
   const [stringDate, setStringDate] = useState(
-    value ? format(value, "dd/MM/yyyy") : ""
+    defaultValue ? format(defaultValue, "dd/MM/yyyy") : ""
   );
-  const [date, setDate] = useState(value || null);
+  const [date, setDate] = useState(defaultValue || null);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (defaultValue) {
+      setStringDate(format(defaultValue, "dd/MM/yyyy"));
+      setDate(defaultValue);
+    }
+  }, [defaultValue]);
 
   useImperativeHandle(ref, () => ({
     clear() {
@@ -47,7 +59,7 @@ const Datepicker = forwardRef(({ value, onChange }, ref) => {
 
   return (
     <Popover>
-      <div className="relative w-[300px] max-md:w-[220px]">
+      <div className="relative w-[80%] max-md:w-[240px]">
         <InputMask
           mask="99/99/9999"
           value={stringDate}
@@ -75,6 +87,8 @@ const Datepicker = forwardRef(({ value, onChange }, ref) => {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
+          defaultMonth={defaultValue}
+          initialFocus
           selected={date}
           onSelect={(selectedDate) => {
             if (!selectedDate) return;
@@ -83,8 +97,6 @@ const Datepicker = forwardRef(({ value, onChange }, ref) => {
             setErrorMessage("");
             onChange(selectedDate);
           }}
-          defaultMonth={date}
-          initialFocus
         />
       </PopoverContent>
     </Popover>
