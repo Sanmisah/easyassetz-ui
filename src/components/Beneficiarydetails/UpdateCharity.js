@@ -23,7 +23,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
-import "react-international-charityNumber/style.css";
+import "react-international-phone/style.css";
 import { PhoneInput } from "react-international-phone";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
