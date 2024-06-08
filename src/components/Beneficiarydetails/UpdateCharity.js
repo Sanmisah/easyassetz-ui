@@ -79,14 +79,13 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     enabled: !!charityId,
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["charityData", charityId]);
       console.log("Data:", data);
-      if (data.dob) {
-        const age = calculateAge(data.dob);
-        if (age >= 18) {
-          clearGuardianFields();
-        }
-      }
+      // if (data.dob) {
+      //   const age = calculateAge(data.dob);
+      //   if (age >= 18) {
+      //     clearGuardianFields();
+      //   }
+      // }
 
       for (const [key, value] of Object.entries(data)) {
         setValue(key, value);
