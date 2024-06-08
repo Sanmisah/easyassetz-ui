@@ -492,7 +492,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                 <SelectValue placeholder="Select document" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="aadhaar">Aadhaar</SelectItem>
+                                <SelectItem value="adhar">Aadhaar</SelectItem>
                                 <SelectItem value="passport">
                                   Passport
                                 </SelectItem>
@@ -520,7 +520,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           <Input
                             id="guardian-document-data"
                             placeholder={`Enter guardian's ${selectedDocument} number`}
-                            {...register(`${selectedDocument}Data`)}
+                            {...register("documentData")}
                           />
                           {errors.documentData && (
                             <p className="text-red-500">
