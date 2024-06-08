@@ -30,16 +30,16 @@ import { PhoneInput } from "react-international-phone";
 import { toast } from "sonner";
 
 const charitySchema = z.object({
-  orgName: z.string().nonempty("Organization name is required"),
-  address1: z.string().nonempty("Address 1 is required"),
-  address2: z.string().optional(),
-  city: z.string().nonempty("City is required"),
-  state: z.string().nonempty("State is required"),
-  phone: z.string().nonempty("Phone number is required"),
-  email: z.string().email("Invalid email address"),
+  charityName: z.string().nonempty("Organization name is required"),
+  charityAddress1: z.string().nonempty("Address 1 is required"),
+  charityAddress2: z.string().optional(),
+  charityCity: z.string().nonempty("City is required"),
+  charityState: z.string().nonempty("State is required"),
+  charityNumber: z.string().optional(),
+  charityEmail: z.string().email("Invalid charityEmail address"),
   contactName: z.string().nonempty("Contact person name is required"),
-  website: z.string().url("Invalid URL").optional(),
-  instructions: z.string().optional(),
+  charityWebsite: z.string().url("Invalid URL").optional(),
+  charitySpecificInstruction: z.string().optional(),
 });
 
 const Charitysheet = ({ charityopen, setcharityopen }) => {
@@ -106,11 +106,11 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Input
                 id="org-name"
                 placeholder="Enter organization name"
-                {...register("orgName")}
+                {...register("charityName")}
                 className="w-full"
               />
-              {errors.orgName && (
-                <p className="text-red-500">{errors.orgName.message}</p>
+              {errors.charityName && (
+                <p className="text-red-500">{errors.charityName.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
@@ -120,11 +120,11 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Input
                 id="address-1"
                 placeholder="Enter address"
-                {...register("address1")}
+                {...register("charityAddress1")}
                 className="w-full"
               />
-              {errors.address1 && (
-                <p className="text-red-500">{errors.address1.message}</p>
+              {errors.charityAddress1 && (
+                <p className="text-red-500">{errors.charityAddress1.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
@@ -134,35 +134,35 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Input
                 id="address-2"
                 placeholder="Enter address"
-                {...register("address2")}
+                {...register("charityAddress2")}
                 className="w-full"
               />
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="city" className="text-base font-medium">
+              <Label htmlFor="charityCity" className="text-base font-medium">
                 City
               </Label>
               <Input
-                id="city"
-                placeholder="Enter city"
-                {...register("city")}
+                id="charityCity"
+                placeholder="Enter charityCity"
+                {...register("charityCity")}
                 className="w-full"
               />
-              {errors.city && (
-                <p className="text-red-500">{errors.city.message}</p>
+              {errors.charityCity && (
+                <p className="text-red-500">{errors.charityCity.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="state" className="text-base font-medium">
+              <Label htmlFor="charityState" className="text-base font-medium">
                 State
               </Label>
               <Controller
-                name="state"
+                name="charityState"
                 control={control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select state" />
+                      <SelectValue placeholder="Select charityState" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="ca">California</SelectItem>
@@ -172,39 +172,39 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
                   </Select>
                 )}
               />
-              {errors.state && (
-                <p className="text-red-500">{errors.state.message}</p>
+              {errors.charityState && (
+                <p className="text-red-500">{errors.charityState.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="phone" className="text-base font-medium">
+              <Label htmlFor="charityNumber" className="text-base font-medium">
                 Phone Number
               </Label>
               <PhoneInput
-                id="phone"
+                id="charityNumber"
                 type="tel"
                 defaultCountry="in"
-                placeholder="Enter phone number"
-                {...register("phone")}
+                placeholder="Enter charityNumber number"
+                {...register("charityNumber")}
                 className="w-full"
               />
-              {errors.phone && (
-                <p className="text-red-500">{errors.phone.message}</p>
+              {errors.charityNumber && (
+                <p className="text-red-500">{errors.charityNumber.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="email" className="text-base font-medium">
+              <Label htmlFor="charityEmail" className="text-base font-medium">
                 Email
               </Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter email"
-                {...register("email")}
+                id="charityEmail"
+                type="charityEmail"
+                placeholder="Enter charityEmail"
+                {...register("charityEmail")}
                 className="w-full"
               />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
+              {errors.charityEmail && (
+                <p className="text-red-500">{errors.charityEmail.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
@@ -222,28 +222,31 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="website" className="text-base font-medium">
+              <Label htmlFor="charityWebsite" className="text-base font-medium">
                 Website
               </Label>
               <Input
-                id="website"
+                id="charityWebsite"
                 type="url"
-                placeholder="Enter website"
-                {...register("website")}
+                placeholder="Enter charityWebsite"
+                {...register("charityWebsite")}
                 className="w-full"
               />
-              {errors.website && (
-                <p className="text-red-500">{errors.website.message}</p>
+              {errors.charityWebsite && (
+                <p className="text-red-500">{errors.charityWebsite.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="instructions" className="text-base font-medium">
+              <Label
+                htmlFor="charitySpecificInstruction"
+                className="text-base font-medium"
+              >
                 Specific Instructions
               </Label>
               <Textarea
-                id="instructions"
-                placeholder="Enter any specific instructions"
-                {...register("instructions")}
+                id="charitySpecificInstruction"
+                placeholder="Enter any specific charitySpecificInstruction"
+                {...register("charitySpecificInstruction")}
                 className="w-full"
               />
             </div>
