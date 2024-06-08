@@ -61,14 +61,11 @@ const Benificiarydetails = () => {
   });
   const getCharityData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`http://127.0.0.1:8000/api/charities`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
     setCharityData(response.data.data.Charity);
 
     return response.data.data.Charity;
