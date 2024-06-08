@@ -49,13 +49,13 @@ const beneficiarySchema = z
     guardianCity: z.string().optional(),
     guardianState: z.string().optional(),
     guardianDocument: z.string().optional(),
-    guardianDocumentData: z.string().optional(),
+    documentData: z.string().optional(),
     guardianReligion: z.string().optional(),
     guardianNationality: z.string().optional(),
-    guardianAddress1: z.string().optional(),
-    guardianAddress2: z.string().optional(),
-    guardianPincode: z.string().optional(),
-    guardianCountry: z.string().optional(),
+    AddressLine1: z.string().optional(),
+    AddressLine2: z.string().optional(),
+    pincode: z.string().optional(),
+    country: z.string().optional(),
     mobile: z.string().optional(),
     email: z.string().optional(),
     documentData: z.string().optional(),
@@ -135,14 +135,14 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianCity", "");
     setValue("guardianState", "");
     setValue("guardianDocument", "");
-    setValue("guardianDocumentData", "");
+    setValue("documentData", "");
     setValue("guardianReligion", "");
     setValue("guardianNationality", "");
-    setValue("guardianHouseNo", "");
-    setValue("guardianAddress1", "");
-    setValue("guardianAddress2", "");
-    setValue("guardianPincode", "");
-    setValue("guardianCountry", "");
+    setValue("houseNo", "");
+    setValue("AddressLine1", "");
+    setValue("AddressLine2", "");
+    setValue("pincode", "");
+    setValue("country", "");
   };
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
@@ -173,14 +173,14 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
       delete data.guardianCity;
       delete data.guardianState;
       delete data.guardianDocument;
-      delete data.guardianDocumentData;
+      delete data.documentData;
       delete data.guardianReligion;
       delete data.guardianNationality;
-      delete data.guardianHouseNo;
-      delete data.guardianAddress1;
-      delete data.guardianAddress2;
-      delete data.guardianPincode;
-      delete data.guardianCountry;
+      delete data.houseNo;
+      delete data.AddressLine1;
+      delete data.AddressLine2;
+      delete data.pincode;
+      delete data.country;
     }
     try {
       benificiaryMutate.mutate(data);
@@ -516,9 +516,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             placeholder={`Enter guardian's ${selectedDocument} number`}
                             {...register("documentData")}
                           />
-                          {errors.guardianDocumentData && (
+                          {errors.documentData && (
                             <p className="text-red-500">
-                              {errors.guardianDocumentData.message}
+                              {errors.documentData.message}
                             </p>
                           )}
                         </div>
@@ -560,9 +560,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           placeholder="Enter house/flat number"
                           {...register("houseNo")}
                         />
-                        {errors.guardianHouseNo && (
+                        {errors.houseNo && (
                           <p className="text-red-500">
-                            {errors.guardianHouseNo.message}
+                            {errors.houseNo.message}
                           </p>
                         )}
                       </div>
@@ -573,11 +573,11 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-address1"
                           placeholder="Enter address line 1"
-                          {...register("Address1")}
+                          {...register("AddressLine1")}
                         />
-                        {errors.guardianAddress1 && (
+                        {errors.AddressLine1 && (
                           <p className="text-red-500">
-                            {errors.guardianAddress1.message}
+                            {errors.AddressLine1.message}
                           </p>
                         )}
                       </div>
@@ -588,11 +588,11 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-address2"
                           placeholder="Enter address line 2"
-                          {...register("address2")}
+                          {...register("AddressLine2")}
                         />
-                        {errors.guardianAddress2 && (
+                        {errors.AddressLine2 && (
                           <p className="text-red-500">
-                            {errors.guardianAddress2.message}
+                            {errors.AddressLine2.message}
                           </p>
                         )}
                       </div>
@@ -601,11 +601,11 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-pincode"
                           placeholder="Enter pincode"
-                          {...register("guardianPincode")}
+                          {...register("pincode")}
                         />
-                        {errors.guardianPincode && (
+                        {errors.pincode && (
                           <p className="text-red-500">
-                            {errors.guardianPincode.message}
+                            {errors.pincode.message}
                           </p>
                         )}
                       </div>
@@ -616,9 +616,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           placeholder="Enter country"
                           {...register("country")}
                         />
-                        {errors.guardianCountry && (
+                        {errors.country && (
                           <p className="text-red-500">
-                            {errors.guardianCountry.message}
+                            {errors.country.message}
                           </p>
                         )}
                       </div>
@@ -628,12 +628,10 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-city"
                           placeholder="Enter guardian's city"
-                          {...register("city")}
+                          {...register("city", { required: true })}
                         />
-                        {errors.guardianCity && (
-                          <p className="text-red-500">
-                            {errors.guardianCity.message}
-                          </p>
+                        {errors.city && (
+                          <p className="text-red-500">{errors.city.message}</p>
                         )}
                       </div>
                       <div className="space-y-2">
@@ -641,12 +639,10 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-state"
                           placeholder="Enter guardian's state"
-                          {...register("state")}
+                          {...register("state", { required: true })}
                         />
-                        {errors.guardianState && (
-                          <p className="text-red-500">
-                            {errors.guardianState.message}
-                          </p>
+                        {errors.state && (
+                          <p className="text-red-500">{errors.state.message}</p>
                         )}
                       </div>
                     </CardContent>
