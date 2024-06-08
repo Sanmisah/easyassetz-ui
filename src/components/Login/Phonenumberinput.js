@@ -19,9 +19,18 @@ import "react-phone-number-input/style.css"; // Ensure to include the styles for
 
 const PhoneInput = React.forwardRef(
   ({ className, onChange, value, defaultValue, ...props }, ref) => {
+    const [internalValue, setInternalValue] = React.useState(
+      defaultValue || ""
+    );
     const handleChange = (value) => {
-      onChange(defaultValue || value || "");
+      onChange(value || "");
     };
+
+    React.useEffect(() => {
+      if (value !== undefined) {
+        setInternalValue(value);
+      }
+    }, [value]);
 
     return (
       <RPNInput.default
@@ -32,7 +41,7 @@ const PhoneInput = React.forwardRef(
         countrySelectComponent={CountrySelect}
         inputComponent={InputComponent}
         onChange={handleChange}
-        value={value}
+        value={internalValue}
         {...props}
       />
     );

@@ -149,7 +149,6 @@ const Benificiaryform = ({
           clearGuardianFields();
         }
       }
-      data.dob = new Date(data.dob);
       setdummy(data);
       // Prefill the form with the fetched data
       for (const [key, value] of Object.entries(data)) {
