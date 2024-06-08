@@ -167,10 +167,10 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 id="address-1"
                 placeholder="Enter address"
                 {...register("charityAddress1")}
-                defaultValue={Charitydata?.charitycharityAddress1}
+                defaultValue={Charitydata?.charityAddress1}
                 className="w-full"
               />
-              {errors.charitycharityAddress1 && (
+              {errors.charityAddress1 && (
                 <p className="text-red-500">{errors.charityAddress1.message}</p>
               )}
             </div>
@@ -318,8 +318,8 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Textarea
                 id="charityspecificInstrucion"
                 placeholder="Enter any specific charityspecificInstrucion"
-                defaultValue={Charitydata?.charityspecificInstrucion}
-                {...register("charityspecificInstrucion")}
+                defaultValue={Charitydata?.charitySpecificInstrucion}
+                {...register("charitySpecificInstrucion")}
                 className="w-full"
               />
             </div>
