@@ -221,7 +221,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
-                              {...register("fullName")}
+                              {...register("fullLegalName")}
                             />
                             {errors.fullName && (
                               <p className="text-red-500">

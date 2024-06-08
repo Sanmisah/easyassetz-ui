@@ -175,7 +175,7 @@ const Benificiaryform = ({
   const mutation = useMutation(
     async (data) => {
       const response = await axios.put(
-        `/api/beneficiary/${beneficiaryId}`,
+        `/api/beneficiaries/${beneficiaryId}`,
         data
       );
       return response.data;
