@@ -32,6 +32,12 @@ const PhoneInput = React.forwardRef(
       }
     }, [value]);
 
+    React.useEffect(() => {
+      if (defaultValue) {
+        console.log("value:", defaultValue);
+      }
+    }, [defaultValue]);
+
     return (
       <RPNInput.default
         ref={ref}
