@@ -220,7 +220,7 @@ const Benificiaryform = ({
     onSuccess: () => {
       queryClient.invalidateQueries(["beneficiaryDataUpdate", benificiaryId]);
       toast.success("Beneficiary updated successfully!");
-      setbenficiaryopen(false);
+      setUpdateBenificiaryOpen(false);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -715,7 +715,7 @@ const Benificiaryform = ({
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setbenficiaryopen(false)}
+                        onClick={() => setUpdateBenificiaryOpen(false)}
                       >
                         Cancel
                       </Button>
