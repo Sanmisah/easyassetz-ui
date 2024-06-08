@@ -168,6 +168,10 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
   const onSubmit = async (data) => {
     console.log(data);
+    if (relationship === "other") {
+      data.relationship = data.specificRelationship;
+    }
+    delete data.specificRelationship;
 
     if (data.dob > new Date() === 18) {
       delete data.guardianCity;
