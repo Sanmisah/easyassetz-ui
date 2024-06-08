@@ -38,7 +38,7 @@ import { toast } from "sonner";
 const beneficiarySchema = z
   .object({
     fullLegalName: z.string().nonempty("Full Legal Name is required"),
-    relationship: z.string().nonempty("Relationship is required"),
+    relationship: z.string().optional(),
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
     dob: z.date().optional(),
