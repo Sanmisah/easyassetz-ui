@@ -261,9 +261,7 @@ const Benificiaryform = ({
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
-                              value={
-                                Benifyciary ? Benifyciary.fullLegalName : ""
-                              }
+                              defaultvalue={Benifyciary.fullLegalName}
                               {...register("fullName")}
                             />
                             {errors.fullName && (
