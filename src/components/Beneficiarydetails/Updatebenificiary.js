@@ -92,8 +92,8 @@ const beneficiarySchema = z
   );
 
 const Benificiaryform = ({
-  benficiaryopen,
-  setbenficiaryopen,
+  updateBenificiaryOpen,
+  setUpdateBenificiaryOpen,
   beneficiaryId,
 }) => {
   const queryClient = useQueryClient();
@@ -225,8 +225,8 @@ const Benificiaryform = ({
     <div>
       <Sheet
         className="w-[800px]"
-        open={benficiaryopen}
-        onOpenChange={setbenficiaryopen}
+        open={updateBenificiaryOpen}
+        onOpenChange={setUpdateBenificiaryOpen}
       >
         <SheetContent>
           <SheetHeader>

@@ -167,8 +167,8 @@ const Benificiarydetails = () => {
       )}
       {updateBenificiaryOpen && (
         <UpdateBenificiary
-          benificiaryopen={updateBenificiaryOpen}
-          setbenificiaryopen={setUpdateBenificiaryOpen}
+          updateBenificiaryOpen={updateBenificiaryOpen}
+          setUpdateBenificiaryOpen={setUpdateBenificiaryOpen}
           benificiaryId={benificiaryData[0].id}
         />
       )}
