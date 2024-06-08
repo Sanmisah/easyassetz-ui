@@ -33,6 +33,7 @@ import axios from "axios";
 import Datepicker from "./Datepicker";
 import { PhoneInput } from "react-international-phone";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const beneficiarySchema = z
   .object({
@@ -114,30 +115,43 @@ const Benificiaryform = ({
 
   const watchDOB = watch("dob", null);
 
-  const {
-    data: beneficiaryData,
-    isLoading,
-    isError,
-  } = useQuery(
-    ["beneficiary", beneficiaryId],
-    async () => {
-      const { data } = await axios.get(`/api/beneficiary/${beneficiaryId}`);
-      return data;
-    },
-    {
-      enabled: !!beneficiaryId,
-      onSuccess: (data) => {
-        // Prefill the form with the fetched data
-        for (const [key, value] of Object.entries(data)) {
-          if (key === "dob") {
-            setValue(key, new Date(value)); // Convert ISO string to Date object
-          } else {
-            setValue(key, value);
-          }
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
+
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/beneficiaries/${beneficiaryId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+
+    return response.data.data.Benificiary;
+  };
+
+  const { isLoading, isError } = useQuery({
+    queryKey: ["beneficiaryDataUpdate", beneficiaryId],
+    queryFn: getPersonalData,
+    enabled: !!beneficiaryId,
+
+    onSuccess: (data) => {
+      // Prefill the form with the fetched data
+      for (const [key, value] of Object.entries(data)) {
+        if (key === "dob") {
+          setValue(key, new Date(value)); // Convert ISO string to Date object
+        } else {
+          setValue(key, value);
         }
-      },
-    }
-  );
+      }
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
+  });
 
   useEffect(() => {
     if (watchDOB) {
@@ -183,7 +197,7 @@ const Benificiaryform = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["beneficiary", beneficiaryId]);
-        alert("Beneficiary updated successfully!");
+        toast.success("Beneficiary updated successfully!");
         setbenficiaryopen(false);
       },
       onError: (error) => {
