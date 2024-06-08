@@ -37,7 +37,7 @@ const Benificiarydetails = () => {
   const getBenificiaryData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries${user.data.user.profile.id}`,
+      `http://127.0.0.1:8000/api/beneficiaries/${user.data.user.profile.id}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,

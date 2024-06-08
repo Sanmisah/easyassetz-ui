@@ -38,7 +38,7 @@ import { toast } from "sonner";
 
 const beneficiarySchema = z
   .object({
-    fullName: z.string().nonempty("Full Legal Name is required"),
+    fullLegalName: z.string().nonempty("Full Legal Name is required"),
     relationship: z.string().nonempty("Relationship is required"),
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
@@ -223,9 +223,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               placeholder="Enter your full legal name"
                               {...register("fullLegalName")}
                             />
-                            {errors.fullName && (
+                            {errors.fullLegalName && (
                               <p className="text-red-500">
-                                {errors.fullName.message}
+                                {errors.fullLegalName.message}
                               </p>
                             )}
                           </div>
