@@ -234,7 +234,9 @@ const Benificiaryform = ({
     benificiaryMutate.mutate(data);
   };
 
-  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
+  const isMinor = watchDOB
+    ? calculateAge(watchDOB) < 18 || Benifyciary.dob < new Date()
+    : true;
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading beneficiary data</div>;
