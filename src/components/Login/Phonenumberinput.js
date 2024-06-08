@@ -18,7 +18,7 @@ import { ScrollArea } from "@com/ui/scroll-area";
 import "react-phone-number-input/style.css"; // Ensure to include the styles for react-phone-number-input
 
 const PhoneInput = React.forwardRef(
-  ({ className, onChange, value, ...props }, ref) => {
+  ({ className, onChange, value, defaultValue, ...props }, ref) => {
     const handleChange = (value) => {
       onChange(value || "");
     };
@@ -28,6 +28,7 @@ const PhoneInput = React.forwardRef(
         ref={ref}
         className={cn("flex", className)}
         flagComponent={FlagComponent}
+        defaultValue={defaultValue}
         countrySelectComponent={CountrySelect}
         inputComponent={InputComponent}
         onChange={handleChange}
