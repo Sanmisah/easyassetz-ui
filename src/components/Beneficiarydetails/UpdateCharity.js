@@ -23,24 +23,21 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
-import "react-international-phone/style.css";
+import "react-international-charityNumber/style.css";
 import { PhoneInput } from "react-international-phone";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const charitySchema = z.object({
-  orgName: z.string().nonempty("Organization name is required"),
-  address1: z.string().nonempty("Address 1 is required"),
-  address2: z.string().optional(),
-  city: z.string().nonempty("City is required"),
-  state: z.string().nonempty("State is required"),
-  phone: z
-    .string()
-    .regex(/^[0-9]{10}$/, "Phone number must be 10 digits")
-    .nonempty("Phone number is required"),
-  email: z.string().email("Invalid email address"),
-  contactName: z.string().nonempty("Contact person name is required"),
-  website: z.string().url("Invalid URL").optional(),
-  instructions: z.string().optional(),
+  charityName: z.string().nonempty("Organization name is required"),
+  charityAddress1: z.string().nonempty("Address 1 is required"),
+  charityAddress2: z.string().optional(),
+  charityCity: z.string().nonempty("City is required"),
+  charityState: z.string().nonempty("State is required"),
+  charityNumber: z.string().nonempty("Phone number is required"),
+  charityEmail: z.string().charityEmail("Invalid charityEmail address"),
+  charityContactPerson: z.string().nonempty("Contact person name is required"),
+  charityWebsite: z.string().url("Invalid URL").optional(),
+  charityspecificInstrucion: z.string().optional(),
 });
 
 const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
@@ -154,12 +151,12 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="org-name"
                 placeholder="Enter organization name"
-                {...register("orgName")}
-                defaultValue={Charitydata?.orgName}
+                {...register("charityName")}
+                defaultValue={Charitydata?.charityName}
                 className="w-full"
               />
-              {errors.orgName && (
-                <p className="text-red-500">{errors.orgName.message}</p>
+              {errors.charityName && (
+                <p className="text-red-500">{errors.charityName.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
@@ -169,12 +166,12 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="address-1"
                 placeholder="Enter address"
-                {...register("address1")}
-                defaultValue={Charitydata?.address1}
+                {...register("charityAddress1")}
+                defaultValue={Charitydata?.charitycharityAddress1}
                 className="w-full"
               />
-              {errors.address1 && (
-                <p className="text-red-500">{errors.address1.message}</p>
+              {errors.charitycharityAddress1 && (
+                <p className="text-red-500">{errors.charityAddress1.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
@@ -184,43 +181,43 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="address-2"
                 placeholder="Enter address"
-                {...register("address2")}
-                defaultValue={Charitydata?.address2}
+                {...register("charityAddress2")}
+                defaultValue={Charitydata?.charityAddress2}
                 className="w-full"
               />
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="city" className="text-base font-medium">
+              <Label htmlFor="charityCity" className="text-base font-medium">
                 City
               </Label>
               <Input
-                id="city"
-                placeholder="Enter city"
-                defaultValue={Charitydata?.city}
-                {...register("city")}
+                id="charityCity"
+                placeholder="Enter charityCity"
+                defaultValue={Charitydata?.charityCity}
+                {...register("charityCity")}
                 className="w-full"
               />
-              {errors.city && (
-                <p className="text-red-500">{errors.city.message}</p>
+              {errors.charityCity && (
+                <p className="text-red-500">{errors.charityCity.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="state" className="text-base font-medium">
+              <Label htmlFor="charityState" className="text-base font-medium">
                 State
               </Label>
               <Controller
-                name="state"
+                name="charityState"
                 control={control}
-                defaultValue={Charitydata?.state}
+                defaultValue={Charitydata?.charityState}
                 render={({ field }) => (
                   <Select
                     {...field}
-                    defaultValue={Charitydata?.state}
+                    defaultValue={Charitydata?.charityState}
                     value={field.value}
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select state" />
+                      <SelectValue placeholder="Select charityState" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="ca">California</SelectItem>
@@ -230,47 +227,49 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                   </Select>
                 )}
               />
-              {errors.state && (
-                <p className="text-red-500">{errors.state.message}</p>
+              {errors.charityState && (
+                <p className="text-red-500">{errors.charityState.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="phone" className="text-base font-medium">
+              <Label htmlFor="charityNumber" className="text-base font-medium">
                 Phone Number
               </Label>
               <Controller
-                name="phone"
+                name="charityNumber"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
-                    id="phone"
+                    id="charityNumber"
                     international
                     countryCallingCodeEditable={false}
                     defaultCountry="US"
-                    value={field.value ? field.value : Charitydata?.phone}
+                    value={
+                      field.value ? field.value : Charitydata?.charityNumber
+                    }
                     onChange={field.onChange}
                     className="w-full"
                   />
                 )}
               />
-              {errors.phone && (
-                <p className="text-red-500">{errors.phone.message}</p>
+              {errors.charityNumber && (
+                <p className="text-red-500">{errors.charityNumber.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="email" className="text-base font-medium">
+              <Label htmlFor="charityEmail" className="text-base font-medium">
                 Email
               </Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter email"
-                defaultValue={Charitydata?.email}
-                {...register("email")}
+                id="charityEmail"
+                type="charityEmail"
+                placeholder="Enter charityEmail"
+                defaultValue={Charitydata?.charityEmail}
+                {...register("charityEmail")}
                 className="w-full"
               />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
+              {errors.charityEmail && (
+                <p className="text-red-500">{errors.charityEmail.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
@@ -280,39 +279,47 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="contact-name"
                 placeholder="Enter full legal name"
-                defaultValue={Charitydata?.contactName}
-                {...register("contactName")}
+                defaultValue={Charitydata?.charityContactPerson}
+                {...register("charityContactPerson")}
                 className="w-full"
               />
-              {errors.contactName && (
-                <p className="text-red-500">{errors.contactName.message}</p>
+              {errors.charityContactPerson && (
+                <p className="text-red-500">
+                  {errors.charityContactPerson.message}
+                </p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="website" className="text-base font-medium">
+              <Label
+                htmlFor="charitycontactperson"
+                className="text-base font-medium"
+              >
                 Website
               </Label>
               <Input
-                id="website"
+                id="charitycontactperson"
                 type="url"
-                placeholder="Enter website"
-                defaultValue={Charitydata?.website}
-                {...register("website")}
+                placeholder="Enter charityWebsite"
+                defaultValue={Charitydata?.charityWebsite}
+                {...register("charityWebsite")}
                 className="w-full"
               />
-              {errors.website && (
-                <p className="text-red-500">{errors.website.message}</p>
+              {errors.charityWebsite && (
+                <p className="text-red-500">{errors.charityWebsite.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="instructions" className="text-base font-medium">
+              <Label
+                htmlFor="charityspecificInstrucion"
+                className="text-base font-medium"
+              >
                 Specific Instructions
               </Label>
               <Textarea
-                id="instructions"
-                placeholder="Enter any specific instructions"
-                defaultValue={Charitydata?.instructions}
-                {...register("instructions")}
+                id="charityspecificInstrucion"
+                placeholder="Enter any specific charityspecificInstrucion"
+                defaultValue={Charitydata?.charityspecificInstrucion}
+                {...register("charityspecificInstrucion")}
                 className="w-full"
               />
             </div>
