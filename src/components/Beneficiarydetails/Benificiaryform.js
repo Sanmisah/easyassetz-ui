@@ -52,8 +52,8 @@ const beneficiarySchema = z
     documentData: z.string().optional(),
     guardianReligion: z.string().optional(),
     guardianNationality: z.string().optional(),
-    AddressLine1: z.string().optional(),
-    AddressLine2: z.string().optional(),
+    addressLine1: z.string().optional(),
+    addressLine2: z.string().optional(),
     pincode: z.string().optional(),
     country: z.string().optional(),
     mobile: z.string().optional(),
@@ -139,8 +139,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianReligion", "");
     setValue("guardianNationality", "");
     setValue("houseNo", "");
-    setValue("AddressLine1", "");
-    setValue("AddressLine2", "");
+    setValue("addressLine1", "");
+    setValue("addressLine2", "");
     setValue("pincode", "");
     setValue("country", "");
   };
@@ -177,8 +177,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
       delete data.guardianReligion;
       delete data.guardianNationality;
       delete data.houseNo;
-      delete data.AddressLine1;
-      delete data.AddressLine2;
+      delete data.addressLine1;
+      delete data.addressLine2;
       delete data.pincode;
       delete data.country;
     }
@@ -575,11 +575,11 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-address1"
                           placeholder="Enter address line 1"
-                          {...register("AddressLine1")}
+                          {...register("addressLine1")}
                         />
-                        {errors.AddressLine1 && (
+                        {errors.addressLine1 && (
                           <p className="text-red-500">
-                            {errors.AddressLine1.message}
+                            {errors.addressLine1.message}
                           </p>
                         )}
                       </div>
@@ -590,11 +590,11 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-address2"
                           placeholder="Enter address line 2"
-                          {...register("AddressLine2")}
+                          {...register("addressLine2")}
                         />
-                        {errors.AddressLine2 && (
+                        {errors.addressLine2 && (
                           <p className="text-red-500">
-                            {errors.AddressLine2.message}
+                            {errors.addressLine2.message}
                           </p>
                         )}
                       </div>
