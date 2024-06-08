@@ -79,7 +79,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     enabled: !!charityId,
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries("charityData");
+      queryClient.invalidateQueries(["charityData", charityId]);
       console.log("Data:", data);
       if (data.dob) {
         const age = calculateAge(data.dob);
