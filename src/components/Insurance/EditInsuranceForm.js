@@ -155,6 +155,7 @@ const InsuranceForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    lifeInsuranceMutate.mutate(data);
   };
 
   useEffect(() => {
@@ -179,7 +180,7 @@ const InsuranceForm = () => {
         </CardHeader>
         <CardContent className="grid gap-6">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
                 <Controller
