@@ -85,7 +85,7 @@ const InsuranceForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || {},
+    defaultValues: { ...defaultValues } || {},
   });
 
   const getPersonalData = async () => {
