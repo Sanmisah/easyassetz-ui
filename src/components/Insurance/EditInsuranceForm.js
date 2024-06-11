@@ -500,7 +500,7 @@ const InsuranceForm = () => {
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem
-                        checked={brokerSelected}
+                        defaultValue={Benifyciary.modeOfPurchase}
                         id="broker"
                         value="broker"
                       />
@@ -508,7 +508,7 @@ const InsuranceForm = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem
-                        checked={!brokerSelected}
+                        defaultValue={Benifyciary.modeOfPurchase}
                         id="e-insurance"
                         value="e-insurance"
                       />
