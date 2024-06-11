@@ -64,6 +64,8 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
 const InsuranceForm = () => {
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);

@@ -22,6 +22,8 @@ import {
 import { useDispatch } from "react-redux";
 
 const LifeInsurance = () => {
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
