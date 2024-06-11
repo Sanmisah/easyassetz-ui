@@ -129,7 +129,7 @@ const InsuranceForm = () => {
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOthercompanyName(value === "other");
+                        setShowOtherInsuranceCompany(value === "other");
                       }}
                       className={errors.companyName ? "border-red-500" : ""}
                     >
