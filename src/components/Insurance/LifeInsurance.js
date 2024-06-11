@@ -1,5 +1,4 @@
 import React from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@com/ui/button";
 import {
@@ -15,6 +14,8 @@ import * as z from "zod";
 import axios from "axios";
 import Datepicker from "./../Beneficiarydetails/Datepicker";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   setlifeInsuranceEditId,
   setlifeInsuranceDeleteId,

@@ -32,7 +32,7 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Insurance Company is required" }),
   othercompanyName: z.string().optional(),
-  insuranceSubtype: z
+  insuranceSubType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().nonempty({ message: "Policy Number is required" }),
@@ -81,7 +81,7 @@ const InsuranceForm = () => {
     defaultValues: {
       companyName: "",
       otherInsuranceCompany: "",
-      insuranceSubtype: "",
+      insuranceSubType: "",
       policyNumber: "",
       maturityDate: "",
       premium: "",
@@ -199,7 +199,7 @@ const InsuranceForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Sub Type</Label>
                 <Controller
-                  name="insuranceSubtype"
+                  name="insuranceSubType"
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -207,14 +207,14 @@ const InsuranceForm = () => {
                       placeholder="Enter sub type"
                       {...field}
                       className={
-                        errors.insuranceSubtype ? "border-red-500" : ""
+                        errors.insuranceSubType ? "border-red-500" : ""
                       }
                     />
                   )}
                 />
-                {errors.insuranceSubtype && (
+                {errors.insuranceSubType && (
                   <span className="text-red-500">
-                    {errors.insuranceSubtype.message}
+                    {errors.insuranceSubType.message}
                   </span>
                 )}
               </div>

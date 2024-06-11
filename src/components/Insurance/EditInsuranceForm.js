@@ -27,13 +27,14 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
-  insuranceCompany: z
+  companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
   otherInsuranceCompany: z.string().optional(),
-  insuranceSubtype: z
+  insuranceSubType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().nonempty({ message: "Policy Number is required" }),
@@ -108,7 +109,7 @@ const InsuranceForm = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherInsuranceCompany(data.insuranceCompany === "other");
+      setShowOtherInsuranceCompany(data.companyName === "other");
       setShowOtherRelationship(data.relationship === "other");
       setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
     },
@@ -143,7 +144,7 @@ const InsuranceForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
                 <Controller
-                  name="insuranceCompany"
+                  name="companyName"
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -153,10 +154,8 @@ const InsuranceForm = () => {
                         field.onChange(value);
                         setShowOtherInsuranceCompany(value === "other");
                       }}
-                      className={
-                        errors.insuranceCompany ? "border-red-500" : ""
-                      }
-                      defaultValue={defaultValues?.insuranceCompany || ""}
+                      className={errors.companyName ? "border-red-500" : ""}
+                      defaultValue={defaultValues?.companyName || ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select insurance company" />
@@ -186,16 +185,16 @@ const InsuranceForm = () => {
                     )}
                   />
                 )}
-                {errors.insuranceCompany && (
+                {errors.companyName && (
                   <span className="text-red-500">
-                    {errors.insuranceCompany.message}
+                    {errors.companyName.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Sub Type</Label>
                 <Controller
-                  name="insuranceSubtype"
+                  name="insuranceSubType"
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -203,15 +202,15 @@ const InsuranceForm = () => {
                       placeholder="Enter sub type"
                       {...field}
                       className={
-                        errors.insuranceSubtype ? "border-red-500" : ""
+                        errors.insuranceSubType ? "border-red-500" : ""
                       }
-                      defaultValue={defaultValues?.insuranceSubtype || ""}
+                      defaultValue={defaultValues?.insuranceSubType || ""}
                     />
                   )}
                 />
-                {errors.insuranceSubtype && (
+                {errors.insuranceSubType && (
                   <span className="text-red-500">
-                    {errors.insuranceSubtype.message}
+                    {errors.insuranceSubType.message}
                   </span>
                 )}
               </div>
