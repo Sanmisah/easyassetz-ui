@@ -300,6 +300,7 @@ const InsuranceForm = () => {
                     <Input
                       id="policy-number"
                       placeholder="Enter policy number"
+                      value={field.value}
                       {...field}
                       className={errors.policyNumber ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.policyNumber || ""}
