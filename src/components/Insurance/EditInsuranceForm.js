@@ -158,6 +158,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Select
                       id="insurance-company"
+                      value={field.value}
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
