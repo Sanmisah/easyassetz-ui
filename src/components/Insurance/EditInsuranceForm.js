@@ -122,6 +122,20 @@ const InsuranceForm = () => {
       setShowOtherInsuranceCompany(data.companyName === "other");
       setShowOtherRelationship(data.relationship === "other");
       setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
+      setValue("companyName", data.companyName);
+      setValue("relationship", data.relationship);
+      setValue("otherRelationship", data.otherRelationship);
+      setValue("modeOfPurchase", data.modeOfPurchase);
+      setValue("contactPerson", data.contactPerson);
+      setValue("contactNumber", data.contactNumber);
+      setValue("email", data.email);
+      setValue("registeredMobile", data.registeredMobile);
+      setValue("registeredEmail", data.registeredEmail);
+      setValue("additionalDetails", data.additionalDetails);
+      setValue("previousPolicy", data.previousPolicy);
+      setValue("brokerName", data.brokerName);
+
+      console.log(data);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -162,8 +176,8 @@ const InsuranceForm = () => {
   };
 
   useEffect(() => {
-    console.log(defaultValues);
-  }, [defaultValues]);
+    console.log(Benifyciary);
+  }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading insurance data</div>;
   return (
@@ -202,7 +216,7 @@ const InsuranceForm = () => {
                         setShowOtherInsuranceCompany(value === "other");
                       }}
                       className={errors.companyName ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.companyName || ""}
+                      defaultValue={Benifyciary?.companyName || ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select insurance company" />
@@ -225,9 +239,7 @@ const InsuranceForm = () => {
                         {...field}
                         placeholder="Specify Insurance Company"
                         className="mt-2"
-                        defaultValue={
-                          defaultValues?.otherInsuranceCompany || ""
-                        }
+                        defaultValue={Benifyciary?.otherInsuranceCompany || ""}
                       />
                     )}
                   />
@@ -238,7 +250,7 @@ const InsuranceForm = () => {
                   </span>
                 )}
               </div>
-              {console.log(defaultValues)}
+              {console.log(Benifyciary)}
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Sub Type</Label>
                 <Controller
@@ -253,7 +265,7 @@ const InsuranceForm = () => {
                       className={
                         errors.insuranceSubType ? "border-red-500" : ""
                       }
-                      defaultValue={defaultValues?.insuranceSubType || ""}
+                      defaultValue={Benifyciary?.insuranceSubType || ""}
                     />
                   )}
                 />
@@ -276,7 +288,7 @@ const InsuranceForm = () => {
                       placeholder="Enter policy number"
                       {...field}
                       className={errors.policyNumber ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.policyNumber || ""}
+                      defaultValue={Benifyciary?.policyNumber || ""}
                     />
                   )}
                 />
@@ -296,7 +308,7 @@ const InsuranceForm = () => {
                       {...field}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={defaultValues?.maturityDate || ""}
+                      defaultValue={Benifyciary?.maturityDate || ""}
                     />
                   )}
                 />
@@ -319,7 +331,7 @@ const InsuranceForm = () => {
                       placeholder="Enter premium amount"
                       {...field}
                       className={errors.premium ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.premium || ""}
+                      defaultValue={Benifyciary?.premium || ""}
                     />
                   )}
                 />
@@ -338,7 +350,7 @@ const InsuranceForm = () => {
                       placeholder="Enter sum insured"
                       {...field}
                       className={errors.sumInsured ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.sumInsured || ""}
+                      defaultValue={Benifyciary?.sumInsured || ""}
                     />
                   )}
                 />
@@ -361,7 +373,7 @@ const InsuranceForm = () => {
                       placeholder="Enter policy holder name"
                       {...field}
                       className={errors.policyHolder ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.policyHolder || ""}
+                      defaultValue={Benifyciary?.policyHolder || ""}
                     />
                   )}
                 />
@@ -385,7 +397,7 @@ const InsuranceForm = () => {
                         setShowOtherRelationship(value === "other");
                       }}
                       className={errors.relationship ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.relationship || ""}
+                      defaultValue={Benifyciary?.relationship || ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select relationship" />
@@ -409,7 +421,7 @@ const InsuranceForm = () => {
                         {...field}
                         placeholder="Specify Relationship"
                         className="mt-2"
-                        defaultValue={defaultValues?.otherRelationship || ""}
+                        defaultValue={Benifyciary?.otherRelationship || ""}
                       />
                     )}
                   />
@@ -432,7 +444,7 @@ const InsuranceForm = () => {
                       id="previous-policy"
                       placeholder="Enter previous policy number"
                       {...field}
-                      defaultValue={defaultValues?.previousPolicy || ""}
+                      defaultValue={Benifyciary?.previousPolicy || ""}
                     />
                   )}
                 />
@@ -447,7 +459,7 @@ const InsuranceForm = () => {
                       id="additional-details"
                       placeholder="Enter additional details"
                       {...field}
-                      defaultValue={defaultValues?.additionalDetails || ""}
+                      defaultValue={Benifyciary?.additionalDetails || ""}
                     />
                   )}
                 />
@@ -465,7 +477,7 @@ const InsuranceForm = () => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                     }}
-                    defaultValue={defaultValues?.modeOfPurchase || ""}
+                    defaultValue={Benifyciary?.modeOfPurchase || ""}
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem id="broker" value="broker" />
@@ -491,7 +503,7 @@ const InsuranceForm = () => {
                         id="registered-mobile"
                         placeholder="Enter registered mobile"
                         {...field}
-                        defaultValue={defaultValues?.registeredMobile || ""}
+                        defaultValue={Benifyciary?.registeredMobile || ""}
                       />
                     )}
                   />
@@ -507,7 +519,7 @@ const InsuranceForm = () => {
                         placeholder="Enter registered email"
                         type="email"
                         {...field}
-                        defaultValue={defaultValues?.registeredEmail || ""}
+                        defaultValue={Benifyciary?.registeredEmail || ""}
                       />
                     )}
                   />
@@ -526,7 +538,7 @@ const InsuranceForm = () => {
                       placeholder="Enter contact person name"
                       {...field}
                       className={errors.contactPerson ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.contactPerson || ""}
+                      defaultValue={Benifyciary?.contactPerson || ""}
                     />
                   )}
                 />
@@ -547,7 +559,7 @@ const InsuranceForm = () => {
                       placeholder="Enter contact number"
                       {...field}
                       className={errors.contactNumber ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.contactNumber || ""}
+                      defaultValue={Benifyciary?.contactNumber || ""}
                     />
                   )}
                 />
@@ -571,7 +583,7 @@ const InsuranceForm = () => {
                       placeholder="Enter email"
                       {...field}
                       className={errors.email ? "border-red-500" : ""}
-                      defaultValue={defaultValues?.email || ""}
+                      defaultValue={Benifyciary?.email || ""}
                     />
                   )}
                 />
