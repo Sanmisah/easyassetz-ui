@@ -210,6 +210,7 @@ const InsuranceForm = () => {
                     <Input
                       id="insurance-subtype"
                       placeholder="Enter sub type"
+                      value={field.value}
                       {...field}
                       className={
                         errors.insuranceSubType ? "border-red-500" : ""
