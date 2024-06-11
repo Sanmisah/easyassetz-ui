@@ -61,7 +61,7 @@ const LifeInsurance = () => {
   });
 
   return (
-    <div className="w-[100%] ">
+    <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Life Insurance</h1>

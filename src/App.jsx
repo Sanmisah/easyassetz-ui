@@ -5,7 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 function App() {
   return (
-    <>
+    <div style={{ fontFamily: "Roboto" }}>
       <Toaster position="top-center" richColors />
       <Routes>
         <Route path="/" element={<Loginpage />} />
@@ -16,7 +16,7 @@ function App() {
         <Route path="/lifeinsurance/add" element={<Personalpage />} />
         <Route path="/lifeinsurance/edit" element={<Personalpage />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
