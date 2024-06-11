@@ -61,7 +61,8 @@ const schema = z.object({
 const InsuranceForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const lifeInsuranceEditId = useSelector((state) => state.lifeInsuranceEditId);
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
+
   console.log(lifeInsuranceEditId);
   useEffect(() => {
     if (lifeInsuranceEditId) {
