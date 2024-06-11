@@ -77,7 +77,7 @@ const LifeInsurance = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{Benifyciary.CompanyName}</h1>
+                  <h1 className="font-bold">{Benifyciary.companyName}</h1>
                   <p className="text-sm">{Benifyciary.insuranceSubType}</p>
                 </div>
                 <div className="flex items-center mr-8">
