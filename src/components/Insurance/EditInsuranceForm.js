@@ -114,7 +114,7 @@ const InsuranceForm = () => {
     onSuccess: (data) => {
       setDefaultValues(data);
       reset(data);
-
+      setValue(data);
       console.log(data);
 
       // Set fetched values to the form

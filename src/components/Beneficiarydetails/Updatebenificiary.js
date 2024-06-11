@@ -251,7 +251,7 @@ const Benificiaryform = ({
         open={updateBenificiaryOpen}
         onOpenChange={setUpdateBenificiaryOpen}
       >
-        <SheetContent side="left">
+        <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Update Beneficiary</SheetTitle>
             <SheetDescription className="flex flex-col justify-center">
