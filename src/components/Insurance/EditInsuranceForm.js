@@ -543,7 +543,30 @@ const InsuranceForm = () => {
                 </div>
               </div>
             )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="contact-person">Broker Name</Label>
+                <Controller
+                  name="brokerName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="contact-person"
+                      placeholder="Enter broker name"
+                      {...field}
+                      defaultValue={Benifyciary?.brokerName || ""}
+                      value={field.value}
+                      className={errors.brokerName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.brokerName && (
+                  <span className="text-red-500">
+                    {errors.brokerName.message}
+                  </span>
+                )}
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="contact-person">Contact Person</Label>
                 <Controller
