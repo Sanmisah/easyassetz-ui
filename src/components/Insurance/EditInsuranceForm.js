@@ -499,19 +499,11 @@ const InsuranceForm = () => {
                     defaultValue={Benifyciary?.modeOfPurchase || ""}
                   >
                     <div className="flex items-center gap-2">
-                      <RadioGroupItem
-                        defaultValue={Benifyciary.modeOfPurchase}
-                        id="broker"
-                        value="broker"
-                      />
+                      <RadioGroupItem id="broker" value="broker" />
                       <Label htmlFor="broker">Broker</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <RadioGroupItem
-                        defaultValue={Benifyciary.modeOfPurchase}
-                        id="e-insurance"
-                        value="e-insurance"
-                      />
+                      <RadioGroupItem id="e-insurance" value="e-insurance" />
                       <Label htmlFor="e-insurance">E-Insurance</Label>
                     </div>
                   </RadioGroup>
