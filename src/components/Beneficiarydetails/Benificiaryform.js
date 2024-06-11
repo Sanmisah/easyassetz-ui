@@ -145,6 +145,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("pincode", "");
     setValue("country", "");
   };
+
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(

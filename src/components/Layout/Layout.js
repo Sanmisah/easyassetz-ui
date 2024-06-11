@@ -4,6 +4,8 @@ import PersonalDetails from "@/components/Personaldetail/Personaldetail";
 import BeneficiaryDetails from "@/components/Beneficiarydetails/Benificiarydetails";
 import Logo from "../image/Logo.png";
 import Hamburger from "../image/hamburger.svg";
+import Insurance from "@/components/Insurance/LifeInsurance";
+import InsuranceMainForm from "@/components/Insurance/InsuranceMainForm";
 import {
   Sheet,
   SheetContent,
@@ -61,6 +63,13 @@ const Layout = () => {
           </Link>
           <Link
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+            to="/insurance"
+          >
+            <UserIcon className="h-5 w-5" />
+            Insurance
+          </Link>
+          <Link
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
             to="#"
           >
             <HomeIcon className="h-5 w-5" />
@@ -113,6 +122,8 @@ const Layout = () => {
       {/* Conditionally render content based on location */}
       {location.pathname === "/personal" && <PersonalDetails />}
       {location.pathname === "/benificiary" && <BeneficiaryDetails />}
+      {location.pathname === "/insurance" && <InsuranceMainForm />}
+      {location.pathname === "/lifeinsurance" && <Insurance />}
     </div>
   );
 };
