@@ -28,10 +28,10 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const schema = z.object({
-  insuranceCompany: z
+  companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
+  othercompanyName: z.string().optional(),
   insuranceSubtype: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
@@ -79,7 +79,7 @@ const InsuranceForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      insuranceCompany: "",
+      companyName: "",
       otherInsuranceCompany: "",
       insuranceSubtype: "",
       policyNumber: "",
@@ -153,7 +153,7 @@ const InsuranceForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
                 <Controller
-                  name="insuranceCompany"
+                  name="companyName"
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -163,9 +163,7 @@ const InsuranceForm = () => {
                         field.onChange(value);
                         setShowOtherInsuranceCompany(value === "other");
                       }}
-                      className={
-                        errors.insuranceCompany ? "border-red-500" : ""
-                      }
+                      className={errors.companyName ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
                         <SelectValue placeholder="Select insurance company" />
@@ -194,7 +192,7 @@ const InsuranceForm = () => {
                 )}
                 {errors.insuranceCompany && (
                   <span className="text-red-500">
-                    {errors.insuranceCompany.message}
+                    {errors.companyName.message}
                   </span>
                 )}
               </div>
