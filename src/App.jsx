@@ -14,6 +14,7 @@ function App() {
         <Route path="/insurance" element={<Personalpage />} />
         <Route path="/lifeinsurance" element={<Personalpage />} />
         <Route path="/lifeinsurance/add" element={<Personalpage />} />
+        <Route path="/lifeinsurance/edit" element={<Personalpage />} />
       </Routes>
     </>
   );
