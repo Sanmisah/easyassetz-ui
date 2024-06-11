@@ -12,10 +12,11 @@ import {
 } from "@com/ui/dropdown-menu";
 import { Button } from "@com/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@com/ui/avatar";
+import { useNavigate } from "react-router-dom";
 const Navcomponent = () => {
   const getItem = localStorage.getItem("user");
   const user = JSON.parse(getItem);
-
+  const Navigate = useNavigate();
   return (
     <div className="z-50 flex sticky backdrop-blur-md top-0 justify-between item-center gap-10 max-h-[300px] mt-2  py-2 max-md:hidden border-b border-gray-200 shadow-md">
       <div>
@@ -61,7 +62,12 @@ const Navcomponent = () => {
               {user.data.user.email}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                localStorage.removeItem("user");
+                Navigate("/");
+              }}
+            >
               <LogOutIcon className="mr-2 h-4 w-4" />
               Logout
             </DropdownMenuItem>
