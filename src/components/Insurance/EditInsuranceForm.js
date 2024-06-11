@@ -105,7 +105,6 @@ const InsuranceForm = () => {
   } = useQuery({
     queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
-    enabled: !lifeInsuranceEditId,
 
     onSuccess: (data) => {
       setDefaultValues(data);
