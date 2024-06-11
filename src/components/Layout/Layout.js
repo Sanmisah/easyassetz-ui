@@ -6,6 +6,7 @@ import Logo from "../image/Logo.png";
 import Hamburger from "../image/hamburger.svg";
 import Insurance from "@/components/Insurance/LifeInsurance";
 import InsuranceMainForm from "@/components/Insurance/InsuranceMainForm";
+import LifeIsuranceadd from "@/components/Insurance/InsuranceForm";
 import {
   Sheet,
   SheetContent,
@@ -124,6 +125,7 @@ const Layout = () => {
       {location.pathname === "/benificiary" && <BeneficiaryDetails />}
       {location.pathname === "/insurance" && <InsuranceMainForm />}
       {location.pathname === "/lifeinsurance" && <Insurance />}
+      {location.pathname === "/lifeinsurance/add" && <LifeIsuranceadd />}
     </div>
   );
 };

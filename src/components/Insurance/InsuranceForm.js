@@ -23,6 +23,7 @@ import Datepicker from "./../Beneficiarydetails/Datepicker";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   insuranceCompany: z
@@ -36,7 +37,7 @@ const schema = z.object({
   maturityDate: z.string().nonempty({ message: "Maturity Date is required" }),
   premium: z.string().nonempty({ message: "Premium is required" }),
   sumInsured: z.string().nonempty({ message: "Sum Insured is required" }),
-  policyHolder: z
+  policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
   relationship: z.string().nonempty({ message: "Relationship is required" }),
@@ -50,7 +51,8 @@ const schema = z.object({
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
-  previousPolicy: z.string().optional(),
+  previousPolicyNumber: z.string().optional(),
+  brokerName: z.string().nonempty({ message: "Broker Name is required" }),
 });
 
 const InsuranceForm = () => {
@@ -70,7 +72,7 @@ const InsuranceForm = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/beneficiaries`,
+        `http://127.0.0.1:8000/api/lifeinsurances`,
         data,
         {
           headers: {
@@ -78,7 +80,7 @@ const InsuranceForm = () => {
           },
         }
       );
-      return response.data.data.profile;
+      return response.data.data.LifeInsurance;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -97,7 +99,7 @@ const InsuranceForm = () => {
 
   return (
     <div className="w-full">
-      <Card>
+      <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
@@ -110,13 +112,16 @@ const InsuranceForm = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-6">
-          <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="grid gap-6 ">
+          <form
+            className="space-y-6 flex flex-col"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
                 <Controller
-                  name="insuranceCompany"
+                  name="companyName"
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -124,11 +129,9 @@ const InsuranceForm = () => {
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
+                        setShowOthercompanyName(value === "other");
                       }}
-                      className={
-                        errors.insuranceCompany ? "border-red-500" : ""
-                      }
+                      className={errors.companyName ? "border-red-500" : ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select insurance company" />
@@ -269,20 +272,22 @@ const InsuranceForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
                 <Controller
-                  name="policyHolder"
+                  name="policyHolderName"
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
                       placeholder="Enter policy holder name"
                       {...field}
-                      className={errors.policyHolder ? "border-red-500" : ""}
+                      className={
+                        errors.policyHolderName ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.policyHolder && (
+                {errors.policyHolderName && (
                   <span className="text-red-500">
-                    {errors.policyHolder.message}
+                    {errors.policyHolderName.message}
                   </span>
                 )}
               </div>
@@ -338,7 +343,7 @@ const InsuranceForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="previous-policy">Previous Policy Number</Label>
                 <Controller
-                  name="previousPolicy"
+                  name="previousPolicyNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -364,7 +369,7 @@ const InsuranceForm = () => {
                 />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-4 flex flex-col">
               <Label>Mode of Purchase</Label>
               <Controller
                 name="modeOfPurchase"
@@ -376,8 +381,9 @@ const InsuranceForm = () => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                     }}
+                    className="flex items-center gap-2"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-center">
                       <RadioGroupItem id="broker" value="broker" />
                       <Label htmlFor="broker">Broker</Label>
                     </div>
@@ -389,7 +395,7 @@ const InsuranceForm = () => {
                 )}
               />
             </div>
-            {!hideRegisteredFields && (
+            {hideRegisteredFields && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="registered-mobile">Registered Mobile</Label>
@@ -422,7 +428,28 @@ const InsuranceForm = () => {
                 </div>
               </div>
             )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="contact-person">Broker Name</Label>
+                <Controller
+                  name="brokerName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="contact-person"
+                      placeholder="Enter contact person name"
+                      {...field}
+                      className={errors.brokerName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.brokerName && (
+                  <span className="text-red-500">
+                    {errors.brokerName.message}
+                  </span>
+                )}
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="contact-person">Contact Person</Label>
                 <Controller

@@ -2,8 +2,10 @@ import React from "react";
 import lifeInsurance from "../image/LifeInsurance.png";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@com/ui/button";
+
 const InsuranceMainForm = () => {
   const navigate = useNavigate();
+
   return (
     <div>
       <div>

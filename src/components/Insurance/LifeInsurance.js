@@ -14,14 +14,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import Datepicker from "./../Beneficiarydetails/Datepicker";
+import { useNavigate } from "react-router-dom";
+import {
+  setlifeInsuranceEditId,
+  setlifeInsuranceDeleteId,
+} from "@/Redux/sessionSlice";
+import { useDispatch } from "react-redux";
 
 const LifeInsurance = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
 
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      ` http://127.0.0.1:8000/api/beneficiaries/${benificiaryId}`,
+      `http://127.0.0.1:8000/api/lifeinsurances`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -29,7 +37,7 @@ const LifeInsurance = () => {
       }
     );
 
-    return response.data.data.Beneficiary;
+    return response.data.data.LifeInsurance;
   };
 
   const {
@@ -54,15 +62,17 @@ const LifeInsurance = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Life Insurance</h1>
-          <Button>Add Life Insurance</Button>
+          <Button onMouseDown={() => navigate("/lifeinsurance/add")}>
+            Add Life Insurance
+          </Button>
         </div>
         <div className="w-[100%] grid grid-cols-1 md:grid-cols-1 gap-4 mt-8 ">
           {Benifyciary &&
             Benifyciary.map((data) => (
               <div className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md">
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">Life Insurance Policy</h1>
-                  <p className="text-sm">Term Life</p>
+                  <h1 className="font-bold">{Benifyciary.CompanyName}</h1>
+                  <p className="text-sm">{Benifyciary.insuranceSubType}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -76,16 +86,14 @@ const LifeInsurance = () => {
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem
                         onClick={() => {
-                          setbenificiaryid(data.id);
-                          setUpdateBenificiaryOpen(true);
+                          setlifeInsuranceEditId(data.id);
                         }}
                       >
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          setdeleteid(data.id);
-                          setAlertDialog(true);
+                          setlifeInsuranceDeleteId(data.id);
                         }}
                       >
                         Delete

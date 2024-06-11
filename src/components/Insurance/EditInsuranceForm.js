@@ -24,6 +24,9 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 
 const schema = z.object({
   insuranceCompany: z
@@ -55,6 +58,7 @@ const schema = z.object({
 });
 
 const InsuranceForm = () => {
+  const lifeInsuranceEditId = useSelector((state) => state.lifeInsuranceEditId);
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
@@ -71,33 +75,10 @@ const InsuranceForm = () => {
     defaultValues: defaultValues || {},
   });
 
-  useEffect(() => {
-    // Fetch default values from API
-    axios
-      .get("/api/insurance/details")
-      .then((response) => {
-        const data = response.data;
-        setDefaultValues(data);
-
-        // Set fetched values to the form
-        for (const key in data) {
-          setValue(key, data[key]);
-        }
-
-        // Handle conditional fields based on fetched data
-        setShowOtherInsuranceCompany(data.insuranceCompany === "other");
-        setShowOtherRelationship(data.relationship === "other");
-        setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
-      })
-      .catch((error) => {
-        console.error("Error fetching insurance details:", error);
-      });
-  }, [setValue]);
-
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries/${benificiaryId}`,
+      `http://127.0.0.1:8000/api/lifeinsurances/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -105,7 +86,7 @@ const InsuranceForm = () => {
       }
     );
 
-    return response.data.data.Beneficiary;
+    return response.data.data.LifeInsurance;
   };
 
   const {
@@ -113,12 +94,11 @@ const InsuranceForm = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["beneficiaryDataUpdate", benificiaryId],
+    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
-    enabled: !!benificiaryId,
+    enabled: !!lifeInsuranceEditId,
 
     onSuccess: (data) => {
-      const data = response.data;
       setDefaultValues(data);
 
       // Set fetched values to the form
@@ -126,12 +106,9 @@ const InsuranceForm = () => {
         setValue(key, data[key]);
       }
 
-      // Handle conditional fields based on fetched data
       setShowOtherInsuranceCompany(data.insuranceCompany === "other");
       setShowOtherRelationship(data.relationship === "other");
       setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
-
-      // setValue("fullLegalName", data.fullLegalName);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
