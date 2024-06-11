@@ -44,7 +44,7 @@ const LifeInsurance = () => {
       }
     );
 
-    return response.data.data.LifeInsurance;
+    return response.data.data.LifeInsurances;
   };
 
   const {
