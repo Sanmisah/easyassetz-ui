@@ -93,7 +93,7 @@ const LifeInsurance = () => {
                       <DropdownMenuItem
                         onClick={() => {
                           console.log("data.id:", data.id);
-                          setlifeInsuranceEditId(data.id);
+                          dispatch(setlifeInsuranceEditId(data.id));
                           navigate("/lifeinsurance/edit");
                         }}
                       >
