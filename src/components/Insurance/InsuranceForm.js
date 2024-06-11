@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -24,6 +24,8 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
 
 const schema = z.object({
   insuranceCompany: z
@@ -34,7 +36,7 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().nonempty({ message: "Policy Number is required" }),
-  maturityDate: z.string().nonempty({ message: "Maturity Date is required" }),
+  maturityDate: z.date().optional(),
   premium: z.string().nonempty({ message: "Premium is required" }),
   sumInsured: z.string().nonempty({ message: "Sum Insured is required" }),
   policyHolderName: z
@@ -55,7 +57,14 @@ const schema = z.object({
   brokerName: z.string().nonempty({ message: "Broker Name is required" }),
 });
 
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+
 const InsuranceForm = () => {
+  const queryClient = useQueryClient();
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
@@ -67,6 +76,27 @@ const InsuranceForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      insuranceCompany: "",
+      otherInsuranceCompany: "",
+      insuranceSubtype: "",
+      policyNumber: "",
+      maturityDate: "",
+      premium: "",
+      sumInsured: "",
+      policyHolderName: "",
+      relationship: "",
+      otherRelationship: "",
+      modeOfPurchase: "",
+      contactPerson: "",
+      contactNumber: "",
+      email: "",
+      registeredMobile: "",
+      registeredEmail: "",
+      additionalDetails: "",
+      previousPolicyNumber: "",
+      brokerName: "",
+    },
   });
 
   const lifeInsuranceMutate = useMutation({
@@ -121,7 +151,7 @@ const InsuranceForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
                 <Controller
-                  name="companyName"
+                  name="insuranceCompany"
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -131,11 +161,13 @@ const InsuranceForm = () => {
                         field.onChange(value);
                         setShowOtherInsuranceCompany(value === "other");
                       }}
-                      className={errors.companyName ? "border-red-500" : ""}
+                      className={
+                        errors.insuranceCompany ? "border-red-500" : ""
+                      }
                     >
-                      <SelectTrigger>
+                      <FocusableSelectTrigger>
                         <SelectValue placeholder="Select insurance company" />
-                      </SelectTrigger>
+                      </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="company1">Company 1</SelectItem>
                         <SelectItem value="company2">Company 2</SelectItem>
@@ -306,9 +338,9 @@ const InsuranceForm = () => {
                       }}
                       className={errors.relationship ? "border-red-500" : ""}
                     >
-                      <SelectTrigger>
+                      <FocusableSelectTrigger>
                         <SelectValue placeholder="Select relationship" />
-                      </SelectTrigger>
+                      </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="self">Self</SelectItem>
                         <SelectItem value="spouse">Spouse</SelectItem>
@@ -438,7 +470,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Input
                       id="contact-person"
-                      placeholder="Enter contact person name"
+                      placeholder="Enter broker name"
                       {...field}
                       className={errors.brokerName ? "border-red-500" : ""}
                     />

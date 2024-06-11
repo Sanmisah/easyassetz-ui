@@ -33,7 +33,15 @@ const Datepicker = forwardRef(({ value, onChange, defaultValue }, ref) => {
       setDate(null);
       onChange(null);
     },
+    focus() {
+      // This is to ensure that the component supports focusing
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    },
   }));
+
+  const inputRef = React.useRef();
 
   const handleDateChange = (e) => {
     const value = e.target.value;
@@ -65,7 +73,7 @@ const Datepicker = forwardRef(({ value, onChange, defaultValue }, ref) => {
           value={stringDate}
           onChange={handleDateChange}
         >
-          {(inputProps) => <Input type="text" {...inputProps} />}
+          {(inputProps) => <Input type="text" ref={inputRef} {...inputProps} />}
         </InputMask>
         {errorMessage && (
           <div className="absolute bottom-[-1.75rem] left-0 text-red-400 text-sm">
