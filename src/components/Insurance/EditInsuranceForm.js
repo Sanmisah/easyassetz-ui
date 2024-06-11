@@ -201,6 +201,7 @@ const InsuranceForm = () => {
                   </span>
                 )}
               </div>
+              {console.log(defaultValues)}
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Sub Type</Label>
                 <Controller
