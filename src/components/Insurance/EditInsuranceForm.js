@@ -42,7 +42,7 @@ const schema = z.object({
   maturityDate: z.date().optional(),
   premium: z.string().nonempty({ message: "Premium is required" }),
   sumInsured: z.string().nonempty({ message: "Sum Insured is required" }),
-  policyHolder: z
+  policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
   relationship: z.string().nonempty({ message: "Relationship is required" }),
@@ -365,21 +365,23 @@ const InsuranceForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
                 <Controller
-                  name="policyHolder"
+                  name="policyHolderName"
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
                       placeholder="Enter policy holder name"
                       {...field}
-                      className={errors.policyHolder ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.policyHolder || ""}
+                      className={
+                        errors.policyHolderName ? "border-red-500" : ""
+                      }
+                      defaultValue={Benifyciary?.policyHolderName || ""}
                     />
                   )}
                 />
-                {errors.policyHolder && (
+                {errors.policyHolderName && (
                   <span className="text-red-500">
-                    {errors.policyHolder.message}
+                    {errors.policyHolderName.message}
                   </span>
                 )}
               </div>
@@ -444,7 +446,7 @@ const InsuranceForm = () => {
                       id="previous-policy"
                       placeholder="Enter previous policy number"
                       {...field}
-                      defaultValue={Benifyciary?.previousPolicy || ""}
+                      defaultValue={Benifyciary?.previousPolicyNumber || ""}
                     />
                   )}
                 />
