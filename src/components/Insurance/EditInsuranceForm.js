@@ -115,6 +115,29 @@ const InsuranceForm = () => {
       setDefaultValues(data);
       reset(data);
       setValue(data);
+      setValue("relationship", data.relationship);
+      setValue("otherRelationship", data.otherRelationship);
+      setValue("registeredMobile", data.registeredMobile);
+      setValue("registeredEmail", data.registeredEmail);
+      setValue("additionalDetails", data.additionalDetails);
+      setValue("previousPolicyNumber", data.previousPolicyNumber);
+      setValue("brokerName", data.brokerName);
+      setValue("policyNumber", data.policyNumber);
+      setValue("maturityDate", data.maturityDate);
+      setValue("premium", data.premium);
+      setValue("sumInsured", data.sumInsured);
+      setValue("policyHolderName", data.policyHolderName);
+      setValue("policyHolderName", data.policyHolderName);
+      setValue("modeOfPurchase", data.modeOfPurchase);
+      setValue("contactPerson", data.contactPerson);
+      setValue("contactNumber", data.contactNumber);
+      setValue("email", data.email);
+      setValue("registeredMobile", data.registeredMobile);
+      setValue("registeredEmail", data.registeredEmail);
+      setValue("additionalDetails", data.additionalDetails);
+      setValue("previousPolicyNumber", data.previousPolicyNumber);
+      setValue("brokerName", data.brokerName);
+
       console.log(data);
 
       // Set fetched values to the form
