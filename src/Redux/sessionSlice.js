@@ -1,7 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  lifeInsuranceEditId: "",
+  lifeInsuranceEditId: null,
   lifeInsuranceDeleteId: "",
 };
 
