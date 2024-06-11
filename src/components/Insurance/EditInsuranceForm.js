@@ -37,7 +37,7 @@ const schema = z.object({
   insuranceSubType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z.int().nonempty({ message: "Policy Number is required" }),
+  policyNumber: z.number().nonempty({ message: "Policy Number is required" }),
   maturityDate: z.date().nonempty({ message: "Maturity Date is required" }),
   premium: z.string().nonempty({ message: "Premium is required" }),
   sumInsured: z.string().nonempty({ message: "Sum Insured is required" }),
@@ -59,6 +59,7 @@ const schema = z.object({
 });
 
 const InsuranceForm = () => {
+  const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
@@ -123,6 +124,32 @@ const InsuranceForm = () => {
     onError: (error) => {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile", error.message);
+    },
+  });
+
+  const lifeInsuranceMutate = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/lifeinsurances/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.LifeInsurance;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(
+        "lifeInsuranceDataUpdate",
+        lifeInsuranceEditId
+      );
+      toast.success("Beneficiary added successfully!");
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
     },
   });
 
