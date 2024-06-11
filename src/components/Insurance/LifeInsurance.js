@@ -72,7 +72,10 @@ const LifeInsurance = () => {
         <div className="w-[100%] grid grid-cols-1 md:grid-cols-1 gap-4 mt-8 ">
           {Benifyciary &&
             Benifyciary.map((data) => (
-              <div className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md">
+              <div
+                key={data.id}
+                className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
+              >
                 <div className="flex flex-col  ml-8">
                   <h1 className="font-bold">{Benifyciary.CompanyName}</h1>
                   <p className="text-sm">{Benifyciary.insuranceSubType}</p>
@@ -89,6 +92,7 @@ const LifeInsurance = () => {
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem
                         onClick={() => {
+                          console.log("data.id:", data.id);
                           setlifeInsuranceEditId(data.id);
                           navigate("/lifeinsurance/edit");
                         }}
