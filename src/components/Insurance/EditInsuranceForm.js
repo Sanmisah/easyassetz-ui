@@ -82,6 +82,7 @@ const InsuranceForm = () => {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -112,6 +113,8 @@ const InsuranceForm = () => {
 
     onSuccess: (data) => {
       setDefaultValues(data);
+      reset(data);
+
       console.log(data);
 
       // Set fetched values to the form
@@ -122,18 +125,6 @@ const InsuranceForm = () => {
       setShowOtherInsuranceCompany(data.companyName === "other");
       setShowOtherRelationship(data.relationship === "other");
       setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
-      setValue("companyName", data.companyName);
-      setValue("relationship", data.relationship);
-      setValue("otherRelationship", data.otherRelationship);
-      setValue("modeOfPurchase", data.modeOfPurchase);
-      setValue("contactPerson", data.contactPerson);
-      setValue("contactNumber", data.contactNumber);
-      setValue("email", data.email);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicy", data.previousPolicy);
-      setValue("brokerName", data.brokerName);
 
       console.log(data);
     },
