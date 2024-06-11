@@ -11,6 +11,7 @@ const counterSlice = createSlice({
   reducers: {
     setlifeInsuranceEditId(state, action) {
       state.lifeInsuranceEditId = action.payload;
+      console.log("lifeInsuranceEditId:", state.lifeInsuranceEditId);
     },
     setlifeInsuranceDeleteId(state, action) {
       state.lifeInsuranceDeleteId = action.payload;
