@@ -140,8 +140,16 @@ const InsuranceForm = () => {
       setValue("brokerName", data.brokerName);
 
       console.log(data);
-      setBrokerSelected(data.modeOfPurchase === "broker");
-      setEInsuranceSelected(data.modeOfPurchase === "e-insurance");
+      if (data.modeOfPurchase === "e-insurance") {
+        setBrokerSelected(false);
+      } else {
+        setBrokerSelected(true);
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        setEInsuranceSelected(true);
+      } else {
+        setEInsuranceSelected(false);
+      }
 
       // Set fetched values to the form
       for (const key in data) {
