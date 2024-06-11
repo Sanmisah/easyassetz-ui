@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@com/ui/button";
 import {
@@ -20,14 +20,18 @@ import {
   setlifeInsuranceEditId,
   setlifeInsuranceDeleteId,
 } from "@/Redux/sessionSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import DeleteAlert from "./ConfirmDelete";
 
 const LifeInsurance = () => {
+  const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const { lifeInsuranceDeleteId } = useSelector((state) => state.counterSlice);
 
   const getPersonalData = async () => {
     if (!user) return;
@@ -60,6 +64,19 @@ const LifeInsurance = () => {
     },
   });
 
+  const confirmDelete = async (id) => {
+    const response = await axios.delete(
+      `http://127.0.0.1:8000/api/lifeinsurances/${lifeInsuranceDeleteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    queryClient.invalidateQueries("LifeInsuranceData");
+    toast.success("Beneficiary deleted successfully!");
+  };
+
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
@@ -68,6 +85,14 @@ const LifeInsurance = () => {
           <Button onMouseDown={() => navigate("/lifeinsurance/add")}>
             Add Life Insurance
           </Button>
+          {alertDialog && (
+            <DeleteAlert
+              alertDialog={alertDialog}
+              setAlertDialog={setAlertDialog}
+              onConfirm={confirmDelete}
+              onCancel={() => setAlertDialog(false)}
+            />
+          )}
         </div>
         <div className="w-[100%] grid grid-cols-1 md:grid-cols-1 gap-4 mt-8 ">
           {Benifyciary &&
@@ -101,7 +126,8 @@ const LifeInsurance = () => {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          setlifeInsuranceDeleteId(data.id);
+                          setAlertDialog(true);
+                          dispatch(setlifeInsuranceDeleteId(data.id));
                         }}
                       >
                         Delete

@@ -26,6 +26,7 @@ import * as z from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   companyName: z
@@ -64,6 +65,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
 const InsuranceForm = () => {
+  const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
@@ -117,6 +119,7 @@ const InsuranceForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
       toast.success("Beneficiary added successfully!");
+      navigate("/lifeinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

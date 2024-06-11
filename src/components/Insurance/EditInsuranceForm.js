@@ -28,6 +28,7 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   companyName: z
@@ -59,6 +60,7 @@ const schema = z.object({
 });
 
 const InsuranceForm = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -146,6 +148,7 @@ const InsuranceForm = () => {
         lifeInsuranceEditId
       );
       toast.success("Beneficiary added successfully!");
+      navigate("/lifeinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -179,8 +182,11 @@ const InsuranceForm = () => {
           </div>
         </CardHeader>
         <CardContent className="grid gap-6">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-6">
+          <form
+            className="space-y-6 flex flex-col"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
                 <Controller
