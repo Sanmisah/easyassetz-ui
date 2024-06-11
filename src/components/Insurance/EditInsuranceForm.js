@@ -62,6 +62,7 @@ const InsuranceForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const lifeInsuranceEditId = useSelector((state) => state.lifeInsuranceEditId);
+  console.log(lifeInsuranceEditId);
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
@@ -103,6 +104,7 @@ const InsuranceForm = () => {
 
     onSuccess: (data) => {
       setDefaultValues(data);
+      console.log(data);
 
       // Set fetched values to the form
       for (const key in data) {
@@ -123,6 +125,8 @@ const InsuranceForm = () => {
     console.log(data);
   };
 
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading insurance data</div>;
   return (
     <div className="w-full">
       <Card>
