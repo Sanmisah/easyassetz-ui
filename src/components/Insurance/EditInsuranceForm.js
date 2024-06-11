@@ -63,6 +63,11 @@ const InsuranceForm = () => {
   const user = JSON.parse(getitem);
   const lifeInsuranceEditId = useSelector((state) => state.lifeInsuranceEditId);
   console.log(lifeInsuranceEditId);
+  useEffect(() => {
+    if (lifeInsuranceEditId) {
+      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
+    }
+  }, [lifeInsuranceEditId]);
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
