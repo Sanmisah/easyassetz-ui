@@ -15,8 +15,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@com/ui/avatar";
 const Navcomponent = () => {
   const getItem = localStorage.getItem("user");
   const user = JSON.parse(getItem);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   return (
     <div className="z-50 flex sticky backdrop-blur-md top-0 justify-between item-center gap-10 max-h-[300px] mt-2  py-2 max-md:hidden border-b border-gray-200 shadow-md">
       <div>
