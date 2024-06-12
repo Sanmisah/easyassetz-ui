@@ -18,8 +18,8 @@ const ConfirmDelete = ({ onConfirm, alertDialog, setAlertDialog }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            By Checking this box I confirm that i am atleast 18 years of age and
-            have read and aggree to easy asstsz terms of service privat notice
+            This action cannot be undone. By Clicking on Confirm. I confirm that
+            i want to delete this beneficiary.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

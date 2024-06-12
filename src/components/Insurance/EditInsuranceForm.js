@@ -231,6 +231,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="companyName"
                   control={control}
+                  defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
                     <Select
                       id="insurance-company"

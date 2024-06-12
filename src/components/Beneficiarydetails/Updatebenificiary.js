@@ -187,7 +187,6 @@ const Benificiaryform = ({
       const age = calculateAge(watchDOB);
       if (age >= 18) {
         clearGuardianFields();
-        isMinor = true;
       }
     }
   }, [watchDOB]);
