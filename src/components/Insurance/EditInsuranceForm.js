@@ -532,146 +532,152 @@ const InsuranceForm = () => {
                 )}
               />
             </div>
-            {hideRegisteredFields && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registered-mobile">Registered Mobile</Label>
-                  <Controller
-                    name="registeredMobile"
-                    control={control}
-                    defaultValue={Benifyciary?.registeredMobile || ""}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-mobile"
-                        placeholder="Enter registered mobile"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredMobile || ""}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="registered-email">Registered Email ID</Label>
-                  <Controller
-                    name="registeredEmail"
-                    defaultValue={Benifyciary?.registeredEmail || ""}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-email"
-                        placeholder="Enter registered email"
-                        type="email"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredEmail || ""}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-            )}
-
-            {brokerSelected && (
-              <>
+            {hideRegisteredFields ||
+              (Benifyciary?.modeOfPurchase === "e-insurance" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="contact-person">Broker Name</Label>
+                    <Label htmlFor="registered-mobile">Registered Mobile</Label>
                     <Controller
-                      name="brokerName"
+                      name="registeredMobile"
                       control={control}
-                      defaultValue={Benifyciary?.brokerName || ""}
+                      defaultValue={Benifyciary?.registeredMobile || ""}
                       render={({ field }) => (
                         <Input
-                          id="contact-person"
-                          placeholder="Enter broker name"
+                          id="registered-mobile"
+                          placeholder="Enter registered mobile"
                           {...field}
-                          defaultValue={Benifyciary?.brokerName || ""}
-                          value={field.value}
-                          className={errors.brokerName ? "border-red-500" : ""}
+                          defaultValue={Benifyciary?.registeredMobile || ""}
                         />
                       )}
                     />
-                    {errors.brokerName && (
-                      <span className="text-red-500">
-                        {errors.brokerName.message}
-                      </span>
-                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="contact-person">Contact Person</Label>
+                    <Label htmlFor="registered-email">
+                      Registered Email ID
+                    </Label>
                     <Controller
-                      name="contactPerson"
-                      control={control}
-                      defaultValue={Benifyciary?.contactPerson || ""}
-                      render={({ field }) => (
-                        <Input
-                          id="contact-person"
-                          placeholder="Enter contact person name"
-                          {...field}
-                          className={
-                            errors.contactPerson ? "border-red-500" : ""
-                          }
-                          defaultValue={Benifyciary?.contactPerson || ""}
-                        />
-                      )}
-                    />
-                    {errors.contactPerson && (
-                      <span className="text-red-500">
-                        {errors.contactPerson.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-number">Contact Number</Label>
-                    <Controller
-                      name="contactNumber"
-                      defaultValue={Benifyciary?.contactNumber || ""}
+                      name="registeredEmail"
+                      defaultValue={Benifyciary?.registeredEmail || ""}
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="contact-number"
-                          placeholder="Enter contact number"
-                          {...field}
-                          className={
-                            errors.contactNumber ? "border-red-500" : ""
-                          }
-                          defaultValue={Benifyciary?.contactNumber || ""}
-                        />
-                      )}
-                    />
-                    {errors.contactNumber && (
-                      <span className="text-red-500">
-                        {errors.contactNumber.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Controller
-                      name="email"
-                      control={control}
-                      defaultValue={Benifyciary?.email || ""}
-                      render={({ field }) => (
-                        <Input
-                          id="email"
+                          id="registered-email"
+                          placeholder="Enter registered email"
                           type="email"
-                          placeholder="Enter email"
                           {...field}
-                          className={errors.email ? "border-red-500" : ""}
-                          defaultValue={Benifyciary?.email || ""}
+                          defaultValue={Benifyciary?.registeredEmail || ""}
                         />
                       )}
                     />
-                    {errors.email && (
-                      <span className="text-red-500">
-                        {errors.email.message}
-                      </span>
-                    )}
                   </div>
                 </div>
-              </>
-            )}
+              ))}
+
+            {brokerSelected ||
+              (Benifyciary?.modeOfPurchase === "broker" && (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="contact-person">Broker Name</Label>
+                      <Controller
+                        name="brokerName"
+                        control={control}
+                        defaultValue={Benifyciary?.brokerName || ""}
+                        render={({ field }) => (
+                          <Input
+                            id="contact-person"
+                            placeholder="Enter broker name"
+                            {...field}
+                            defaultValue={Benifyciary?.brokerName || ""}
+                            value={field.value}
+                            className={
+                              errors.brokerName ? "border-red-500" : ""
+                            }
+                          />
+                        )}
+                      />
+                      {errors.brokerName && (
+                        <span className="text-red-500">
+                          {errors.brokerName.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="contact-person">Contact Person</Label>
+                      <Controller
+                        name="contactPerson"
+                        control={control}
+                        defaultValue={Benifyciary?.contactPerson || ""}
+                        render={({ field }) => (
+                          <Input
+                            id="contact-person"
+                            placeholder="Enter contact person name"
+                            {...field}
+                            className={
+                              errors.contactPerson ? "border-red-500" : ""
+                            }
+                            defaultValue={Benifyciary?.contactPerson || ""}
+                          />
+                        )}
+                      />
+                      {errors.contactPerson && (
+                        <span className="text-red-500">
+                          {errors.contactPerson.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="contact-number">Contact Number</Label>
+                      <Controller
+                        name="contactNumber"
+                        defaultValue={Benifyciary?.contactNumber || ""}
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="contact-number"
+                            placeholder="Enter contact number"
+                            {...field}
+                            className={
+                              errors.contactNumber ? "border-red-500" : ""
+                            }
+                            defaultValue={Benifyciary?.contactNumber || ""}
+                          />
+                        )}
+                      />
+                      {errors.contactNumber && (
+                        <span className="text-red-500">
+                          {errors.contactNumber.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Controller
+                        name="email"
+                        control={control}
+                        defaultValue={Benifyciary?.email || ""}
+                        render={({ field }) => (
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="Enter email"
+                            {...field}
+                            className={errors.email ? "border-red-500" : ""}
+                            defaultValue={Benifyciary?.email || ""}
+                          />
+                        )}
+                      />
+                      {errors.email && (
+                        <span className="text-red-500">
+                          {errors.email.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ))}
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller
