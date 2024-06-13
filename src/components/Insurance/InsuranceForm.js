@@ -27,6 +27,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import Addnominee from "./addNominee";
 
 const schema = z.object({
   companyName: z
@@ -401,6 +402,10 @@ const InsuranceForm = () => {
                   )}
                 />
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              <Addnominee />{" "}
             </div>
             <div className="space-y-4 flex flex-col">
               <Label>Mode of Purchase</Label>
