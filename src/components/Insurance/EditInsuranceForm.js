@@ -358,7 +358,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="premium"
                   control={control}
-                  defaultValue={parseInt(Benifyciary?.premium) || ""}
+                  defaultValue={Benifyciary?.premium || ""}
                   render={({ field }) => (
                     <Input
                       id="premium"
@@ -378,7 +378,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="sumInsured"
                   control={control}
-                  defaultValue={parseInt(Benifyciary?.sumInsured) || ""}
+                  defaultValue={Benifyciary?.sumInsured || ""}
                   render={({ field }) => (
                     <Input
                       id="sum-insured"
