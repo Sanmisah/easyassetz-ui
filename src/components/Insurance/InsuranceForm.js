@@ -417,6 +417,7 @@ const InsuranceForm = () => {
                         {nominee?.fullLegalName}
                       </Label>
                       <img
+                        className="w-4 h-4"
                         onClick={() => {
                           setDisplaynominie(
                             filter(
