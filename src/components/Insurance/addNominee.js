@@ -64,7 +64,7 @@ const AddNominee = ({ setSelectedNommie }) => {
             </SheetDescription>
           </SheetHeader>
           <div className="grid gap-4 py-4">
-            {nominees}
+            {console.log(nominees)}
             {nominees &&
               nominees?.Beneficiaries?.map((nominee) => (
                 <div
