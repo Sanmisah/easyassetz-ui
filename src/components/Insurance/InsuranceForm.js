@@ -75,8 +75,8 @@ const InsuranceForm = () => {
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
-  const [selectedNommie, setSelectedNommie] = useState(null);
-  const [displaynominie, setDisplaynominie] = useState(null);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [displaynominie, setDisplaynominie] = useState([]);
 
   const {
     handleSubmit,
