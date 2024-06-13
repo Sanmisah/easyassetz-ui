@@ -341,7 +341,7 @@ const InsuranceForm = () => {
                       {...field}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={Benifyciary?.maturityDate || ""}
+                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
                     />
                   )}
                 />
