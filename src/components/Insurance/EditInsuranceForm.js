@@ -113,7 +113,6 @@ const InsuranceForm = () => {
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
-      setBrokerSelected(data.modeOfPurchase === "broker");
       setDefaultValues(data);
       reset(data);
       setValue(data);
@@ -137,18 +136,6 @@ const InsuranceForm = () => {
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("brokerName", data.brokerName);
-
-      console.log(data);
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-      } else {
-        setBrokerSelected(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setEInsuranceSelected(true);
-      } else {
-        setEInsuranceSelected(false);
-      }
 
       // Set fetched values to the form
       for (const key in data) {
