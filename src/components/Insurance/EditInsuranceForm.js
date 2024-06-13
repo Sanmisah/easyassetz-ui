@@ -139,10 +139,10 @@ const InsuranceForm = () => {
       setValue("brokerName", data.brokerName);
 
       console.log(data);
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-      } else {
+      if (data.modeOfPurchase === "broker") {
         setBrokerSelected(true);
+      } else {
+        setBrokerSelected(false);
       }
       if (data.modeOfPurchase === "e-insurance") {
         setEInsuranceSelected(true);
@@ -157,7 +157,6 @@ const InsuranceForm = () => {
 
       setShowOtherInsuranceCompany(data.companyName === "other");
       setShowOtherRelationship(data.relationship === "other");
-      setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
 
       console.log(data);
     },
