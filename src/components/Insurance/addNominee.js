@@ -28,6 +28,7 @@ const AddNominee = ({ setSelectedNommie }) => {
         },
       })
       .then((res) => {
+        console.log(res.data);
         setNominees(res?.data?.Beneficiaries);
       });
   }, []);
