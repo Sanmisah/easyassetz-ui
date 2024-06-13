@@ -40,7 +40,7 @@ const AddNominee = ({
       });
   }, []);
 
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (id, fullLegalName) => {
     setSelectedNominees((prevSelectedNominees) =>
       prevSelectedNominees.includes(id)
         ? prevSelectedNominees.filter((nomineeId) => nomineeId !== id)
