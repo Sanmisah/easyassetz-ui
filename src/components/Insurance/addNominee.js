@@ -46,6 +46,11 @@ const AddNominee = ({
         ? prevSelectedNominees.filter((nomineeId) => nomineeId !== id)
         : [...prevSelectedNominees, id]
     );
+    setDisplaynominie((prevDisplayNominees) =>
+      prevDisplayNominees.some((nominee) => nominee.id === id)
+        ? prevDisplayNominees.filter((nominee) => nominee.id !== id)
+        : [...prevDisplayNominees, { id, fullLegalName }]
+    );
   };
 
   const handlesubmit = () => {
@@ -82,11 +87,7 @@ const AddNominee = ({
                     id={`nominee-${nominee?.id}`}
                     checked={selectedNominees.includes(nominee?.id)}
                     onCheckedChange={() => {
-                      setDisplaynominie(...displaynominie, [
-                        nominee?.id,
-                        nominee?.fullLegalName,
-                      ]);
-                      handleCheckboxChange(nominee?.id);
+                      handleCheckboxChange(nominee?.id, nominee?.fullLegalName);
                     }}
                   />
                 </div>
