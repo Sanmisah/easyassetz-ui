@@ -122,12 +122,10 @@ const InsuranceForm = () => {
       setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("brokerName", data.brokerName);
       setValue("policyNumber", data.policyNumber);
       setValue("maturityDate", data.maturityDate);
       setValue("premium", data.premium);
       setValue("sumInsured", data.sumInsured);
-      setValue("policyHolderName", data.policyHolderName);
       setValue("policyHolderName", data.policyHolderName);
       setValue("modeOfPurchase", data.modeOfPurchase);
       setValue("contactPerson", data.contactPerson);
@@ -158,6 +156,7 @@ const InsuranceForm = () => {
 
       setShowOtherInsuranceCompany(data.companyName === "other");
       setShowOtherRelationship(data.relationship === "other");
+      setBrokerSelected(data.modeOfPurchase === "e-insurance");
       setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
 
       console.log(data);
@@ -515,12 +514,12 @@ const InsuranceForm = () => {
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
+                    defaultValue={Benifyciary?.modeOfPurchase || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                       setBrokerSelected(value === "broker");
                     }}
-                    defaultValue={Benifyciary?.modeOfPurchase || ""}
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem id="broker" value="broker" />
