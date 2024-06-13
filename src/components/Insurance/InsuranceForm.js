@@ -28,6 +28,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import Addnominee from "./addNominee";
+import cross from "../image/close.png";
 
 const schema = z.object({
   companyName: z
@@ -75,6 +76,7 @@ const InsuranceForm = () => {
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState(null);
+  const [displaynominie, setDisplaynominie] = useState(null);
 
   const {
     handleSubmit,
@@ -406,9 +408,44 @@ const InsuranceForm = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
-              <Addnominee setSelectedNommie={setSelectedNommie} />{" "}
+              <Label htmlFor="registered-mobile">All nominee Selected</Label>
+              <div className="grid gap-4 py-4">
+                {displaynominie &&
+                  displaynominie.map((nominee) => (
+                    <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                      <Label htmlFor={`nominee-${nominee?.id}`}>
+                        {nominee?.fullLegalName}
+                      </Label>
+                      <img
+                        onClick={() => {
+                          setDisplaynominie(
+                            filter(
+                              displaynominie,
+                              (item) => item.id !== nominee.id
+                            )
+                          );
+                          setSelectedNommie(
+                            filter(
+                              selectedNommie,
+                              (item) => item.id !== nominee.id
+                            )
+                          );
+                        }}
+                        src={cross}
+                        alt=""
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              <Addnominee
+                setDisplaynominie={setDisplaynominie}
+                setSelectedNommie={setSelectedNommie}
+              />{" "}
+            </div>
+
             <div className="space-y-4 flex flex-col">
               <Label>Mode of Purchase</Label>
               <Controller
