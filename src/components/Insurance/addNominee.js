@@ -29,7 +29,7 @@ const AddNominee = ({ setSelectedNommie }) => {
       })
       .then((res) => {
         console.log(res.data);
-        setNominees(res?.data?.data?.Beneficiaries);
+        setNominees(res?.data?.data?.Beneficiaries, res?.data?.data?.Charities);
       });
   }, []);
 
@@ -68,7 +68,7 @@ const AddNominee = ({ setSelectedNommie }) => {
                   className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
                 >
                   <Label htmlFor={`nominee-${nominee?.id}`}>
-                    {nominee?.name}
+                    {nominee?.fullLegalName}
                   </Label>
                   <Checkbox
                     id={`nominee-${nominee?.id}`}
