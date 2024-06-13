@@ -15,13 +15,21 @@ import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
 
 const AddNominee = () => {
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/nominees").then((res) => {
-      setNominees(res.data);
-    });
+    axios
+      .get(`http://127.0.0.1:8000/api/beneficiaries`, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      })
+      .then((res) => {
+        setNominees(res.data);
+      });
   }, []);
 
   const handleCheckboxChange = (id) => {
