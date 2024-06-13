@@ -448,6 +448,7 @@ const InsuranceForm = () => {
               <Addnominee
                 setDisplaynominie={setDisplaynominie}
                 setSelectedNommie={setSelectedNommie}
+                displaynominie={displaynominie}
               />{" "}
             </div>
 

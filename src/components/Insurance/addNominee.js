@@ -14,7 +14,11 @@ import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
 
-const AddNominee = ({ setSelectedNommie, setDisplaynominie }) => {
+const AddNominee = ({
+  setSelectedNommie,
+  setDisplaynominie,
+  displaynominie,
+}) => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const [nominees, setNominees] = useState([]);
@@ -78,7 +82,10 @@ const AddNominee = ({ setSelectedNommie, setDisplaynominie }) => {
                     id={`nominee-${nominee?.id}`}
                     checked={selectedNominees.includes(nominee?.id)}
                     onCheckedChange={() => {
-                      setDisplaynominie([nominee?.id, nominee?.fullLegalName]);
+                      setDisplaynominie(...displaynominie, [
+                        nominee?.id,
+                        nominee?.fullLegalName,
+                      ]);
                       handleCheckboxChange(nominee?.id);
                     }}
                   />
