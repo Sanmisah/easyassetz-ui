@@ -424,14 +424,12 @@ const InsuranceForm = () => {
                         className="w-4 h-4"
                         onClick={() => {
                           setDisplaynominie(
-                            filter(
-                              displaynominie,
+                            displaynominie.filter(
                               (item) => item.id !== nominee.id
                             )
                           );
                           setSelectedNommie(
-                            filter(
-                              selectedNommie,
+                            selectedNommie.filter(
                               (item) => item.id !== nominee.id
                             )
                           );
