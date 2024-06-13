@@ -113,6 +113,7 @@ const InsuranceForm = () => {
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
+      setBrokerSelected(data.modeOfPurchase === "broker");
       setDefaultValues(data);
       reset(data);
       setValue(data);
@@ -156,7 +157,6 @@ const InsuranceForm = () => {
 
       setShowOtherInsuranceCompany(data.companyName === "other");
       setShowOtherRelationship(data.relationship === "other");
-      setBrokerSelected(data.modeOfPurchase === "e-insurance");
       setHideRegisteredFields(data.modeOfPurchase === "e-insurance");
 
       console.log(data);
