@@ -283,14 +283,14 @@ const InsuranceForm = () => {
               </div>
               {console.log(Benifyciary)}
               <div className="space-y-2">
-                <Label htmlFor="insurance-subtype">Insurance Sub Type</Label>
+                <Label htmlFor="insuranceType">Insurance Sub Type</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
-                  defaultValue={Benifyciary?.otherInsuranceCompany || ""}
+                  defaultValue={Benifyciary?.insuranceType || ""}
                   render={({ field }) => (
                     <Input
-                      id="insurance-subtype"
+                      id="insuranceType"
                       placeholder="Enter sub type"
                       value={field.value}
                       {...field}
