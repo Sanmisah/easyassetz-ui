@@ -136,6 +136,9 @@ const InsuranceForm = () => {
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
+  useEffect(() => {
+    console.log("displaynominie:", displaynominie);
+  }, [displaynominie]);
 
   return (
     <div className="w-full">
@@ -410,6 +413,7 @@ const InsuranceForm = () => {
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">All nominee Selected</Label>
               <div className="grid gap-4 py-4">
+                {console.log(displaynominie)}
                 {displaynominie &&
                   displaynominie.map((nominee) => (
                     <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
