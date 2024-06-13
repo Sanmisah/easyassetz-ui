@@ -418,7 +418,7 @@ const InsuranceForm = () => {
                   displaynominie.map((nominee) => (
                     <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
                       <Label htmlFor={`nominee-${nominee?.id}`}>
-                        {nominee?.fullLegalName}
+                        {nominee?.fullLegalName || nominee?.charityName}
                       </Label>
                       <img
                         className="w-4 h-4 cursor-pointer"
