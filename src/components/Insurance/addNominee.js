@@ -47,7 +47,7 @@ const AddNominee = ({
         : [...prevSelectedNominees, id]
     );
     setDisplaynominie((prevDisplayNominees) =>
-      prevDisplayNominees.some((nominee) => nominee.id === id)
+      prevDisplayNominees?.some((nominee) => nominee.id === id)
         ? prevDisplayNominees.filter((nominee) => nominee.id !== id)
         : [...prevDisplayNominees, { id, fullLegalName }]
     );
