@@ -410,7 +410,7 @@ const InsuranceForm = () => {
                 />
               </div>
             </div>
-            {displaynominie && (
+            {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="registered-mobile">All nominee Selected</Label>
                 <div className="grid gap-4 py-4">
