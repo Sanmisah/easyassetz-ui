@@ -90,17 +90,17 @@ const Personaldetail = () => {
     if (response.data.data.profile?.dob) {
       setdefaultDate(new Date(response.data.data.profile.dob));
     }
-    return response.data.data.profile;
+    return response.data.data.profile || {};
   };
 
-  const getDropdownData = async () => {
-    const response = await axios.get("/path/to/data.json");
-    setDropdownData(response.data);
-  };
+  // const getDropdownData = async () => {
+  //   const response = await axios.get("/path/to/data.json");
+  //   setDropdownData(response.data);
+  // };
 
-  useEffect(() => {
-    getDropdownData();
-  }, []);
+  // useEffect(() => {
+  //   getDropdownData();
+  // }, []);
 
   const { isLoading, isError } = useQuery({
     queryKey: ["personalData"],

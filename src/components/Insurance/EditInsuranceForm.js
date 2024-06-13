@@ -194,9 +194,13 @@ const InsuranceForm = () => {
       toast.error("Failed to submit profile");
     },
   });
+  useEffect(() => {
+    console.log("Form values:", control._formValues);
+  }, [control._formValues]);
 
   const onSubmit = (data) => {
     console.log(data);
+    reset(Benifyciary);
     lifeInsuranceMutate.mutate(data);
   };
 

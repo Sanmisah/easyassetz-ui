@@ -59,7 +59,7 @@ const Navcomponent = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="font-medium p-2">
-              {user.data.user.email}
+              {user?.data?.user?.email}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
