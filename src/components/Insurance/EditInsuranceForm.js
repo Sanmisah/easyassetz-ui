@@ -312,6 +312,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="policyNumber"
                   control={control}
+                  defaultValue={Benifyciary?.policyNumber || ""}
                   render={({ field }) => (
                     <Input
                       id="policy-number"
@@ -333,6 +334,7 @@ const InsuranceForm = () => {
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
                   name="maturityDate"
+                  defaultValue={Benifyciary?.maturityDate || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
@@ -356,6 +358,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="premium"
                   control={control}
+                  defaultValue={Benifyciary?.premium || ""}
                   render={({ field }) => (
                     <Input
                       id="premium"
@@ -375,6 +378,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="sumInsured"
                   control={control}
+                  defaultValue={Benifyciary?.sumInsured || ""}
                   render={({ field }) => (
                     <Input
                       id="sum-insured"
@@ -398,6 +402,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="policyHolderName"
                   control={control}
+                  defaultValue={Benifyciary?.policyHolderName || ""}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
@@ -420,6 +425,7 @@ const InsuranceForm = () => {
                 <Label htmlFor="relationship">Relationship</Label>
                 <Controller
                   name="relationship"
+                  defaultValue={Benifyciary?.relationship || ""}
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -449,6 +455,7 @@ const InsuranceForm = () => {
                   <Controller
                     name="otherRelationship"
                     control={control}
+                    defaultValue={Benifyciary?.otherRelationship || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
@@ -472,6 +479,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="previousPolicy"
                   control={control}
+                  defaultValue={Benifyciary?.previousPolicy || ""}
                   render={({ field }) => (
                     <Input
                       id="previous-policy"
@@ -487,6 +495,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="additionalDetails"
                   control={control}
+                  defaultValue={Benifyciary?.additionalDetails || ""}
                   render={({ field }) => (
                     <Textarea
                       id="additional-details"
@@ -502,6 +511,7 @@ const InsuranceForm = () => {
               <Label>Mode of Purchase</Label>
               <Controller
                 name="modeOfPurchase"
+                defaultValue={Benifyciary?.modeOfPurchase || ""}
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
@@ -532,6 +542,7 @@ const InsuranceForm = () => {
                   <Controller
                     name="registeredMobile"
                     control={control}
+                    defaultValue={Benifyciary?.registeredMobile || ""}
                     render={({ field }) => (
                       <Input
                         id="registered-mobile"
@@ -546,6 +557,7 @@ const InsuranceForm = () => {
                   <Label htmlFor="registered-email">Registered Email ID</Label>
                   <Controller
                     name="registeredEmail"
+                    defaultValue={Benifyciary?.registeredEmail || ""}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -569,6 +581,7 @@ const InsuranceForm = () => {
                     <Controller
                       name="brokerName"
                       control={control}
+                      defaultValue={Benifyciary?.brokerName || ""}
                       render={({ field }) => (
                         <Input
                           id="contact-person"
@@ -591,6 +604,7 @@ const InsuranceForm = () => {
                     <Controller
                       name="contactPerson"
                       control={control}
+                      defaultValue={Benifyciary?.contactPerson || ""}
                       render={({ field }) => (
                         <Input
                           id="contact-person"
@@ -613,6 +627,7 @@ const InsuranceForm = () => {
                     <Label htmlFor="contact-number">Contact Number</Label>
                     <Controller
                       name="contactNumber"
+                      defaultValue={Benifyciary?.contactNumber || ""}
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -639,6 +654,7 @@ const InsuranceForm = () => {
                     <Controller
                       name="email"
                       control={control}
+                      defaultValue={Benifyciary?.email || ""}
                       render={({ field }) => (
                         <Input
                           id="email"
@@ -664,6 +680,7 @@ const InsuranceForm = () => {
               <Controller
                 name="imageUpload"
                 control={control}
+                defaultValue={Benifyciary?.imageUpload || ""}
                 render={({ field }) => (
                   <Input id="image-upload" type="file" {...field} />
                 )}
