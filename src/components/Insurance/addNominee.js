@@ -46,7 +46,7 @@ const AddNominee = ({ setSelectedNommie }) => {
   };
   return (
     <div>
-      <Sheet open={true}>
+      <Sheet>
         <SheetTrigger asChild>
           <div className="cursor-pointer flex border border-input bg-background p-4 justify-between pl-2 pr-2 items-center rounded-lg">
             <h1 className="ml-2 font-bold">Add Nominee</h1>
