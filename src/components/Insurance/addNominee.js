@@ -29,7 +29,10 @@ const AddNominee = ({ setSelectedNommie }) => {
       })
       .then((res) => {
         console.log(res.data);
-        setNominees(res?.data?.data?.Beneficiaries, res?.data?.data?.Charities);
+        setNominees({
+          Beneficiaries: res?.data?.data?.Beneficiaries || [],
+          Charities: res?.data?.data?.Charities || [],
+        });
       });
   }, []);
 
