@@ -64,8 +64,25 @@ const AddNominee = ({ setSelectedNommie }) => {
             </SheetDescription>
           </SheetHeader>
           <div className="grid gap-4 py-4">
+            {nominees}
             {nominees &&
-              nominees?.map((nominee) => (
+              nominees?.Beneficiaries?.map((nominee) => (
+                <div
+                  key={nominee.id}
+                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                >
+                  <Label htmlFor={`nominee-${nominee?.id}`}>
+                    {nominee?.fullLegalName}
+                  </Label>
+                  <Checkbox
+                    id={`nominee-${nominee?.id}`}
+                    checked={selectedNominees.includes(nominee?.id)}
+                    onCheckedChange={() => handleCheckboxChange(nominee?.id)}
+                  />
+                </div>
+              ))}
+            {nominees &&
+              nominees?.Charities?.map((nominee) => (
                 <div
                   key={nominee.id}
                   className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
