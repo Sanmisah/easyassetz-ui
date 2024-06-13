@@ -40,8 +40,8 @@ const schema = z.object({
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().nonempty({ message: "Policy Number is required" }),
   maturityDate: z.date().optional(),
-  premium: z.number().nonempty({ message: "Premium is required" }),
-  sumInsured: z.number().nonempty({ message: "Sum Insured is required" }),
+  premium: z.number().int().nonempty({ message: "Premium is required" }),
+  sumInsured: z.number().int().nonempty({ message: "Sum Insured is required" }),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
