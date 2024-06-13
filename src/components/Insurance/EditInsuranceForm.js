@@ -264,6 +264,7 @@ const InsuranceForm = () => {
                   <Controller
                     name="otherInsuranceCompany"
                     control={control}
+                    defaultValue={Benifyciary?.otherInsuranceCompany || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
@@ -286,6 +287,7 @@ const InsuranceForm = () => {
                 <Controller
                   name="insuranceSubType"
                   control={control}
+                  defaultValue={Benifyciary?.otherInsuranceCompany || ""}
                   render={({ field }) => (
                     <Input
                       id="insurance-subtype"
