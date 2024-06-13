@@ -40,23 +40,39 @@ const AddNominee = ({
       });
   }, []);
 
-  const handleCheckboxChange = (id, fullLegalName) => {
+  useEffect(() => {
+    // Sync state with displaynominie when it changes
+    const selectedIds = displaynominie.map((nominee) => nominee.id);
+    setSelectedNominees(selectedIds);
+  }, [displaynominie]);
+
+  const handleCheckboxChange = (id, fullLegalName, charityName) => {
     setSelectedNominees((prevSelectedNominees) =>
       prevSelectedNominees.includes(id)
         ? prevSelectedNominees.filter((nomineeId) => nomineeId !== id)
         : [...prevSelectedNominees, id]
     );
-    setDisplaynominie((prevDisplayNominees) =>
-      prevDisplayNominees?.some((nominee) => nominee.id === id)
-        ? prevDisplayNominees.filter((nominee) => nominee.id !== id)
-        : [...prevDisplayNominees, { id, fullLegalName }]
-    );
+
+    if (fullLegalName) {
+      setDisplaynominie((prevDisplayNominees) =>
+        prevDisplayNominees.some((nominee) => nominee.id === id)
+          ? prevDisplayNominees.filter((nominee) => nominee.id !== id)
+          : [...prevDisplayNominees, { id, fullLegalName }]
+      );
+    } else if (charityName) {
+      setDisplaynominie((prevDisplayNominees) =>
+        prevDisplayNominees.some((nominee) => nominee.id === id)
+          ? prevDisplayNominees.filter((nominee) => nominee.id !== id)
+          : [...prevDisplayNominees, { id, charityName }]
+      );
+    }
   };
 
-  const handlesubmit = () => {
+  const handleSubmit = () => {
     setSelectedNommie(selectedNominees);
     console.log(selectedNominees);
   };
+
   return (
     <div>
       <Sheet>
@@ -73,45 +89,51 @@ const AddNominee = ({
             </SheetDescription>
           </SheetHeader>
           <div className="grid gap-4 py-4">
-            {console.log(nominees)}
-            {nominees &&
-              nominees?.Beneficiaries?.map((nominee) => (
-                <div
-                  key={nominee.id}
-                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-                >
-                  <Label htmlFor={`nominee-${nominee?.id}`}>
-                    {nominee?.fullLegalName}
-                  </Label>
-                  <Checkbox
-                    id={`nominee-${nominee?.id}`}
-                    checked={selectedNominees.includes(nominee?.id)}
-                    onCheckedChange={() => {
-                      handleCheckboxChange(nominee?.id, nominee?.fullLegalName);
-                    }}
-                  />
-                </div>
-              ))}
-            {nominees &&
-              nominees?.Charities?.map((nominee) => (
-                <div
-                  key={nominee.id}
-                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-                >
-                  <Label htmlFor={`nominee-${nominee?.id}`}>
-                    {nominee?.charityName}
-                  </Label>
-                  <Checkbox
-                    id={`nominee-${nominee?.id}`}
-                    checked={selectedNominees.includes(nominee?.id)}
-                    onCheckedChange={() => handleCheckboxChange(nominee?.id)}
-                  />
-                </div>
-              ))}
+            <h2 className="font-bold">Beneficiaries</h2>
+            {nominees.Beneficiaries?.map((nominee) => (
+              <div
+                key={nominee.id}
+                className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+              >
+                <Label htmlFor={`nominee-${nominee.id}`}>
+                  {nominee.fullLegalName}
+                </Label>
+                <Checkbox
+                  id={`nominee-${nominee.id}`}
+                  checked={selectedNominees.includes(nominee.id)}
+                  onCheckedChange={() =>
+                    handleCheckboxChange(
+                      nominee.id,
+                      nominee.fullLegalName,
+                      null
+                    )
+                  }
+                />
+              </div>
+            ))}
+
+            <h2 className="font-bold">Charities</h2>
+            {nominees.Charities?.map((nominee) => (
+              <div
+                key={nominee.id}
+                className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+              >
+                <Label htmlFor={`nominee-${nominee.id}`}>
+                  {nominee.charityName}
+                </Label>
+                <Checkbox
+                  id={`nominee-${nominee.id}`}
+                  checked={selectedNominees.includes(nominee.id)}
+                  onCheckedChange={() =>
+                    handleCheckboxChange(nominee.id, null, nominee.charityName)
+                  }
+                />
+              </div>
+            ))}
           </div>
           <SheetFooter>
             <SheetClose asChild>
-              <Button onClick={handlesubmit} type="submit">
+              <Button onClick={handleSubmit} type="submit">
                 Save changes
               </Button>
             </SheetClose>
