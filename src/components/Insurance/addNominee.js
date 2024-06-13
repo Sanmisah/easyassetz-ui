@@ -14,7 +14,7 @@ import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
 
-const AddNominee = () => {
+const AddNominee = ({ setSelectedNommie }) => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const [nominees, setNominees] = useState([]);
@@ -28,7 +28,7 @@ const AddNominee = () => {
         },
       })
       .then((res) => {
-        setNominees(res.data);
+        setNominees(res?.data?.Beneficiaries);
       });
   }, []);
 
@@ -40,6 +40,10 @@ const AddNominee = () => {
     );
   };
 
+  const handlesubmit = () => {
+    setSelectedNommie(selectedNominees);
+    console.log(selectedNominees);
+  };
   return (
     <div>
       <Sheet open={true}>
@@ -56,29 +60,26 @@ const AddNominee = () => {
             </SheetDescription>
           </SheetHeader>
           <div className="grid gap-4 py-4">
-            {nominees.map((nominee) => (
-              <div
-                key={nominee.id}
-                className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-              >
-                <Label htmlFor={`nominee-${nominee.id}`}>{nominee.name}</Label>
-                <Checkbox
-                  id={`nominee-${nominee.id}`}
-                  checked={selectedNominees.includes(nominee.id)}
-                  onCheckedChange={() => handleCheckboxChange(nominee.id)}
-                />
-              </div>
-            ))}
+            {nominees &&
+              nominees?.map((nominee) => (
+                <div
+                  key={nominee.id}
+                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                >
+                  <Label htmlFor={`nominee-${nominee?.id}`}>
+                    {nominee?.name}
+                  </Label>
+                  <Checkbox
+                    id={`nominee-${nominee?.id}`}
+                    checked={selectedNominees.includes(nominee?.id)}
+                    onCheckedChange={() => handleCheckboxChange(nominee?.id)}
+                  />
+                </div>
+              ))}
           </div>
           <SheetFooter>
             <SheetClose asChild>
-              <Button
-                onClick={() => {
-                  console.log("Nominee added");
-                  console.log(selectedNominees);
-                }}
-                type="submit"
-              >
+              <Button onClick={handlesubmit} type="submit">
                 Save changes
               </Button>
             </SheetClose>
