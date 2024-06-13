@@ -334,7 +334,7 @@ const InsuranceForm = () => {
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
                   name="maturityDate"
-                  defaultValue={Benifyciary?.maturityDate || ""}
+                  defaultValue={new Date(Benifyciary?.maturityDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
