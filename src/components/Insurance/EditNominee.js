@@ -14,6 +14,8 @@ import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
 import cross from "@/components/image/close.png";
+import { ScrollArea } from "@com/ui/scroll-area";
+
 const AddNominee = ({ setSelectedNommie, selectedNommie, AllNominees }) => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -21,6 +23,11 @@ const AddNominee = ({ setSelectedNommie, selectedNommie, AllNominees }) => {
   const [selectedNominees, setSelectedNominees] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
 
+  useEffect(() => {
+    if (AllNominees) {
+      setDisplaynominie(AllNominees);
+    }
+  }, [AllNominees]);
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:8000/api/beneficiaries`, {
@@ -87,80 +94,89 @@ const AddNominee = ({ setSelectedNommie, selectedNommie, AllNominees }) => {
           </SheetHeader>
           <div className="grid gap-4 py-4">
             <h2 className="font-bold">Beneficiaries</h2>
-            {console.log(AllNominees)}
-            {AllNominees && AllNominees.length > 0 && (
-              <div className="space-y-2">
-                <Label htmlFor="registered-mobile">All nominee Selected</Label>
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  {AllNominees &&
-                    AllNominees.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
+            <ScrollArea className="h-72 w-48 rounded-md border">
+              {console.log(AllNominees)}
+              {displaynominie && displaynominie.length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="registered-mobile">
+                    All nominee Selected
+                  </Label>
+                  <div className="grid gap-4 py-4">
+                    {console.log(displaynominie)}
+                    {displaynominie &&
+                      displaynominie.map((nominee) => (
+                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                          <Label htmlFor={`nominee-${nominee?.id}`}>
+                            {nominee?.fullLegalName || nominee?.charityName}
+                          </Label>
+                          <img
+                            className="w-4 h-4 cursor-pointer"
+                            onClick={() => {
+                              setDisplaynominie(
+                                displaynominie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                              setSelectedNommie(
+                                selectedNommie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                            }}
+                            src={cross}
+                            alt=""
+                          />
+                        </div>
+                      ))}
+                  </div>
                 </div>
-              </div>
-            )}
-            {nominees.Beneficiaries?.map((nominee) => (
-              <div
-                key={nominee.id}
-                className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-              >
-                <Label htmlFor={`nominee-${nominee.id}`}>
-                  {nominee.fullLegalName}
-                </Label>
-                <Checkbox
-                  id={`nominee-${nominee.id}`}
-                  checked={selectedNominees.includes(nominee.id)}
-                  onCheckedChange={() =>
-                    handleCheckboxChange(
-                      nominee.id,
-                      nominee.fullLegalName,
-                      null
-                    )
-                  }
-                />
-              </div>
-            ))}
+              )}
+              {nominees.Beneficiaries?.map((nominee) => (
+                <div
+                  key={nominee.id}
+                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                >
+                  <Label htmlFor={`nominee-${nominee.id}`}>
+                    {nominee.fullLegalName}
+                  </Label>
+                  <Checkbox
+                    id={`nominee-${nominee.id}`}
+                    checked={selectedNominees.includes(nominee.id)}
+                    onCheckedChange={() =>
+                      handleCheckboxChange(
+                        nominee.id,
+                        nominee.fullLegalName,
+                        null
+                      )
+                    }
+                  />
+                </div>
+              ))}
 
-            <h2 className="font-bold">Charities</h2>
-            {nominees.Charities?.map((nominee) => (
-              <div
-                key={nominee.id}
-                className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-              >
-                <Label htmlFor={`nominee-${nominee.id}`}>
-                  {nominee.charityName}
-                </Label>
-                <Checkbox
-                  id={`nominee-${nominee.id}`}
-                  checked={selectedNominees.includes(nominee.id)}
-                  onCheckedChange={() =>
-                    handleCheckboxChange(nominee.id, null, nominee.charityName)
-                  }
-                />
-              </div>
-            ))}
+              <h2 className="font-bold">Charities</h2>
+              {nominees.Charities?.map((nominee) => (
+                <div
+                  key={nominee.id}
+                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                >
+                  <Label htmlFor={`nominee-${nominee.id}`}>
+                    {nominee.charityName}
+                  </Label>
+                  <Checkbox
+                    id={`nominee-${nominee.id}`}
+                    checked={selectedNominees.includes(nominee.id)}
+                    onCheckedChange={() =>
+                      handleCheckboxChange(
+                        nominee.id,
+                        nominee.fullLegalName,
+
+                        nominee.charityName
+                      )
+                    }
+                  />
+                </div>
+              ))}
+            </ScrollArea>
           </div>
           <SheetFooter>
             <SheetClose asChild>
