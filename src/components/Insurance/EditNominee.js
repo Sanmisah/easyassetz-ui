@@ -16,12 +16,17 @@ import axios from "axios";
 import cross from "@/components/image/close.png";
 import { ScrollArea } from "@com/ui/scroll-area";
 
-const AddNominee = ({ setSelectedNommie, selectedNommie, AllNominees }) => {
+const AddNominee = ({
+  setSelectedNommie,
+  selectedNommie,
+  AllNominees,
+  displaynominie,
+  setDisplaynominie,
+}) => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
-  const [displaynominie, setDisplaynominie] = useState([]);
 
   useEffect(() => {
     if (AllNominees) {

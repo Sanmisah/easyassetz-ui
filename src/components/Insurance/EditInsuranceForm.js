@@ -80,6 +80,7 @@ const InsuranceForm = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
+  const [displaynominie, setDisplaynominie] = useState([]);
 
   const {
     handleSubmit,
@@ -185,6 +186,11 @@ const InsuranceForm = () => {
     console.log("Form values:", control._formValues);
   }, [control._formValues]);
 
+  useEffect(() => {
+    if (Benifyciary?.nominees) {
+      setDisplaynominie(Benifyciary?.nominees);
+    }
+  }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
     console.log(data);
     data.nominees = selectedNommie;
@@ -494,6 +500,39 @@ const InsuranceForm = () => {
                 />
               </div>
             </div>
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
               {console.log(Benifyciary?.nominees)}
@@ -501,6 +540,8 @@ const InsuranceForm = () => {
                 setSelectedNommie={setSelectedNommie}
                 AllNominees={Benifyciary?.nominees}
                 selectedNommie={selectedNommie}
+                displaynominie={displaynominie}
+                setDisplaynominie={setDisplaynominie}
               />{" "}
             </div>
             <div className="space-y-2">
