@@ -496,6 +496,7 @@ const InsuranceForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
+              {console.log(defaultValues?.nominees)}
               <Addnominee
                 setSelectedNommie={setSelectedNommie}
                 AllNominees={defaultValues?.nominees}
