@@ -27,17 +27,17 @@ const Navcomponent = () => {
         />
       </div>
       <div className="flex item-center self-center gap-8 mr-[50px]">
-        <Link className="text-md font-medium" to="/">
+        <Link className="text-md font-medium self-center" to="/">
           Home
         </Link>
 
-        <Link className="text-md font-medium" to="/">
+        <Link className="text-md font-medium self-center" to="/">
           My Will
         </Link>
-        <Link className="text-md font-medium" to="/">
+        <Link className="text-md font-medium self-center" to="/">
           Blog
         </Link>
-        <Link className="text-md font-medium" to="/">
+        <Link className="text-md font-medium self-center" to="/">
           FAQs
         </Link>
 
