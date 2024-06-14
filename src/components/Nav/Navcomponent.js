@@ -26,7 +26,7 @@ const Navcomponent = () => {
           alt="Logo"
         />
       </div>
-      <div className="flex self-center gap-8 mr-[50px]">
+      <div className="flex item-center self-center gap-8 mr-[50px]">
         <Link className="text-md font-medium" to="/">
           Home
         </Link>

@@ -87,7 +87,7 @@ const AddNominee = ({ setSelectedNommie, selectedNommie, AllNominees }) => {
           </SheetHeader>
           <div className="grid gap-4 py-4">
             <h2 className="font-bold">Beneficiaries</h2>
-
+            {console.log(AllNominees)}
             {AllNominees && AllNominees.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="registered-mobile">All nominee Selected</Label>
