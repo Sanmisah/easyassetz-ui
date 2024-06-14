@@ -30,6 +30,7 @@ import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Addnominee from "./EditNominee";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
   companyName: z
