@@ -101,7 +101,7 @@ const AddNominee = ({
             <h2 className="font-bold">Beneficiaries</h2>
             <ScrollArea className="flex flex-col gap-2rounded-md ">
               {console.log(AllNominees)}
-              {displaynominie && displaynominie.length > 0 && (
+              {/* {displaynominie && displaynominie.length > 0 && (
                 <div className="space-y-2">
                   <div className="grid gap-4 py-4">
                     {console.log(displaynominie)}
@@ -132,7 +132,7 @@ const AddNominee = ({
                       ))}
                   </div>
                 </div>
-              )}
+              )} */}
               {nominees.Beneficiaries?.map((nominee) => (
                 <div
                   key={nominee.id}
