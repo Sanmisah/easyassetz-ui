@@ -94,13 +94,10 @@ const AddNominee = ({ setSelectedNommie, selectedNommie, AllNominees }) => {
           </SheetHeader>
           <div className="grid gap-4 py-4">
             <h2 className="font-bold">Beneficiaries</h2>
-            <ScrollArea className="h-72 w-48 rounded-md border">
+            <ScrollArea className="flex flex-col gap-2rounded-md ">
               {console.log(AllNominees)}
               {displaynominie && displaynominie.length > 0 && (
                 <div className="space-y-2">
-                  <Label htmlFor="registered-mobile">
-                    All nominee Selected
-                  </Label>
                   <div className="grid gap-4 py-4">
                     {console.log(displaynominie)}
                     {displaynominie &&
@@ -134,7 +131,7 @@ const AddNominee = ({ setSelectedNommie, selectedNommie, AllNominees }) => {
               {nominees.Beneficiaries?.map((nominee) => (
                 <div
                   key={nominee.id}
-                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                  className="flex mb-4 space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
                 >
                   <Label htmlFor={`nominee-${nominee.id}`}>
                     {nominee.fullLegalName}
