@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import Addnominee from "./EditNominee";
 
 const schema = z.object({
   companyName: z
