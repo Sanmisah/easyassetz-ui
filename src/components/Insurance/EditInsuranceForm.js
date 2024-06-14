@@ -78,6 +78,7 @@ const InsuranceForm = () => {
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [brokerSelected, setBrokerSelected] = useState(false);
+  const [selectedNommie, setSelectedNommie] = useState([]);
 
   const {
     handleSubmit,
@@ -185,6 +186,7 @@ const InsuranceForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -490,6 +492,14 @@ const InsuranceForm = () => {
                   )}
                 />
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              <Addnominee
+                setSelectedNommie={setSelectedNommie}
+                AllNominees={defaultValues?.nominees}
+                selectedNommie={selectedNommie}
+              />{" "}
             </div>
             <div className="space-y-2">
               <Label>Mode of Purchase</Label>
