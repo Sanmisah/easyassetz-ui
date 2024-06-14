@@ -29,6 +29,35 @@ import "react-international-phone/style.css";
 import { PhoneInput } from "react-international-phone";
 import { toast } from "sonner";
 
+const States = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+];
 const charitySchema = z.object({
   charityName: z.string().nonempty("Organization name is required"),
   charityAddress1: z.string().nonempty("Address 1 is required"),
@@ -170,9 +199,11 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
                       <SelectValue placeholder="Select charityState" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ca">California</SelectItem>
-                      <SelectItem value="ny">New York</SelectItem>
-                      <SelectItem value="tx">Texas</SelectItem>
+                      {States.map((state) => (
+                        <SelectItem key={state} value={state}>
+                          {state}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
