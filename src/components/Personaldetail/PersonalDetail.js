@@ -38,9 +38,9 @@ const dropdownData = {
     "other",
   ],
   countries: [
-    "united-states",
+    "united states",
     "canada",
-    "united-kingdom",
+    "united kingdom",
     "australia",
     "other",
   ],
@@ -87,6 +87,10 @@ const Personaldetail = () => {
       }
     );
     setDefaultData(response.data.data.profile);
+    if (response.data.data.profile?.nationality === "indian")
+      setIsForeign(false);
+    if (response.data.data.profile?.nationality !== "indian")
+      setIsForeign(true);
     if (response.data.data.profile?.dob) {
       setdefaultDate(new Date(response.data.data.profile.dob));
     }
@@ -101,11 +105,18 @@ const Personaldetail = () => {
   // useEffect(() => {
   //   getDropdownData();
   // }, []);
+  useEffect(() => {
+    console.log(isForeign);
+  }, [isForeign]);
 
   const { isLoading, isError } = useQuery({
     queryKey: ["personalData"],
     queryFn: getPersonalData,
-    onSuccess: () => {},
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      if (data.nationality === "indian") setIsForeign(false);
+      if (data.nationality !== "indian") setIsForeign(true);
+    },
     onError: (error) => {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
@@ -162,6 +173,16 @@ const Personaldetail = () => {
       toast.error("Failed to submit profile");
     },
   });
+  useEffect(() => {
+    if (defaultData?.nationality === "foreign") {
+      setValue("nationality", defaultData?.nationality);
+      setIsForeign(true);
+    }
+    if (defaultData?.nationality === "indian") {
+      setValue("nationality", "indian");
+      setIsForeign(false);
+    }
+  }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
     if (isForeign && data.specificNationality) {
@@ -265,7 +286,7 @@ const Personaldetail = () => {
                     <SelectContent>
                       {dropdownData.genders?.map((gender) => (
                         <SelectItem key={gender} value={gender}>
-                          {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                          {gender.charAt(0) + gender.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -300,7 +321,9 @@ const Personaldetail = () => {
               <div className="flex flex-col gap-4">
                 <Controller
                   name="nationality"
-                  defaultValue={defaultData?.nationality}
+                  defaultValue={
+                    defaultData?.nationality !== "indian" ? "foreign" : "indian"
+                  }
                   control={control}
                   rules={{
                     required:
@@ -327,7 +350,7 @@ const Personaldetail = () => {
                           <RadioGroupItem
                             id={`nationality-${nationality}`}
                             value={nationality}
-                            checked={field.value === nationality} // Use the field's value to check the correct radio button
+                            checked={field.value === nationality}
                           />
                           {nationality.charAt(0).toUpperCase() +
                             nationality.slice(1)}
@@ -345,7 +368,7 @@ const Personaldetail = () => {
                   <Controller
                     name="specificNationality"
                     control={control}
-                    defaultValue={defaultData?.specificNationality}
+                    defaultValue={defaultData?.nationality}
                     rules={{
                       required: !defaultData?.specificNationality && isForeign,
                     }}
@@ -405,10 +428,7 @@ const Personaldetail = () => {
                         <SelectItem key={country} value={country}>
                           {country
                             .split("-")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() + word.slice(1)
-                            )
+                            .map((word) => word.charAt(0) + word.slice(1))
                             .join(" ")}
                         </SelectItem>
                       ))}
@@ -442,7 +462,7 @@ const Personaldetail = () => {
                     <SelectContent>
                       {dropdownData.religions?.map((religion) => (
                         <SelectItem key={religion} value={religion}>
-                          {religion.charAt(0).toUpperCase() + religion.slice(1)}
+                          {religion.charAt(0) + religion.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -489,7 +509,7 @@ const Personaldetail = () => {
                     <SelectContent>
                       {dropdownData.maritalStatuses?.map((status) => (
                         <SelectItem key={status} value={status}>
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                          {status.charAt(0) + status.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>

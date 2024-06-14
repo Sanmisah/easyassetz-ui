@@ -95,7 +95,7 @@ const InsuranceForm = () => {
       policyHolderName: "",
       relationship: "",
       otherRelationship: "",
-      modeOfPurchase: "",
+      modeOfPurchase: "broker",
       contactPerson: "",
       contactNumber: "",
       email: "",
@@ -410,39 +410,7 @@ const InsuranceForm = () => {
                 />
               </div>
             </div>
-            {displaynominie && displaynominie.length > 0 && (
-              <div className="space-y-2">
-                <Label htmlFor="registered-mobile">All nominee Selected</Label>
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
+
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
               <Addnominee
@@ -457,11 +425,9 @@ const InsuranceForm = () => {
               <Controller
                 name="modeOfPurchase"
                 control={control}
-                defaultValues={Benificiary?.modeOfPurchase || ""}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
-                    defaultValues={Benificiary?.modeOfPurchase || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");

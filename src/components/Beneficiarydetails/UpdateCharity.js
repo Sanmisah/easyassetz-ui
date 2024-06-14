@@ -241,7 +241,6 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 render={({ field }) => (
                   <PhoneInput
                     id="charityNumber"
-                    international
                     countryCallingCodeEditable={false}
                     defaultCountry="in"
                     value={field.value}

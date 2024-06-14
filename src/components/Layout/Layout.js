@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import PersonalDetails from "@/components/Personaldetail/Personaldetail";
+import PersonalDetails from "@/components/Personaldetail/PersonalDetail";
 import BeneficiaryDetails from "@/components/Beneficiarydetails/Benificiarydetails";
 import Logo from "../image/Logo.png";
 import Hamburger from "../image/hamburger.svg";
 import Insurance from "@/components/Insurance/LifeInsurance";
 import InsuranceMainForm from "@/components/Insurance/InsuranceMainForm";
-import LifeIsuranceadd from "@/components/Insurance/InsuranceForm";
+import InsuranceForm from "@/components/Insurance/InsuranceForm";
 import EditInsuranceForm from "@/components/Insurance/EditInsuranceForm";
 import {
   Sheet,
@@ -128,7 +128,7 @@ const Layout = () => {
       {location.pathname === "/benificiary" && <BeneficiaryDetails />}
       {location.pathname === "/insurance" && <InsuranceMainForm />}
       {location.pathname === "/lifeinsurance" && <Insurance />}
-      {location.pathname === "/lifeinsurance/add" && <LifeIsuranceadd />}
+      {location.pathname === "/lifeinsurance/add" && <InsuranceForm />}
       {location.pathname === "/lifeinsurance/edit" && <EditInsuranceForm />}
     </div>
   );
