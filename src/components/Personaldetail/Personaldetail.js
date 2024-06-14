@@ -1378,7 +1378,10 @@ const Personaldetail = () => {
               )}
             </div>
             <div className="col-span-full flex justify-end min-w-[200px] max-md:mt-2">
-              <Button className="w-full max-w-[200px]" type="submit">
+              <Button
+                className="w-full max-w-[200px] min-h-[50px] rounded-[2rem] mt-6"
+                type="submit"
+              >
                 Save Changes
               </Button>
             </div>

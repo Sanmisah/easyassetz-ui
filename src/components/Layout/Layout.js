@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import PersonalDetails from "@/components/Personaldetail/Personaldetail";
 import BeneficiaryDetails from "@/components/Beneficiarydetails/Benificiarydetails";
 import Logo from "../image/Logo.png";
@@ -7,7 +7,7 @@ import Hamburger from "../image/hamburger.svg";
 import Insurance from "@/components/Insurance/LifeInsurance";
 import InsuranceMainForm from "@/components/Insurance/InsuranceMainForm";
 import LifeIsuranceadd from "@/components/Insurance/InsuranceForm";
-import LifeIsuranceEdit from "@/components/Insurance/EditInsuranceForm";
+import EditInsuranceForm from "@/components/Insurance/EditInsuranceForm";
 import {
   Sheet,
   SheetContent,
@@ -41,42 +41,44 @@ const Layout = () => {
             onClick={toggle}
           />
         </div>
-        <nav className="space-y-4 ml-2 mt-4 max-md:hidden">
-          <Link
-            className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
+        <nav id="layout" className="space-y-4 ml-2 mt-4 max-md:hidden">
+          <NavLink
+            prefetch="true"
+            activeClassName="active"
+            className="flex items-center gap-2 rounded-md  px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/personal"
           >
             <UserIcon className="h-5 w-5" />
             Personal Details
-          </Link>
-          <Link
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/benificiary"
           >
             <HandHelpingIcon className="h-5 w-5" />
             Beneficiary Details
-          </Link>
-          <Link
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-            to="#"
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/nomination"
           >
             <UserIcon className="h-5 w-5" />
             Nomination Module
-          </Link>
-          <Link
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/insurance"
           >
             <UserIcon className="h-5 w-5" />
             Insurance
-          </Link>
-          <Link
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-            to="#"
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/financial-assets"
           >
             <HomeIcon className="h-5 w-5" />
             Financial assets
-          </Link>
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -86,34 +88,34 @@ const Layout = () => {
               <SheetDescription>
                 <nav className="space-y-4">
                   <img src={Logo} alt="Logo" width="190" height="100" />
-                  <Link
+                  <NavLink
                     className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
                     to="/personal"
                   >
                     <UserIcon className="h-5 w-5" />
                     Personal Details
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
                     to="/benificiary"
                   >
                     <HandHelpingIcon className="h-5 w-5" />
                     Beneficiary Details
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="#"
+                    to="/nomination"
                   >
                     <UserIcon className="h-5 w-5" />
                     Nomination Module
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
                     to="#"
                   >
                     <HomeIcon className="h-5 w-5" />
                     Financial assets
-                  </Link>
+                  </NavLink>
                 </nav>
               </SheetDescription>
             </SheetHeader>
@@ -127,7 +129,7 @@ const Layout = () => {
       {location.pathname === "/insurance" && <InsuranceMainForm />}
       {location.pathname === "/lifeinsurance" && <Insurance />}
       {location.pathname === "/lifeinsurance/add" && <LifeIsuranceadd />}
-      {location.pathname === "/lifeinsurance/edit" && <LifeIsuranceEdit />}
+      {location.pathname === "/lifeinsurance/edit" && <EditInsuranceForm />}
     </div>
   );
 };

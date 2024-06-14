@@ -61,7 +61,7 @@ const schema = z.object({
   previousPolicy: z.string().optional(),
 });
 
-const InsuranceForm = () => {
+const EditInsuranceForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -740,4 +740,4 @@ const InsuranceForm = () => {
   );
 };
 
-export default InsuranceForm;
+export default EditInsuranceForm;

@@ -457,9 +457,11 @@ const InsuranceForm = () => {
               <Controller
                 name="modeOfPurchase"
                 control={control}
+                defaultValues={Benificiary?.modeOfPurchase || ""}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
+                    defaultValues={Benificiary?.modeOfPurchase || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
