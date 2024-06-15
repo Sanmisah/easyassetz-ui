@@ -32,10 +32,7 @@ const loginSchema = z.object({
 const registerSchema = z
   .object({
     name: z.string().min(1, "Full Legal name is required"),
-    mobile: z
-      .string()
-      .min(10, "Invalid mobile number")
-      .max(10, "Invalid mobile number"),
+    mobile: z.string().min(7, "Invalid mobile number"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     password_confirmation: z.string().min(6, "Please confirm your password"),
