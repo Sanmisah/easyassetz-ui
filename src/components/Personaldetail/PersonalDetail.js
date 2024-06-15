@@ -477,7 +477,9 @@ const Personaldetail = () => {
                         defaultValue={defaultData?.specificNationality}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select nationality" />
+                          <SelectValue>
+                            {field.value || "Select nationality"}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {dropdownData.specificNationalities?.map(

@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import Addnominee from "./addNominee";
 import cross from "../image/close.png";
+import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   companyName: z
@@ -38,10 +39,27 @@ const schema = z.object({
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z.string().nonempty({ message: "Policy Number is required" }),
+  policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+
   maturityDate: z.date().optional(),
-  premium: z.string().nonempty({ message: "Premium is required" }),
-  sumInsured: z.string().nonempty({ message: "Sum Insured is required" }),
+  premium: z
+    .string()
+    .min(3, { message: "Premium is required" })
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Premium must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
+  sumInsured: z
+    .string()
+    .min(3, { message: "Sum Insured is required" })
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Sum Insured must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
@@ -51,7 +69,9 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.string().nonempty({ message: "Contact Person is required" }),
-  contactNumber: z.string().nonempty({ message: "Contact Number is required" }),
+  contactNumber: z.string().min(7, {
+    message: "Contact Number is required and must be more than 7 digits",
+  }),
   email: z.string().email({ message: "Invalid email address" }),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
@@ -77,7 +97,8 @@ const InsuranceForm = () => {
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
-
+  const [brokerSelected, setBrokerSelected] = useState(true);
+  const [nomineeerror, setnomineeerror] = useState(false);
   const {
     handleSubmit,
     control,
@@ -118,6 +139,7 @@ const InsuranceForm = () => {
           },
         }
       );
+
       return response.data.data.LifeInsurance;
     },
     onSuccess: () => {
@@ -130,9 +152,21 @@ const InsuranceForm = () => {
       toast.error("Failed to submit profile");
     },
   });
+  useEffect(() => {
+    if (selectedNommie.length > 0) {
+      setnomineeerror(false);
+    }
+  }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
     console.log(data);
+    console.log("Nomiee:", selectedNommie.length > 0);
+    if (selectedNommie.length < 1) {
+      console.log("Nomiee:", selectedNommie.length > 0);
+
+      setnomineeerror(true);
+      return;
+    }
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -208,14 +242,14 @@ const InsuranceForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="insurance-subtype">Insurance Sub Type</Label>
+                <Label htmlFor="insurance-subtype">Insurance Type</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="insurance-subtype"
-                      placeholder="Enter sub type"
+                      id="insuranceType"
+                      placeholder="Enter  type"
                       {...field}
                       className={errors.insuranceType ? "border-red-500" : ""}
                     />
@@ -263,7 +297,7 @@ const InsuranceForm = () => {
                   )}
                 />
                 {errors.maturityDate && (
-                  <span className="text-red-500">
+                  <span className="text-red-500 mt-5">
                     {errors.maturityDate.message}
                   </span>
                 )}
@@ -402,6 +436,7 @@ const InsuranceForm = () => {
                   control={control}
                   render={({ field }) => (
                     <Textarea
+                      value={field.value}
                       id="additional-details"
                       placeholder="Enter additional details"
                       {...field}
@@ -410,18 +445,57 @@ const InsuranceForm = () => {
                 />
               </div>
             </div>
-
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
             <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
+              <Label htmlFor="registered-mobile" className="text-lg font-bold">
+                Add nominee
+              </Label>
               <Addnominee
                 setDisplaynominie={setDisplaynominie}
                 setSelectedNommie={setSelectedNommie}
                 displaynominie={displaynominie}
-              />{" "}
+              />
+              {nomineeerror && (
+                <span className="text-red-500">
+                  Please select atleast one nominee
+                </span>
+              )}
             </div>
 
             <div className="space-y-4 flex flex-col">
-              <Label>Mode of Purchase</Label>
+              <Label className="text-lg font-bold">Mode of Purchase</Label>
               <Controller
                 name="modeOfPurchase"
                 control={control}
@@ -431,6 +505,7 @@ const InsuranceForm = () => {
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
+                      setBrokerSelected(value === "broker");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -480,89 +555,103 @@ const InsuranceForm = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="contact-person">Broker Name</Label>
-                <Controller
-                  name="brokerName"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="contact-person"
-                      placeholder="Enter broker name"
-                      {...field}
-                      className={errors.brokerName ? "border-red-500" : ""}
+            {brokerSelected && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-person">Broker Name</Label>
+                    <Controller
+                      name="brokerName"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="brokerName"
+                          placeholder="Enter broker name"
+                          {...field}
+                          className={errors.brokerName ? "border-red-500" : ""}
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors.brokerName && (
-                  <span className="text-red-500">
-                    {errors.brokerName.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="contact-person">Contact Person</Label>
-                <Controller
-                  name="contactPerson"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="contact-person"
-                      placeholder="Enter contact person name"
-                      {...field}
-                      className={errors.contactPerson ? "border-red-500" : ""}
+                    {errors.brokerName && (
+                      <span className="text-red-500">
+                        {errors.brokerName.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-person">Contact Person</Label>
+                    <Controller
+                      name="contactPerson"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="contact-person"
+                          placeholder="Enter contact person name"
+                          {...field}
+                          className={
+                            errors.contactPerson ? "border-red-500" : ""
+                          }
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors.contactPerson && (
-                  <span className="text-red-500">
-                    {errors.contactPerson.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="contact-number">Contact Number</Label>
-                <Controller
-                  name="contactNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="contact-number"
-                      placeholder="Enter contact number"
-                      {...field}
-                      className={errors.contactNumber ? "border-red-500" : ""}
+                    {errors.contactPerson && (
+                      <span className="text-red-500">
+                        {errors.contactPerson.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-number">Contact Number</Label>
+                    <Controller
+                      name="contactNumber"
+                      control={control}
+                      render={({ field }) => (
+                        <PhoneInput
+                          id="guardian-mobile"
+                          type="tel"
+                          placeholder="Enter contact number"
+                          defaultCountry="in"
+                          value={field.value}
+                          inputStyle={{ minWidth: "30.5rem" }}
+                          onChange={field.onChange}
+                          className={
+                            errors.contactNumber ? "border-red-500" : ""
+                          }
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors.contactNumber && (
-                  <span className="text-red-500">
-                    {errors.contactNumber.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter email"
-                      {...field}
-                      className={errors.email ? "border-red-500" : ""}
+                    {errors.contactNumber && (
+                      <span className="text-red-500">
+                        {errors.contactNumber.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="Enter email"
+                          {...field}
+                          className={errors.email ? "border-red-500" : ""}
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors.email && (
-                  <span className="text-red-500">{errors.email.message}</span>
-                )}
-              </div>
-            </div>
+                    {errors.email && (
+                      <span className="text-red-500">
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller

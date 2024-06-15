@@ -18,6 +18,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { PhoneInput } from "react-international-phone";
 
 const phoneRegex = new RegExp(
   /^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
@@ -300,14 +301,25 @@ const Auth = () => {
 
                 <div className="grid gap-2">
                   <Label htmlFor="mobile">Mobile Number</Label>
-                  <Input
-                    id="mobile"
-                    type="text"
-                    placeholder="Mobile Number"
-                    value={formData.mobile}
-                    onChange={handleInputChange}
-                    className={getFieldError("mobile") ? "border-red-500" : ""}
-                  />
+                  <div className="min-w-[300px] max-md:min-w-[300px]">
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      value={formData.mobile}
+                      onChange={(e) => {
+                        console.log(e);
+                        setFormData({ ...formData, mobile: e });
+                      }}
+                      inputStyle={{ minWidth: "300px" }}
+                      className={
+                        getFieldError("mobile")
+                          ? "border-red-500 min-w-[20rem]!important"
+                          : "min-w-[20rem]!important"
+                      }
+                    />
+                  </div>
                   {getFieldError("mobile") && (
                     <p className="text-red-500">{getFieldError("mobile")}</p>
                   )}

@@ -58,26 +58,13 @@ const Layout = () => {
             <HandHelpingIcon className="h-5 w-5" />
             Beneficiary Details
           </NavLink>
-          <NavLink
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/nomination"
-          >
-            <UserIcon className="h-5 w-5" />
-            Nomination Module
-          </NavLink>
+
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/insurance"
           >
             <UserIcon className="h-5 w-5" />
             Insurance
-          </NavLink>
-          <NavLink
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/financial-assets"
-          >
-            <HomeIcon className="h-5 w-5" />
-            Financial assets
           </NavLink>
         </nav>
 

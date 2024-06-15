@@ -31,6 +31,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
+import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   companyName: z
@@ -40,10 +41,31 @@ const schema = z.object({
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z.string().nonempty({ message: "Policy Number is required" }),
+  policyNumber: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Policy Number must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
   maturityDate: z.date().optional(),
-  premium: z.string().nonempty({ message: "Premium is required" }),
-  sumInsured: z.string().nonempty({ message: "Sum Insured is required" }),
+  premium: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Premium must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
+  sumInsured: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Sum Insured must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
@@ -53,12 +75,20 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.string().nonempty({ message: "Contact Person is required" }),
-  contactNumber: z.string().nonempty({ message: "Contact Number is required" }),
+  contactNumber: z.string().min(7, { message: "Contact Number is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
-  previousPolicy: z.string().optional(),
+  brokerName: z.string().nonempty({ message: "Broker Name is required" }),
+  previousPolicy: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Premium must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
 });
 
 const EditInsuranceForm = () => {
@@ -211,6 +241,7 @@ const EditInsuranceForm = () => {
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
     console.log(data);
+    console.log("brokerName:", data.brokerName);
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -490,7 +521,7 @@ const EditInsuranceForm = () => {
                 <Controller
                   name="previousPolicy"
                   control={control}
-                  defaultValue={Benifyciary?.previousPolicy || ""}
+                  defaultValue={Benifyciary?.previousPolicyNumber || ""}
                   render={({ field }) => (
                     <Input
                       id="previous-policy"
@@ -686,14 +717,18 @@ const EditInsuranceForm = () => {
                       defaultValue={Benifyciary?.contactNumber || ""}
                       control={control}
                       render={({ field }) => (
-                        <Input
-                          id="contact-number"
+                        <PhoneInput
+                          defaultValue={Benifyciary?.contactNumber || ""}
+                          id="guardian-mobile"
+                          type="tel"
                           placeholder="Enter contact number"
-                          {...field}
+                          defaultCountry="in"
+                          value={field.value}
+                          inputStyle={{ minWidth: "30.5rem" }}
+                          onChange={field.onChange}
                           className={
                             errors.contactNumber ? "border-red-500" : ""
                           }
-                          defaultValue={Benifyciary?.contactNumber || ""}
                         />
                       )}
                     />

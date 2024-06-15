@@ -131,7 +131,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
         <ScrollArea className="w-full h-[76vh] rounded-md">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="grid gap-6 py-6 p-6 mr-2"
+            className="grid gap-6 py-6  p-4"
           >
             <div className="space-y-2 p-2">
               <Label htmlFor="org-name" className="text-base font-medium">
@@ -219,6 +219,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <PhoneInput
                 id="charityNumber"
                 type="tel"
+                inputStyle={{ minWidth: "15.5rem" }}
                 defaultCountry="in"
                 placeholder="Enter charityNumber number"
                 {...register("charityNumber")}

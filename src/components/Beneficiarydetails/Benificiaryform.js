@@ -330,7 +330,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               </p>
                             )}
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="dob">Date of Birth</Label>
                             <Controller
                               name="dob"
@@ -339,6 +339,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                 <Datepicker
                                   value={field.value}
                                   onChange={field.onChange}
+                                  className="min-w-[190rem]"
                                 />
                               )}
                             />
@@ -348,7 +349,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               </p>
                             )}
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
                             <Controller
                               name="mobile"
@@ -359,6 +360,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                   type="tel"
                                   placeholder="Enter mobile number"
                                   defaultCountry="in"
+                                  inputStyle={{ minWidth: "15.5rem" }}
                                   value={field.value}
                                   onChange={field.onChange}
                                 />
@@ -421,6 +423,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                     placeholder="Enter guardian's mobile number"
                                     defaultCountry="in"
                                     value={field.value}
+                                    inputStyle={{ minWidth: "15.5rem" }}
                                     onChange={field.onChange}
                                   />
                                 )}
