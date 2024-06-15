@@ -167,6 +167,8 @@ const Personaldetail = () => {
   const [defaultDate, setdefaultDate] = useState(null);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [specialactundermarriange, setSpecialactundermarriange] =
+    useState(true);
 
   const queryClient = useQueryClient();
 
@@ -290,6 +292,7 @@ const Personaldetail = () => {
       data.marriedUnderSpecialAct = "false";
     }
     delete data.specificNationality;
+    data.marriedUnderSpecialAct = specialactundermarriange;
     Profilemutate.mutate(data);
   };
 
@@ -627,7 +630,8 @@ const Personaldetail = () => {
                   <Checkbox
                     className="mt-2"
                     id="married-under-act"
-                    value="true"
+                    checked={specialactundermarriange}
+                    onCheckedChange={() => setSpecialactundermarriange(true)}
                     defaultChecked={defaultData?.marriedUnderSpecialAct}
                     {...register("marriedUnderSpecialAct")}
                   />
