@@ -178,7 +178,7 @@ const Personaldetail = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/profiles/${user.data.user.profile.id}`,
+      `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -253,11 +253,12 @@ const Personaldetail = () => {
     mutationFn: async (data) => {
       const mergedData = { ...defaultData, ...data };
       const response = await axios.put(
-        `/api/profiles/${user.data.user.profile.id}`,
+        `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
         mergedData,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -284,16 +285,32 @@ const Personaldetail = () => {
   }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
+    const formData = new FormData();
+
+    // Append each field to the FormData object
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        formData.append(key, data[key]);
+      }
+    }
+
+    // Handle specific nationality for foreign users
     if (isForeign && data.specificNationality) {
-      data.nationality = data.specificNationality;
+      formData.append("nationality", data.specificNationality);
     }
+
+    // Handle marital status
     if (marriedUnderAct && data.maritalStatus === "bachelor") {
-      data.maritalStatus = "bachelor";
-      data.marriedUnderSpecialAct = "false";
+      formData.append("maritalStatus", "bachelor");
+      formData.append("marriedUnderSpecialAct", "false");
+    } else {
+      formData.append("marriedUnderSpecialAct", specialactundermarriange);
     }
-    delete data.specificNationality;
-    data.marriedUnderSpecialAct = specialactundermarriange;
-    Profilemutate.mutate(data);
+
+    // Remove specificNationality from the data object if not needed
+    formData.delete("specificNationality");
+
+    Profilemutate.mutate(formData);
   };
 
   const permanentAddress = watch([
