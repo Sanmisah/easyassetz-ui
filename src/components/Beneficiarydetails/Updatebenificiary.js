@@ -120,14 +120,11 @@ const Benificiaryform = ({
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries/${benificiaryId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
 
     return response.data.data.Beneficiary;
   };
@@ -209,7 +206,7 @@ const Benificiaryform = ({
     mutationFn: async (data) => {
       console.log("data:", data);
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/beneficiaries/${benificiaryId}`,
+        `/api/beneficiaries/${benificiaryId}`,
         data,
         {
           headers: {

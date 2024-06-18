@@ -87,15 +87,11 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
 
   const charityMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/beneficiaries`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
+      const response = await axios.post(`/api/beneficiaries`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
       return response.data.data.Benificiary;
     },
     onSuccess: () => {

@@ -128,15 +128,11 @@ const MotorForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/motor-insurances`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
+      const response = await axios.post(`/api/motor-insurances`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
 
       return response.data.data.MotorInsurances;
     },

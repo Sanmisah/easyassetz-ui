@@ -35,14 +35,11 @@ const LifeInsurance = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/lifeinsurances`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/lifeinsurances`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
 
     return response.data.data.LifeInsurances;
   };
@@ -66,7 +63,7 @@ const LifeInsurance = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `http://127.0.0.1:8000/api/lifeinsurances/${lifeInsuranceDeleteId}`,
+      `/api/lifeinsurances/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,

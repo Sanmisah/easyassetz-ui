@@ -57,14 +57,11 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries/${charityId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/beneficiaries/${charityId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
 
     return response.data.data.Beneficiary;
   };
@@ -101,7 +98,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     mutationFn: async (data) => {
       console.log("data:", data);
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/beneficiaries/${charityId}`,
+        `/api/beneficiaries/${charityId}`,
         data,
         {
           headers: {

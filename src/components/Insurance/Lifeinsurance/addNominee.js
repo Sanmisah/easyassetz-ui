@@ -26,7 +26,7 @@ const AddNominee = ({
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/beneficiaries`, {
+      .get(`/api/beneficiaries`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },

@@ -127,7 +127,7 @@ const EditMotorForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/motor-insurances/${lifeInsuranceEditId}`,
+      `/api/motor-insurances/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -208,7 +208,7 @@ const EditMotorForm = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/motor-insurances/${lifeInsuranceEditId}`,
+        `/api/motor-insurances/${lifeInsuranceEditId}`,
         data,
         {
           headers: {

@@ -38,14 +38,11 @@ const Benificiarydetails = () => {
 
   const getBenificiaryData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/beneficiaries`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
     setBenificiaryData(response.data.data.Beneficiaries);
 
     return response.data.data.Beneficiaries;
@@ -61,14 +58,11 @@ const Benificiarydetails = () => {
   });
   const getCharityData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/beneficiaries`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/beneficiaries`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
     setCharityData(response.data.data.Charities);
 
     return response.data.data.Charity;
@@ -84,14 +78,11 @@ const Benificiarydetails = () => {
   });
 
   const Deletebenificiary = async (id) => {
-    const response = await axios.delete(
-      `http://127.0.0.1:8000/api/beneficiaries/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.delete(`/api/beneficiaries/${id}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
     queryClient.invalidateQueries("benificiaryData");
     toast.success("Beneficiary deleted successfully!");
   };

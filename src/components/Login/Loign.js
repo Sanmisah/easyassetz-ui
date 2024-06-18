@@ -125,7 +125,7 @@ const Auth = () => {
         // const query = useQuery({ queryKey: ['user'], queryFn: Loginfun });
 
         // Call login API
-        // const response = await axios.post("http://127.0.0.1:8000/api/login", {
+        // const response = await axios.post("/api/login", {
         //   email: formData.email,
         //   password: formData.password,
         // });
@@ -144,7 +144,7 @@ const Auth = () => {
   };
   const Registermutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post("http://127.0.0.1:8000/api/register", {
+      const response = await axios.post("/api/register", {
         ...data,
       });
       return response.data;
@@ -164,7 +164,7 @@ const Auth = () => {
     setAlertDialog(false);
     try {
       Registermutation.mutate(formData);
-      //   const response = await axios.post("http://127.0.0.1:8000/api/register", {
+      //   const response = await axios.post("/api/register", {
       //     ...formData,
       //   });
       //   console.log("Registering user:", response.data);
