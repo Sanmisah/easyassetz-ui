@@ -6,10 +6,11 @@ import axios from "axios";
 
 const InsuranceMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
+  const [motorInsuranceData, setMotorInsuranceData] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataLifeinsurance = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
@@ -27,8 +28,27 @@ const InsuranceMainForm = () => {
         console.error("Error fetching life insurance data", error);
       }
     };
+    const fetchDataMotorinsurance = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
 
-    fetchData();
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/motor-insurances`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.data.token}`,
+            },
+          }
+        );
+        setMotorInsuranceData(response?.data?.data?.MotorInsurances);
+      } catch (error) {
+        console.error("Error fetching life insurance data", error);
+      }
+    };
+
+    fetchDataLifeinsurance();
+    fetchDataMotorinsurance();
   }, []);
 
   return (
@@ -40,9 +60,19 @@ const InsuranceMainForm = () => {
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">
-        <div className="w-[70%] flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg">
+        <div
+          onClick={() => navigate("/motorinsurance")}
+          className="w-[70%] flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
           <img src={lifeInsurance} className="w-6 ml-2" />
-          <h1 className="text-xl font-bold">Motor Insurance</h1>
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold">Motor Insurance</h1>
+            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+              <p className="text-green-500 self-center dark:text-green-800 ">
+                {motorInsuranceData?.length} Insurance Policies
+              </p>
+            </div>
+          </div>
         </div>
         <div className="w-[70%] flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg">
           <img src={lifeInsurance} className="w-6 ml-2" />

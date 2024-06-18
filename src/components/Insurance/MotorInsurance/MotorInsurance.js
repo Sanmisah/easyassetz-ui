@@ -12,7 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
-import Datepicker from "./../Beneficiarydetails/Datepicker";
+import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const LifeInsurance = () => {
+const MotorInsurance = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -36,7 +36,7 @@ const LifeInsurance = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/lifeinsurances`,
+      `http://127.0.0.1:8000/api/motor-insurances`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -44,7 +44,7 @@ const LifeInsurance = () => {
       }
     );
 
-    return response.data.data.LifeInsurances;
+    return response.data.data.MotorInsurances;
   };
 
   const {
@@ -66,7 +66,7 @@ const LifeInsurance = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `http://127.0.0.1:8000/api/lifeinsurances/${lifeInsuranceDeleteId}`,
+      `http://127.0.0.1:8000/api/motor-insurances/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -74,16 +74,16 @@ const LifeInsurance = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Beneficiary deleted successfully!");
+    toast.success("Motor Insurance deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Life Insurance</h1>
-          <Button onMouseDown={() => navigate("/lifeinsurance/add")}>
-            Add Life Insurance
+          <h1 className="text-2xl font-bold">Motor Insurance</h1>
+          <Button onMouseDown={() => navigate("/motorinsurance/add")}>
+            Add Motor Insurance
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -119,7 +119,7 @@ const LifeInsurance = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/lifeinsurance/edit");
+                          navigate("/motorinsurance/edit");
                         }}
                       >
                         Edit
@@ -143,4 +143,4 @@ const LifeInsurance = () => {
   );
 };
 
-export default LifeInsurance;
+export default MotorInsurance;

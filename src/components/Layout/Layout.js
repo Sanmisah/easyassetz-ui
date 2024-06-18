@@ -4,10 +4,10 @@ import PersonalDetails from "@/components/Personaldetail/PersonalDetail";
 import BeneficiaryDetails from "@/components/Beneficiarydetails/Benificiarydetails";
 import Logo from "../image/Logo.png";
 import Hamburger from "../image/hamburger.svg";
-import Insurance from "@/components/Insurance/LifeInsurance";
+import Insurance from "@/components/Insurance/Lifeinsurance/LifeInsurance";
 import InsuranceMainForm from "@/components/Insurance/InsuranceMainForm";
-import InsuranceForm from "@/components/Insurance/InsuranceForm";
-import EditInsuranceForm from "@/components/Insurance/EditInsuranceForm";
+import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
+import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import {
   Sheet,
   SheetContent,
@@ -16,6 +16,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@com/ui/sheet";
+import MotorForm from "@/components/Insurance/MotorInsurance/MotorForm";
+import EditMotorForm from "@/components/Insurance/MotorInsurance/EditMotorForm";
+import MotorInsurance from "@/components/Insurance/MotorInsurance/MotorInsurance";
 
 const Layout = () => {
   const location = useLocation();
@@ -117,6 +120,9 @@ const Layout = () => {
       {location.pathname === "/lifeinsurance" && <Insurance />}
       {location.pathname === "/lifeinsurance/add" && <InsuranceForm />}
       {location.pathname === "/lifeinsurance/edit" && <EditInsuranceForm />}
+      {location.pathname === "/motorinsurance" && <MotorInsurance />}
+      {location.pathname === "/motorinsurance/add" && <MotorForm />}
+      {location.pathname === "/motorinsurance/edit" && <EditMotorForm />}
     </div>
   );
 };

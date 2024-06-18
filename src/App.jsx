@@ -15,6 +15,9 @@ function App() {
         <Route path="/lifeinsurance" element={<Personalpage />} />
         <Route path="/lifeinsurance/add" element={<Personalpage />} />
         <Route path="/lifeinsurance/edit" element={<Personalpage />} />
+        <Route path="/motorinsurance" element={<Personalpage />} />
+        <Route path="/motorinsurance/add" element={<Personalpage />} />
+        <Route path="/motorinsurance/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

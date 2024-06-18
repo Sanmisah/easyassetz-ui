@@ -95,7 +95,7 @@ const Auth = () => {
 
   const Loginmutation = useMutation({
     mutationFn: async ({ email, password }) => {
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
+      const response = await axios.post("/api/login", {
         email,
         password,
       });
