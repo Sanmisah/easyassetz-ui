@@ -291,6 +291,8 @@ const Personaldetail = () => {
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
         formData.append(key, data[key]);
+
+        console.log(key, data[key]);
       }
     }
 
@@ -1048,36 +1050,41 @@ const Personaldetail = () => {
               {showAdharFields && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="adhar-number">Adhar Number</Label>
+                    <Label htmlFor="aadhar-number">Aadhar Number</Label>
                     <Controller
-                      name="adharNumber"
+                      name="aadharNumber"
                       control={control}
-                      defaultValue={defaultData?.adharNumber}
+                      defaultValue={defaultData?.aadharNumber || ""}
                       render={({ field }) => (
                         <InputMask
-                          id="adhar-number"
-                          placeholder="1234 5678 9012"
                           mask="9999 9999 9999"
-                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value.replace(/\s/g, ""));
+                          }}
+                          onBlur={field.onBlur}
                         >
                           {(inputProps) => (
-                            <Input {...inputProps} type="text" />
+                            <Input
+                              id="aadhar-number"
+                              placeholder="1234 5678 9012"
+                              {...inputProps}
+                              type="text"
+                            />
                           )}
                         </InputMask>
                       )}
                       rules={{
-                        required:
-                          !defaultData?.adharNumber &&
-                          "Adhar Number is required",
+                        required: "Aadhar Number is required",
                         pattern: {
                           value: /^[2-9]{1}[0-9]{11}$/,
                           message: "Invalid Aadhar Number",
                         },
                       }}
                     />
-                    {errors.adharNumber && (
+                    {errors.aadharNumber && (
                       <span className="text-red-500">
-                        {errors.adharNumber.message}
+                        {errors.aadharNumber.message}
                       </span>
                     )}
                   </div>
@@ -1090,14 +1097,32 @@ const Personaldetail = () => {
                       placeholder="Full Name - Name as per Adhar"
                       type="text"
                       defaultValue={defaultData?.adharName}
-                      {...register("adharName", {
+                      {...register("aadharName", {
                         required:
-                          !defaultData?.adharName && "Full Name is required",
+                          !defaultData?.aadharName && "Full Name is required",
                       })}
                     />
-                    {errors.adharName && (
+                    {errors.aadharName && (
                       <span className="text-red-500">
-                        {errors.adharName.message}
+                        {errors.aadharName.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="adhar-name">Upload Your Aadhar File</Label>
+                    <Input
+                      id="aadhar-name"
+                      placeholder="Full Name - Name as per Adhar"
+                      type="file"
+                      defaultValue={defaultData?.aadharFile}
+                      {...register("aadharFile", {
+                        required:
+                          !defaultData?.aadharFile && "Full Name is required",
+                      })}
+                    />
+                    {errors.aadharFile && (
+                      <span className="text-red-500">
+                        {errors.aadharFile.message}
                       </span>
                     )}
                   </div>
