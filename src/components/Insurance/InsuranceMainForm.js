@@ -90,9 +90,19 @@ const InsuranceMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <h1 className="text-xl font-bold">General Insurance</h1>
         </div>
-        <div className="w-[70%] flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg">
+        <div
+          onClick={() => navigate("/otherinsurance")}
+          className="w-[70%] flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
           <img src={lifeInsurance} className="w-6 ml-2" />
-          <h1 className="text-xl font-bold">Other Insurance</h1>
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold">Other Insurance</h1>
+            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+              <p className="text-green-500 self-center dark:text-green-800 ">
+                {lifeInsuranceData?.length} Insurance Policies
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

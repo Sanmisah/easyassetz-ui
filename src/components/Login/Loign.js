@@ -109,7 +109,7 @@ const Auth = () => {
     },
     onError: (error) => {
       alert("Login failed: " + error.message);
-      toast.error("Login failed: " + error.message);
+      toast.error("Login failed: " + );
     },
   });
 

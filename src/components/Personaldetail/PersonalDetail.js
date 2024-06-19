@@ -177,6 +177,7 @@ const Personaldetail = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
+
     const response = await axios.get(
       `http://127.0.0.1:8000/api/profiles/${user.data.user.profile.id}`,
       {
@@ -195,18 +196,6 @@ const Personaldetail = () => {
     }
     return response.data.data.profile || {};
   };
-
-  // const getDropdownData = async () => {
-  //   const response = await axios.get("/path/to/data.json");
-  //   setDropdownData(response.data);
-  // };
-
-  // useEffect(() => {
-  //   getDropdownData();
-  // }, []);
-  useEffect(() => {
-    console.log(isForeign);
-  }, [isForeign]);
 
   const { isLoading, isError } = useQuery({
     queryKey: ["personalData"],
@@ -258,7 +247,6 @@ const Personaldetail = () => {
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
-            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -273,6 +261,7 @@ const Personaldetail = () => {
       toast.error("Failed to submit profile");
     },
   });
+
   useEffect(() => {
     if (defaultData?.nationality === "foreign") {
       setValue("nationality", defaultData?.nationality);
@@ -285,34 +274,16 @@ const Personaldetail = () => {
   }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-
-    // Append each field to the FormData object
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        formData.append(key, data[key]);
-
-        console.log(key, data[key]);
-      }
-    }
-
-    // Handle specific nationality for foreign users
     if (isForeign && data.specificNationality) {
-      formData.append("nationality", data.specificNationality);
+      data.nationality = data.specificNationality;
     }
-
-    // Handle marital status
     if (marriedUnderAct && data.maritalStatus === "bachelor") {
-      formData.append("maritalStatus", "bachelor");
-      formData.append("marriedUnderSpecialAct", "false");
-    } else {
-      formData.append("marriedUnderSpecialAct", specialactundermarriange);
+      data.maritalStatus = "bachelor";
+      data.marriedUnderSpecialAct = "false";
     }
-
-    // Remove specificNationality from the data object if not needed
-    formData.delete("specificNationality");
-
-    Profilemutate.mutate(formData);
+    delete data.specificNationality;
+    data.marriedUnderSpecialAct = specialactundermarriange;
+    Profilemutate.mutate(data);
   };
 
   const permanentAddress = watch([

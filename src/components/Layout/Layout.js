@@ -19,6 +19,9 @@ import {
 import MotorForm from "@/components/Insurance/MotorInsurance/MotorForm";
 import EditMotorForm from "@/components/Insurance/MotorInsurance/EditMotorForm";
 import MotorInsurance from "@/components/Insurance/MotorInsurance/MotorInsurance";
+import OtherInsurance from "@/components/Insurance/Otherinsurance/OtherInsurance";
+import OtherForm from "@/components/Insurance/Otherinsurance/OtherForm";
+import EditOtherForm from "@/components/Insurance/Otherinsurance/EditOtherForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -123,6 +126,9 @@ const Layout = () => {
       {location.pathname === "/motorinsurance" && <MotorInsurance />}
       {location.pathname === "/motorinsurance/add" && <MotorForm />}
       {location.pathname === "/motorinsurance/edit" && <EditMotorForm />}
+      {location.pathname === "/otherinsurance" && <OtherInsurance />}
+      {location.pathname === "/otherinsurance/add" && <OtherForm />}
+      {location.pathname === "/otherinsurance/edit" && <EditOtherForm />}
     </div>
   );
 };
