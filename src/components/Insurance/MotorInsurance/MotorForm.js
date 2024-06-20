@@ -155,8 +155,8 @@ const MotorForm = () => {
   const onSubmit = (data) => {
     console.log(data);
     console.log("Nomiee:", selectedNommie.length > 0);
-    if (selectedNommie.length > 0) {
-      console.log("Nomiee:", selectedNommie.length > 0);
+    if (selectedNommie.length < 1) {
+      console.log("Nomiee:", selectedNommie.length < 1);
 
       setnomineeerror(true);
       return;

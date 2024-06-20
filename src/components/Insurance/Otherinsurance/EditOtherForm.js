@@ -49,23 +49,9 @@ const schema = z.object({
       message: "Policy Number must be a number",
     })
     .transform((value) => (value === null ? null : Number(value))),
-  expiryDate: z.date().optional(),
-  premium: z
-    .number()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .number()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  maturityDate: z.date().optional(),
+  premium: z.string().min(3, { message: "Premium is required" }),
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
@@ -170,7 +156,7 @@ const EditOtherForm = () => {
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("policyNumber", data.policyNumber);
-      setValue("expiryDate", data.expiryDate);
+      setValue("maturityDate", data.maturityDate);
       setValue("premium", data.premium);
       setValue("sumInsured", data.sumInsured);
       setValue("policyHolderName", data.policyHolderName);
@@ -219,7 +205,7 @@ const EditOtherForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Beneficiary added successfully!");
+      toast.success("Other Insurance added successfully!");
       navigate("/lifeinsurance");
     },
     onError: (error) => {
@@ -242,6 +228,7 @@ const EditOtherForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
+
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -330,25 +317,14 @@ const EditOtherForm = () => {
                   control={control}
                   defaultValue={Benifyciary?.insuranceType || ""}
                   render={({ field }) => (
-                    <div className="flex items-center gap-2">
-                      <RadioGroup
+                    <div className="flex items-center gap-2 mt-2">
+                      <Input
                         {...field}
+                        placeholder="Select Insurance Type"
                         defaultValue={Benifyciary?.insuranceType || ""}
-                        onValueChange={(value) => {
-                          console.log("value:", value);
-                          field.onChange(value);
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="company1" value="ThirdParty" />
-                          <Label htmlFor="company1">Third Party</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="company2" value="Comprehensive" />
-                          <Label htmlFor="company2">Comprehensive</Label>
-                        </div>
-                      </RadioGroup>
+                        value={field.value}
+                        className={errors.policyNumber ? "border-red-500" : ""}
+                      />
                     </div>
                   )}
                 />
@@ -386,21 +362,21 @@ const EditOtherForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
-                  name="expiryDate"
-                  defaultValue={new Date(Benifyciary?.expiryDate) || ""}
+                  name="maturityDate"
+                  defaultValue={new Date(Benifyciary?.maturityDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={new Date(Benifyciary?.expiryDate) || ""}
+                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
                     />
                   )}
                 />
-                {errors.expiryDate && (
+                {errors.maturityDate && (
                   <span className="text-red-500">
-                    {errors.expiryDate.message}
+                    {errors.maturityDate.message}
                   </span>
                 )}
               </div>
@@ -527,6 +503,39 @@ const EditOtherForm = () => {
               </div>
             </div>
 
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
               {console.log(Benifyciary?.nominees)}

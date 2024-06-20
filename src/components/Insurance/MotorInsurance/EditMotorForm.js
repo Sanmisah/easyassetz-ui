@@ -51,7 +51,7 @@ const schema = z.object({
     .transform((value) => (value === null ? null : Number(value))),
   expiryDate: z.date().optional(),
   premium: z
-    .number()
+    .string()
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .refine((value) => value === null || !isNaN(Number(value)), {
@@ -59,7 +59,7 @@ const schema = z.object({
     })
     .transform((value) => (value === null ? null : Number(value))),
   sumInsured: z
-    .number()
+    .string()
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .refine((value) => value === null || !isNaN(Number(value)), {
@@ -418,14 +418,14 @@ const EditMotorForm = () => {
                 <Controller
                   name="premium"
                   control={control}
-                  defaultValue={Benifyciary?.premium || ""}
+                  defaultValue={parseInt(Benifyciary?.premium) || ""}
                   render={({ field }) => (
                     <Input
                       id="premium"
                       placeholder="Enter premium amount"
                       {...field}
                       className={errors.premium ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.premium || ""}
+                      defaultValue={parseInt(Benifyciary?.premium) || ""}
                     />
                   )}
                 />

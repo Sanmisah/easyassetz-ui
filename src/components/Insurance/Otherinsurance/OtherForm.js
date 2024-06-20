@@ -42,25 +42,9 @@ const schema = z.object({
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
 
   maturityDate: z.date().optional(),
-  premium: z
-    .string()
-    .min(3, { message: "Premium is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .min(3, { message: "Sum Insured is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  premium: z.string().min(3, { message: "Premium is required" }),
 
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
