@@ -148,11 +148,15 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/beneficiaries`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.post(
+        `${process.env.API_URL}/api/beneficiaries`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.profile;
     },
     onSuccess: () => {
