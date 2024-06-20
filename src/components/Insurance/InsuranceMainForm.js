@@ -103,7 +103,10 @@ const InsuranceMainForm = () => {
             </div>
           </div>
         </div>
-        <div className="w-[70%] flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg">
+        <div
+          onMouseDown={() => navigate("/generalinsurance")}
+          className="w-[70%] flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <h1 className="text-xl font-bold">General Insurance</h1>
         </div>
