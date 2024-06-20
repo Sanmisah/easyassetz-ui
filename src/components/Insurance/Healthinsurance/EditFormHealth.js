@@ -122,16 +122,16 @@ const EditFormHealth = () => {
         },
       }
     );
-    if (response.data.data.OtherInsurance?.modeOfPurchase === "broker") {
+    if (response.data.data.HealthInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
     }
-    if (response.data.data.OtherInsurance?.modeOfPurchase === "e-insurance") {
+    if (response.data.data.HealthInsurance?.modeOfPurchase === "e-insurance") {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    console.log(typeof response.data.data.OtherInsurance?.premium);
-    return response.data.data.OtherInsurance;
+    console.log(typeof response.data.data.HealthInsurance?.premium);
+    return response.data.data.HealthInsurance;
   };
 
   const {
@@ -194,7 +194,7 @@ const EditFormHealth = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/other-insurances/${lifeInsuranceEditId}`,
+        `/api/health-insurances/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -202,7 +202,7 @@ const EditFormHealth = () => {
           },
         }
       );
-      return response.data.data.OtherInsurance;
+      return response.data.data.HealthInsurance;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
