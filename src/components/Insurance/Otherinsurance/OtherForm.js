@@ -129,15 +129,11 @@ const OtherForm = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       console.log("data:", process.env.API_URL);
-      const response = await axios.post(
-        `${process.env.API_URL}/api/other-insurances`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
+      const response = await axios.post(`/api/other-insurances`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
 
       return response.data.data.OtherInsurance;
     },
