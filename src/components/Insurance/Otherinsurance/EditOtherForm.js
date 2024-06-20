@@ -132,16 +132,16 @@ const EditOtherForm = () => {
         },
       }
     );
-    if (response.data.data.MotorInsurance?.modeOfPurchase === "broker") {
+    if (response.data.data.OtherInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
     }
-    if (response.data.data.MotorInsurance?.modeOfPurchase === "e-insurance") {
+    if (response.data.data.OtherInsurance?.modeOfPurchase === "e-insurance") {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    console.log(typeof response.data.data.MotorInsurance?.premium);
-    return response.data.data.MotorInsurance;
+    console.log(typeof response.data.data.OtherInsurance?.premium);
+    return response.data.data.OtherInsurance;
   };
 
   const {
@@ -212,7 +212,7 @@ const EditOtherForm = () => {
           },
         }
       );
-      return response.data.data.MotorInsurances;
+      return response.data.data.OtherInsurance;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(

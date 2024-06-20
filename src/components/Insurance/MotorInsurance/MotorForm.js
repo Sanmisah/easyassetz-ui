@@ -138,7 +138,7 @@ const MotorForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Beneficiary added successfully!");
+      toast.success("Motor Insurance added successfully!");
       navigate("/motorinsurance");
     },
     onError: (error) => {
