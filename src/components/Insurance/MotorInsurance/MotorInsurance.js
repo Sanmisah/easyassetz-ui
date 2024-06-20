@@ -49,7 +49,7 @@ const MotorInsurance = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["LifeInsuranceData"],
+    queryKey: ["MotorInsuranceData"],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {

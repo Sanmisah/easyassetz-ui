@@ -35,13 +35,13 @@ const MotorInsurance = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/motor-insurances`, {
+    const response = await axios.get(`/api/other-insurances`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.MotorInsurances;
+    return response.data.data.OtherInsurance;
   };
 
   const {
@@ -49,7 +49,7 @@ const MotorInsurance = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["LifeInsuranceData"],
+    queryKey: ["OtherInsuranceData"],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -63,7 +63,7 @@ const MotorInsurance = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/motor-insurances/${lifeInsuranceDeleteId}`,
+      `/api/other-insurances/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -71,7 +71,7 @@ const MotorInsurance = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Motor Insurance deleted successfully!");
+    toast.success("Other Insurance deleted successfully!");
   };
 
   return (
