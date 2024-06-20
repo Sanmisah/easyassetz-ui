@@ -67,7 +67,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const GeneralForm = () => {
+const HealthForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -80,6 +80,10 @@ const GeneralForm = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
   const [nomineeerror, setnomineeerror] = useState(false);
+  const [showOtherInsuranceType, setShowOtherInsuranceType] = useState(false);
+  const [FamilyMembersCovered, setFamilyMembersCovered] = useState([]);
+  const [showOtherFamilyMembersCovered, setShowOtherFamilyMembersCovered] =
+    useState(false);
   const {
     handleSubmit,
     control,
@@ -108,17 +112,35 @@ const GeneralForm = () => {
       brokerName: "",
     },
   });
+  useEffect(() => {
+    const fetchFamilyMembersCovered = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/beneficiaries`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setFamilyMembersCovered(response?.data?.data?.Beneficiaries);
+      } catch (error) {
+        console.error("Error fetching family members covered:", error);
+      }
+    };
+    fetchFamilyMembersCovered();
+  }, []);
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       console.log("data:", process.env.API_URL);
-      const response = await axios.post(`/api/general-insurances`, data, {
+      const response = await axios.post(`/api/health-insurances`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.GeneralInsurance;
+      return response.data.data.HealthInsurance;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -151,6 +173,13 @@ const GeneralForm = () => {
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
+    if (data.insuranceType === "other") {
+      data.insuranceType = data.specifyInsuranceType;
+    }
+    if (data.FamilyMembersCovered === "other") {
+      data.FamilyMembersCovered = data.specifyFamilyMembersCovered;
+    }
+
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -232,14 +261,47 @@ const GeneralForm = () => {
                   control={control}
                   render={({ field }) => (
                     <div className="flex items-center gap-2 mt-2">
-                      <Input
+                      <Select
                         {...field}
-                        placeholder="Select Insurance Type"
-                        className={errors.policyNumber ? "border-red-500" : ""}
-                      />
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowOtherInsuranceType(value === "other");
+                        }}
+                        className={errors.insuranceType ? "border-red-500" : ""}
+                      >
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select insurance type">
+                            {field.value || "Select insurance type"}
+                          </SelectValue>
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="mediclaim">Mediclaim</SelectItem>
+                          <SelectItem value="criticalIllness">
+                            Critical illness
+                          </SelectItem>
+                          <SelectItem value="familyHealthPlan">
+                            Family health plan
+                          </SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   )}
                 />
+                {showOtherInsuranceType && (
+                  <Controller
+                    name="specifyInsuranceType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Vehical Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
+
                 {errors.insuranceType && (
                   <span className="text-red-500">
                     {errors.insuranceType.message}
@@ -351,51 +413,63 @@ const GeneralForm = () => {
                   </span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="vehicleType">Vehical Type</Label>
-                <Controller
-                  name="vehicleType"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="vehicleType"
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRelationship(value === "other");
-                      }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select vehicleType" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="self">Two Wheeler</SelectItem>
-                        <SelectItem value="spouse">Three Wheeler</SelectItem>
-                        <SelectItem value="parent">Four Wheeler</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherRelationship && (
+              <div>
+                <div className="space-y-2">
+                  <Label htmlFor="FamilyMembersCovered">
+                    Family Members Covered
+                  </Label>
                   <Controller
-                    name="specificVehicalType"
+                    name="FamilyMembersCovered"
                     control={control}
                     render={({ field }) => (
-                      <Input
+                      <Select
                         {...field}
-                        placeholder="Specify Vehical Type"
-                        className="mt-2"
-                      />
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowOtherFamilyMembersCovered(value === "other");
+                        }}
+                        className={
+                          errors.FamilyMembersCovered ? "border-red-500" : ""
+                        }
+                      >
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select Family Members Covered">
+                            {field.value || "Select Family Members Covered"}
+                          </SelectValue>
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          {FamilyMembersCovered?.map((familyMembersCovered) => (
+                            <SelectItem
+                              key={familyMembersCovered.id}
+                              value={familyMembersCovered.fullLegalName}
+                            >
+                              {familyMembersCovered.fullLegalName}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     )}
                   />
-                )}
-                {errors.vehicleType && (
-                  <span className="text-red-500">
-                    {errors.vehicleType.message}
-                  </span>
-                )}
+                  {showOtherFamilyMembersCovered && (
+                    <Controller
+                      name="specifyFamilyMembersCovered"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Specify Vehical Type"
+                          className="mt-2"
+                        />
+                      )}
+                    />
+                  )}
+                  {errors.FamilyMembersCovered && (
+                    <span className="text-red-500">
+                      {errors.FamilyMembersCovered.message}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -642,4 +716,4 @@ const GeneralForm = () => {
   );
 };
 
-export default GeneralForm;
+export default HealthForm;

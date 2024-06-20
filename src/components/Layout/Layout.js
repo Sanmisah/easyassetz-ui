@@ -25,6 +25,9 @@ import EditOtherForm from "@/components/Insurance/Otherinsurance/EditOtherForm";
 import GeneralInsurance from "@/components/Insurance/GeneralInsurance/GeneralInsurance";
 import GeneralForm from "@/components/Insurance/GeneralInsurance/GeneralForm";
 import EditGeneralForm from "@/components/Insurance/GeneralInsurance/EditFormGeneral";
+import Healthinsurance from "@/components/Insurance/Healthinsurance/Healthinsurance";
+import HealthForm from "@/components/Insurance/Healthinsurance/HealthForm";
+import EditHealthForm from "@/components/Insurance/Healthinsurance/EditFormHealth";
 
 const Layout = () => {
   const location = useLocation();
@@ -135,6 +138,9 @@ const Layout = () => {
       {location.pathname === "/generalinsurance" && <GeneralInsurance />}
       {location.pathname === "/generalinsurance/add" && <GeneralForm />}
       {location.pathname === "/generalinsurance/edit" && <EditGeneralForm />}
+      {location.pathname === "/healthinsurance" && <Healthinsurance />}
+      {location.pathname === "/healthinsurance/add" && <HealthForm />}
+      {location.pathname === "/healthinsurance/edit" && <EditHealthForm />}
     </div>
   );
 };

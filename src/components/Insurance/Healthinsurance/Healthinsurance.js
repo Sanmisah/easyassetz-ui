@@ -23,7 +23,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const GeneralInsurance = () => {
+const Heathinsurance = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -35,13 +35,13 @@ const GeneralInsurance = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/general-insurances`, {
+    const response = await axios.get(`/api/health-insurances`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.GeneralInsurance;
+    return response.data.data.HeathInsurance;
   };
 
   const {
@@ -49,7 +49,7 @@ const GeneralInsurance = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["GeneralInsuranceData"],
+    queryKey: ["HeathinsuranceData"],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -63,7 +63,7 @@ const GeneralInsurance = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/general-insurances/${lifeInsuranceDeleteId}`,
+      `/api/health-insurances/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -78,9 +78,9 @@ const GeneralInsurance = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">General Insurance</h1>
-          <Button onMouseDown={() => navigate("/generalinsurance/add")}>
-            Add General Insurance
+          <h1 className="text-2xl font-bold">Health Insurance</h1>
+          <Button onMouseDown={() => navigate("/healthinsurance/add")}>
+            Add Health Insurance
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -116,7 +116,7 @@ const GeneralInsurance = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/generalinsurance/edit");
+                          navigate("/healthinsurance/edit");
                         }}
                       >
                         Edit
@@ -140,4 +140,4 @@ const GeneralInsurance = () => {
   );
 };
 
-export default GeneralInsurance;
+export default Heathinsurance;

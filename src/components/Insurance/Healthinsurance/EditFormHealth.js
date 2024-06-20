@@ -75,7 +75,7 @@ const schema = z.object({
     .transform((value) => (value === null ? null : Number(value))),
 });
 
-const EditFormGeneral = () => {
+const EditFormHealth = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -92,6 +92,10 @@ const EditFormGeneral = () => {
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
+  const [showOtherInsuranceType, setShowOtherInsuranceType] = useState(false);
+  const [FamilyMembersCovered, setFamilyMembersCovered] = useState([]);
+  const [showOtherFamilyMembersCovered, setShowOtherFamilyMembersCovered] =
+    useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
@@ -111,7 +115,7 @@ const EditFormGeneral = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/general-insurances/${lifeInsuranceEditId}`,
+      `/api/health-insurances/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -229,6 +233,12 @@ const EditFormGeneral = () => {
       data.nominees = selectedNommie;
     }
 
+    if (data.FamilyMembersCovered === "other") {
+      data.FamilyMembersCovered = data.specifyFamilyMembersCovered;
+    }
+    if (data.insuranceType === "other") {
+      data.insuranceType = data.specifyInsuranceType;
+    }
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -315,23 +325,47 @@ const EditFormGeneral = () => {
                 <Controller
                   name="insuranceType"
                   control={control}
-                  defaultValue={Benifyciary?.insuranceType || ""}
                   render={({ field }) => (
                     <div className="flex items-center gap-2 mt-2">
-                      <Input
+                      <Select
                         {...field}
-                        placeholder="Select Insurance Type"
-                        defaultValue={Benifyciary?.insuranceType || ""}
-                        value={field.value}
-                        className={errors.policyNumber ? "border-red-500" : ""}
-                      />
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowOtherInsuranceType(value === "other");
+                        }}
+                        className={errors.insuranceType ? "border-red-500" : ""}
+                      >
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select insurance type">
+                            {field.value || "Select insurance type"}
+                          </SelectValue>
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="mediclaim">Mediclaim</SelectItem>
+                          <SelectItem value="criticalIllness">
+                            Critical illness
+                          </SelectItem>
+                          <SelectItem value="familyHealthPlan">
+                            Family health plan
+                          </SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   )}
                 />
-                {errors.insuranceType && (
-                  <span className="text-red-500">
-                    {errors.insuranceType.message}
-                  </span>
+                {showOtherInsuranceType && (
+                  <Controller
+                    name="specifyInsuranceType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Vehical Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
                 )}
               </div>
             </div>
@@ -447,6 +481,64 @@ const EditFormGeneral = () => {
                 {errors.policyHolderName && (
                   <span className="text-red-500">
                     {errors.policyHolderName.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div>
+              <div className="space-y-2">
+                <Label htmlFor="FamilyMembersCovered">
+                  Family Members Covered
+                </Label>
+                <Controller
+                  name="FamilyMembersCovered"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherFamilyMembersCovered(value === "other");
+                      }}
+                      className={
+                        errors.FamilyMembersCovered ? "border-red-500" : ""
+                      }
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Family Members Covered">
+                          {field.value || "Select Family Members Covered"}
+                        </SelectValue>
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        {FamilyMembersCovered?.map((familyMembersCovered) => (
+                          <SelectItem
+                            key={familyMembersCovered.id}
+                            value={familyMembersCovered.fullLegalName}
+                          >
+                            {familyMembersCovered.fullLegalName}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {showOtherFamilyMembersCovered && (
+                  <Controller
+                    name="specifyFamilyMembersCovered"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Vehical Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
+                {errors.FamilyMembersCovered && (
+                  <span className="text-red-500">
+                    {errors.FamilyMembersCovered.message}
                   </span>
                 )}
               </div>
@@ -741,4 +833,4 @@ const EditFormGeneral = () => {
   );
 };
 
-export default EditFormGeneral;
+export default EditFormHealth;
