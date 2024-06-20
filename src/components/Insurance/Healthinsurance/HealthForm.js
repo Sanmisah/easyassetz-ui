@@ -41,30 +41,15 @@ const schema = z.object({
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
 
-  expiryDate: z.date().optional(),
-  premium: z
-    .string()
-    .min(3, { message: "Premium is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .min(3, { message: "Sum Insured is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  insurerName: z
+  maturityDate: z.date().optional(),
+  premium: z.string().min(3, { message: "Premium is required" }),
+
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
-  vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
-  specificVehicalType: z.string().optional(),
+
+  additionalDetails: z.string().optional(),
   modeOfPurchase: z
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
@@ -73,8 +58,6 @@ const schema = z.object({
   email: z.string().optional(),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  previousPolicyNumber: z.string().optional(),
   brokerName: z.string().optional(),
 });
 
@@ -84,7 +67,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const MotorForm = () => {
+const HealthForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -97,6 +80,10 @@ const MotorForm = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
   const [nomineeerror, setnomineeerror] = useState(false);
+  const [showOtherInsuranceType, setShowOtherInsuranceType] = useState(false);
+  const [FamilyMembersCovered, setFamilyMembersCovered] = useState([]);
+  const [showOtherFamilyMembersCovered, setShowOtherFamilyMembersCovered] =
+    useState(false);
   const {
     handleSubmit,
     control,
@@ -108,10 +95,10 @@ const MotorForm = () => {
       otherInsuranceCompany: "",
       insuranceType: "",
       policyNumber: "",
-      expiryDate: "",
+      maturityDate: "",
       premium: "",
       sumInsured: "",
-      insurerName: "",
+      policyHolderName: "",
       vehicleType: "",
       otherRelationship: "",
       modeOfPurchase: "broker",
@@ -125,21 +112,40 @@ const MotorForm = () => {
       brokerName: "",
     },
   });
+  useEffect(() => {
+    const fetchFamilyMembersCovered = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/beneficiaries`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setFamilyMembersCovered(response?.data?.data?.Beneficiaries);
+      } catch (error) {
+        console.error("Error fetching family members covered:", error);
+      }
+    };
+    fetchFamilyMembersCovered();
+  }, []);
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/motor-insurances`, data, {
+      console.log("data:", process.env.API_URL);
+      const response = await axios.post(`/api/health-insurances`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.MotorInsurances;
+      return response.data.data.HealthInsurance;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Motor Insurance added successfully!");
-      navigate("/motorinsurance");
+      toast.success("Other Insurance added successfully!");
+      navigate("/otherinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -154,7 +160,7 @@ const MotorForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    console.log("Nomiee:", selectedNommie.length > 0);
+    console.log("Nomiee:", selectedNommie.length < 1);
     if (selectedNommie.length < 1) {
       console.log("Nomiee:", selectedNommie.length < 1);
 
@@ -167,6 +173,13 @@ const MotorForm = () => {
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
+    if (data.insuranceType === "other") {
+      data.insuranceType = data.specifyInsuranceType;
+    }
+    if (data.FamilyMembersCovered === "other") {
+      data.FamilyMembersCovered = data.specifyFamilyMembersCovered;
+    }
+
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -247,26 +260,48 @@ const MotorForm = () => {
                   name="insuranceType"
                   control={control}
                   render={({ field }) => (
-                    <div className="flex items-center gap-2">
-                      <RadioGroup
+                    <div className="flex items-center gap-2 mt-2">
+                      <Select
                         {...field}
                         onValueChange={(value) => {
                           field.onChange(value);
+                          setShowOtherInsuranceType(value === "other");
                         }}
-                        className="flex items-center gap-2"
+                        className={errors.insuranceType ? "border-red-500" : ""}
                       >
-                        <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="company1" value="company1" />
-                          <Label htmlFor="company1">Third Party</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="company2" value="company2" />
-                          <Label htmlFor="company2">Comprehensive</Label>
-                        </div>
-                      </RadioGroup>
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select insurance type">
+                            {field.value || "Select insurance type"}
+                          </SelectValue>
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="mediclaim">Mediclaim</SelectItem>
+                          <SelectItem value="criticalIllness">
+                            Critical illness
+                          </SelectItem>
+                          <SelectItem value="familyHealthPlan">
+                            Family health plan
+                          </SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   )}
                 />
+                {showOtherInsuranceType && (
+                  <Controller
+                    name="specifyInsuranceType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Vehical Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
+
                 {errors.insuranceType && (
                   <span className="text-red-500">
                     {errors.insuranceType.message}
@@ -298,7 +333,7 @@ const MotorForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
-                  name="expiryDate"
+                  name="maturityDate"
                   control={control}
                   render={({ field }) => (
                     <Datepicker
@@ -308,9 +343,9 @@ const MotorForm = () => {
                     />
                   )}
                 />
-                {errors.expiryDate && (
+                {errors.maturityDate && (
                   <span className="text-red-500 mt-5">
-                    {errors.expiryDate.message}
+                    {errors.maturityDate.message}
                   </span>
                 )}
               </div>
@@ -359,85 +394,85 @@ const MotorForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
                 <Controller
-                  name="insurerName"
+                  name="policyHolderName"
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
                       placeholder="Enter policy holder name"
                       {...field}
-                      className={errors.insurerName ? "border-red-500" : ""}
+                      className={
+                        errors.policyHolderName ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.insurerName && (
+                {errors.policyHolderName && (
                   <span className="text-red-500">
-                    {errors.insurerName.message}
+                    {errors.policyHolderName.message}
                   </span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="vehicleType">Vehical Type</Label>
-                <Controller
-                  name="vehicleType"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="vehicleType"
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRelationship(value === "other");
-                      }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select vehicleType" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="self">Two Wheeler</SelectItem>
-                        <SelectItem value="spouse">Three Wheeler</SelectItem>
-                        <SelectItem value="parent">Four Wheeler</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherRelationship && (
+              <div>
+                <div className="space-y-2">
+                  <Label htmlFor="FamilyMembersCovered">
+                    Family Members Covered
+                  </Label>
                   <Controller
-                    name="specificVehicalType"
+                    name="FamilyMembersCovered"
                     control={control}
                     render={({ field }) => (
-                      <Input
+                      <Select
                         {...field}
-                        placeholder="Specify Vehical Type"
-                        className="mt-2"
-                      />
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowOtherFamilyMembersCovered(value === "other");
+                        }}
+                        className={
+                          errors.FamilyMembersCovered ? "border-red-500" : ""
+                        }
+                      >
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select Family Members Covered">
+                            {field.value || "Select Family Members Covered"}
+                          </SelectValue>
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          {FamilyMembersCovered?.map((familyMembersCovered) => (
+                            <SelectItem
+                              key={familyMembersCovered.id}
+                              value={familyMembersCovered.fullLegalName}
+                            >
+                              {familyMembersCovered.fullLegalName}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     )}
                   />
-                )}
-                {errors.vehicleType && (
-                  <span className="text-red-500">
-                    {errors.vehicleType.message}
-                  </span>
-                )}
+                  {showOtherFamilyMembersCovered && (
+                    <Controller
+                      name="specifyFamilyMembersCovered"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Specify Vehical Type"
+                          className="mt-2"
+                        />
+                      )}
+                    />
+                  )}
+                  {errors.FamilyMembersCovered && (
+                    <span className="text-red-500">
+                      {errors.FamilyMembersCovered.message}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="previous-policy">Previous Policy Number</Label>
-                <Controller
-                  name="previousPolicyNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="previous-policy"
-                      placeholder="Enter previous policy number"
-                      {...field}
-                    />
-                  )}
-                />
-              </div>
               <div className="space-y-2">
                 <Label htmlFor="additional-details">Additional Details</Label>
                 <Controller
@@ -681,4 +716,4 @@ const MotorForm = () => {
   );
 };
 
-export default MotorForm;
+export default HealthForm;

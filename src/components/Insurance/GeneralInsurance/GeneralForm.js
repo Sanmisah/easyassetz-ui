@@ -41,30 +41,15 @@ const schema = z.object({
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
 
-  expiryDate: z.date().optional(),
-  premium: z
-    .string()
-    .min(3, { message: "Premium is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .min(3, { message: "Sum Insured is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  insurerName: z
+  maturityDate: z.date().optional(),
+  premium: z.string().min(3, { message: "Premium is required" }),
+
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
-  vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
-  specificVehicalType: z.string().optional(),
+
+  additionalDetails: z.string().optional(),
   modeOfPurchase: z
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
@@ -73,8 +58,6 @@ const schema = z.object({
   email: z.string().optional(),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  previousPolicyNumber: z.string().optional(),
   brokerName: z.string().optional(),
 });
 
@@ -84,7 +67,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const MotorForm = () => {
+const GeneralForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -108,10 +91,10 @@ const MotorForm = () => {
       otherInsuranceCompany: "",
       insuranceType: "",
       policyNumber: "",
-      expiryDate: "",
+      maturityDate: "",
       premium: "",
       sumInsured: "",
-      insurerName: "",
+      policyHolderName: "",
       vehicleType: "",
       otherRelationship: "",
       modeOfPurchase: "broker",
@@ -128,18 +111,19 @@ const MotorForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/motor-insurances`, data, {
+      console.log("data:", process.env.API_URL);
+      const response = await axios.post(`/api/general-insurances`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.MotorInsurances;
+      return response.data.data.GeneralInsurance;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Motor Insurance added successfully!");
-      navigate("/motorinsurance");
+      toast.success("Other Insurance added successfully!");
+      navigate("/otherinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -154,7 +138,7 @@ const MotorForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    console.log("Nomiee:", selectedNommie.length > 0);
+    console.log("Nomiee:", selectedNommie.length < 1);
     if (selectedNommie.length < 1) {
       console.log("Nomiee:", selectedNommie.length < 1);
 
@@ -247,23 +231,12 @@ const MotorForm = () => {
                   name="insuranceType"
                   control={control}
                   render={({ field }) => (
-                    <div className="flex items-center gap-2">
-                      <RadioGroup
+                    <div className="flex items-center gap-2 mt-2">
+                      <Input
                         {...field}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="company1" value="company1" />
-                          <Label htmlFor="company1">Third Party</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="company2" value="company2" />
-                          <Label htmlFor="company2">Comprehensive</Label>
-                        </div>
-                      </RadioGroup>
+                        placeholder="Select Insurance Type"
+                        className={errors.policyNumber ? "border-red-500" : ""}
+                      />
                     </div>
                   )}
                 />
@@ -298,7 +271,7 @@ const MotorForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
-                  name="expiryDate"
+                  name="maturityDate"
                   control={control}
                   render={({ field }) => (
                     <Datepicker
@@ -308,9 +281,9 @@ const MotorForm = () => {
                     />
                   )}
                 />
-                {errors.expiryDate && (
+                {errors.maturityDate && (
                   <span className="text-red-500 mt-5">
-                    {errors.expiryDate.message}
+                    {errors.maturityDate.message}
                   </span>
                 )}
               </div>
@@ -359,20 +332,22 @@ const MotorForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
                 <Controller
-                  name="insurerName"
+                  name="policyHolderName"
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
                       placeholder="Enter policy holder name"
                       {...field}
-                      className={errors.insurerName ? "border-red-500" : ""}
+                      className={
+                        errors.policyHolderName ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.insurerName && (
+                {errors.policyHolderName && (
                   <span className="text-red-500">
-                    {errors.insurerName.message}
+                    {errors.policyHolderName.message}
                   </span>
                 )}
               </div>
@@ -424,20 +399,6 @@ const MotorForm = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="previous-policy">Previous Policy Number</Label>
-                <Controller
-                  name="previousPolicyNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="previous-policy"
-                      placeholder="Enter previous policy number"
-                      {...field}
-                    />
-                  )}
-                />
-              </div>
               <div className="space-y-2">
                 <Label htmlFor="additional-details">Additional Details</Label>
                 <Controller
@@ -681,4 +642,4 @@ const MotorForm = () => {
   );
 };
 
-export default MotorForm;
+export default GeneralForm;
