@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -23,167 +23,110 @@ import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import Addnominee from "./EditNominee";
+import Addnominee from "./addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  metalType: z
+  companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  articleDetails: z
+  othercompanyName: z.string().optional(),
+  insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  WeightPerArticle: z
-    .string().min(1,{message:" Weight Per Article is Required"})
-   ,
-  numberOfArticle: z.date().optional(),
-  additionalInformation: z
-    .string().min(1,{message:"Additional Information is Required"}),
-    
-  pointOfContact: z
-    .string().min(1,{message:"Point Of Conact is Required"}),
+  policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+
+  maturityDate: z.date().optional(),
+  premium: z.string().min(3, { message: "Premium is required" }),
+
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  policyHolderName: z
+    .string()
+    .nonempty({ message: "Policy Holder Name is required" }),
+
+  additionalDetails: z.string().optional(),
+  modeOfPurchase: z
+    .string()
+    .nonempty({ message: "Mode of Purchase is required" }),
+  contactPerson: z.string().optional(),
+  contactNumber: z.string().optional(),
+  email: z.string().optional(),
+  registeredMobile: z.string().optional(),
+  registeredEmail: z.string().optional(),
+  previousPolicyNumber: z.string().optional(),
+  brokerName: z.string().optional(),
 });
 
-const BullionEdit = () => {
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+
+const OtherForm = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
-
-  console.log(lifeInsuranceEditId);
-  useEffect(() => {
-    if (lifeInsuranceEditId) {
-      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
-    }
-  }, [lifeInsuranceEditId]);
+  const queryClient = useQueryClient();
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
-  const [defaultValues, setDefaultValues] = useState(null);
-  const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
-
+  const [brokerSelected, setBrokerSelected] = useState(true);
+  const [nomineeerror, setnomineeerror] = useState(false);
   const {
     handleSubmit,
     control,
-    setValue,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || {},
-  });
+    defaultValues: {
+      companyName: "",
+      otherInsuranceCompany: "",
+      insuranceType: "",
+      policyNumber: "",
+      maturityDate: "",
+      premium: "",
+      sumInsured: "",
+      policyHolderName: "",
+      vehicleType: "",
+      otherRelationship: "",
+      modeOfPurchase: "broker",
+      contactPerson: "",
+      contactNumber: "",
+      email: "",
+      registeredMobile: "",
+      registeredEmail: "",
+      additionalDetails: "",
+      previousPolicyNumber: "",
+      brokerName: "",
 
-  const getPersonalData = async () => {
-    if (!user) return;
-    const response = await axios.get(
-      `/api/other-insurances/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
-    if (response.data.data.OtherInsurance?.modeOfPurchase === "broker") {
-      setBrokerSelected(true);
-      setHideRegisteredFields(false);
-    }
-    if (response.data.data.OtherInsurance?.modeOfPurchase === "e-insurance") {
-      setBrokerSelected(false);
-      setHideRegisteredFields(true);
-    }
-    console.log(typeof response.data.data.OtherInsurance?.premium);
-    return response.data.data.OtherInsurance;
-  };
 
-  const {
-    data: Benifyciary,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
-    queryFn: getPersonalData,
-
-    onSuccess: (data) => {
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
-      setDefaultValues(data);
-      reset(data);
-      setValue(data);
-      setValue("specificVehicalType", data.specificVehicalType);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("policyNumber", data.policyNumber);
-      setValue("expiryDate", data.expiryDate);
-      setValue("premium", data.premium);
-      setValue("sumInsured", data.sumInsured);
-      setValue("policyHolderName", data.policyHolderName);
-      setValue("modeOfPurchase", data.modeOfPurchase);
-      setValue("contactPerson", data.contactPerson);
-      setValue("contactNumber", data.contactNumber);
-      setValue("email", data.email);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("brokerName", data.brokerName);
-      setValue("contactPerson", data.contactPerson);
-      setValue("contactNumber", data.contactNumber);
-
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
-      }
-
-      setShowOtherInsuranceCompany(data.companyName === "other");
-
-      console.log(data);
-    },
-    onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
     },
   });
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
-        `/api/other-insurances/${lifeInsuranceEditId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
+      console.log("data:", process.env.API_URL);
+      const response = await axios.post(`/api/other-insurances`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
+
       return response.data.data.OtherInsurance;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(
-        "lifeInsuranceDataUpdate",
-        lifeInsuranceEditId
-      );
-      toast.success("Beneficiary added successfully!");
-      navigate("/lifeinsurance");
+      queryClient.invalidateQueries("LifeInsuranceData");
+      toast.success("Other Insurance added successfully!");
+      navigate("/otherinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -191,34 +134,36 @@ const BullionEdit = () => {
     },
   });
   useEffect(() => {
-    console.log("Form values:", control._formValues);
-  }, [control._formValues]);
-
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
+    if (selectedNommie.length > 0) {
+      setnomineeerror(false);
     }
-  }, [Benifyciary?.nominees]);
-
+  }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
     console.log(data);
-    console.log("brokerName:", data.brokerName);
-   if(data.metalType==="other"){
-    data.metalType=data.otherMetalType
-   }
+    console.log("Nomiee:", selectedNommie.length < 1);
+    if (selectedNommie.length < 1) {
+      console.log("Nomiee:", selectedNommie.length < 1);
 
+      setnomineeerror(true);
+      return;
+    }
+    if (selectedNommie.length > 1) {
+      setnomineeerror(false);
+    }
+    if (data.vehicleType === "other") {
+      data.vehicleType = data.specificVehicalType;
+    }
+    data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
-
   useEffect(() => {
-    console.log(Benifyciary);
-  }, [Benifyciary]);
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading insurance data</div>;
+    console.log("displaynominie:", displaynominie);
+  }, [displaynominie]);
+
   return (
     <div className="w-full">
-      <Card>
+      <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
@@ -226,42 +171,39 @@ const BullionEdit = () => {
                 Insurance Policy Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the insurance policy details.
+                Fill out the form to add a new insurance policy.
               </CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-6">
+        <CardContent className="grid gap-6 ">
           <form
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="insurance-company">Metal Type</Label>
+                <Label htmlFor="insurance-company">Insurance Company</Label>
                 <Controller
-                  name="metalType"
+                  name="companyName"
                   control={control}
-                  defaultValue={Benifyciary?.metalType}
                   render={({ field }) => (
                     <Select
                       id="insurance-company"
-                      value={field.value}
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherInsuranceCompany(value === "other");
                       }}
-                      className={errors.metalType ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.metalType || ""}
+                      className={errors.companyName ? "border-red-500" : ""}
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
-                      </SelectTrigger>
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="company1">Gold</SelectItem>
-                        <SelectItem value="company2">Silver</SelectItem>
-                        <SelectItem value="company3">Copper</SelectItem>
+                        <SelectItem value="company1">Company 1</SelectItem>
+                        <SelectItem value="company2">Company 2</SelectItem>
+                        <SelectItem value="company3">Company 3</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -269,122 +211,103 @@ const BullionEdit = () => {
                 />
                 {showOtherInsuranceCompany && (
                   <Controller
-                    name="otherMetalType"
+                    name="otherInsuranceCompany"
                     control={control}
-                    defaultValue={Benifyciary?.otherMetalType || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Metal Type"
+                        placeholder="Specify Insurance Company"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherMetalType || ""}
                       />
                     )}
                   />
                 )}
-                {errors.metalType && (
+                {errors.insuranceCompany && (
                   <span className="text-red-500">
-                    {errors.metalType.message}
+                    {errors.companyName.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="articleDetails">Ariticle Details </Label>
+                <Label htmlFor="insurance-subtype">Insurance Type</Label>
                 <Controller
-                  name="articleDetails"
+                  name="insuranceType"
                   control={control}
-                  defaultValue={Benifyciary?.articleDetails || ""}
                   render={({ field }) => (
-                      <Select
-                      id="insurance-company"
-                      value={field.value}
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
-                      }}
-                      className={errors.articleDetails ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.articleDetails || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Article Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Plates</SelectItem>
-                        <SelectItem value="company2">Glass</SelectItem>
-                        <SelectItem value="company3">Bowl</SelectItem>
-                        <SelectItem value="company3">Bar</SelectItem>
-                        <SelectItem value="company3">Utensils</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherInsuranceCompany && (
-                  <Controller
-                    name="otherArticleDetails"
-                    control={control}
-                    defaultValue={Benifyciary?.otherArticleDetails || ""}
-                    render={({ field }) => (
+                    <div className="flex items-center gap-2 mt-2">
                       <Input
                         {...field}
-                        placeholder="Specify Metal Type"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherArticleDetails || ""}
+                        placeholder="Select Insurance Type"
+                        className={errors.policyNumber ? "border-red-500" : ""}
                       />
-                    )}
-                  />
-                
+                    </div>
                   )}
-                
-                {errors.articleDetails && (
+                />
+                {errors.insuranceType && (
                   <span className="text-red-500">
-                    {errors.articleDetails.message}
+                    {errors.insuranceType.message}
                   </span>
                 )}
               </div>
             </div>
-            
-              <div className="space-y-2">
-                <Label htmlFor="weightPerArticle">Weight Per Article</Label>
-                <Controller
-                  name="weightPerArticle"
-                  defaultValue={new Date(Benifyciary?.expiryDate) || ""}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                    id="weightPerArticle"
-                    placeholder="Weight Per Aricle"
-                    {...field}
-                    className={errors.weightPerArticle ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.weightPerArticle || ""}
-                  />
-                  )}
-                />
-                {errors.weightPerArticle && (
-                  <span className="text-red-500">{errors.weightPerArticle.message}</span>
-                )}
-              </div>
-          
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="numberOfArticle">Number Of Article</Label>
+                <Label htmlFor="policy-number">Policy Number</Label>
                 <Controller
-                  name="numberOfArticle"
+                  name="policyNumber"
                   control={control}
-                  defaultValue={Benifyciary?.numberOfArticle || ""}
                   render={({ field }) => (
                     <Input
-                      id="numberOfArticle"
-                      placeholder="Enter Number Of Article"
+                      id="policy-number"
+                      placeholder="Enter policy number"
                       {...field}
-                      className={errors.numberOfArticle ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.numberOfArticle || ""}
+                      className={errors.policyNumber ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.policyNumber && (
+                  <span className="text-red-500">
+                    {errors.policyNumber.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Controller
+                  name="maturityDate"
+                  control={control}
+                  render={({ field }) => (
+                    <Datepicker
+                      {...field}
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value}
+                    />
+                  )}
+                />
+                {errors.maturityDate && (
+                  <span className="text-red-500 mt-5">
+                    {errors.maturityDate.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="premium">Premium</Label>
+                <Controller
+                  name="premium"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="premium"
+                      placeholder="Enter premium amount"
+                      {...field}
+                      className={errors.premium ? "border-red-500" : ""}
                     />
                   )}
                 />
                 {errors.premium && (
-                  <span className="text-red-500">{errors.numberOfArticle.message}</span>
+                  <span className="text-red-500">{errors.premium.message}</span>
                 )}
               </div>
               <div className="space-y-2">
@@ -392,14 +315,12 @@ const BullionEdit = () => {
                 <Controller
                   name="sumInsured"
                   control={control}
-                  defaultValue={Benifyciary?.sumInsured || ""}
                   render={({ field }) => (
                     <Input
                       id="sum-insured"
                       placeholder="Enter sum insured"
                       {...field}
                       className={errors.sumInsured ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.sumInsured || ""}
                     />
                   )}
                 />
@@ -416,7 +337,6 @@ const BullionEdit = () => {
                 <Controller
                   name="policyHolderName"
                   control={control}
-                  defaultValue={Benifyciary?.policyHolderName || ""}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
@@ -425,7 +345,6 @@ const BullionEdit = () => {
                       className={
                         errors.policyHolderName ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.policyHolderName || ""}
                     />
                   )}
                 />
@@ -435,12 +354,75 @@ const BullionEdit = () => {
                   </span>
                 )}
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="vehicleType">Vehical Type</Label>
+                <Controller
+                  name="vehicleType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="vehicleType"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherRelationship(value === "other");
+                      }}
+                      className={errors.vehicleType ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select vehicleType" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="self">Two Wheeler</SelectItem>
+                        <SelectItem value="spouse">Three Wheeler</SelectItem>
+                        <SelectItem value="parent">Four Wheeler</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {showOtherRelationship && (
+                  <Controller
+                    name="specificVehicalType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Vehical Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
+                {errors.vehicleType && (
+                  <span className="text-red-500">
+                    {errors.vehicleType.message}
+                  </span>
+                )}
+              </div>
             </div>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="additional-details">Additional Details</Label>
+                <Controller
+                  name="additionalDetails"
+                  control={control}
+                  render={({ field }) => (
+                    <Textarea
+                      value={field.value}
+                      id="additional-details"
+                      placeholder="Enter additional details"
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+            </div>
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
                   {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
                   {displaynominie &&
                     displaynominie.map((nominee) => (
                       <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
@@ -469,53 +451,38 @@ const BullionEdit = () => {
                 </div>
               </div>
             )}
-            <div>
-              <div className="space-y-2">
-                <Label>additional details</Label>
-                <Controller
-                  name="registeredMobile"
-                  control={control}
-                  defaultValue={Benifyciary?.registeredMobile || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="registered-mobile"
-                      placeholder="Enter registered mobile"
-                      {...field}
-                      defaultValue={Benifyciary?.registeredMobile || ""}
-                    />
-                  )}
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile" className="text-lg font-bold">
+                Add nominee
+              </Label>
+              <Addnominee
+                setDisplaynominie={setDisplaynominie}
+                setSelectedNommie={setSelectedNommie}
+                displaynominie={displaynominie}
+              />
+              {nomineeerror && (
+                <span className="text-red-500">
+                  Please select atleast one nominee
+                </span>
+              )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
-              <Addnominee
-                setSelectedNommie={setSelectedNommie}
-                AllNominees={Benifyciary?.nominees}
-                selectedNommie={selectedNommie}
-                displaynominie={displaynominie}
-                setDisplaynominie={setDisplaynominie}
-              />{" "}
-            </div>
-            <div className="space-y-2">
-              <Label>Mode of Purchase</Label>
+            <div className="space-y-4 flex flex-col">
+              <Label className="text-lg font-bold">Mode of Purchase</Label>
               <Controller
                 name="modeOfPurchase"
-                defaultValue={Benifyciary?.modeOfPurchase || ""}
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
-                    defaultValue={Benifyciary?.modeOfPurchase || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                       setBrokerSelected(value === "broker");
                     }}
+                    className="flex items-center gap-2"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-center">
                       <RadioGroupItem id="broker" value="broker" />
                       <Label htmlFor="broker">Broker</Label>
                     </div>
@@ -527,7 +494,6 @@ const BullionEdit = () => {
                 )}
               />
             </div>
-
             {hideRegisteredFields && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -535,13 +501,11 @@ const BullionEdit = () => {
                   <Controller
                     name="registeredMobile"
                     control={control}
-                    defaultValue={Benifyciary?.registeredMobile || ""}
                     render={({ field }) => (
                       <Input
                         id="registered-mobile"
                         placeholder="Enter registered mobile"
                         {...field}
-                        defaultValue={Benifyciary?.registeredMobile || ""}
                       />
                     )}
                   />
@@ -550,7 +514,6 @@ const BullionEdit = () => {
                   <Label htmlFor="registered-email">Registered Email ID</Label>
                   <Controller
                     name="registeredEmail"
-                    defaultValue={Benifyciary?.registeredEmail || ""}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -558,7 +521,6 @@ const BullionEdit = () => {
                         placeholder="Enter registered email"
                         type="email"
                         {...field}
-                        defaultValue={Benifyciary?.registeredEmail || ""}
                       />
                     )}
                   />
@@ -574,14 +536,11 @@ const BullionEdit = () => {
                     <Controller
                       name="brokerName"
                       control={control}
-                      defaultValue={Benifyciary?.brokerName || ""}
                       render={({ field }) => (
                         <Input
                           id="brokerName"
                           placeholder="Enter broker name"
                           {...field}
-                          defaultValue={Benifyciary?.brokerName || ""}
-                          value={field.value}
                           className={errors.brokerName ? "border-red-500" : ""}
                         />
                       )}
@@ -597,7 +556,6 @@ const BullionEdit = () => {
                     <Controller
                       name="contactPerson"
                       control={control}
-                      defaultValue={Benifyciary?.contactPerson || ""}
                       render={({ field }) => (
                         <Input
                           id="contact-person"
@@ -606,7 +564,6 @@ const BullionEdit = () => {
                           className={
                             errors.contactPerson ? "border-red-500" : ""
                           }
-                          defaultValue={Benifyciary?.contactPerson || ""}
                         />
                       )}
                     />
@@ -620,11 +577,9 @@ const BullionEdit = () => {
                     <Label htmlFor="contact-number">Contact Number</Label>
                     <Controller
                       name="contactNumber"
-                      defaultValue={Benifyciary?.contactNumber || ""}
                       control={control}
                       render={({ field }) => (
                         <PhoneInput
-                          defaultValue={Benifyciary?.contactNumber || ""}
                           id="guardian-mobile"
                           type="tel"
                           placeholder="Enter contact number"
@@ -651,7 +606,6 @@ const BullionEdit = () => {
                     <Controller
                       name="email"
                       control={control}
-                      defaultValue={Benifyciary?.email || ""}
                       render={({ field }) => (
                         <Input
                           id="email"
@@ -659,7 +613,6 @@ const BullionEdit = () => {
                           placeholder="Enter email"
                           {...field}
                           className={errors.email ? "border-red-500" : ""}
-                          defaultValue={Benifyciary?.email || ""}
                         />
                       )}
                     />
@@ -677,7 +630,6 @@ const BullionEdit = () => {
               <Controller
                 name="imageUpload"
                 control={control}
-                defaultValue={Benifyciary?.imageUpload || ""}
                 render={({ field }) => (
                   <Input id="image-upload" type="file" {...field} />
                 )}
@@ -693,4 +645,4 @@ const BullionEdit = () => {
   );
 };
 
-export default BullionEdit;
+export default OtherForm;

@@ -27,6 +27,10 @@ function App() {
         <Route path="/healthinsurance" element={<Personalpage />} />
         <Route path="/healthinsurance/add" element={<Personalpage />} />
         <Route path="/healthinsurance/edit" element={<Personalpage />} />
+        <Route path="/bullion" element={<Personalpage />} />
+        <Route path="/bullion/add" element={<Personalpage />} />
+        <Route path="/bullion/edit" element={<Personalpage />} />
+
       </Routes>
     </div>
   );
