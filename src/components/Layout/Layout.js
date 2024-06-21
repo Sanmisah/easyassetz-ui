@@ -28,6 +28,8 @@ import EditGeneralForm from "@/components/Insurance/GeneralInsurance/EditFormGen
 import Healthinsurance from "@/components/Insurance/Healthinsurance/Healthinsurance";
 import HealthForm from "@/components/Insurance/Healthinsurance/HealthForm";
 import EditHealthForm from "@/components/Insurance/Healthinsurance/EditFormHealth";
+import BullionForm from "@/components/Bullion/BullionOtherForm";
+import BullionEditFrom from "@/components/Bullion/BullionEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -77,6 +79,14 @@ const Layout = () => {
           >
             <UserIcon className="h-5 w-5" />
             Insurance
+          </NavLink>
+
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/bullion"
+          >
+            <UserIcon className="h-5 w-5" />
+            Bullion
           </NavLink>
         </nav>
 
@@ -141,6 +151,8 @@ const Layout = () => {
       {location.pathname === "/healthinsurance" && <Healthinsurance />}
       {location.pathname === "/healthinsurance/add" && <HealthForm />}
       {location.pathname === "/healthinsurance/edit" && <EditHealthForm />}
+      {location.pathname === "/bullion" && <BullionForm />}
+      {location.pathname === "/bullion/edit" && <BullionEditFrom />}
     </div>
   );
 };

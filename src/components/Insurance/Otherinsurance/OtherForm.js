@@ -107,6 +107,8 @@ const OtherForm = () => {
       additionalDetails: "",
       previousPolicyNumber: "",
       brokerName: "",
+
+
     },
   });
 
