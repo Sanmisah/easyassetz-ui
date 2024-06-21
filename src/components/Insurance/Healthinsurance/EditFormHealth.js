@@ -65,14 +65,6 @@ const schema = z.object({
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
-  previousPolicy: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
 });
 
 const EditFormHealth = () => {
@@ -206,11 +198,11 @@ const EditFormHealth = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
-        "lifeInsuranceDataUpdate",
+        "healthInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Other Insurance added successfully!");
-      navigate("/lifeinsurance");
+      toast.success("Health Insurance added successfully!");
+      navigate("/healthinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

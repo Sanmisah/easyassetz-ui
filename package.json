@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "npm run move-build",
+    "move-build": "cp -r dist/* ../easyassetz-api/public/",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "node deploy.js"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -32,6 +35,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "fs-extra": "^11.2.0",
     "lucide-react": "^0.390.0",
     "react": "^18.2.0",
     "react-day-picker": "^8.10.1",

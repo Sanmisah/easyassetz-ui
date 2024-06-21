@@ -1,13 +1,13 @@
 {
-    "compilerOptions": {
-      // ...
-      "baseUrl": ".",
-      "module": "ESNext",
-      "target": "esnext",
-  
-      "paths": {
-        "@/*": ["./src/*"]
-      }
-      // ...
+  "compilerOptions": {
+    // ...
+    "baseUrl": ".",
+    "module": "ESNext",
+    "target": "esnext",
+
+    "paths": {
+      "@/*": ["./src/*"]
     }
+    // ...
   }
+}

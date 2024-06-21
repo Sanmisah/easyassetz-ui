@@ -620,7 +620,6 @@ const Personaldetail = () => {
                   <Checkbox
                     className="mt-2"
                     id="married-under-act"
-                    checked={specialactundermarriange}
                     onCheckedChange={() => setSpecialactundermarriange(true)}
                     defaultChecked={defaultData?.marriedUnderSpecialAct}
                     {...register("marriedUnderSpecialAct")}

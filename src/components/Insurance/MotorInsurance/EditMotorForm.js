@@ -81,14 +81,6 @@ const schema = z.object({
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
-  previousPolicy: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
 });
 
 const EditMotorForm = () => {
@@ -134,6 +126,7 @@ const EditMotorForm = () => {
         },
       }
     );
+    console.log(typeof response.data.data.MotorInsurance?.premium);
     if (response.data.data.MotorInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
@@ -223,8 +216,8 @@ const EditMotorForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Beneficiary added successfully!");
-      navigate("/lifeinsurance");
+      toast.success("motorinsurance added successfully!");
+      navigate("/motorinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -418,14 +411,14 @@ const EditMotorForm = () => {
                 <Controller
                   name="premium"
                   control={control}
-                  defaultValue={parseInt(Benifyciary?.premium) || ""}
+                  defaultValue={Benifyciary?.premium || ""}
                   render={({ field }) => (
                     <Input
                       id="premium"
                       placeholder="Enter premium amount"
                       {...field}
                       className={errors.premium ? "border-red-500" : ""}
-                      defaultValue={parseInt(Benifyciary?.premium) || ""}
+                      defaultValue={Benifyciary?.premium || ""}
                     />
                   )}
                 />

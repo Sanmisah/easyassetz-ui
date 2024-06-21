@@ -41,14 +41,7 @@ const schema = z.object({
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  policyNumber: z.string().min(1, { message: "Policy Number is required" }),
   maturityDate: z.date().optional(),
   premium: z.string().min(3, { message: "Premium is required" }),
   sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
@@ -65,14 +58,13 @@ const schema = z.object({
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
-  previousPolicy: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  // previousPolicy: z.string().min(1, { message: "Previous Policy is required" }),
+  // .transform((value) => (value === "" ? null : value))
+  // .nullable()
+  // .refine((value) => value === null || !isNaN(Number(value)), {
+  //   message: "Premium must be a number",
+  // })
+  // .transform((value) => (value === null ? null : Number(value))),
 });
 
 const EditFormGeneral = () => {
@@ -179,7 +171,7 @@ const EditFormGeneral = () => {
 
       setShowOtherInsuranceCompany(data.companyName === "other");
 
-      console.log(data);
+      console.log("SucessFully fetched data", data);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -189,6 +181,7 @@ const EditFormGeneral = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
+      console.log("data1:", data);
       const response = await axios.put(
         `/api/general-insurances/${lifeInsuranceEditId}`,
         data,
@@ -198,6 +191,7 @@ const EditFormGeneral = () => {
           },
         }
       );
+      console.log("response:", response);
       return response.data.data.GeneralInsurance;
     },
     onSuccess: () => {
@@ -205,6 +199,7 @@ const EditFormGeneral = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
+
       toast.success("Other Insurance added successfully!");
       navigate("/lifeinsurance");
     },
@@ -223,7 +218,7 @@ const EditFormGeneral = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("I am in here", data);
     console.log("brokerName:", data.brokerName);
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
@@ -266,7 +261,7 @@ const EditFormGeneral = () => {
                   defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
                     <Select
-                      id="insurance-company"
+                      id="companyName"
                       value={field.value}
                       {...field}
                       onValueChange={(value) => {
@@ -323,7 +318,7 @@ const EditFormGeneral = () => {
                         placeholder="Select Insurance Type"
                         defaultValue={Benifyciary?.insuranceType || ""}
                         value={field.value}
-                        className={errors.policyNumber ? "border-red-500" : ""}
+                        className={errors.insuranceType ? "border-red-500" : ""}
                       />
                     </div>
                   )}
@@ -344,7 +339,7 @@ const EditFormGeneral = () => {
                   defaultValue={Benifyciary?.policyNumber || ""}
                   render={({ field }) => (
                     <Input
-                      id="policy-number"
+                      id="policyNumber"
                       placeholder="Enter policy number"
                       value={field.value}
                       {...field}
@@ -410,7 +405,7 @@ const EditFormGeneral = () => {
                   defaultValue={Benifyciary?.sumInsured || ""}
                   render={({ field }) => (
                     <Input
-                      id="sum-insured"
+                      id="sumInsured"
                       placeholder="Enter sum insured"
                       {...field}
                       className={errors.sumInsured ? "border-red-500" : ""}
@@ -434,7 +429,7 @@ const EditFormGeneral = () => {
                   defaultValue={Benifyciary?.policyHolderName || ""}
                   render={({ field }) => (
                     <Input
-                      id="policy-holder"
+                      id="policyHolderName"
                       placeholder="Enter policy holder name"
                       {...field}
                       className={
@@ -452,7 +447,7 @@ const EditFormGeneral = () => {
               </div>
             </div>
 
-            {displaynominie && displaynominie.length > 0 && (
+            {/* {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
                   {console.log(displaynominie)}
@@ -483,7 +478,7 @@ const EditFormGeneral = () => {
                     ))}
                 </div>
               </div>
-            )}
+            )} */}
             <div>
               <div className="space-y-2">
                 <Label>additional details</Label>
@@ -493,7 +488,7 @@ const EditFormGeneral = () => {
                   defaultValue={Benifyciary?.registeredMobile || ""}
                   render={({ field }) => (
                     <Input
-                      id="registered-mobile"
+                      id="registeredMobile"
                       placeholder="Enter registered mobile"
                       {...field}
                       defaultValue={Benifyciary?.registeredMobile || ""}
@@ -586,7 +581,7 @@ const EditFormGeneral = () => {
                     defaultValue={Benifyciary?.registeredMobile || ""}
                     render={({ field }) => (
                       <Input
-                        id="registered-mobile"
+                        id="registeredMobile"
                         placeholder="Enter registered mobile"
                         {...field}
                         defaultValue={Benifyciary?.registeredMobile || ""}
@@ -602,7 +597,7 @@ const EditFormGeneral = () => {
                     control={control}
                     render={({ field }) => (
                       <Input
-                        id="registered-email"
+                        id="registeredEmail"
                         placeholder="Enter registered email"
                         type="email"
                         {...field}
@@ -648,7 +643,7 @@ const EditFormGeneral = () => {
                       defaultValue={Benifyciary?.contactPerson || ""}
                       render={({ field }) => (
                         <Input
-                          id="contact-person"
+                          id="contactPerson"
                           placeholder="Enter contact person name"
                           {...field}
                           className={
@@ -673,7 +668,7 @@ const EditFormGeneral = () => {
                       render={({ field }) => (
                         <PhoneInput
                           defaultValue={Benifyciary?.contactNumber || ""}
-                          id="guardian-mobile"
+                          id="contactNumber"
                           type="tel"
                           placeholder="Enter contact number"
                           defaultCountry="in"

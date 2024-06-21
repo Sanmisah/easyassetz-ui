@@ -65,14 +65,6 @@ const schema = z.object({
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
-  previousPolicy: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
 });
 
 const EditOtherForm = () => {
@@ -135,7 +127,7 @@ const EditOtherForm = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
+    queryKey: ["otherinsuranceDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -206,7 +198,7 @@ const EditOtherForm = () => {
         lifeInsuranceEditId
       );
       toast.success("Other Insurance added successfully!");
-      navigate("/lifeinsurance");
+      navigate("/otherinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -490,13 +482,13 @@ const EditOtherForm = () => {
                 <Controller
                   name="registeredMobile"
                   control={control}
-                  defaultValue={Benifyciary?.registeredMobile || ""}
+                  defaultValue={Benifyciary?.additionalDetails || ""}
                   render={({ field }) => (
                     <Input
                       id="registered-mobile"
                       placeholder="Enter registered mobile"
                       {...field}
-                      defaultValue={Benifyciary?.registeredMobile || ""}
+                      defaultValue={Benifyciary?.additionalDetails || ""}
                     />
                   )}
                 />
