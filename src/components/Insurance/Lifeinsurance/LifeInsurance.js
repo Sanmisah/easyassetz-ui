@@ -35,7 +35,7 @@ const LifeInsurance = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/lifeinsurances`, {
+    const response = await axios.get(`/api/life-insurances`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },

@@ -127,7 +127,7 @@ const EditMotorForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/lifeinsurances/${lifeInsuranceEditId}`,
+      `/api/life-insurances/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -207,7 +207,7 @@ const EditMotorForm = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/lifeinsurances/${lifeInsuranceEditId}`,
+        `/api/life-insurances/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -222,7 +222,7 @@ const EditMotorForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Beneficiary added successfully!");
+      toast.success("lifeinsurance added successfully!");
       navigate("/lifeinsurance");
     },
     onError: (error) => {

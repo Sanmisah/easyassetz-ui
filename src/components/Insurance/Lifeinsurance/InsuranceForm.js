@@ -130,7 +130,7 @@ const InsuranceForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/lifeinsurances`, data, {
+      const response = await axios.post(`/api/life-insurances`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
@@ -140,7 +140,7 @@ const InsuranceForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Beneficiary added successfully!");
+      toast.success("lifeinsurance added successfully!");
       navigate("/lifeinsurance");
     },
     onError: (error) => {
