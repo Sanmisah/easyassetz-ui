@@ -58,13 +58,7 @@ const schema = z.object({
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
-  // previousPolicy: z.string().min(1, { message: "Previous Policy is required" }),
-  // .transform((value) => (value === "" ? null : value))
-  // .nullable()
-  // .refine((value) => value === null || !isNaN(Number(value)), {
-  //   message: "Premium must be a number",
-  // })
-  // .transform((value) => (value === null ? null : Number(value))),
+  previousPolicy: z.string().min(1, { message: "Previous Policy is required" }),
 });
 
 const EditFormGeneral = () => {
