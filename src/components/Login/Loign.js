@@ -46,7 +46,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [alertDialog, setAlertDialog] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -108,8 +108,8 @@ const Auth = () => {
       navigate("/personal");
     },
     onError: (error) => {
-      alert("Login failed: " + error.message);
-      toast.error("Login failed: " + error.message);
+      console.error("Login failed: " + error.response.data.data);
+      toast.error("Login failed: " + error.response.data.data);
     },
   });
 
@@ -155,8 +155,9 @@ const Auth = () => {
       setIsLogin(true);
     },
     onError: (error) => {
+      setErrorMessage(error.response.data.data);
       console.error("Error registering user:", error);
-      toast.error("Failed to register user.", error.message);
+      toast.error(`Failed to register user.${error.response.data.data}`);
     },
   });
 
@@ -320,6 +321,9 @@ const Auth = () => {
                   {getFieldError("mobile") && (
                     <p className="text-red-500">{getFieldError("mobile")}</p>
                   )}
+                  {errorMessage && (
+                    <p className="text-red-500">{errorMessage.mobile}</p>
+                  )}
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -333,6 +337,9 @@ const Auth = () => {
                   />
                   {getFieldError("email") && (
                     <p className="text-red-500">{getFieldError("email")}</p>
+                  )}
+                  {errorMessage && (
+                    <p className="text-red-500">{errorMessage.email}</p>
                   )}
                 </div>
                 <div className="grid gap-2">
@@ -348,6 +355,9 @@ const Auth = () => {
                   />
                   {getFieldError("password") && (
                     <p className="text-red-500">{getFieldError("password")}</p>
+                  )}
+                  {errorMessage && (
+                    <p className="text-red-500">{errorMessage.password}</p>
                   )}
                 </div>
                 <div className="grid gap-2">
