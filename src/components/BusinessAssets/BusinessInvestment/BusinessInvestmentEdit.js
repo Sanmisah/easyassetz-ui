@@ -50,15 +50,15 @@ const BullionEdit = () => {
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const { bullionEditId } = useSelector((state) => state.counterSlice);
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
 
-  console.log(bullionEditId);
+  console.log(lifeInsuranceEditId);
   useEffect(() => {
-    if (bullionEditId) {
-      console.log("bullionEditId:", bullionEditId);
+    if (lifeInsuranceEditId) {
+      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
     }
-  }, [bullionEditId]);
-  const [showOtherBullion, setShowOtherBullion] =
+  }, [lifeInsuranceEditId]);
+  const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
 
@@ -75,21 +75,21 @@ const BullionEdit = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions/${bullionEditId}`, {
+    const response = await axios.get(`/api/bullions/${lifeInsuranceEditId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-    if (response.data.data.Bullion?.modeOfPurchase === "broker") {
+    if (response.data.data.OtherInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
     }
-    if (response.data.data.Bullion?.modeOfPurchase === "e-insurance") {
+    if (response.data.data.OtherInsurance?.modeOfPurchase === "e-insurance") {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    console.log(typeof response.data.data.Bullion?.premium);
-    return response.data.data.Bullion;
+    console.log(typeof response.data.data.OtherInsurance?.premium);
+    return response.data.data.OtherInsurance;
   };
 
   const {
@@ -97,7 +97,7 @@ const BullionEdit = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["bullionDataUpdate", bullionEditId],
+    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -112,6 +112,27 @@ const BullionEdit = () => {
       setDefaultValues(data);
       reset(data);
       setValue(data);
+      setValue("specificVehicalType", data.specificVehicalType);
+      setValue("registeredMobile", data.registeredMobile);
+      setValue("registeredEmail", data.registeredEmail);
+      setValue("additionalDetails", data.additionalDetails);
+      setValue("previousPolicyNumber", data.previousPolicyNumber);
+      setValue("policyNumber", data.policyNumber);
+      setValue("expiryDate", data.expiryDate);
+      setValue("premium", data.premium);
+      setValue("sumInsured", data.sumInsured);
+      setValue("policyHolderName", data.policyHolderName);
+      setValue("modeOfPurchase", data.modeOfPurchase);
+      setValue("contactPerson", data.contactPerson);
+      setValue("contactNumber", data.contactNumber);
+      setValue("email", data.email);
+      setValue("registeredMobile", data.registeredMobile);
+      setValue("registeredEmail", data.registeredEmail);
+      setValue("additionalDetails", data.additionalDetails);
+      setValue("previousPolicyNumber", data.previousPolicyNumber);
+      setValue("brokerName", data.brokerName);
+      setValue("contactPerson", data.contactPerson);
+      setValue("contactNumber", data.contactNumber);
       setValue("metaltype", data.metaltype);
       setValue("otherInsuranceCompany", data.otherInsuranceCompany);
       setValue("WeightPerArticle", data.WeightPerArticle);
@@ -124,7 +145,7 @@ const BullionEdit = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherBullion(data.Bullion === "other");
+      setShowOtherInsuranceCompany(data.companyName === "other");
 
       console.log(data);
     },
@@ -134,19 +155,19 @@ const BullionEdit = () => {
     },
   });
 
-  const bullionMutate = useMutation({
+  const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api//${bullionEditId}`, data, {
+      const response = await axios.put(`/api//${lifeInsuranceEditId}`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Bullion;
+      return response.data.data.OtherInsurance;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("BullionDataUpdate", bullionEditId);
+      queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
       toast.success("Bullion added successfully!");
-      navigate("/bullion");
+      navigate("/lifeinsurance");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -165,12 +186,12 @@ const BullionEdit = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    console.log("bullion:", data.bullion);
+    console.log("brokerName:", data.brokerName);
     if (data.metalType === "other") {
       data.metalType = data.otherMetalType;
     }
 
-    bullionMutate.mutate(data);
+    lifeInsuranceMutate.mutate(data);
   };
 
   useEffect(() => {
