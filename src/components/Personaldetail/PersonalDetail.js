@@ -166,6 +166,7 @@ const Personaldetail = () => {
   const [defaultData, setDefaultData] = useState({});
   const [defaultDate, setdefaultDate] = useState(null);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [specialactundermarriange, setSpecialactundermarriange] =
     useState(true);
@@ -274,6 +275,8 @@ const Personaldetail = () => {
   }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
+    console.log("file:", file);
+    data.aadharFile = file;
     if (isForeign && data.specificNationality) {
       data.nationality = data.specificNationality;
     }
@@ -330,6 +333,10 @@ const Personaldetail = () => {
     } catch (error) {
       console.error("Failed to fetch pincode details:", error);
     }
+  };
+
+  const handleFileChange = (e) => {
+    setValue("aadharFile", file);
   };
 
   return (
@@ -1094,6 +1101,8 @@ const Personaldetail = () => {
                       id="aadharFile"
                       placeholder="Full Name - Name as per Adhar"
                       type="file"
+                      onChange={(e) => setFile(e.target.files[0])}
+                      f
                       defaultValue={defaultData?.aadharFile}
                       {...register("aadharFile", {
                         required:

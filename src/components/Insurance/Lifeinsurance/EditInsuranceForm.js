@@ -51,7 +51,8 @@ const schema = z.object({
     .transform((value) => (value === null ? null : Number(value))),
   maturityDate: z.date().optional(),
   premium: z
-    .string()
+    .number()
+    .multipleOf(0.01)
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .refine((value) => value === null || !isNaN(Number(value)), {
@@ -59,7 +60,8 @@ const schema = z.object({
     })
     .transform((value) => (value === null ? null : Number(value))),
   sumInsured: z
-    .string()
+    .number()
+    .multipleOf(0.01)
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .refine((value) => value === null || !isNaN(Number(value)), {

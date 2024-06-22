@@ -42,9 +42,15 @@ const schema = z.object({
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
 
   maturityDate: z.date().optional(),
-  premium: z.string().min(3, { message: "Premium is required" }),
+  premium: z
+    .number()
+    .multipleOf(0.01)
+    .min(3, { message: "Premium is required" }),
 
-  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  sumInsured: z
+    .number()
+    .multipleOf(0.01)
+    .min(3, { message: "Sum Insured is required" }),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),

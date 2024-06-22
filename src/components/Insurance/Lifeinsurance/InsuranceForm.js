@@ -43,7 +43,8 @@ const schema = z.object({
 
   maturityDate: z.date().optional(),
   premium: z
-    .string()
+    .number()
+    .multipleOf(0.01)
     .min(3, { message: "Premium is required" })
     .transform((value) => (value === "" ? null : value))
     .nullable()
@@ -52,7 +53,8 @@ const schema = z.object({
     })
     .transform((value) => (value === null ? null : Number(value))),
   sumInsured: z
-    .string()
+    .number()
+    .multipleOf(0.01)
     .min(3, { message: "Sum Insured is required" })
     .transform((value) => (value === "" ? null : value))
     .nullable()
