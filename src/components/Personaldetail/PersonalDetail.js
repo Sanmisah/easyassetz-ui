@@ -1089,15 +1089,15 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="adhar-name">Upload Your Aadhar File</Label>
+                    <Label htmlFor="aadharFile">Upload Your Aadhar File</Label>
                     <Input
-                      id="aadhar-name"
+                      id="aadharFile"
                       placeholder="Full Name - Name as per Adhar"
                       type="file"
                       defaultValue={defaultData?.aadharFile}
                       {...register("aadharFile", {
                         required:
-                          !defaultData?.aadharFile && "Full Name is required",
+                          !defaultData?.aadharFile && "file is required",
                       })}
                     />
                     {errors.aadharFile && (
