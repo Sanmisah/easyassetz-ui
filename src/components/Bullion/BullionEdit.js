@@ -26,23 +26,20 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   metalType: z.string().nonempty({ message: "Metal Name is required" }),
   articleDetails: z
     .string()
     .nonempty({ message: "Article Detail is required" }),
-  WeightPerArticle: z
+  numberOfArticles: z.string().optional(),
+  weightPerArticle: z
     .string()
     .min(1, { message: " Weight Per Article is Required" }),
-  numberOfArticle: z.date().optional(),
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
-
-  pointOfContact: z
-    .string()
-    .min(1, { message: "Point Of Contact is Required" }),
 });
 
 const BullionEdit = () => {
@@ -50,16 +47,19 @@ const BullionEdit = () => {
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const { bullionEditId } = useSelector((state) => state.counterSlice);
-
-  console.log(bullionEditId);
+  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
+  const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  console.log(lifeInsuranceEditId);
   useEffect(() => {
-    if (bullionEditId) {
-      console.log("bullionEditId:", bullionEditId);
+    if (lifeInsuranceEditId) {
+      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
     }
-  }, [bullionEditId]);
-  const [showOtherBullion, setShowOtherBullion] =
-    useState(false);
+  }, [lifeInsuranceEditId]);
+  const [showOtherBullion, setShowOtherBullion] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
 
   const {
@@ -75,18 +75,37 @@ const BullionEdit = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions/${bullionEditId}`, {
+    const response = await axios.get(`/api/bullions/${lifeInsuranceEditId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-    if (response.data.data.Bullion?.modeOfPurchase === "broker") {
-      setBrokerSelected(true);
-      setHideRegisteredFields(false);
+    let othertype = response.data.data.Bullion?.metalType;
+    let otherarticle = response.data.data.Bullion?.articleDetails;
+    if (
+      othertype === "gold" ||
+      othertype === "silver" ||
+      othertype === "copper"
+    ) {
+      setShowOtherMetalType(false);
+      setValue("metalType", othertype);
+    } else {
+      setShowOtherMetalType(true);
+      setValue("otherMetalType", othertype);
     }
-    if (response.data.data.Bullion?.modeOfPurchase === "e-insurance") {
-      setBrokerSelected(false);
-      setHideRegisteredFields(true);
+
+    if (
+      otherarticle === "plates" ||
+      otherarticle === "glass" ||
+      otherarticle === "bowl" ||
+      otherarticle === "bar" ||
+      otherarticle === "utensils"
+    ) {
+      setShowOtherArticleDetails(false);
+      setValue("articleDetails", otherarticle);
+    } else {
+      setShowOtherArticleDetails(true);
+      setValue("otherArticleDetails", otherarticle);
     }
     console.log(typeof response.data.data.Bullion?.premium);
     return response.data.data.Bullion;
@@ -97,7 +116,7 @@ const BullionEdit = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["bullionDataUpdate", bullionEditId],
+    queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -115,7 +134,7 @@ const BullionEdit = () => {
       setValue("metaltype", data.metaltype);
       setValue("otherInsuranceCompany", data.otherInsuranceCompany);
       setValue("WeightPerArticle", data.WeightPerArticle);
-      setValue("numberOfArticle", data.numberOfArticle);
+      setValue("numberOfArticles", data.numberOfArticles);
       setValue("additionalInformation", data.additionalInformation);
       setValue("pointOfContact", data.pointOfContact);
 
@@ -136,15 +155,19 @@ const BullionEdit = () => {
 
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api//${bullionEditId}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.put(
+        `/api/bullions/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.Bullion;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("BullionDataUpdate", bullionEditId);
+      queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
       toast.success("Bullion added successfully!");
       navigate("/bullion");
     },
@@ -165,6 +188,9 @@ const BullionEdit = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    data.name = name;
+    data.email = email;
+    data.phone = phone;
     console.log("bullion:", data.bullion);
     if (data.metalType === "other") {
       data.metalType = data.otherMetalType;
@@ -212,7 +238,7 @@ const BullionEdit = () => {
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
+                        setShowOtherMetalType(value === "other");
                       }}
                       className={errors.metalType ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.metalType || ""}
@@ -221,15 +247,15 @@ const BullionEdit = () => {
                         <SelectValue placeholder="Select Metal Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="company1">Gold</SelectItem>
-                        <SelectItem value="company2">Silver</SelectItem>
-                        <SelectItem value="company3">Copper</SelectItem>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="silver">Silver</SelectItem>
+                        <SelectItem value="copper">Copper</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherInsuranceCompany && (
+                {showOtherMetalType && (
                   <Controller
                     name="otherMetalType"
                     control={control}
@@ -263,7 +289,7 @@ const BullionEdit = () => {
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
+                        setShowOtherArticleDetails(value === "other");
                       }}
                       className={errors.articleDetails ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.articleDetails || ""}
@@ -272,17 +298,17 @@ const BullionEdit = () => {
                         <SelectValue placeholder="Select Article Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="article1">Plates</SelectItem>
-                        <SelectItem value="article2">Glass</SelectItem>
-                        <SelectItem value="article3">Bowl</SelectItem>
-                        <SelectItem value="article4">Bar</SelectItem>
-                        <SelectItem value="article5">Utensils</SelectItem>
+                        <SelectItem value="plates">Plates</SelectItem>
+                        <SelectItem value="glass">Glass</SelectItem>
+                        <SelectItem value="bowl">Bowl</SelectItem>
+                        <SelectItem value="bar">Bar</SelectItem>
+                        <SelectItem value="utensils">Utensils</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherInsuranceCompany && (
+                {showOtherArticleDetails && (
                   <Controller
                     name="otherArticleDetails"
                     control={control}
@@ -310,7 +336,7 @@ const BullionEdit = () => {
               <Label htmlFor="weightPerArticle">Weight Per Article</Label>
               <Controller
                 name="weightPerArticle"
-                defaultValue={new Date(Benifyciary?.expiryDate) || ""}
+                defaultValue={Benifyciary?.weightPerArticle || ""}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -331,24 +357,28 @@ const BullionEdit = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="numberOfArticle">Number Of Article</Label>
+                <Label htmlFor="numberOfArticles">Number Of Article</Label>
                 <Controller
-                  name="numberOfArticle"
+                  name="numberOfArticles"
                   control={control}
-                  defaultValue={Benifyciary?.numberOfArticle || ""}
+                  defaultValue={Benifyciary?.numberOfArticles || ""}
                   render={({ field }) => (
                     <Input
-                      id="numberOfArticle"
-                      placeholder="Enter Number Of Article"
+                      id="numberOfArticles"
+                      type="number"
                       {...field}
-                      className={errors.numberOfArticle ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.numberOfArticle || ""}
+                      placeholder="Enter Number Of Article"
+                      value={parseInt(field.value)}
+                      className={
+                        errors.numberOfArticles ? "border-red-500" : ""
+                      }
+                      defaultValue={Benifyciary?.numberOfArticles || ""}
                     />
                   )}
                 />
-                {errors.numberOfArticle && (
+                {errors.numberOfArticles && (
                   <span className="text-red-500">
-                    {errors.numberOfArticle.message}
+                    {errors.numberOfArticles.message}
                   </span>
                 )}
               </div>
@@ -380,27 +410,71 @@ const BullionEdit = () => {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
-                <Label htmlFor="pointOfContact">Point Of Contact</Label>
+                <Label htmlFor="name">Name</Label>
                 <Controller
-                  name="pointOfContact"
+                  name="name"
                   control={control}
-                  defaultValue={Benifyciary?.pointOfContact || ""}
+                  defaultValue={Benifyciary?.name || ""}
                   render={({ field }) => (
                     <Input
-                      id="pointOfContact"
-                      pointOfContact="Enter policy holder name"
+                      id="name"
+                      placeholder="Enter Name"
+                      value={field.value}
+                      onChange={(e) => setName(e.target.value)}
                       {...field}
-                      className={errors.pointOfContact ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.pointOfContact || ""}
+                      className={errors.name ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.name || ""}
                     />
                   )}
                 />
-                {errors.pointOfContact && (
-                  <span className="text-red-500">
-                    {errors.pointOfContact.message}
-                  </span>
+                {errors.name && (
+                  <span className="text-red-500">{errors.name.message}</span>
+                )}
+              </div>
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue={Benifyciary?.email || ""}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      placeholder="Enter Email"
+                      {...field}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={errors.email ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.email || ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
+                )}
+              </div>
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Controller
+                  name="phone"
+                  control={control}
+                  defaultValue={Benifyciary?.phone || ""}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="phone"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      value={field.value}
+                      onChange={(e) => setPhone(e.target)}
+                      defaultValue={Benifyciary?.phone || ""}
+                    />
+                  )}
+                />
+                {errors.phone && (
+                  <span className="text-red-500">{errors.phone.message}</span>
                 )}
               </div>
             </div>

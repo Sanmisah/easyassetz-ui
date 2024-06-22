@@ -35,7 +35,7 @@ const schema = z.object({
   weightPerArticle: z
     .string()
     .min(2, { message: "Weight Per Article is required" }),
-  numberOfArticle: z
+  numberOfArticles: z
     .string()
     .nonempty({ message: "Number of Article Details is required" }),
   additionalInformation: z
@@ -61,6 +61,9 @@ const BullionForm = () => {
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const {
     handleSubmit,
     control,
@@ -72,8 +75,11 @@ const BullionForm = () => {
       metalType: "",
       articleDetails: "",
       weightPerArticle: "",
-      numberOfArticle: "",
+      numberOfArticles: "",
       additionalInformation: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
@@ -105,6 +111,9 @@ const BullionForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    data.name = name;
+    data.email = email;
+    data.mobile = phone;
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -148,9 +157,9 @@ const BullionForm = () => {
                         <SelectValue placeholder="Select Metal Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Metal1">Gold</SelectItem>
-                        <SelectItem value="Metal2">Silver</SelectItem>
-                        <SelectItem value="Metal3">Copper</SelectItem>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="silver">Silver</SelectItem>
+                        <SelectItem value="copper">Copper</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -198,11 +207,11 @@ const BullionForm = () => {
                       <SelectValue placeholder="Select Article Type" />
                     </FocusableSelectTrigger>
                     <SelectContent>
-                      <SelectItem value="article1">Plates</SelectItem>
-                      <SelectItem value="article2">Glass</SelectItem>
-                      <SelectItem value="article3">Bowl</SelectItem>
-                      <SelectItem value="article4">Bar</SelectItem>
-                      <SelectItem value="article5">Utensils</SelectItem>
+                      <SelectItem value="plates">Plates</SelectItem>
+                      <SelectItem value="glass">Glass</SelectItem>
+                      <SelectItem value="bowl">Bowl</SelectItem>
+                      <SelectItem value="bar">Bar</SelectItem>
+                      <SelectItem value="utensils">Utensils</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
@@ -256,24 +265,26 @@ const BullionForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="numberOfArticle">Number Of Article</Label>
+                <Label htmlFor="numberOfArticles">Number Of Article</Label>
                 <Controller
-                  name="numberOfArticle"
+                  name="numberOfArticles"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="numberOfArticle"
+                      id="numberOfArticles"
                       placeholder="Enter Number Of Article"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
-                      className={errors.numberOfArticle ? "border-red-500" : ""}
+                      className={
+                        errors.numberOfArticles ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.numberOfArticle && (
+                {errors.numberOfArticles && (
                   <span className="text-red-500">
-                    {errors.numberOfArticle.message}
+                    {errors.numberOfArticles.message}
                   </span>
                 )}
               </div>
@@ -320,8 +331,8 @@ const BullionForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={field.value || ""}
-                          onChange={field.onChange}
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -342,8 +353,8 @@ const BullionForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={field.value || ""}
-                          onChange={field.onChange}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -357,7 +368,7 @@ const BullionForm = () => {
                   <div className="w-[40%] space-y-2">
                     <Label htmlFor="phone">Phone</Label>
                     <Controller
-                      name="phone"
+                      name="mobile"
                       control={control}
                       render={({ field }) => (
                         <PhoneInput
@@ -367,7 +378,10 @@ const BullionForm = () => {
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            console.log(value);
+                            setPhone(value);
+                          }}
                         />
                       )}
                     />

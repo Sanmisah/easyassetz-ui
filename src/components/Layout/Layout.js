@@ -30,6 +30,7 @@ import HealthForm from "@/components/Insurance/Healthinsurance/HealthForm";
 import EditHealthForm from "@/components/Insurance/Healthinsurance/EditFormHealth";
 import BullionForm from "@/components/Bullion/BullionOtherForm";
 import BullionEditFrom from "@/components/Bullion/BullionEdit";
+import BullionMainForm from "@/components/Bullion/BullionMainForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -151,7 +152,8 @@ const Layout = () => {
       {location.pathname === "/healthinsurance" && <Healthinsurance />}
       {location.pathname === "/healthinsurance/add" && <HealthForm />}
       {location.pathname === "/healthinsurance/edit" && <EditHealthForm />}
-      {location.pathname === "/bullion" && <BullionForm />}
+      {location.pathname === "/bullion" && <BullionMainForm />}
+      {location.pathname === "/bullion/add" && <BullionForm />}
       {location.pathname === "/bullion/edit" && <BullionEditFrom />}
     </div>
   );
