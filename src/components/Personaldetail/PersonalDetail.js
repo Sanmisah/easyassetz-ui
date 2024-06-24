@@ -196,9 +196,10 @@ const Personaldetail = () => {
     if (response.data.data.profile?.nationality !== "indian")
       setIsForeign(true);
     if (response.data.data.profile?.dob) {
-      setdefaultDate(response.data.data.profile.dob);
+      setdefaultDate(new Date(response.data.data.profile.dob));
     }
-    console.log(response.data.data.profile?.dob);
+    console.log(new Date("2022-01-01"));
+    console.log(new Date("22-01-01"));
     console.log(new Date());
     return response.data.data.profile || {};
   };

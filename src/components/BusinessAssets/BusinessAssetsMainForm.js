@@ -111,12 +111,12 @@ const BusinessAssetsMainForm = () => {
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Propritorship </h1>
+            <h1 className="text-xl font-bold">Buisness Investment </h1>
             {motorInsuranceData && motorInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {motorInsuranceData && motorInsuranceData?.length}{" "}
-                  Propritorship
+                  {motorInsuranceData && motorInsuranceData?.length} Buisness
+                  Investment
                 </p>
               </div>
             )}
