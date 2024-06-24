@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import lifeInsurance from "../image/LifeInsurance.png";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@com/ui/button";
 import axios from "axios";
 
 const BusinessAssetsMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
   const [motorInsuranceData, setMotorInsuranceData] = useState([]);
   const [otherInsuranceData, setOtherInsuranceData] = useState([]);
+  const [GeneralInsurance, setGeneralInsuranceData] = useState([]);
+  const [HealthInsurance, setHealthInsuranceData] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,17 +19,16 @@ const BusinessAssetsMainForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/lifeinsurances`, {
+        const response = await axios.get(`/api/life-insurances`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
         setLifeInsuranceData(response?.data?.data?.LifeInsurances);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching the Business Assets data", error);
       }
     };
-
     const fetchDataMotorinsurance = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
@@ -36,12 +39,11 @@ const BusinessAssetsMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setMotorInsuranceData(response?.data?.data?.MotorInsurances);
+        setMotorInsuranceData(response?.data?.data?.OtherInsurance);
       } catch (error) {
-        console.error("Error fetching motor insurance data", error);
+        console.error("Error fetching the Business Assets data", error);
       }
     };
-
     const fetchDataOtherinsurance = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
@@ -52,15 +54,46 @@ const BusinessAssetsMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.OtherInsurances);
+        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
       } catch (error) {
-        console.error("Error fetching other insurance data", error);
+        console.error("Error fetching the Business Assets data", error);
       }
     };
+    const fetchDataGeneralinsurance = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
 
+      try {
+        const response = await axios.get(`/api/general-insurances`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+      } catch (error) {
+        console.error("Error fetching the Business Assets data", error);
+      }
+    };
+    const fetchDataHealthinsurance = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/health-insurances`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setHealthInsuranceData(response?.data?.data?.HealthInsurances);
+      } catch (error) {
+        console.error("Error fetching the Business Assets data", error);
+      }
+    };
+    fetchDataGeneralinsurance();
+    fetchDataHealthinsurance();
+    fetchDataOtherinsurance();
     fetchDataLifeinsurance();
     fetchDataMotorinsurance();
-    fetchDataOtherinsurance();
   }, []);
 
   return (
@@ -72,65 +105,86 @@ const BusinessAssetsMainForm = () => {
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">
-        {/* Business Investment Section */}
         <div
-          onClick={() => navigate("/businessinvestment")}
-          className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+          onClick={() => navigate("/motorinsurance")}
+          className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
-          <img src={lifeInsurance} className="w-6 ml-2" alt="icon" />
-          <div className="flex items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Business Investments</h1>
-            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-              <p className="text-green-500 self-center dark:text-green-800">
-                {motorInsuranceData?.length} Business Investments
-              </p>
-            </div>
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold">Propritorship </h1>
+            {motorInsuranceData && motorInsuranceData?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {motorInsuranceData && motorInsuranceData?.length}{" "}
+                  Propritorship
+                </p>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Company Section */}
         <div
           onClick={() => navigate("/healthinsurance")}
+          className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold"> Firm Name</h1>
+            {HealthInsurance.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {HealthInsurance.length && HealthInsurance?.length} Firm Name
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        <div
+          onMouseDown={() => navigate("/lifeinsurance")}
+          className=" cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold"> Partnership Firm</h1>
+            {lifeInsuranceData && lifeInsuranceData?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {lifeInsuranceData?.length} Partnership Firm
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        <div
+          onMouseDown={() => navigate("/generalinsurance")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
-          <img src={lifeInsurance} className="w-6 ml-2" alt="icon" />
-          <h1 className="text-xl font-bold">Company</h1>
-          <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-            <p className="text-green-500 self-center dark:text-green-800">
-              {lifeInsuranceData?.length} Company
-            </p>
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold"> Company</h1>
+            {GeneralInsurance && GeneralInsurance?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {GeneralInsurance && GeneralInsurance?.length} Company
+                </p>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Intellectual Property Section */}
-        <div
-          onClick={() => navigate("/lifeinsurance")}
-          className="cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
-        >
-          <img src={lifeInsurance} className="w-6 ml-2" alt="icon" />
-          <div className="flex items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Intellectual Property (IP)</h1>
-            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-              <p className="text-green-500 self-center dark:text-green-800">
-                {lifeInsuranceData?.length} Intellectual Property (IP)
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Partnership Firm Section */}
         <div
           onClick={() => navigate("/otherinsurance")}
-          className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+          className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
-          <img src={lifeInsurance} className="w-6 ml-2" alt="icon" />
-          <div className="flex items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Partnership Firm</h1>
-            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-              <p className="text-green-500 self-center dark:text-green-800">
-                {otherInsuranceData?.length} Partnership Firm
-              </p>
-            </div>
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold"> Intellectual Property (IP)</h1>
+            {otherInsuranceData && otherInsuranceData?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {otherInsuranceData && otherInsuranceData?.length}{" "}
+                  Intellectual Property
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
