@@ -34,7 +34,7 @@ const schema = z.object({
     .nonempty({ message: "Article Details is required" }),
   firmRegistrationNumber: z
     .string()
-    .min(2, { message: "Weight Per Article is required" }),
+    .min(2, { message: "Firm Registration Number is required" }),
 
   additionalInformation: z
     .string()
@@ -50,7 +50,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const BullionForm = () => {
+const PropritershipForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -65,7 +65,7 @@ const BullionForm = () => {
   const [
     showOtherFirmsRegistrationNumber,
     setShowOtherFirmsRegistrationNumber,
-  ] = useState(false);
+  ] = useState();
 
   const {
     handleSubmit,
@@ -116,6 +116,10 @@ const BullionForm = () => {
     data.name = name;
     data.email = email;
     data.mobile = phone;
+    if (showOtherFirmsRegistrationNumber) {
+      data.firmRegistrationNumberType = showOtherFirmsRegistrationNumber;
+      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+    }
 
     if (data.firmRegistrationNumber === "other") {
       data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
@@ -193,7 +197,7 @@ const BullionForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Article Details</Label>
+              <Label htmlFor="registrationAddress">Registratin Address</Label>
               <Controller
                 name="registrationAddress"
                 control={control}
@@ -210,21 +214,7 @@ const BullionForm = () => {
                   />
                 )}
               />
-              {showOtherArticleDetails && (
-                <Controller
-                  name="otherRegistrationAddress"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Article Type"
-                      className="mt-2"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              )}
+
               {errors.registrationAddress && (
                 <span className="text-red-500">
                   {errors.registrationAddress.message}
@@ -235,7 +225,7 @@ const BullionForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmRegistrationNumber">
-                  Weight Per Article
+                  Firm Registration Number
                 </Label>
                 <Controller
                   name="firmRegistrationNumber"
@@ -246,7 +236,7 @@ const BullionForm = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherFirmsRegistrationNumber(value === "other");
+                        setShowOtherFirmsRegistrationNumber(value);
                       }}
                       className={
                         errors.firmRegistrationNumber ? "border-red-500" : ""
@@ -263,6 +253,21 @@ const BullionForm = () => {
                     </Select>
                   )}
                 />
+                {showOtherFirmsRegistrationNumber && (
+                  <Controller
+                    name="otherFirmsRegistrationNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Firm's Registration Number"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                )}
                 {errors.firmRegistrationNumber && (
                   <span className="text-red-500">
                     {errors.firmRegistrationNumber.message}
@@ -270,33 +275,7 @@ const BullionForm = () => {
                 )}
               </div>
             </div>
-            {showOtherFirmsRegistrationNumber && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="otherFirmsRegistrationNumber">
-                    Weight Per Article
-                  </Label>
-                  <Controller
-                    name="otherFirmsRegistrationNumber"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Article Type"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                  {errors.otherFirmsRegistrationNumber && (
-                    <span className="text-red-500">
-                      {errors.otherFirmsRegistrationNumber.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
@@ -412,4 +391,4 @@ const BullionForm = () => {
   );
 };
 
-export default BullionForm;
+export default PropritershipForm;
