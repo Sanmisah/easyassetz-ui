@@ -240,7 +240,8 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                     id="charityNumber"
                     countryCallingCodeEditable={false}
                     defaultCountry="in"
-                    value={field.value}
+                    value={field.value || Charitydata?.charityNumber}
+                    defaultValue={Charitydata?.charityNumber}
                     onChange={field.onChange}
                     className="w-full"
                   />

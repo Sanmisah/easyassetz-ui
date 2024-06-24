@@ -30,7 +30,7 @@ function App() {
         <Route path="/bullion" element={<Personalpage />} />
         <Route path="/bullion/add" element={<Personalpage />} />
         <Route path="/bullion/edit" element={<Personalpage />} />
-
+        <Route path="/businessasset" element={<Personalpage />} />
       </Routes>
     </div>
   );

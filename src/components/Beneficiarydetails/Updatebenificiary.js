@@ -395,16 +395,15 @@ const Benificiaryform = ({
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="mobile">Mobile Number</Label>
+                            {console.log(Benifyciary?.mobile)}
                             <Controller
                               name="mobile"
                               control={control}
                               render={({ field }) => (
                                 <PhoneInput
-                                  international
-                                  countryCallingCodeEditable={false}
-                                  defaultCountry={dateCountryCode}
-                                  value={field.value}
-                                  defaultValue={Benifyciary.mobile}
+                                  // defaultCountry="in"
+                                  value={field.value || Benifyciary?.mobile}
+                                  defaultValue={Benifyciary?.mobile}
                                   onChange={(value) => {
                                     field.onChange(value);
                                   }}

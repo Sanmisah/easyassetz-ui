@@ -31,6 +31,7 @@ import EditHealthForm from "@/components/Insurance/Healthinsurance/EditFormHealt
 import BullionForm from "@/components/Bullion/BullionOtherForm";
 import BullionEditFrom from "@/components/Bullion/BullionEdit";
 import BullionMainForm from "@/components/Bullion/BullionMainForm";
+import BuisnessassetsMainForm from "@/components/BusinessAssets/BusinessAssetsMainForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -88,6 +89,13 @@ const Layout = () => {
           >
             <UserIcon className="h-5 w-5" />
             Bullion
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/businessasset"
+          >
+            <UserIcon className="h-5 w-5" />
+            Buisnes Assets
           </NavLink>
         </nav>
 
@@ -155,6 +163,7 @@ const Layout = () => {
       {location.pathname === "/bullion" && <BullionMainForm />}
       {location.pathname === "/bullion/add" && <BullionForm />}
       {location.pathname === "/bullion/edit" && <BullionEditFrom />}
+      {location.pathname === "/businessasset" && <BuisnessassetsMainForm />}
     </div>
   );
 };

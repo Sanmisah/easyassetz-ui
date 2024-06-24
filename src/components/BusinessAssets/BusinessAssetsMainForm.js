@@ -82,7 +82,7 @@ const BusinessAssetsMainForm = () => {
             <h1 className="text-xl font-bold">Business Investments</h1>
             <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
               <p className="text-green-500 self-center dark:text-green-800">
-                {motorInsuranceData.length} Business Investments
+                {motorInsuranceData?.length} Business Investments
               </p>
             </div>
           </div>
@@ -96,12 +96,11 @@ const BusinessAssetsMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" alt="icon" />
           <h1 className="text-xl font-bold">Company</h1>
           <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-              <p className="text-green-500 self-center dark:text-green-800">
-                {lifeInsuranceData.length} Company
-              </p>
-            </div>
+            <p className="text-green-500 self-center dark:text-green-800">
+              {lifeInsuranceData?.length} Company
+            </p>
+          </div>
         </div>
-      
 
         {/* Intellectual Property Section */}
         <div
@@ -113,7 +112,7 @@ const BusinessAssetsMainForm = () => {
             <h1 className="text-xl font-bold">Intellectual Property (IP)</h1>
             <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
               <p className="text-green-500 self-center dark:text-green-800">
-                {lifeInsuranceData.length} Intellectual Property (IP)
+                {lifeInsuranceData?.length} Intellectual Property (IP)
               </p>
             </div>
           </div>
@@ -129,7 +128,7 @@ const BusinessAssetsMainForm = () => {
             <h1 className="text-xl font-bold">Partnership Firm</h1>
             <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
               <p className="text-green-500 self-center dark:text-green-800">
-                {otherInsuranceData.length} Partnership Firm
+                {otherInsuranceData?.length} Partnership Firm
               </p>
             </div>
           </div>
