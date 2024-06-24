@@ -32,6 +32,9 @@ import BullionForm from "@/components/Bullion/BullionOtherForm";
 import BullionEditFrom from "@/components/Bullion/BullionEdit";
 import BullionMainForm from "@/components/Bullion/BullionMainForm";
 import BuisnessassetsMainForm from "@/components/BusinessAssets/BusinessAssetsMainForm";
+import PropritershipMainForm from "@/components/BusinessAssets/Propritorship/PropritorishipMainForm";
+import PropritershipForm from "@/components/BusinessAssets/Propritorship/PropritorshipOtherForm";
+import PropritershipEditForm from "@/components/BusinessAssets/Propritorship/PropritorshipEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -95,7 +98,7 @@ const Layout = () => {
             to="/businessasset"
           >
             <UserIcon className="h-5 w-5" />
-            Buisnes Assets
+            Buisness Assets
           </NavLink>
         </nav>
 
@@ -164,6 +167,9 @@ const Layout = () => {
       {location.pathname === "/bullion/add" && <BullionForm />}
       {location.pathname === "/bullion/edit" && <BullionEditFrom />}
       {location.pathname === "/businessasset" && <BuisnessassetsMainForm />}
+      {location.pathname === "/propritorship" && <PropritershipMainForm />}
+      {location.pathname === "/propritorship/add" && <PropritershipForm />}
+      {location.pathname === "/propritorship/edit" && <PropritershipEditForm />}
     </div>
   );
 };

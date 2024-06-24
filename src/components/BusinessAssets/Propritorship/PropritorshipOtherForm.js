@@ -28,20 +28,14 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  businessInvestments: z
+  firmName: z.string().nonempty({ message: "Metal Name is required" }),
+  registrationAddress: z
     .string()
-    .nonempty({ message: "Business Investment is required" }),
-  propritorship: z.string().nonempty({ message: "Propritorship is required" }),
-  firmName: z.string().min(2, { message: "Firm Name is required" }),
-  registeredAddress: z
+    .nonempty({ message: "Article Details is required" }),
+  firmRegistrationNumber: z
     .string()
-    .nonempty({ message: "Registered Address is required" }),
-  firmsRegistrationNumber: z
-    .string()
-    .min(3, { message: "Firm's Registration number is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .transform((value) => (value === null ? null : Number(value))),
+    .min(2, { message: "Weight Per Article is required" }),
+
   additionalInformation: z
     .string()
     .min(3, { message: "Additional Information is required" })
@@ -61,15 +55,18 @@ const BullionForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [showOtherBusinessInvestments, setShowOtherBusinessInvestments] =
-    useState(false);
+  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [nomineeerror, setNomineeError] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [
     showOtherFirmsRegistrationNumber,
     setShowOtherFirmsRegistrationNumber,
   ] = useState(false);
-  const [selectedNommie, setSelectedNommie] = useState([]);
-  const [nomineeerror, setNomineeError] = useState(false);
+
   const {
     handleSubmit,
     control,
@@ -78,24 +75,25 @@ const BullionForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      businessInvestments: "",
-      propritorship: "",
       firmName: "",
-      registeredAddress: "",
-      firmsRegistrationNumber: "",
+      registrationAddress: "",
+      firmRegistrationNumber: "",
       additionalInformation: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/bullions`, data, {
+      const response = await axios.post(`/api/propriterships`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.BusinessInvestment;
+      return response.data.data.Propritership;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -115,6 +113,14 @@ const BullionForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    data.name = name;
+    data.email = email;
+    data.mobile = phone;
+
+    if (data.firmRegistrationNumber === "other") {
+      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+    }
+
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -125,10 +131,10 @@ const BullionForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Business Assets
+                Propritership Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Business Assets.
+                Fill out the form to add a new Propritership.
               </CardDescription>
             </div>
           </div>
@@ -140,48 +146,37 @@ const BullionForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="businessInvestments">
-                  Business Investments
-                </Label>
+                <Label htmlFor="firmName">Firm Name </Label>
                 <Controller
-                  name="businessInvestments"
+                  name="firmName"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="businessInvestments"
+                      id="firmName"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherBusinessInvestments(value === "other");
+                        setShowOtherMetalType(value === "other");
                       }}
-                      className={
-                        errors.businessInvestments ? "border-red-500" : ""
-                      }
+                      className={errors.firmName ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Business Investments" />
+                        <SelectValue placeholder="Select Metal Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="1">Individual</SelectItem>
-                        <SelectItem value="2">Proprietorship</SelectItem>
-                        <SelectItem value="3">Private Ltd.</SelectItem>
-                        <SelectItem value="4">LLP</SelectItem>
-                        <SelectItem value="5">Partnership</SelectItem>
-                        <SelectItem value="6">LLP</SelectItem>
-                        <SelectItem value="7">JV</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="company1">Company 1</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherBusinessInvestments && (
+                {showOtherMetalType && (
                   <Controller
-                    name="otherBusinessInvestments"
+                    name="otherMetalType"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Business Investments"
+                        placeholder="Specify Metal Type"
                         className="mt-2"
                         value={field.value || ""}
                         onChange={field.onChange}
@@ -189,121 +184,119 @@ const BullionForm = () => {
                     )}
                   />
                 )}
-                {errors.businessInvestments && (
+                {errors.firmName && (
                   <span className="text-red-500">
-                    {errors.businessInvestments.message}
+                    {errors.firmName.message}
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="propritorship">Propritorship</Label>
+            <div className="space-y-2">
+              <Label htmlFor="registrationAddress">Article Details</Label>
+              <Controller
+                name="registrationAddress"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="registrationAddress"
+                    placeholder="Enter Address"
+                    {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={
+                      errors.registrationAddress ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {showOtherArticleDetails && (
                 <Controller
-                  name="propritorship"
+                  name="otherRegistrationAddress"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="propritorship"
-                      placeholder="Enter Propritorship"
                       {...field}
+                      placeholder="Specify Article Type"
+                      className="mt-2"
                       value={field.value || ""}
                       onChange={field.onChange}
-                      className={errors.propritorship ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.propritorship && (
-                  <span className="text-red-500">
-                    {errors.propritorship.message}
-                  </span>
-                )}
-              </div>
+              )}
+              {errors.registrationAddress && (
+                <span className="text-red-500">
+                  {errors.registrationAddress.message}
+                </span>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registeredAddress"> Registered address </Label>
+                <Label htmlFor="firmRegistrationNumber">
+                  Weight Per Article
+                </Label>
                 <Controller
-                  name="registeredAddress"
+                  name="firmRegistrationNumber"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      id="registeredAddress"
-                      placeholder="Enter Registered address"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
+                    <Select
+                      id="firmRegistrationNumber"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherFirmsRegistrationNumber(value === "other");
+                      }}
                       className={
-                        errors.registeredAddress ? "border-red-500" : ""
+                        errors.firmRegistrationNumber ? "border-red-500" : ""
                       }
-                    />
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Firm's Registration Number" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="CIN">CIN</SelectItem>
+                        <SelectItem value="PAN">PAN</SelectItem>
+                        <SelectItem value="FIRM NO">FIRM NO</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-                {errors.registeredAddress && (
+                {errors.firmRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.registeredAddress.message}
+                    {errors.firmRegistrationNumber.message}
                   </span>
                 )}
               </div>
+            </div>
+            {showOtherFirmsRegistrationNumber && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firmsRegistrationNumber">
-                    {" "}
-                    Firm's Registration Number
+                  <Label htmlFor="otherFirmsRegistrationNumber">
+                    Weight Per Article
                   </Label>
                   <Controller
-                    name="firmsRegistrationNumber"
+                    name="otherFirmsRegistrationNumber"
                     control={control}
                     render={({ field }) => (
-                      <Select
-                        id="firmsRegistrationNumber"
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setShowOtherFirmsRegistrationNumber(
-                            value === "other"
-                          );
-                        }}
-                        className={
-                          errors.firmsRegistrationNumber ? "border-red-500" : ""
-                        }
-                      >
-                        <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select Firm's Registration Number" />
-                        </FocusableSelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">CIN</SelectItem>
-                          <SelectItem value="2">PAN</SelectItem>
-                          <SelectItem value="3">FIRM NO</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        {...field}
+                        placeholder="Specify Article Type"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
                     )}
                   />
-                  {showOtherFirmsRegistrationNumber && (
-                    <Controller
-                      name="otherFirmsRegistrationNumber"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          placeholder="Specify Firm's Registration Number"
-                          className="mt-2"
-                          value={field.value || ""}
-                          onChange={field.onChange}
-                        />
-                      )}
-                    />
-                  )}
-                  {errors.firmsRegistrationNumber && (
+                  {errors.otherFirmsRegistrationNumber && (
                     <span className="text-red-500">
-                      {errors.firmsRegistrationNumber.message}
+                      {errors.otherFirmsRegistrationNumber.message}
                     </span>
                   )}
                 </div>
               </div>
-            </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
@@ -346,8 +339,8 @@ const BullionForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={field.value || ""}
-                          onChange={field.onChange}
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -368,8 +361,8 @@ const BullionForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={field.value || ""}
-                          onChange={field.onChange}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -383,7 +376,7 @@ const BullionForm = () => {
                   <div className="w-[40%] space-y-2">
                     <Label htmlFor="phone">Phone</Label>
                     <Controller
-                      name="phone"
+                      name="mobile"
                       control={control}
                       render={({ field }) => (
                         <PhoneInput
@@ -393,7 +386,10 @@ const BullionForm = () => {
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            console.log(value);
+                            setPhone(value);
+                          }}
                         />
                       )}
                     />
