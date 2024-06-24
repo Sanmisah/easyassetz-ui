@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Logo from "../image/Logo.png";
 import Avtar from "../image/background.jpg";
 import { Link } from "react-router-dom";
@@ -13,10 +13,23 @@ import {
 import { Button } from "@com/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@com/ui/avatar";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 const Navcomponent = () => {
   const getItem = localStorage.getItem("user");
   const user = JSON.parse(getItem);
   const Navigate = useNavigate();
+
+  const HandleLogout = () => {
+    axios.delete(`/api/logout`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
+    localStorage.removeItem("user");
+    Navigate("/");
+  };
+
   return (
     <div className="z-50 flex sticky backdrop-blur-md top-0 justify-between item-center gap-10 max-h-[300px] mt-2  py-2 max-md:hidden border-b border-gray-200 shadow-md">
       <div>
@@ -62,12 +75,7 @@ const Navcomponent = () => {
               {user?.data?.user?.email}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                localStorage.removeItem("user");
-                Navigate("/");
-              }}
-            >
+            <DropdownMenuItem onClick={HandleLogout}>
               <LogOutIcon className="mr-2 h-4 w-4" />
               Logout
             </DropdownMenuItem>

@@ -108,8 +108,11 @@ const Auth = () => {
       navigate("/personal");
     },
     onError: (error) => {
-      console.error("Login failed: " + error.response.data.data);
-      toast.error("Login failed: " + error.response.data.data);
+      console.error("Login failed: " + error.response.data.message);
+      if (error.response.data.message === "You are already logged-in.") {
+        navigate("/personal");
+      }
+      toast.error("Login failed: " + error.response.data.message);
     },
   });
 
