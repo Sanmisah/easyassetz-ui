@@ -51,8 +51,7 @@ const schema = z.object({
     .transform((value) => (value === null ? null : Number(value))),
   maturityDate: z.date().optional(),
   premium: z
-    .number()
-    .multipleOf(0.01)
+    .string()
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .refine((value) => value === null || !isNaN(Number(value)), {
@@ -60,8 +59,7 @@ const schema = z.object({
     })
     .transform((value) => (value === null ? null : Number(value))),
   sumInsured: z
-    .number()
-    .multipleOf(0.01)
+    .string()
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .refine((value) => value === null || !isNaN(Number(value)), {
@@ -83,7 +81,7 @@ const schema = z.object({
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().nonempty({ message: "Broker Name is required" }),
-  previousPolicy: z
+  previousPolicyNumber: z
     .string()
     .transform((value) => (value === "" ? null : value))
     .nullable()
@@ -521,12 +519,12 @@ const EditMotorForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="previous-policy">Previous Policy Number</Label>
                 <Controller
-                  name="previousPolicy"
+                  name="previousPolicyNumber"
                   control={control}
                   defaultValue={Benifyciary?.previousPolicyNumber || ""}
                   render={({ field }) => (
                     <Input
-                      id="previous-policy"
+                      id="previousPolicyNumber"
                       placeholder="Enter previous policy number"
                       {...field}
                       defaultValue={Benifyciary?.previousPolicyNumber || ""}

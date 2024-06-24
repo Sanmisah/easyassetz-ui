@@ -9,6 +9,9 @@ const InsuranceMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
   const [motorInsuranceData, setMotorInsuranceData] = useState([]);
   const [otherInsuranceData, setOtherInsuranceData] = useState([]);
+  const [GeneralInsurance, setGeneralInsuranceData] = useState([]);
+  const [HealthInsurance, setHealthInsuranceData] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +20,7 @@ const InsuranceMainForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/lifeinsurances`, {
+        const response = await axios.get(`/api/life-insurances`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
@@ -57,6 +60,38 @@ const InsuranceMainForm = () => {
         console.error("Error fetching life insurance data", error);
       }
     };
+    const fetchDataGeneralinsurance = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/general-insurances`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+      } catch (error) {
+        console.error("Error fetching life insurance data", error);
+      }
+    };
+    const fetchDataHealthinsurance = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/health-insurances`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setHealthInsuranceData(response?.data?.data?.HealthInsurances);
+      } catch (error) {
+        console.error("Error fetching life insurance data", error);
+      }
+    };
+    fetchDataGeneralinsurance();
+    fetchDataHealthinsurance();
     fetchDataOtherinsurance();
     fetchDataLifeinsurance();
     fetchDataMotorinsurance();
@@ -78,11 +113,14 @@ const InsuranceMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Motor Insurance</h1>
-            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-              <p className="text-green-500 self-center dark:text-green-800 ">
-                {motorInsuranceData?.length} Insurance Policies
-              </p>
-            </div>
+            {motorInsuranceData && motorInsuranceData?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {motorInsuranceData && motorInsuranceData?.length} Insurance
+                  Policies
+                </p>
+              </div>
+            )}
           </div>
         </div>
         <div
@@ -90,7 +128,17 @@ const InsuranceMainForm = () => {
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
-          <h1 className="text-xl font-bold">Health Insurance</h1>
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold">Health Insurance</h1>
+            {HealthInsurance.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {HealthInsurance.length && HealthInsurance?.length} Insurance
+                  Policies
+                </p>
+              </div>
+            )}
+          </div>
         </div>
         <div
           onMouseDown={() => navigate("/lifeinsurance")}
@@ -99,11 +147,13 @@ const InsuranceMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Life Insurance</h1>
-            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-              <p className="text-green-500 self-center dark:text-green-800 ">
-                {lifeInsuranceData?.length} Insurance Policies
-              </p>
-            </div>
+            {lifeInsuranceData && lifeInsuranceData?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {lifeInsuranceData?.length} Insurance Policies
+                </p>
+              </div>
+            )}
           </div>
         </div>
         <div
@@ -111,7 +161,17 @@ const InsuranceMainForm = () => {
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
-          <h1 className="text-xl font-bold">General Insurance</h1>
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold">General Insurance</h1>
+            {GeneralInsurance && GeneralInsurance?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {GeneralInsurance && GeneralInsurance?.length} Insurance
+                  Policies
+                </p>
+              </div>
+            )}
+          </div>
         </div>
         <div
           onClick={() => navigate("/otherinsurance")}
@@ -120,11 +180,14 @@ const InsuranceMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Other Insurance</h1>
-            <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
-              <p className="text-green-500 self-center dark:text-green-800 ">
-                {otherInsuranceData?.length} Insurance Policies
-              </p>
-            </div>
+            {otherInsuranceData && otherInsuranceData?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {otherInsuranceData && otherInsuranceData?.length} Insurance
+                  Policies
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

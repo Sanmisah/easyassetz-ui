@@ -43,8 +43,7 @@ const schema = z.object({
 
   maturityDate: z.date().optional(),
   premium: z
-    .number()
-    .multipleOf(0.01)
+    .string()
     .min(3, { message: "Premium is required" })
     .transform((value) => (value === "" ? null : value))
     .nullable()
@@ -53,8 +52,7 @@ const schema = z.object({
     })
     .transform((value) => (value === null ? null : Number(value))),
   sumInsured: z
-    .number()
-    .multipleOf(0.01)
+    .string()
     .min(3, { message: "Sum Insured is required" })
     .transform((value) => (value === "" ? null : value))
     .nullable()
@@ -420,7 +418,7 @@ const InsuranceForm = () => {
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="previous-policy"
+                      id="previousPolicyNumber"
                       placeholder="Enter previous policy number"
                       {...field}
                     />
