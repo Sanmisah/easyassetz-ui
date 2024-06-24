@@ -189,14 +189,17 @@ const Personaldetail = () => {
         },
       }
     );
+    console.log(response.data.data.profile);
     setDefaultData(response.data.data.profile);
     if (response.data.data.profile?.nationality === "indian")
       setIsForeign(false);
     if (response.data.data.profile?.nationality !== "indian")
       setIsForeign(true);
     if (response.data.data.profile?.dob) {
-      setdefaultDate(new Date(response.data.data.profile.dob));
+      setdefaultDate(response.data.data.profile.dob);
     }
+    console.log(response.data.data.profile?.dob);
+    console.log(new Date());
     return response.data.data.profile || {};
   };
 
