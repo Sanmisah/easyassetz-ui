@@ -19,6 +19,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Skletonpersonal from "./Skletonpersonal";
 import { toast } from "sonner";
 
+import { format, parse } from "date-fns";
+
 const dropdownData = {
   genders: ["male", "female", "other"],
   nationalities: ["indian", "foreign"],
@@ -413,7 +415,7 @@ const Personaldetail = () => {
                 control={control}
                 render={({ field }) => (
                   <Datepicker
-                    defaultValue={defaultData?.dob}
+                    defaultValue={defaultDate}
                     value={field.value}
                     onChange={field.onChange}
                   />
