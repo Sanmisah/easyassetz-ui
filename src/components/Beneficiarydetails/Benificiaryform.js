@@ -167,6 +167,12 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
   const onSubmit = async (data) => {
     console.log(data);
+    const date = new Date(data.dob);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.dob = newdate;
     data.type = "beneficiary";
     if (relationship === "other") {
       data.relationship = data.specificRelationship;
