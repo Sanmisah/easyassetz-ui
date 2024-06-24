@@ -145,10 +145,10 @@ const PropritershipForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Bullion Details
+                Partnership Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Bullion.
+                Fill out the form to add a new Partnership.
               </CardDescription>
             </div>
           </div>
@@ -160,7 +160,7 @@ const PropritershipForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmName">Metal Type</Label>
+                <Label htmlFor="firmName">Firm Name</Label>
                 <Controller
                   name="firmName"
                   control={control}
@@ -178,10 +178,10 @@ const PropritershipForm = () => {
                         <SelectValue placeholder="Select Metal Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -210,7 +210,7 @@ const PropritershipForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Article Details</Label>
+              <Label htmlFor="registrationAddress">Registration Address </Label>
               <Controller
                 name="registrationAddress"
                 control={control}
@@ -251,7 +251,7 @@ const PropritershipForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Weight Per Article</Label>
+                <Label htmlFor="registrationNumber">Registration Number</Label>
                 <Controller
                   name="registrationNumber"
                   control={control}
@@ -274,7 +274,7 @@ const PropritershipForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="showOtherRegistrationNumber">
-                    Weight Per Article
+                  Registration Number
                   </Label>
                   <Controller
                     name="otherFirmsRegistrationNumber"
