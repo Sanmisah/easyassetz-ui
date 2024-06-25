@@ -39,9 +39,6 @@ import IntellectualPropertyMainForm from "@/components/BusinessAssets/Intellectu
 import IntellectualPropertyOtherForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyOtherForm";
 
 import Dashboard from "@/components/Dashboard/Dashboard";
-import partnershipfirmMainForm from "@/components/BusinessAssets/PartnershipFirm/partnerShipMainForm";
-import partnershipfirmAddForm from "@/components/BusinessAssets/PartnershipFirm/partnerShipAddForm";
-import partnershipfirmEditForm from "@/components/BusinessAssets/PartnershipFirm/partnerShipEditForm";
 
 import PartnershipFirmMainForm from "@/components/BusinessAssets/PartnershipFirm/partnershipMainForm";
 import PartnershipFirmOtherForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipOtherForm";
@@ -184,12 +181,12 @@ const Layout = () => {
       {location.pathname === "/propritorship" && <PropritershipMainForm />}
       {location.pathname === "/propritorship/add" && <PropritershipForm />}
       {location.pathname === "/propritorship/edit" && <PropritershipEditForm />}
-      {location.pathname === "/partnershipfirm" && <partnershipfirmMainForm />}
+      {location.pathname === "/partnershipfirm" && <PartnershipFirmMainForm />}
       {location.pathname === "/partnershipfirm/add" && (
-        <partnershipfirmAddForm />
+        <PartnershipFirmOtherForm />
       )}
       {location.pathname === "/partnershipfirm/edit" && (
-        <partnershipfirmEditForm />
+        <PartnershipFirmEditForm />
       )}
       {location.pathname === "/intellectualproperty" && (
         <IntellectualPropertyMainForm />
