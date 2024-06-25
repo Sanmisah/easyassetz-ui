@@ -24,6 +24,7 @@ import * as z from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import cross from "@/components/image/close.png";
 import { useNavigate } from "react-router-dom";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";

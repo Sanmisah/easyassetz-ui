@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Firm Name is required" }),
@@ -74,7 +75,7 @@ const BullionEdit = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/propriterships/${lifeInsuranceEditId}`,
+      `/api/business-assets/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -278,7 +279,10 @@ const BullionEdit = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="registrationAddress">   Registration Address </Label>
+                <Label htmlFor="registrationAddress">
+                  {" "}
+                  Registration Address{" "}
+                </Label>
                 <Controller
                   name="registrationAddress"
                   control={control}

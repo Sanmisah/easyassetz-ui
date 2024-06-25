@@ -18,6 +18,8 @@ import {
 } from "@/Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
+import cross from "@/components/image/close.png";
+
 
 const PropritershipMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);

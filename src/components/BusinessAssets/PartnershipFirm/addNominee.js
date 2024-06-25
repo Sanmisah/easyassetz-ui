@@ -13,6 +13,8 @@ import { Button } from "@com/ui/button";
 import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
+import cross from "@/components/image/close.png";
+
 
 const AddNominee = ({
   setSelectedNommie,
