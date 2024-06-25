@@ -201,7 +201,7 @@ const EditFormGeneral = () => {
       );
 
       toast.success("Other Insurance added successfully!");
-      navigate("/lifeinsurance");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

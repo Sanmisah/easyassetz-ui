@@ -269,16 +269,15 @@ const Personaldetail = () => {
     },
   });
 
-  useEffect(() => {
-    if (defaultData?.nationality === "foreign") {
-      setValue("nationality", defaultData?.nationality);
-      setIsForeign(true);
-    }
-    if (defaultData?.nationality === "indian") {
-      setValue("nationality", "indian");
-      setIsForeign(false);
-    }
-  }, [defaultData, isForeign]);
+  // useEffect(() => {
+  //   if (defaultData?.nationality !== "indian") {
+  //     setValue("nationality", defaultData?.nationality);
+  //     setIsForeign(true);
+  //   } else {
+  //     setValue("nationality", defaultData?.nationality);
+  //     setIsForeign(false);
+  //   }
+  // }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
     console.log("file:", file);

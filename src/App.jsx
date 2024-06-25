@@ -41,6 +41,7 @@ function App() {
         <Route path="/partnershipfirm" element={<Personalpage />} />
         <Route path="/partnershipfirm/add" element={<Personalpage />} />
         <Route path="/partnershipfirm/edit" element={<Personalpage />} />
+        <Route path="/dashboard" element={<Personalpage />} />
       </Routes>
     </div>
   );

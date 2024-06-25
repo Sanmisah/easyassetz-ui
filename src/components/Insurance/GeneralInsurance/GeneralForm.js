@@ -123,7 +123,7 @@ const GeneralForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
       toast.success("Other Insurance added successfully!");
-      navigate("/generalinsurance");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
