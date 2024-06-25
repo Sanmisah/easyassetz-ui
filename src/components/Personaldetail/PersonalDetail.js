@@ -429,7 +429,7 @@ const Personaldetail = () => {
                 <span className="text-red-500">{errors.dob.message}</span>
               )}
             </div>
-            <div className="space-y-2 max-md:col-span-2">
+            <div className="space-y-2 max-md:col-span-2 col-span-full">
               <Label htmlFor="nationality">Nationality</Label>
               <div className="flex flex-col gap-4">
                 <Controller

@@ -107,8 +107,6 @@ const OtherForm = () => {
       additionalDetails: "",
       previousPolicyNumber: "",
       brokerName: "",
-
-
     },
   });
 
@@ -148,6 +146,7 @@ const OtherForm = () => {
       setnomineeerror(true);
       return;
     }
+
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }

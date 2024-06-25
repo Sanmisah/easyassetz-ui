@@ -50,14 +50,8 @@ const schema = z.object({
     })
     .transform((value) => (value === null ? null : Number(value))),
   maturityDate: z.date().optional(),
-  premium: z
-    .number()
-    .multipleOf(0.01)
-    .min(3, { message: "Premium is required" }),
-  sumInsured: z
-    .number()
-    .multipleOf(0.01)
-    .min(3, { message: "Sum Insured is required" }),
+  premium: z.string().min(3, { message: "Premium is required" }),
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
@@ -226,7 +220,7 @@ const EditFormHealth = () => {
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
     console.log(data);
-    const date = new Date(data.dob);
+    const date = new Date(data.maturityDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
