@@ -37,11 +37,13 @@ function App() {
         <Route path="/intellectualproperty" element={<Personalpage />} />
         <Route path="/intellectualproperty/add" element={<Personalpage />} />
         <Route path="/intellectualproperty/edit" element={<Personalpage />} />
-
         <Route path="/partnershipfirm" element={<Personalpage />} />
         <Route path="/partnershipfirm/add" element={<Personalpage />} />
         <Route path="/partnershipfirm/edit" element={<Personalpage />} />
         <Route path="/dashboard" element={<Personalpage />} />
+        <Route path="/company" element={<Personalpage />} />
+        <Route path="/company/add" element={<Personalpage />} />
+        <Route path="/company/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

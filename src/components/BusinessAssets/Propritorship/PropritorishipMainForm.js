@@ -76,7 +76,7 @@ const PropritershipMainForm = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Propritoriship Assets</h1>
           <Button onMouseDown={() => navigate("/propritorship/add")}>
-            Add ProPritoriship Assets
+            Add Propritoriship Assets
           </Button>
           {alertDialog && (
             <DeleteAlert

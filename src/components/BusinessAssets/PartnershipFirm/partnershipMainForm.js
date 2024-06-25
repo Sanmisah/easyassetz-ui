@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const PartnershipMainForm = () => {
+const PartnershipFirmMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -31,13 +31,13 @@ const PartnershipMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions`, {
+    const response = await axios.get(`/api/intellectual-properties`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Bullion;
+    return response.data.data.Propritorship;
   };
 
   const {
@@ -59,7 +59,7 @@ const PartnershipMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/bullions/${lifeInsuranceDeleteId}`,
+      `/api/intellectual-properties/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -67,7 +67,7 @@ const PartnershipMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("   Intellectual Property deleted successfully!");
   };
 
   return (
@@ -76,7 +76,7 @@ const PartnershipMainForm = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Partnership Firm Assets</h1>
           <Button onMouseDown={() => navigate("/partnershipfirm/add")}>
-            Add Partnership Firm Assets
+            Add  Partnership Firm Assets
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -136,4 +136,4 @@ const PartnershipMainForm = () => {
   );
 };
 
-export default PartnershipMainForm;
+export default PartnershipFirmMainForm;

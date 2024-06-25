@@ -37,10 +37,18 @@ import PropritershipForm from "@/components/BusinessAssets/Propritorship/Proprit
 import PropritershipEditForm from "@/components/BusinessAssets/Propritorship/PropritorshipEdit";
 import IntellectualPropertyMainForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyMainForm";
 import IntellectualPropertyOtherForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyOtherForm";
+
 import Dashboard from "@/components/Dashboard/Dashboard";
 import partnershipfirmMainForm from "@/components/BusinessAssets/PartnershipFirm/partnerShipMainForm";
 import partnershipfirmAddForm from "@/components/BusinessAssets/PartnershipFirm/partnerShipAddForm";
 import partnershipfirmEditForm from "@/components/BusinessAssets/PartnershipFirm/partnerShipEditForm";
+
+import PartnershipFirmMainForm from "@/components/BusinessAssets/PartnershipFirm/partnershipMainForm";
+import PartnershipFirmOtherForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipOtherForm";
+import PartnershipFirmEditForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipEdit";
+import CompanyMainForm from "@/components/BusinessAssets/Company/CompanyMainForm";
+import CompanyOtherForm from "@/components/BusinessAssets/Company/CompanyOtherForm";
+import CompanyEditForm from "@/components/BusinessAssets/Company/CompanyEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -190,6 +198,16 @@ const Layout = () => {
         <IntellectualPropertyOtherForm />
       )}
       {location.pathname === "/dashboard" && <Dashboard />}
+
+      {location.pathname === "/intellectualproperty" && (
+        <IntellectualPropertyMainForm />
+      )}
+      {location.pathname === "/intellectualproperty/add" && (
+        <IntellectualPropertyOtherForm />
+      )}
+      {location.pathname === "/company" && <CompanyMainForm />}
+      {location.pathname === "/company/add" && <CompanyOtherForm />}
+      {location.pathname === "/company/edit" && <CompanyEditForm />}
     </div>
   );
 };

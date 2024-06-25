@@ -31,17 +31,15 @@ import { useDispatch, useSelector } from "react-redux";
 const schema = z.object({
   typeOfIntellectualProperty: z
     .string()
-    .nonempty({ message: "Metal Name is required" }),
+    .nonempty({ message: "Intellectual Property Type is required" }),
   registrationNumber: z
     .string()
-    .nonempty({ message: "Article Details is required" }),
-  expiryDate: z
-    .string()
-    .min(2, { message: "Firm Registration Number is required" }),
+    .nonempty({ message: "Registration Number is required" }),
+  expiryDate: z.date().optional(),
 
   whetherAssigned: z
     .string()
-    .min(3, { message: "Additional Information is required" })
+    .min(3, { message: "Whether Assigned is required" })
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .transform((value) => (value === null ? null : Number(value))),

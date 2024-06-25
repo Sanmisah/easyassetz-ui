@@ -29,13 +29,13 @@ import { PhoneInput } from "react-international-phone";
 import Addnominee from "./addNominee";
 
 const schema = z.object({
-  firmName: z.string().nonempty({ message: "Metal Name is required" }),
+  firmName: z.string().nonempty({ message: "Firm Name is required" }),
   registrationAddress: z
     .string()
-    .nonempty({ message: "Article Details is required" }),
+    .nonempty({ message: "Registration Address is required" }),
   registrationNumber: z
     .string()
-    .min(2, { message: "Weight Per Article is required" }),
+    .min(2, { message: "  Registration Number is required" }),
   holdingPercentage: z
     .string()
     .transform((value) => (value === "" ? null : value))
@@ -176,7 +176,7 @@ const PropritershipForm = () => {
                       className={errors.firmName ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
+                        <SelectValue placeholder="Select   Firm Name" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="1">1</SelectItem>
@@ -211,7 +211,7 @@ const PropritershipForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Registration Address </Label>
+              <Label htmlFor="registrationAddress">Regitration Address </Label>
               <Controller
                 name="registrationAddress"
                 control={control}
@@ -235,7 +235,7 @@ const PropritershipForm = () => {
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder="Specify Article Type"
+                      placeholder="Specify Registration Address"
                       className="mt-2"
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -252,52 +252,57 @@ const PropritershipForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Label htmlFor="registrationNumber">
+                   Registration Number
+                </Label>
                 <Controller
                   name="registrationNumber"
                   control={control}
                   render={({ field }) => (
-                    <Select id="registrationNumber">
-                      <option value="CIN">CIN</option>
-                      <option value="PAN">PAN</option>
-                      <option value="FIRM NO">FIRM NO</option>
+                    <Select
+                      id="registrationNumber"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherRegistrationNumber(value);
+                      }}
+                      className={
+                        errors.registrationNumber ? "border-red-500" : ""
+                      }
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select  Registration Number" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="CIN">CIN</SelectItem>
+                        <SelectItem value="PAN">PAN</SelectItem>
+                        <SelectItem value="FIRM NO">FIRM NO</SelectItem>
+                      </SelectContent>
                     </Select>
                   )}
                 />
-                {errors.registrationNumber && (
-                  <span className="text-red-500">
-                    {errors.registrationNumber.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            {showOtherRegistrationNumber && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="showOtherRegistrationNumber">
-                    Registration Number
-                  </Label>
+                {showOtherRegistrationNumber && (
                   <Controller
-                    name="otherFirmsRegistrationNumber"
+                    name="otherRegistrationNumber"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Article Type"
+                        placeholder="Specify Registration Number"
                         className="mt-2"
                         value={field.value || ""}
                         onChange={field.onChange}
                       />
                     )}
                   />
-                  {errors.otherFirmsRegistrationNumber && (
-                    <span className="text-red-500">
-                      {errors.otherFirmsRegistrationNumber.message}
-                    </span>
-                  )}
-                </div>
+                )}
+                {errors.firmsRegistrationNumber && (
+                  <span className="text-red-500">
+                    {errors.firmsRegistrationNumber.message}
+                  </span>
+                )}
               </div>
-            )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">

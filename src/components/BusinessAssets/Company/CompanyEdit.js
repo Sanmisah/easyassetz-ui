@@ -29,18 +29,26 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  firmName: z.string().nonempty({ message: "Firm Name is required" }),
+  firmName: z.string().nonempty({ message: "Metal Name is required" }),
   registrationAddress: z
     .string()
-    .nonempty({ message: "Registration Address is required" }),
+    .nonempty({ message: "Article Detail is required" }),
   firmRegistrationNumber: z.string().optional(),
+  holdingPercentage: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Sum Insured must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
 
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
 });
 
-const BullionEdit = () => {
+const PartnershipFirmEdit = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -57,8 +65,12 @@ const BullionEdit = () => {
       console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
     }
   }, [lifeInsuranceEditId]);
-  const [showOtherBullion, setShowOtherBullion] = useState(false);
+  const [showOtherPartnershipFirm, setShowOtherPartnershipFirm] =
+    useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [nomineeerror, setNomineeError] = useState(false);
 
   const {
     handleSubmit,
@@ -74,15 +86,15 @@ const BullionEdit = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/propriterships/${lifeInsuranceEditId}`,
+      `/api/partnership-firms/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    let othertype = response.data.data.Propritership?.firmName;
-    let otherarticle = response.data.data.Propritership?.registrationAddress;
+    let othertype = response.data.data.PartnershipFirm?.firmName;
+    let otherarticle = response.data.data.PartnershipFirm?.registrationAddress;
     if (
       othertype === "gold" ||
       othertype === "silver" ||
@@ -108,8 +120,8 @@ const BullionEdit = () => {
       setShowOtherArticleDetails(true);
       setValue("otherArticleDetails", otherarticle);
     }
-    console.log(typeof response.data.data.Propritership?.premium);
-    return response.data.data.Propritership;
+    console.log(typeof response.data.data.PartnershipFirm?.premium);
+    return response.data.data.PartnershipFirm;
   };
 
   const {
@@ -117,7 +129,7 @@ const BullionEdit = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
+    queryKey: ["PartnershipFrim", lifeInsuranceEditId],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -143,7 +155,7 @@ const BullionEdit = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherBullion(data.Propritership === "other");
+      setShowOtherPartnershipFirm(data.PartnershipFirm === "other");
 
       console.log(data);
     },
@@ -164,12 +176,12 @@ const BullionEdit = () => {
           },
         }
       );
-      return response.data.data.Propritership;
+      return response.data.data.PartnershipFirm;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Propritership added successfully!");
-      navigate("/propritership");
+      queryClient.invalidateQueries("PartnershipFrim", lifeInsuranceEditId);
+      toast.success("PartnershipFirm added successfully!");
+      navigate("/bullion");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -188,8 +200,8 @@ const BullionEdit = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    data.type = "propritorship";
     data.name = name;
+    data.type = "partnershipFirm";
     data.email = email;
     data.phone = phone;
     console.log("bullion:", data.bullion);
@@ -212,10 +224,10 @@ const BullionEdit = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Propritership Details
+                PartnershipFirm Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the propritorship details.
+                Edit the form to update the bullion details.
               </CardDescription>
             </div>
           </div>
@@ -227,7 +239,7 @@ const BullionEdit = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmName"> Firm Name</Label>
+                <Label htmlFor="firmName">Metal Type</Label>
                 <Controller
                   name="firmName"
                   control={control}
@@ -264,7 +276,7 @@ const BullionEdit = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Firm Name"
+                        placeholder="Specify Metal Type"
                         className="mt-2"
                         defaultValue={Benifyciary?.otherMetalType || ""}
                       />
@@ -278,7 +290,7 @@ const BullionEdit = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="registrationAddress">   Registration Address </Label>
+                <Label htmlFor="registrationAddress">Ariticle Details </Label>
                 <Controller
                   name="registrationAddress"
                   control={control}
@@ -298,7 +310,7 @@ const BullionEdit = () => {
                       defaultValue={Benifyciary?.registrationAddress || ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select  Registration Address" />
+                        <SelectValue placeholder="Select Article Type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="plates">Plates</SelectItem>
@@ -364,6 +376,81 @@ const BullionEdit = () => {
                   </span>
                 )}
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="holdingPercentage">Holding Percentage</Label>
+                <Controller
+                  name="holdingPercentage"
+                  control={control}
+                  defaultValue={Benifyciary?.holdingPercentage || ""}
+                  render={({ field }) => (
+                    <Input
+                      id="holdingPercentage"
+                      type="number"
+                      {...field}
+                      placeholder="Enter Number Of Article"
+                      value={parseInt(field.value)}
+                      className={
+                        errors.holdingPercentage ? "border-red-500" : ""
+                      }
+                      defaultValue={Benifyciary?.holdingPercentage || ""}
+                    />
+                  )}
+                />
+                {errors.holdingPercentage && (
+                  <span className="text-red-500">
+                    {errors.holdingPercentage.message}
+                  </span>
+                )}
+              </div>
+
+              {displaynominie && displaynominie.length > 0 && (
+                <div className="space-y-2">
+                  <div className="grid gap-4 py-4">
+                    {console.log(displaynominie)}
+                    <Label className="text-lg font-bold">
+                      Selected Nominees
+                    </Label>
+                    {displaynominie &&
+                      displaynominie.map((nominee) => (
+                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                          <Label htmlFor={`nominee-${nominee?.id}`}>
+                            {nominee?.fullLegalName || nominee?.charityName}
+                          </Label>
+                          <img
+                            className="w-4 h-4 cursor-pointer"
+                            onClick={() => {
+                              setDisplaynominie(
+                                displaynominie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                              setSelectedNommie(
+                                selectedNommie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                            }}
+                            src={cross}
+                            alt=""
+                          />
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+              <div className="space-y-2">
+                <Label htmlFor="registered-mobile">Add nominee</Label>
+                {console.log(Benifyciary?.nominees)}
+                <Addnominee
+                  setSelectedNommie={setSelectedNommie}
+                  AllNominees={Benifyciary?.nominees}
+                  selectedNommie={selectedNommie}
+                  displaynominie={displaynominie}
+                  setDisplaynominie={setDisplaynominie}
+                />{" "}
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
                   {" "}
@@ -470,4 +557,4 @@ const BullionEdit = () => {
   );
 };
 
-export default BullionEdit;
+export default PartnershipFirmEdit;

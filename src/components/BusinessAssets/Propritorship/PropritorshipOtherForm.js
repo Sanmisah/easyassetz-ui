@@ -28,10 +28,10 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  firmName: z.string().nonempty({ message: "Metal Name is required" }),
+  firmName: z.string().nonempty({ message: " Firm Name is required" }),
   registeredAddress: z
     .string()
-    .nonempty({ message: "Article Details is required" }),
+    .nonempty({ message: "   Registration Address is required" }),
   firmsRegistrationNumber: z
     .string()
     .min(2, { message: "Firm Registration Number is required" }),

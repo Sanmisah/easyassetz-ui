@@ -139,7 +139,7 @@ const BusinessAssetsMainForm = () => {
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/generalinsurance")}
+          onMouseDown={() => navigate("/company")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
