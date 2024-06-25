@@ -130,6 +130,7 @@ const PropritershipForm = () => {
       data.nominees = selectedNommie;
     }
     data.type = "partnershipFirm";
+    console.log(data.name, name);
     data.name = name;
     data.email = email;
     data.mobile = phone;
