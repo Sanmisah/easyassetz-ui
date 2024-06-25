@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const   IntellectualPropertyMainForm = () => {
+const  IntellectualPropertyMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -31,13 +31,13 @@ const   IntellectualPropertyMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions`, {
+    const response = await axios.get(`/api/propriterships`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Bullion;
+    return response.data.data.Propritership;
   };
 
   const {
@@ -59,7 +59,7 @@ const   IntellectualPropertyMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/bullions/${lifeInsuranceDeleteId}`,
+      `/api/propriterships/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -67,16 +67,16 @@ const   IntellectualPropertyMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("   Intellectual Property deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Intellectual Property</h1>
-          <Button onMouseDown={() => navigate("/bullion/add")}>
-          Intellectual Property
+          <h1 className="text-2xl font-bold">Intellectual Property Assets</h1>
+          <Button onMouseDown={() => navigate("/intellectualproperty/add")}>
+            Add Intellectual Property Assets
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -95,8 +95,8 @@ const   IntellectualPropertyMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.metalType}</h1>
-                  <p className="text-sm">{data.articleDetails}</p>
+                  <h1 className="font-bold">{data.firmName}</h1>
+                  <p className="text-sm ">{data.registrationAddress}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -106,13 +106,13 @@ const   IntellectualPropertyMainForm = () => {
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">Intellectual Property
+                    <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/bullion/edit");
+                          navigate("/intellectualproperty/edit");
                         }}
                       >
                         Edit
@@ -136,4 +136,4 @@ const   IntellectualPropertyMainForm = () => {
   );
 };
 
-export default    IntellectualPropertyMainForm;
+export default IntellectualPropertyMainForm;

@@ -36,6 +36,7 @@ import PropritershipMainForm from "@/components/BusinessAssets/Propritorship/Pro
 import PropritershipForm from "@/components/BusinessAssets/Propritorship/PropritorshipOtherForm";
 import PropritershipEditForm from "@/components/BusinessAssets/Propritorship/PropritorshipEdit";
 import IntellectualPropertyMainForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyMainForm";
+import IntellectualPropertyOtherForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyOtherForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -172,6 +173,8 @@ const Layout = () => {
       {location.pathname === "/propritorship/add" && <PropritershipForm />}
       {location.pathname === "/propritorship/edit" && <PropritershipEditForm />}
       {location.pathname === "/intellectualproperty" && <IntellectualPropertyMainForm />}
+      {location.pathname === "/intellectualproperty/add" && <IntellectualPropertyOtherForm />}
+
 
     </div>
   );

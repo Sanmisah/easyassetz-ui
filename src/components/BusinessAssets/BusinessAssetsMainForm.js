@@ -7,7 +7,7 @@ import axios from "axios";
 const BusinessAssetsMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
   const [Propritorship, setPropritorship] = useState([]);
-  const [otherInsuranceData, setOtherInsuranceData] = useState([]);
+  const [IntellectualProperty, setIntellectualProperty] = useState([]);
   const [GeneralInsurance, setGeneralInsuranceData] = useState([]);
   const [HealthInsurance, setHealthInsuranceData] = useState([]);
 
@@ -26,7 +26,7 @@ const BusinessAssetsMainForm = () => {
         });
         setLifeInsuranceData(response?.data?.data?.LifeInsurances);
       } catch (error) {
-        console.error("Error fetching the Business Assets data", error);
+        console.error("Error fetching the Business Asset data", error);
       }
     };
     const fetchDataMotorinsurance = async () => {
@@ -41,7 +41,7 @@ const BusinessAssetsMainForm = () => {
         });
         setPropritorship(response?.data?.data?.OtherInsurance);
       } catch (error) {
-        console.error("Error fetching the Business Assets data", error);
+        console.error("Error fetching the Business Asset data", error);
       }
     };
     const fetchDataOtherinsurance = async () => {
@@ -54,9 +54,9 @@ const BusinessAssetsMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setIntellectualProperty(response?.data?.data?.MotorInsurances);
       } catch (error) {
-        console.error("Error fetching the Business Assets data", error);
+        console.error("Error fetching the Business Asset data", error);
       }
     };
     const fetchDataGeneralinsurance = async () => {
@@ -69,9 +69,9 @@ const BusinessAssetsMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setIntellectualProperty(response?.data?.data?.MotorInsurances);
       } catch (error) {
-        console.error("Error fetching the Business Assets data", error);
+        console.error("Error fetching the Business Asset data", error);
       }
     };
     const fetchDataHealthinsurance = async () => {
@@ -86,7 +86,7 @@ const BusinessAssetsMainForm = () => {
         });
         setHealthInsuranceData(response?.data?.data?.HealthInsurances);
       } catch (error) {
-        console.error("Error fetching the Business Assets data", error);
+        console.error("Error fetching the Business Asset data", error);
       }
     };
     fetchDataGeneralinsurance();
@@ -99,9 +99,9 @@ const BusinessAssetsMainForm = () => {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold">Business Assets</h1>
+        <h1 className="text-2xl font-bold">Business Asset</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Fill out the form to add a new Business Assets.
+          Fill out the form to add a new Business Asset.
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">
@@ -170,16 +170,16 @@ const BusinessAssetsMainForm = () => {
           </div>
         </div>
         <div
-          onClick={() => navigate("/intellectualProperty")}
+          onClick={() => navigate("/intellectualproperty")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold"> Intellectual Property (IP)</h1>
-            {otherInsuranceData && otherInsuranceData?.length > 0 && (
+            {IntellectualProperty && IntellectualProperty?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherInsuranceData && otherInsuranceData?.length}{" "}
+                  {IntellectualProperty && IntellectualProperty?.length}{" "}
                   Intellectual Property
                 </p>
               </div>

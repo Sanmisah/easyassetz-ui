@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const  IntellectualPropertyMainForm = () => {
+const  PropritershipMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -75,7 +75,7 @@ const  IntellectualPropertyMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Propritoriship Assets</h1>
-          <Button onMouseDown={() => navigate("/bullion/add")}>
+          <Button onMouseDown={() => navigate("/propritorship/add")}>
             Add ProPritoriship Assets
           </Button>
           {alertDialog && (
@@ -136,4 +136,4 @@ const  IntellectualPropertyMainForm = () => {
   );
 };
 
-export default  IntellectualPropertyMainForm;
+export default PropritershipMainForm;

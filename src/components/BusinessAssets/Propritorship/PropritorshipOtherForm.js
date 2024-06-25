@@ -165,7 +165,7 @@ const PropritershipForm = () => {
                       className={errors.firmName ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
+                        <SelectValue placeholder="Select Firm Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="company1">Company 1</SelectItem>
@@ -197,7 +197,7 @@ const PropritershipForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Registratin Address</Label>
+              <Label htmlFor="registrationAddress">Registration Address</Label>
               <Controller
                 name="registrationAddress"
                 control={control}
