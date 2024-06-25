@@ -112,7 +112,7 @@ const PropritershipMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/bullion/edit");
+                          navigate("/propritorship/edit");
                         }}
                       >
                         Edit
