@@ -156,6 +156,12 @@ const InsuranceForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    const date = new Date(data.maturityDate);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.maturityDate = newdate;
     console.log("Nomiee:", selectedNommie.length > 0);
     if (selectedNommie.length < 1) {
       console.log("Nomiee:", selectedNommie.length > 0);
