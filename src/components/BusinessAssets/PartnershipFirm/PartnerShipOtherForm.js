@@ -26,6 +26,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import Addnominee from "./addNominee";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Metal Name is required" }),
@@ -93,7 +94,7 @@ const PropritershipForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/bullions`, data, {
+      const response = await axios.post(`/api/partnership`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
@@ -145,10 +146,10 @@ const PropritershipForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Partnership Details
+                Partnership Firm Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Partnership.
+                Fill out the form to add a new Partnership Firm.
               </CardDescription>
             </div>
           </div>
@@ -274,7 +275,7 @@ const PropritershipForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="showOtherRegistrationNumber">
-                  Registration Number
+                    Registration Number
                   </Label>
                   <Controller
                     name="otherFirmsRegistrationNumber"
@@ -362,10 +363,8 @@ const PropritershipForm = () => {
             )}
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
               <Addnominee
                 setSelectedNommie={setSelectedNommie}
-                AllNominees={Benifyciary?.nominees}
                 selectedNommie={selectedNommie}
                 displaynominie={displaynominie}
                 setDisplaynominie={setDisplaynominie}

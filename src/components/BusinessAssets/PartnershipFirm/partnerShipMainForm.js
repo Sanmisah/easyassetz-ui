@@ -74,9 +74,9 @@ const PartnershipMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Propritoriship Assets</h1>
-          <Button onMouseDown={() => navigate("/bullion/add")}>
-            Add ProPritoriship Assets
+          <h1 className="text-2xl font-bold">Partnership Firm Assets</h1>
+          <Button onMouseDown={() => navigate("/partnershipfirm/add")}>
+            Add Partnership Firm Assets
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -112,7 +112,7 @@ const PartnershipMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/bullion/edit");
+                          navigate("/partnershipfirm/edit");
                         }}
                       >
                         Edit
