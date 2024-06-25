@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Addnominee from "./addNominee";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
@@ -41,11 +42,17 @@ const schema = z.object({
     .min(3, { message: "Additional Information is required" }),
   myStatus: z.string().nonempty({ message: "My Status is required" }),
   holdingType: z.string().nonempty({ message: "Holding Type is required" }),
-  jointHolderName: z.string().nonempty({ message: "Joint Holder Name is required" }),
-  documentAvailability: z.string().nonempty({ message: "Document Availability is required" }),
+  jointHolderName: z
+    .string()
+    .nonempty({ message: "Joint Holder Name is required" }),
+  documentAvailability: z
+    .string()
+    .nonempty({ message: "Document Availability is required" }),
   nomination: z.string().nonempty({ message: " Nomination is required" }),
   additionalInformation: z.string().optional(),
-  pointOfContact: z.string().nonempty({ message: "Point of Contact is required" }),
+  pointOfContact: z
+    .string()
+    .nonempty({ message: "Point of Contact is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -59,15 +66,19 @@ const PropritershipForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
+  const [showOtherCompanyRegistration, setShowOtherCompanyRegistration] =
+    useState(false);
+  const [showOtherMyStatus, setShowOthermyStatus] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
+  const [setShowOthertypeOfInvestment, showOthertypeOfInvestment] =
+    useState(false);
+  const [showOtherCompanyName, setshowOtherCompanyName] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [displaynominie, setDisplaynominie] = useState([]);
-
   const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] =
     useState(false);
   const [otherFirmRegistrationNumber, setOtherFirmRegistrationNumber] =
@@ -145,10 +156,10 @@ const PropritershipForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                 Company Details
+                Company Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new  Company.
+                Fill out the form to add a new Company.
               </CardDescription>
             </div>
           </div>
@@ -158,9 +169,87 @@ const PropritershipForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
+            <div className="space-y-2">
+              <Label htmlFor="companyName">Company Name</Label>
+              <Controller
+                name="companyName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="companyName"
+                    placeholder="Enter Company Name"
+                    {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={errors.companyName ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {showOtherCompanyName && (
+                <Controller
+                  name="othercompanyName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Specify Company Name"
+                      className="mt-2"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              )}
+              {errors.companyName && (
+                <span className="text-red-500">
+                  {errors.companyName.message}
+                </span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="companyAddress">Company Address</Label>
+              <Controller
+                name="companyAddress"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="companyAddress"
+                    placeholder="Enter Company Address"
+                    {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={errors.companyAddress ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {showOtherArticleDetails && (
+                <Controller
+                  name="othercompanyAddress"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Specify Company Address"
+                      className="mt-2"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              )}
+              {errors.companyAddress && (
+                <span className="text-red-500">
+                  {errors.companyAddress.message}
+                </span>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="companyRegistration">Company Registration</Label>
+                <Label htmlFor="companyRegistration">
+                  Company Registration
+                </Label>
                 <Controller
                   name="companyRegistration"
                   control={control}
@@ -170,29 +259,31 @@ const PropritershipForm = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherMetalType(value === "other");
+                        setShowOtherCompanyRegistration(value === "other");
                       }}
-                      className={errors.companyRegistration ? "border-red-500" : ""}
+                      className={
+                        errors.companyRegistration ? "border-red-500" : ""
+                      }
                     >
                       <FocusableSelectTrigger>
                         <SelectValue placeholder="Select Company Registration" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                      <SelectItem value="CIN">CIN</SelectItem>
+                        <SelectItem value="CIN">CIN</SelectItem>
                         <SelectItem value="PAN">PAN</SelectItem>
                         <SelectItem value="FIRM NO">FIRM NO</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherMetalType && (
+                {showOtherCompanyRegistration && (
                   <Controller
-                    name="otherMetalType"
+                    name="otherCompanyRegistration"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Metal Type"
+                        placeholder="Specify  Company Registration"
                         className="mt-2"
                         value={field.value || ""}
                         onChange={field.onChange}
@@ -208,83 +299,43 @@ const PropritershipForm = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Regitration Address </Label>
-              <Controller
-                name="registrationAddress"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="registrationAddress"
-                    placeholder="Enter Address"
-                    {...field}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className={
-                      errors.registrationAddress ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {showOtherArticleDetails && (
-                <Controller
-                  name="otherRegistrationAddress"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Registration Address"
-                      className="mt-2"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              )}
-              {errors.registrationAddress && (
-                <span className="text-red-500">
-                  {errors.registrationAddress.message}
-                </span>
-              )}
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Label htmlFor="myStatus">My Status</Label>
                 <Controller
-                  name="registrationNumber"
+                  name="myStatus"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="registrationNumber"
+                      id="myStatus"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherRegistrationNumber(value);
+                        setShowOthermyStatus(value === "other");
                       }}
-                      className={
-                        errors.registrationNumber ? "border-red-500" : ""
-                      }
+                      className={errors.myStatus ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select  Registration Number" />
+                        <SelectValue placeholder="Select Status" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="CIN">CIN</SelectItem>
-                        <SelectItem value="PAN">PAN</SelectItem>
-                        <SelectItem value="FIRM NO">FIRM NO</SelectItem>
+                        <SelectItem value="shareholder">Shareholder</SelectItem>
+                        <SelectItem value="partnerBO">Partner BO</SelectItem>
+                        <SelectItem value="nominee">Nominee</SelectItem>
+                        <SelectItem value="lender">Lender</SelectItem>
+                        <SelectItem value="depositor">Depositor</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherRegistrationNumber && (
+                {showOtherMyStatus && (
                   <Controller
-                    name="otherRegistrationNumber"
+                    name="otherMyStatus"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Registration Number"
+                        placeholder="Specify My Status"
                         className="mt-2"
                         value={field.value || ""}
                         onChange={field.onChange}
@@ -292,9 +343,9 @@ const PropritershipForm = () => {
                     )}
                   />
                 )}
-                {errors.firmsRegistrationNumber && (
+                {errors.myStatus && (
                   <span className="text-red-500">
-                    {errors.firmsRegistrationNumber.message}
+                    {errors.myStatus.message}
                   </span>
                 )}
               </div>
@@ -302,28 +353,99 @@ const PropritershipForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  Holding Percentage
-                </Label>
+                <Label htmlFor="typeOfInvestment">Type Of Investment</Label>
                 <Controller
-                  name="holdingPercentage"
+                  name="typeOfInvestment"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      id="holdingPercentage"
-                      placeholder="Enter Holding Percentage"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
+                    <Select
+                      id="typeOfInvestment"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOthertypeOfInvestment(value === "other");
+                      }}
                       className={
-                        errors.holdingPercentage ? "border-red-500" : ""
+                        errors.typeOfInvestment ? "border-red-500" : ""
                       }
-                    />
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Type Of Investment" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="shares">Shares</SelectItem>
+                        <SelectItem value="profit">Profit</SelectItem>
+                        <SelectItem value="loan">Loan</SelectItem>
+                        <SelectItem value="deposit">Deposit</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-                {errors.holdingPercentage && (
+                {errors.typeOfInvestment && (
                   <span className="text-red-500">
-                    {errors.holdingPercentage.message}
+                    {errors.typeOfInvestment.message}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4 flex flex-col">
+              <Label className="text-lg font-bold">Holding Type</Label>
+              <Controller
+                name="holdingType"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="broker" value="broker" />
+                      <Label htmlFor="broker">Single</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="holdingType" value="holdingType" />
+                      <Label htmlFor="holdingType">Joint Name</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                <Controller
+                  name="jointHolderName"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="jointHolderName"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherjointHolderName(value === "other");
+                      }}
+                      className={errors.jointHolderName ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select From Family & Other Contact Details" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.jointHolderName && (
+                  <span className="text-red-500">
+                    {errors.jointHolderName.message}
                   </span>
                 )}
               </div>
