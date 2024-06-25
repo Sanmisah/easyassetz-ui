@@ -9,6 +9,7 @@ import {
   DropdownMenuLabel,
 } from "@com/ui/dropdown-menu";
 import axios from "axios";
+import cross from "@/components/image/close.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

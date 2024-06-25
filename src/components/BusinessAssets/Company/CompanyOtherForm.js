@@ -36,17 +36,16 @@ const schema = z.object({
   companyRegistration: z
     .string()
     .min(2, { message: " Company Registration is required" }),
-  holdingPercentage: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
   additionalInformation: z
     .string()
     .min(3, { message: "Additional Information is required" }),
+  myStatus: z.string().nonempty({ message: "My Status is required" }),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName: z.string().nonempty({ message: "Joint Holder Name is required" }),
+  documentAvailability: z.string().nonempty({ message: "Document Availability is required" }),
+  nomination: z.string().nonempty({ message: " Nomination is required" }),
+  additionalInformation: z.string().optional(),
+  pointOfContact: z.string().nonempty({ message: "Point of Contact is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -146,10 +145,10 @@ const PropritershipForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Partnership Firm Details
+                 Company Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Partnership Firm.
+                Fill out the form to add a new  Company.
               </CardDescription>
             </div>
           </div>
@@ -161,28 +160,27 @@ const PropritershipForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmName">Firm Name</Label>
+                <Label htmlFor="companyRegistration">Company Registration</Label>
                 <Controller
-                  name="firmName"
+                  name="companyRegistration"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmName"
+                      id="companyRegistration"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherMetalType(value === "other");
                       }}
-                      className={errors.firmName ? "border-red-500" : ""}
+                      className={errors.companyRegistration ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select   Firm Name" />
+                        <SelectValue placeholder="Select Company Registration" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
+                      <SelectItem value="CIN">CIN</SelectItem>
+                        <SelectItem value="PAN">PAN</SelectItem>
+                        <SelectItem value="FIRM NO">FIRM NO</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -202,9 +200,9 @@ const PropritershipForm = () => {
                     )}
                   />
                 )}
-                {errors.firmName && (
+                {errors.companyRegistration && (
                   <span className="text-red-500">
-                    {errors.firmName.message}
+                    {errors.companyRegistration.message}
                   </span>
                 )}
               </div>
@@ -252,9 +250,7 @@ const PropritershipForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">
-                   Registration Number
-                </Label>
+                <Label htmlFor="registrationNumber">Registration Number</Label>
                 <Controller
                   name="registrationNumber"
                   control={control}

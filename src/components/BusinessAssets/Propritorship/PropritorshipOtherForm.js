@@ -26,6 +26,8 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import cross from "@/components/image/close.png";
+
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: " Firm Name is required" }),
