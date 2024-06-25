@@ -169,7 +169,7 @@ const BullionEdit = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
       toast.success("Bullion added successfully!");
-      navigate("/bullion");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

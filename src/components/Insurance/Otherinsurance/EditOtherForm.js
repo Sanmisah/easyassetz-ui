@@ -198,7 +198,7 @@ const EditOtherForm = () => {
         lifeInsuranceEditId
       );
       toast.success("Other Insurance added successfully!");
-      navigate("/otherinsurance");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

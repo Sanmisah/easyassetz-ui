@@ -145,7 +145,7 @@ const HealthForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
       toast.success("Heath Insurance added successfully!");
-      navigate("/healthinsurance");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

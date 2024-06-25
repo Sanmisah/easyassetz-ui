@@ -124,7 +124,7 @@ const MotorForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
       toast.success("Motor Insurance added successfully!");
-      navigate("/motorinsurance");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -263,7 +263,8 @@ const MotorForm = () => {
                     {errors.insuranceType.message}
                   </span>
                 )}
-              </div>Datepicker
+              </div>
+              Datepicker
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">

@@ -223,7 +223,7 @@ const EditMotorForm = () => {
         lifeInsuranceEditId
       );
       toast.success("lifeinsurance added successfully!");
-      navigate("/lifeinsurance");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

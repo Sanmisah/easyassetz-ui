@@ -202,7 +202,7 @@ const EditFormHealth = () => {
         lifeInsuranceEditId
       );
       toast.success("Health Insurance added successfully!");
-      navigate("/healthinsurance");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
