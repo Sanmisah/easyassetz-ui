@@ -24,21 +24,21 @@ const AddNominee = ({
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`/api/beneficiaries`, {
-  //       headers: {
-  //         Authorization: `Bearer ${user.data.token}`,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setNominees({
-  //         Beneficiaries: res?.data?.data?.Beneficiaries,
-  //         Charities: res?.data?.data?.Charities,
-  //       });
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`/api/beneficiaries`, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setNominees({
+          Beneficiaries: res?.data?.data?.Beneficiaries,
+          Charities: res?.data?.data?.Charities,
+        });
+      });
+  }, []);
 
   useEffect(() => {
     // Sync state with displaynominie when it changes
