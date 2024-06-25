@@ -32,18 +32,12 @@ import { useDispatch, useSelector } from "react-redux";
 const schema = z.object({
   typeOfIntellectualProperty: z
     .string()
-    .nonempty({ message: "Intellectual Property Type is required" }),
+    .min(3, { message: "Intellectual Property Type is required" }),
   registrationNumber: z
     .string()
-    .nonempty({ message: "Registration Number is required" }),
+    .min(3, { message: "Registration Number is required" }),
   expiryDate: z.date().optional(),
 
-  whetherAssigned: z
-    .string()
-    .min(3, { message: "Whether Assigned is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .transform((value) => (value === null ? null : Number(value))),
   nameOfAssignee: z
     .string()
     .nonempty({ message: "Name of assignee is required" }),
@@ -161,11 +155,11 @@ const IntellectualPropertyOtherForm = () => {
                   Type Of Intellectual Property{" "}
                 </Label>
                 <Controller
-                  name=" typeOfIntellectualProperty"
+                  name="typeOfIntellectualProperty"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id=" typeOfIntellectualProperty"
+                      id="typeOfIntellectualProperty"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -215,11 +209,11 @@ const IntellectualPropertyOtherForm = () => {
               <div className="space-y-2">
                 <Label htmlFor=" registrationNumber">Registration Number</Label>
                 <Controller
-                  name=" registrationNumber"
+                  name="registrationNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id=" registrationNumber"
+                      id="registrationNumber"
                       placeholder="Enter Registration Number"
                       {...field}
                       value={field.value || ""}
@@ -268,8 +262,6 @@ const IntellectualPropertyOtherForm = () => {
                     {...field}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      setHideRegisteredFields(value === "e-insurance");
-                      setBrokerSelected(value === "broker");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -293,11 +285,11 @@ const IntellectualPropertyOtherForm = () => {
               <div className="space-y-2">
                 <Label htmlFor=" nameOfAssignee">Name OF Assignee</Label>
                 <Controller
-                  name=" nameOfAssignee"
+                  name="nameOfAssignee"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id=" nameOfAssignee"
+                      id="nameOfAssignee"
                       placeholder="Enter Name OF Assignee "
                       {...field}
                       value={field.value || ""}
@@ -315,9 +307,9 @@ const IntellectualPropertyOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="maturity-date">Expiry Date</Label>
+              <Label htmlFor="maturity-date">Date of Assignment</Label>
               <Controller
-                name="expiryDate"
+                name="DateofAssignment"
                 control={control}
                 render={({ field }) => (
                   <Datepicker
@@ -327,9 +319,9 @@ const IntellectualPropertyOtherForm = () => {
                   />
                 )}
               />
-              {errors.expiryDate && (
+              {errors.DateofAssignment && (
                 <span className="text-red-500 mt-5">
-                  {errors.expiryDate.message}
+                  {errors.DateofAssignment.message}
                 </span>
               )}
             </div>

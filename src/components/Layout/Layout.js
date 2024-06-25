@@ -182,11 +182,20 @@ const Layout = () => {
       {location.pathname === "/propritorship/add" && <PropritershipForm />}
       {location.pathname === "/propritorship/edit" && <PropritershipEditForm />}
       {location.pathname === "/partnershipfirm" && <PartnershipFirmMainForm />}
-      {location.pathname === "/partnershipfirm/add" && (  <PartnershipFirmOtherForm /> )}
-      {location.pathname === "/partnershipfirm/edit" && ( <PartnershipFirmEditForm /> )}
-      {location.pathname === "/intellectualproperty" && ( <IntellectualPropertyMainForm /> )}
-      {location.pathname === "/intellectualproperty/add" && ( <IntellectualPropertyOtherForm />     )}
+      {location.pathname === "/partnershipfirm/add" && (
+        <PartnershipFirmOtherForm />
+      )}
+      {location.pathname === "/partnershipfirm/edit" && (
+        <PartnershipFirmEditForm />
+      )}
+      {location.pathname === "/intellectualproperty" && (
+        <IntellectualPropertyMainForm />
+      )}
+      {location.pathname === "/intellectualproperty/add" && (
+        <IntellectualPropertyOtherForm />
+      )}
       {location.pathname === "/dashboard" && <Dashboard />}
+
       {location.pathname === "/company" && <CompanyMainForm />}
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
