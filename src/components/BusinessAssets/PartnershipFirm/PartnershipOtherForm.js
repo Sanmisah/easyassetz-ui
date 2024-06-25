@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Addnominee from "./addNominee";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Firm Name is required" }),
@@ -252,9 +253,7 @@ const PropritershipForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">
-                   Registration Number
-                </Label>
+                <Label htmlFor="registrationNumber">Registration Number</Label>
                 <Controller
                   name="registrationNumber"
                   control={control}
