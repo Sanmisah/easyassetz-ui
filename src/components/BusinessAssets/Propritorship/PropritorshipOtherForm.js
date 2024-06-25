@@ -29,10 +29,10 @@ import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Metal Name is required" }),
-  registrationAddress: z
+  registeredAddress: z
     .string()
     .nonempty({ message: "Article Details is required" }),
-  firmRegistrationNumber: z
+  firmsRegistrationNumber: z
     .string()
     .min(2, { message: "Firm Registration Number is required" }),
 
@@ -76,8 +76,8 @@ const PropritershipForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       firmName: "",
-      registrationAddress: "",
-      firmRegistrationNumber: "",
+      registeredAddress: "",
+      firmsRegistrationNumber: "",
       additionalInformation: "",
       name: "",
       email: "",
@@ -87,7 +87,7 @@ const PropritershipForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/propriterships`, data, {
+      const response = await axios.post(`/api/business-assets`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
@@ -113,16 +113,17 @@ const PropritershipForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    data.type = "propritorship";
     data.name = name;
     data.email = email;
     data.mobile = phone;
     if (showOtherFirmsRegistrationNumber) {
-      data.firmRegistrationNumberType = showOtherFirmsRegistrationNumber;
-      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+      data.firmsRegistrationNumberType = showOtherFirmsRegistrationNumber;
+      data.firmsRegistrationNumber = data.otherFirmRegistrationNumber;
     }
 
-    if (data.firmRegistrationNumber === "other") {
-      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+    if (data.firmsRegistrationNumber === "other") {
+      data.firmsRegistrationNumber = data.otherFirmRegistrationNumber;
     }
 
     lifeInsuranceMutate.mutate(data);
@@ -197,49 +198,47 @@ const PropritershipForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Registration Address</Label>
+              <Label htmlFor="registeredAddress">Registration Address</Label>
               <Controller
-                name="registrationAddress"
+                name="registeredAddress"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="registrationAddress"
+                    id="registeredAddress"
                     placeholder="Enter Address"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
-                    className={
-                      errors.registrationAddress ? "border-red-500" : ""
-                    }
+                    className={errors.registeredAddress ? "border-red-500" : ""}
                   />
                 )}
               />
 
-              {errors.registrationAddress && (
+              {errors.registeredAddress && (
                 <span className="text-red-500">
-                  {errors.registrationAddress.message}
+                  {errors.registeredAddress.message}
                 </span>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmRegistrationNumber">
+                <Label htmlFor="firmsRegistrationNumber">
                   Firm Registration Number
                 </Label>
                 <Controller
-                  name="firmRegistrationNumber"
+                  name="firmsRegistrationNumber"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmRegistrationNumber"
+                      id="firmsRegistrationNumber"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherFirmsRegistrationNumber(value);
                       }}
                       className={
-                        errors.firmRegistrationNumber ? "border-red-500" : ""
+                        errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
@@ -268,9 +267,9 @@ const PropritershipForm = () => {
                     )}
                   />
                 )}
-                {errors.firmRegistrationNumber && (
+                {errors.firmsRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.firmRegistrationNumber.message}
+                    {errors.firmsRegistrationNumber.message}
                   </span>
                 )}
               </div>

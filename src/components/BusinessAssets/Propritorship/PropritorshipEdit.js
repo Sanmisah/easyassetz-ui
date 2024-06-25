@@ -156,7 +156,7 @@ const BullionEdit = () => {
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/propriterships/${lifeInsuranceEditId}`,
+        `/api/business-assets/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -188,6 +188,7 @@ const BullionEdit = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    data.type = "propritorship";
     data.name = name;
     data.email = email;
     data.phone = phone;

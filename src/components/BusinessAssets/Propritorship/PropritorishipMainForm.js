@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const  PropritershipMainForm = () => {
+const PropritershipMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -59,7 +59,7 @@ const  PropritershipMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/propriterships/${lifeInsuranceDeleteId}`,
+      `/api/business-assets/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,

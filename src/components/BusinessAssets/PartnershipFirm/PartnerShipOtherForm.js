@@ -94,13 +94,13 @@ const PropritershipForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/partnership`, data, {
+      const response = await axios.post(`/api/business-assets`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.Bullion;
+      return response.data.data.PartnershipFirm;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -128,7 +128,7 @@ const PropritershipForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-
+    data.type = "partnershipFirm";
     data.name = name;
     data.email = email;
     data.mobile = phone;

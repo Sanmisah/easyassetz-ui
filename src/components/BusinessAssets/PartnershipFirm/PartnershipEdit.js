@@ -48,7 +48,7 @@ const schema = z.object({
     .min(1, { message: "Additional Information is Required" }),
 });
 
-const BullionEdit = () => {
+const PartnershipFirmEdit = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -65,7 +65,8 @@ const BullionEdit = () => {
       console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
     }
   }, [lifeInsuranceEditId]);
-  const [showOtherBullion, setShowOtherBullion] = useState(false);
+  const [showOtherPartnershipFirm, setShowOtherPartnershipFirm] =
+    useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [selectedNommie, setSelectedNommie] = useState([]);
@@ -84,13 +85,16 @@ const BullionEdit = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions/${lifeInsuranceEditId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
-    let othertype = response.data.data.Bullion?.firmName;
-    let otherarticle = response.data.data.Bullion?.registrationAddress;
+    const response = await axios.get(
+      `/api/partnership-firms/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    let othertype = response.data.data.PartnershipFirm?.firmName;
+    let otherarticle = response.data.data.PartnershipFirm?.registrationAddress;
     if (
       othertype === "gold" ||
       othertype === "silver" ||
@@ -116,8 +120,8 @@ const BullionEdit = () => {
       setShowOtherArticleDetails(true);
       setValue("otherArticleDetails", otherarticle);
     }
-    console.log(typeof response.data.data.Bullion?.premium);
-    return response.data.data.Bullion;
+    console.log(typeof response.data.data.PartnershipFirm?.premium);
+    return response.data.data.PartnershipFirm;
   };
 
   const {
@@ -125,7 +129,7 @@ const BullionEdit = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
+    queryKey: ["PartnershipFrim", lifeInsuranceEditId],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -151,7 +155,7 @@ const BullionEdit = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherBullion(data.Bullion === "other");
+      setShowOtherPartnershipFirm(data.PartnershipFirm === "other");
 
       console.log(data);
     },
@@ -164,7 +168,7 @@ const BullionEdit = () => {
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/bullions/${lifeInsuranceEditId}`,
+        `/api/business-assets/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -172,11 +176,11 @@ const BullionEdit = () => {
           },
         }
       );
-      return response.data.data.Bullion;
+      return response.data.data.PartnershipFirm;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Bullion added successfully!");
+      queryClient.invalidateQueries("PartnershipFrim", lifeInsuranceEditId);
+      toast.success("PartnershipFirm added successfully!");
       navigate("/bullion");
     },
     onError: (error) => {
@@ -197,6 +201,7 @@ const BullionEdit = () => {
   const onSubmit = (data) => {
     console.log(data);
     data.name = name;
+    data.type = "partnershipFirm";
     data.email = email;
     data.phone = phone;
     console.log("bullion:", data.bullion);
@@ -219,7 +224,7 @@ const BullionEdit = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Bullion Details
+                PartnershipFirm Details
               </CardTitle>
               <CardDescription>
                 Edit the form to update the bullion details.
@@ -552,4 +557,4 @@ const BullionEdit = () => {
   );
 };
 
-export default BullionEdit;
+export default PartnershipFirmEdit;
