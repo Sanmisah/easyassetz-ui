@@ -31,13 +31,14 @@ const  IntellectualPropertyMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/propriterships`, {
+    const response = await axios.get(`/api/intellectual-properties`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Propritership;
+    return response.data.data.Propritorship;
+    
   };
 
   const {
@@ -59,7 +60,7 @@ const  IntellectualPropertyMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/propriterships/${lifeInsuranceDeleteId}`,
+      `/api/intellectual-properties/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,

@@ -35,6 +35,8 @@ function App() {
         <Route path="/propritorship/add" element={<Personalpage />} />
         <Route path="/propritorship/edit" element={<Personalpage />} />
         <Route path="/intellectualproperty" element={<Personalpage />} />
+        <Route path="/intellectualproperty/add" element={<Personalpage />} />
+        <Route path="/intellectualproperty/edit" element={<Personalpage />} />
 
         <Route path="/partnershipfirm" element={<Personalpage />} />
         <Route path="/partnershipfirm/add" element={<Personalpage />} />

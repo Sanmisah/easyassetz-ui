@@ -25,22 +25,32 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-
+import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import { useDispatch, useSelector } from "react-redux";
 const schema = z.object({
-   typeOfIntellectualProperty: z.string().nonempty({ message: "Intellectual Property Name is required" }),
-   registrationNumber: z
+  typeOfIntellectualProperty: z
     .string()
-    .nonempty({ message: "Registration Number is required" }),
-   expiryDate: z
+    .nonempty({ message: "Metal Name is required" }),
+  registrationNumber: z
     .string()
-    .min(2, { message: "    Expiry Date is required" }),
+    .nonempty({ message: "Article Details is required" }),
+  expiryDate: z
+    .string()
+    .min(2, { message: "Firm Registration Number is required" }),
 
-   whetherAssigned: z
+  whetherAssigned: z
     .string()
-    .min(3, { message: "  Whether Assigned is required" })
+    .min(3, { message: "Additional Information is required" })
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .transform((value) => (value === null ? null : Number(value))),
+  nameOfAssignee: z
+    .string()
+    .nonempty({ message: "Name of assignee is required" }),
+  dateOfAssignment: z
+    .string()
+    .min(2, { message: "Date of assignment is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -54,12 +64,18 @@ const IntellectualPropertyOtherForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [showIntellectualProperty, setShowIntellectualProperty] = useState(false);
+  const [showIntellectualProperty, setShowIntellectualProperty] =
+    useState(false);
+  const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
-  const [displaynominie, setDisplaynominie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
-  const [otherFirmName, setOtherFirmName] = useState("");
-
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [
+    showOtherFirmsRegistrationNumber,
+    setShowOtherFirmsRegistrationNumber,
+  ] = useState();
 
   const {
     handleSubmit,
@@ -69,13 +85,12 @@ const IntellectualPropertyOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-       typeOfIntellectualProperty: "",
-       registrationNumber: "",
-       expiryDate: "",
-       whetherAssigned: "",
-      name: "",
-      email: "",
-      phone: "",
+      typeOfIntellectualProperty: "",
+      registrationNumber: "",
+      expiryDate: "",
+      whetherAssigned: "",
+      nameOfAssignee: "",
+      dateOfAssignment: "",
     },
   });
 
@@ -87,7 +102,7 @@ const IntellectualPropertyOtherForm = () => {
         },
       });
 
-      return response.data.data.IntellectualProperty;
+      return response.data.data.Propritership;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -110,14 +125,17 @@ const IntellectualPropertyOtherForm = () => {
     data.name = name;
     data.email = email;
     data.mobile = phone;
+    if (showOtherFirmsRegistrationNumber) {
+      data.firmRegistrationNumberType = showOtherFirmsRegistrationNumber;
+      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+    }
 
-    if (data. expiryDate === "other") {
-      data. expiryDate = data.otherFirmName;
+    if (data.firmRegistrationNumber === "other") {
+      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
     }
 
     lifeInsuranceMutate.mutate(data);
   };
-
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -125,7 +143,7 @@ const IntellectualPropertyOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-              Intellectual Property Details
+                Intellectual Property Details
               </CardTitle>
               <CardDescription>
                 Fill out the form to add a new Intellectual Property.
@@ -140,7 +158,9 @@ const IntellectualPropertyOtherForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor=" typeOfIntellectualProperty">Type Of Intellectual Property </Label>
+                <Label htmlFor=" typeOfIntellectualProperty">
+                  Type Of Intellectual Property{" "}
+                </Label>
                 <Controller
                   name=" typeOfIntellectualProperty"
                   control={control}
@@ -152,17 +172,19 @@ const IntellectualPropertyOtherForm = () => {
                         field.onChange(value);
                         setShowIntellectualProperty(value === "other");
                       }}
-                      className={errors. typeOfIntellectualProperty ? "border-red-500" : ""}
+                      className={
+                        errors.typeOfIntellectualProperty
+                          ? "border-red-500"
+                          : ""
+                      }
                     >
                       <FocusableSelectTrigger>
                         <SelectValue placeholder="Select Intellectual Property Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-
-                        <SelectItem value="company1"> Trade Mark</SelectItem>
-                        <SelectItem value="company1">Copyright</SelectItem>
-                        <SelectItem value="company1">Patent</SelectItem>
-
+                        <SelectItem value="tradeMark"> Trade Mark</SelectItem>
+                        <SelectItem value="copyright">Copyright</SelectItem>
+                        <SelectItem value="patent">Patent</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -182,9 +204,9 @@ const IntellectualPropertyOtherForm = () => {
                     )}
                   />
                 )}
-                {errors. typeOfIntellectualProperty && (
+                {errors.typeOfIntellectualProperty && (
                   <span className="text-red-500">
-                    {errors. typeOfIntellectualProperty.message}
+                    {errors.typeOfIntellectualProperty.message}
                   </span>
                 )}
               </div>
@@ -192,9 +214,7 @@ const IntellectualPropertyOtherForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor=" registrationNumber">
-                  Registration Number
-                </Label>
+                <Label htmlFor=" registrationNumber">Registration Number</Label>
                 <Controller
                   name=" registrationNumber"
                   control={control}
@@ -206,104 +226,73 @@ const IntellectualPropertyOtherForm = () => {
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
-                        errors. registrationNumber ? "border-red-500" : ""
+                        errors.registrationNumber ? "border-red-500" : ""
                       }
                     />
                   )}
                 />
-                {errors. registrationNumber && (
+                {errors.registrationNumber && (
                   <span className="text-red-500">
-                    {errors. registrationNumber.message}
+                    {errors.registrationNumber.message}
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor=" expiryDate">
-                  Expiry Date 
-                </Label>
-                <Controller
-                  name=" expiryDate"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id=" expiryDate"
-                      placeholder="Enter Expiry Date "
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors. expiryDate ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors. expiryDate && (
-                  <span className="text-red-500">
-                    {errors. expiryDate.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            
-
-
-            {displaynominie && displaynominie.length > 0 && (
-              <div className="space-y-2">
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  <Label className="text-lg font-bold">Selected Nominees</Label>
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
             <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
-              <Addnominee
-                setSelectedNommie={setSelectedNommie}
-                AllNominees={Benifyciary?.nominees}
-                selectedNommie={selectedNommie}
-                displaynominie={displaynominie}
-                setDisplaynominie={setDisplaynominie}
-              />{" "}
+              <Label htmlFor="maturity-date">Expiry Date</Label>
+              <Controller
+                name="expiryDate"
+                control={control}
+                render={({ field }) => (
+                  <Datepicker
+                    {...field}
+                    onChange={(date) => field.onChange(date)}
+                    selected={field.value}
+                  />
+                )}
+              />
+              {errors.expiryDate && (
+                <span className="text-red-500 mt-5">
+                  {errors.expiryDate.message}
+                </span>
+              )}
             </div>
 
-
-
-
+            <div className="space-y-4 flex flex-col">
+              <Label className="text-lg font-bold">Whether Assigned</Label>
+              <Controller
+                name="whetherAssigned"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setHideRegisteredFields(value === "e-insurance");
+                      setBrokerSelected(value === "broker");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="broker" value="broker" />
+                      <Label htmlFor="broker">Yes</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem
+                        id="whetherAssigned"
+                        value="whetherAssigned"
+                      />
+                      <Label htmlFor="whetherAssigned">No</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor=" nameOfAssignee">
-                  Name OF Assignee  
-                </Label>
+                <Label htmlFor=" nameOfAssignee">Name OF Assignee</Label>
                 <Controller
                   name=" nameOfAssignee"
                   control={control}
@@ -314,50 +303,38 @@ const IntellectualPropertyOtherForm = () => {
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
-                      className={
-                        errors. nameOfAssignee ? "border-red-500" : ""
-                      }
+                      className={errors.nameOfAssignee ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors. nameOfAssignee && (
+                {errors.nameOfAssignee && (
                   <span className="text-red-500">
-                    {errors. nameOfAssignee.message}
+                    {errors.nameOfAssignee.message}
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor=" dateOfAssignment">
-                  Date Of Assignment      
-                </Label>
-                <Controller
-                  name=" dateOfAssignment"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id=" dateOfAssignment"
-                      placeholder="Enter Date Of Assignment "
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors. dateOfAssignment ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors. dateOfAssignment && (
-                  <span className="text-red-500">
-                    {errors. dateOfAssignment.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="maturity-date">Expiry Date</Label>
+              <Controller
+                name="expiryDate"
+                control={control}
+                render={({ field }) => (
+                  <Datepicker
+                    {...field}
+                    onChange={(date) => field.onChange(date)}
+                    selected={field.value}
+                  />
                 )}
-              </div>
+              />
+              {errors.expiryDate && (
+                <span className="text-red-500 mt-5">
+                  {errors.expiryDate.message}
+                </span>
+              )}
             </div>
 
-            
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

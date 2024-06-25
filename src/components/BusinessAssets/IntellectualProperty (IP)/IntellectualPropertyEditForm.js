@@ -34,21 +34,13 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Article Detail is required" }),
   firmRegistrationNumber: z.string().optional(),
-  holdingPercentage: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
 
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
 });
 
-const BullionEdit = () => {
+const IntellectualPropertyOtherForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -67,9 +59,6 @@ const BullionEdit = () => {
   }, [lifeInsuranceEditId]);
   const [showOtherBullion, setShowOtherBullion] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
-  const [displaynominie, setDisplaynominie] = useState([]);
-  const [selectedNommie, setSelectedNommie] = useState([]);
-  const [nomineeerror, setNomineeError] = useState(false);
 
   const {
     handleSubmit,
@@ -84,13 +73,16 @@ const BullionEdit = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions/${lifeInsuranceEditId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
-    let othertype = response.data.data.Bullion?.firmName;
-    let otherarticle = response.data.data.Bullion?.registrationAddress;
+    const response = await axios.get(
+      `/api/propriterships/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    let othertype = response.data.data.Propritership?.firmName;
+    let otherarticle = response.data.data.Propritership?.registrationAddress;
     if (
       othertype === "gold" ||
       othertype === "silver" ||
@@ -116,8 +108,8 @@ const BullionEdit = () => {
       setShowOtherArticleDetails(true);
       setValue("otherArticleDetails", otherarticle);
     }
-    console.log(typeof response.data.data.Bullion?.premium);
-    return response.data.data.Bullion;
+    console.log(typeof response.data.data.Propritership?.premium);
+    return response.data.data.Propritership;
   };
 
   const {
@@ -151,7 +143,7 @@ const BullionEdit = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherBullion(data.Bullion === "other");
+      setShowOtherBullion(data.Propritership === "other");
 
       console.log(data);
     },
@@ -164,7 +156,7 @@ const BullionEdit = () => {
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/bullions/${lifeInsuranceEditId}`,
+        `/api/propriterships/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -172,12 +164,12 @@ const BullionEdit = () => {
           },
         }
       );
-      return response.data.data.Bullion;
+      return response.data.data.Propritership;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Bullion added successfully!");
-      navigate("/bullion");
+      toast.success("Propritership added successfully!");
+      navigate("/propritership");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -219,7 +211,7 @@ const BullionEdit = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Bullion Details
+                Propritership Details
               </CardTitle>
               <CardDescription>
                 Edit the form to update the bullion details.
@@ -234,53 +226,52 @@ const BullionEdit = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmName">Metal Type</Label>
+                <Label htmlFor="IntellectualProperty"> Intellectual Property Type</Label>
                 <Controller
-                  name="firmName"
+                  name="IntellectualProperty"
                   control={control}
-                  defaultValue={Benifyciary?.firmName}
+                  defaultValue={Benifyciary?.intellectualProperty}
                   render={({ field }) => (
                     <Select
-                      id="firmName"
+                      id="IntellectualProperty"
                       value={field.value}
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherMetalType(value === "other");
                       }}
-                      className={errors.firmName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.firmName || ""}
+                      className={errors.intellectualProperty ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.intellectualProperty || ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Metal Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
+                        <SelectItem value="tradeMark"> Trade Mark</SelectItem>
+                        <SelectItem value=" copyright">Copyright</SelectItem>
+                        <SelectItem value=" patent">Patent</SelectItem>
+                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherMetalType && (
+                {showIntellectualProperty && (
                   <Controller
-                    name="otherMetalType"
+                    name="otherIntellectualProperty"
                     control={control}
-                    defaultValue={Benifyciary?.otherMetalType || ""}
+                    defaultValue={Benifyciary?.otherIntellectualProperty || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Metal Type"
+                        placeholder="Specify  Intellectual Property Type"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherMetalType || ""}
+                        defaultValue={Benifyciary?.otherIntellectualProperty || ""}
                       />
                     )}
                   />
                 )}
-                {errors.firmName && (
+                {errors.intellectualProperty && (
                   <span className="text-red-500">
-                    {errors.firmName.message}
+                    {errors.intellectualProperty.message}
                   </span>
                 )}
               </div>
@@ -371,81 +362,6 @@ const BullionEdit = () => {
                   </span>
                 )}
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="holdingPercentage">Holding Percentage</Label>
-                <Controller
-                  name="holdingPercentage"
-                  control={control}
-                  defaultValue={Benifyciary?.holdingPercentage || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="holdingPercentage"
-                      type="number"
-                      {...field}
-                      placeholder="Enter Number Of Article"
-                      value={parseInt(field.value)}
-                      className={
-                        errors.holdingPercentage ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.holdingPercentage || ""}
-                    />
-                  )}
-                />
-                {errors.holdingPercentage && (
-                  <span className="text-red-500">
-                    {errors.holdingPercentage.message}
-                  </span>
-                )}
-              </div>
-
-              {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2">
-                  <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="registered-mobile">Add nominee</Label>
-                {console.log(Benifyciary?.nominees)}
-                <Addnominee
-                  setSelectedNommie={setSelectedNommie}
-                  AllNominees={Benifyciary?.nominees}
-                  selectedNommie={selectedNommie}
-                  displaynominie={displaynominie}
-                  setDisplaynominie={setDisplaynominie}
-                />{" "}
-              </div>
-
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
                   {" "}
@@ -552,4 +468,4 @@ const BullionEdit = () => {
   );
 };
 
-export default BullionEdit;
+export default IntellectualPropertyOtherForm;
