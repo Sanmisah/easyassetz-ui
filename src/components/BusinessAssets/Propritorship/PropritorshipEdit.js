@@ -41,7 +41,7 @@ const schema = z.object({
     .min(1, { message: "Additional Information is Required" }),
 });
 
-const BullionEdit = () => {
+const PropritorshipEdit = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -474,4 +474,4 @@ const BullionEdit = () => {
   );
 };
 
-export default BullionEdit;
+export default PropritorshipEdit;

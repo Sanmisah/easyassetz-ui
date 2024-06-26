@@ -61,7 +61,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const PropritershipForm = () => {
+const CompanyForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -84,6 +84,9 @@ const PropritershipForm = () => {
   const [otherFirmRegistrationNumber, setOtherFirmRegistrationNumber] =
     useState("");
   const [otherFirmName, setOtherFirmName] = useState("");
+  const [showOtherJointHolderName, setShowOtherJointHolderName] =
+    useState(false);
+  const [showOtherJointName, setShowOtherJointName] = useState(false);
   const {
     handleSubmit,
     control,
@@ -353,7 +356,7 @@ const PropritershipForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="typeOfInvestment">Type Of Investment</Label>
+                <Label htmlFor="typeOfInvestment">Type of Investment</Label>
                 <Controller
                   name="typeOfInvestment"
                   control={control}
@@ -363,20 +366,20 @@ const PropritershipForm = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOthertypeOfInvestment(value === "other");
                       }}
                       className={
                         errors.typeOfInvestment ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Type Of Investment" />
+                        <SelectValue placeholder="Select Type of Investment" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="shares">Shares</SelectItem>
-                        <SelectItem value="profit">Profit</SelectItem>
-                        <SelectItem value="loan">Loan</SelectItem>
-                        <SelectItem value="deposit">Deposit</SelectItem>
+                        <SelectItem value="shrares">Shares</SelectItem>
+                        <SelectItem value="profit">Profit </SelectItem>
+                        <SelectItem value="loan">Loan </SelectItem>
+                        <SelectItem value="deposit">Deposit </SelectItem>
+                        <SelectItem value="other">Other </SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -403,12 +406,19 @@ const PropritershipForm = () => {
                     className="flex items-center gap-2"
                   >
                     <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem id="broker" value="broker" />
+                      <RadioGroupItem
+                        id="broker"
+                        value="broker"
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowOtherJointName(value === "other");
+                        }}
+                      />
                       <Label htmlFor="broker">Single</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <RadioGroupItem id="holdingType" value="holdingType" />
-                      <Label htmlFor="holdingType">Joint Name</Label>
+                      <RadioGroupItem id="jointType" value="jointType" />
+                      <Label htmlFor="jointType">Joint Name</Label>
                     </div>
                   </RadioGroup>
                 )}
@@ -427,7 +437,7 @@ const PropritershipForm = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherjointHolderName(value === "other");
+                        setShowOtherJointHolderName(value === "other");
                       }}
                       className={errors.jointHolderName ? "border-red-500" : ""}
                     >
@@ -435,17 +445,31 @@ const PropritershipForm = () => {
                         <SelectValue placeholder="Select From Family & Other Contact Details" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="other">
+                          Select From Family{" "}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {errors.jointHolderName && (
+                {showOtherJointHolderName && (
+                  <Controller
+                    name="otherJointHolderName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Joint Holder Name"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                )}
+                {errors.typeOfInvestment && (
                   <span className="text-red-500">
-                    {errors.jointHolderName.message}
+                    {errors.typeOfInvestment.message}
                   </span>
                 )}
               </div>
@@ -609,4 +633,4 @@ const PropritershipForm = () => {
   );
 };
 
-export default PropritershipForm;
+export default CompanyForm;
