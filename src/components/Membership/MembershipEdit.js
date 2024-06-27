@@ -31,9 +31,6 @@ import Datepicker from "../Beneficiarydetails/Datepicker";
 import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
 
-
-
-
 const schema = z.object({
   organizationName: z
     .string()
@@ -63,7 +60,6 @@ const MembershipEdit = () => {
   const [showOtherMembership, setShowOtherMembership] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [selectedNommie, setSelectedNommie] = useState([]);
-
 
   const {
     handleSubmit,
@@ -122,7 +118,6 @@ const MembershipEdit = () => {
       setValue("organizationName", data.organizationName);
       setValue("membershipId", data.membershipId);
       setValue("membershiptype", data.metaltype);
-      setValue("otherInsuranceCompany", data.otherInsuranceCompany);
       setValue("membershipPaymentDate", data.membershipPaymentDate);
       setValue("numberOfArticles", data.numberOfArticles);
       setValue("additionalInformation", data.additionalInformation);
@@ -188,6 +183,15 @@ const MembershipEdit = () => {
     if (data.membershipType === "other") {
       data.membersipType = data.otherMembershipType;
     }
+    console.log(data);
+    const date = new Date(data.membershipPaymentDate);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.membershipPaymentDate = newdate;
+    console.log("brokerName:", data.brokerName);
+    data.nominees = selectedNommie;
 
     membershipMutate.mutate(data);
   };
@@ -322,14 +326,18 @@ const MembershipEdit = () => {
                 </Label>
                 <Controller
                   name="membershipPaymentDate"
-                  defaultValue={new Date(Benifyciary?.membershipPaymentDate) || ""}
+                  defaultValue={
+                    new Date(Benifyciary?.membershipPaymentDate) || ""
+                  }
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={new Date(Benifyciary?.membershipPaymentDate) || ""}
+                      defaultValue={
+                        new Date(Benifyciary?.membershipPaymentDate) || ""
+                      }
                     />
                   )}
                 />
