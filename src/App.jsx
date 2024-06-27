@@ -44,6 +44,9 @@ function App() {
         <Route path="/company" element={<Personalpage />} />
         <Route path="/company/add" element={<Personalpage />} />
         <Route path="/company/edit" element={<Personalpage />} />
+        <Route path="/membership" element={<Personalpage />} />
+        <Route path="/membership/add" element={<Personalpage />} />
+        <Route path="/membership/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

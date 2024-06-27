@@ -20,6 +20,8 @@ import HealthForm from "@/components/Insurance/Healthinsurance/HealthForm";
 import EditHealthForm from "@/components/Insurance/Healthinsurance/EditFormHealth";
 import BullionForm from "@/components/Bullion/BullionOtherForm";
 import BullionEditFrom from "@/components/Bullion/BullionEdit";
+import MembershipForm from "@/components/Membership/MembershipOtherForm";
+import MembershipEditFrom from "@/components/Bullion/MembershipEdit";
 
 const RouteDefining = () => {
   const location = useLocation();
@@ -48,6 +50,8 @@ const RouteDefining = () => {
       {location.pathname === "/healthinsurance/edit" && <EditHealthForm />}
       {location.pathname === "/bullion" && <BullionForm />}
       {location.pathname === "/bullion/edit" && <BullionEditFrom />}
+      {location.pathname === "/membership" && <MembershipForm />}
+      {location.pathname === "/membership/edit" && <MembershipEditFrom />}
     </>
   );
 };
