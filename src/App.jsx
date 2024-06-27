@@ -31,9 +31,9 @@ function App() {
         <Route path="/bullion/add" element={<Personalpage />} />
         <Route path="/bullion/edit" element={<Personalpage />} />
         <Route path="/businessasset" element={<Personalpage />} />
-        <Route path="/propritorship" element={<Personalpage />} />
-        <Route path="/propritorship/add" element={<Personalpage />} />
-        <Route path="/propritorship/edit" element={<Personalpage />} />
+        <Route path="/propritership" element={<Personalpage />} />
+        <Route path="/propritership/add" element={<Personalpage />} />
+        <Route path="/propritership/edit" element={<Personalpage />} />
         <Route path="/intellectualproperty" element={<Personalpage />} />
         <Route path="/intellectualproperty/add" element={<Personalpage />} />
         <Route path="/intellectualproperty/edit" element={<Personalpage />} />

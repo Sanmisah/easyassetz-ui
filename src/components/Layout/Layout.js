@@ -198,9 +198,9 @@ const Layout = () => {
       {location.pathname === "/membership" && <MembershipMainForm />}
       {location.pathname === "/membership/edit" && <MembershipEditForm />}
       {location.pathname === "/businessasset" && <BuisnessassetsMainForm />}
-      {location.pathname === "/propritorship" && <PropritershipMainForm />}
-      {location.pathname === "/propritorship/add" && <PropritershipForm />}
-      {location.pathname === "/propritorship/edit" && <PropritershipEditForm />}
+      {location.pathname === "/propritership" && <PropritershipMainForm />}
+      {location.pathname === "/propritership/add" && <PropritershipForm />}
+      {location.pathname === "/propritership/edit" && <PropritershipEditForm />}
       {location.pathname === "/partnershipfirm" && <PartnershipFirmMainForm />}
       {location.pathname === "/partnershipfirm/add" && (
         <PartnershipFirmOtherForm />

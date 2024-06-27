@@ -52,7 +52,7 @@ const BullionEdit = () => {
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [mobile, setPhone] = useState("");
   console.log(lifeInsuranceEditId);
   useEffect(() => {
     if (lifeInsuranceEditId) {
@@ -188,10 +188,24 @@ const BullionEdit = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    data.name = name;
-    data.email = email;
-    data.phone = phone;
-    console.log("bullion:", data.bullion);
+    if (name) {
+      data.name = name;
+    }
+    if (email) {
+      data.email = email;
+    }
+    if (mobile) {
+      data.mobile = mobile;
+    }
+    console.log(
+      "bullion:",
+      data.mobile,
+      data.name,
+      data.email,
+      mobile,
+      name,
+      email
+    );
     if (data.metalType === "other") {
       data.metalType = data.otherMetalType;
     }
@@ -413,22 +427,16 @@ const BullionEdit = () => {
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-                <Controller
-                  name="name"
-                  control={control}
+
+                <Input
+                  id="name"
+                  placeholder="Enter Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={errors.name ? "border-red-500" : ""}
                   defaultValue={Benifyciary?.name || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="name"
-                      placeholder="Enter Name"
-                      value={field.value}
-                      onChange={(e) => setName(e.target.value)}
-                      {...field}
-                      className={errors.name ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.name || ""}
-                    />
-                  )}
                 />
+
                 {errors.name && (
                   <span className="text-red-500">{errors.name.message}</span>
                 )}
@@ -443,7 +451,7 @@ const BullionEdit = () => {
                     <Input
                       id="email"
                       placeholder="Enter Email"
-                      {...field}
+                      value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className={errors.email ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.email || ""}
@@ -455,26 +463,26 @@ const BullionEdit = () => {
                 )}
               </div>
               <div className="w-[40%] space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="mobile">Mobile</Label>
                 <Controller
-                  name="phone"
+                  name="mobile"
                   control={control}
-                  defaultValue={Benifyciary?.phone || ""}
+                  defaultValue={Benifyciary?.mobile || ""}
                   render={({ field }) => (
                     <PhoneInput
-                      id="phone"
+                      id="mobile"
                       type="tel"
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}
                       value={field.value}
                       onChange={(e) => setPhone(e.target)}
-                      defaultValue={Benifyciary?.phone || ""}
+                      defaultValue={Benifyciary?.mobile || ""}
                     />
                   )}
                 />
-                {errors.phone && (
-                  <span className="text-red-500">{errors.phone.message}</span>
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
                 )}
               </div>
             </div>

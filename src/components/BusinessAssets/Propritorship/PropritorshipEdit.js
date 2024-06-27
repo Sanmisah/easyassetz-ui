@@ -31,7 +31,7 @@ import cross from "@/components/image/close.png";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Firm Name is required" }),
-  registrationAddress: z
+  registeredAddress: z
     .string()
     .nonempty({ message: "Registration Address is required" }),
   firmRegistrationNumber: z.string().optional(),
@@ -51,7 +51,7 @@ const PropritorshipEdit = () => {
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [mobile, setmobile] = useState();
   console.log(lifeInsuranceEditId);
   useEffect(() => {
     if (lifeInsuranceEditId) {
@@ -82,8 +82,8 @@ const PropritorshipEdit = () => {
         },
       }
     );
-    let othertype = response.data.data.Propritership?.firmName;
-    let otherarticle = response.data.data.Propritership?.registrationAddress;
+    let othertype = response.data.data.BusinessAsset?.firmName;
+    let otherarticle = response.data.data.BusinessAsset?.registeredAddress;
     if (
       othertype === "gold" ||
       othertype === "silver" ||
@@ -93,7 +93,7 @@ const PropritorshipEdit = () => {
       setValue("firmName", othertype);
     } else {
       setShowOtherMetalType(true);
-      setValue("otherMetalType", othertype);
+      setValue("otherFirmType", othertype);
     }
 
     if (
@@ -104,13 +104,13 @@ const PropritorshipEdit = () => {
       otherarticle === "utensils"
     ) {
       setShowOtherArticleDetails(false);
-      setValue("registrationAddress", otherarticle);
+      setValue("registeredAddress", otherarticle);
     } else {
       setShowOtherArticleDetails(true);
       setValue("otherArticleDetails", otherarticle);
     }
-    console.log(typeof response.data.data.Propritership?.premium);
-    return response.data.data.Propritership;
+    console.log(typeof response.data.data.BusinessAsset?.premium);
+    return response.data.data.BusinessAsset;
   };
 
   const {
@@ -144,7 +144,7 @@ const PropritorshipEdit = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherBullion(data.Propritership === "other");
+      setShowOtherBullion(data.BusinessAsset === "other");
 
       console.log(data);
     },
@@ -165,11 +165,11 @@ const PropritorshipEdit = () => {
           },
         }
       );
-      return response.data.data.Propritership;
+      return response.data.data.BusinessAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Propritership added successfully!");
+      toast.success("BusinessAsset added successfully!");
       navigate("/propritership");
     },
     onError: (error) => {
@@ -181,21 +181,26 @@ const PropritorshipEdit = () => {
     console.log("Form values:", control._formValues);
   }, [control._formValues]);
 
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
-    }
-  }, [Benifyciary?.nominees]);
-
   const onSubmit = (data) => {
     console.log(data);
-    data.type = "propritorship";
+    data.type = "propritership";
+    // if (!name && name !== "") {
+    //   data.name = name;
+    // }
+    // if (!email && email !== "") {
+    //   data.email = email;
+    // }
+    // if (!mobile && mobile !== "") {
+    //   data.mobile = mobile;
+    // }
+
     data.name = name;
     data.email = email;
-    data.phone = phone;
+    data.mobile = mobile;
+
     console.log("bullion:", data.bullion);
     if (data.firmName === "other") {
-      data.firmName = data.otherMetalType;
+      data.firmName = data.otherFirmType;
     }
 
     bullionMutate.mutate(data);
@@ -206,6 +211,11 @@ const PropritorshipEdit = () => {
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading bullion data</div>;
+
+  useEffect(() => {
+    console.log("Phone:", mobile);
+  }, [mobile]);
+
   return (
     <div className="w-full">
       <Card>
@@ -246,32 +256,15 @@ const PropritorshipEdit = () => {
                       defaultValue={Benifyciary?.firmName || ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
+                        <SelectValue placeholder="Select Firm Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="company1">company1</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherMetalType && (
-                  <Controller
-                    name="otherMetalType"
-                    control={control}
-                    defaultValue={Benifyciary?.otherMetalType || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Firm Name"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherMetalType || ""}
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.firmName && (
                   <span className="text-red-500">
                     {errors.firmName.message}
@@ -279,61 +272,32 @@ const PropritorshipEdit = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="registrationAddress">
+                <Label htmlFor="registeredAddress">
                   {" "}
                   Registration Address{" "}
                 </Label>
                 <Controller
-                  name="registrationAddress"
+                  name="registeredAddress"
                   control={control}
-                  defaultValue={Benifyciary?.registrationAddress || ""}
+                  defaultValue={Benifyciary?.registeredAddress || ""}
                   render={({ field }) => (
-                    <Select
-                      id="registrationAddress"
-                      value={field.value}
+                    <Input
+                      id="registeredAddress"
+                      placeholder="Enter Address"
                       {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherArticleDetails(value === "other");
-                      }}
+                      value={field.value || ""}
+                      onChange={field.onChange}
                       className={
-                        errors.registrationAddress ? "border-red-500" : ""
+                        errors.registeredAddress ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.registrationAddress || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select  Registration Address" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="plates">Plates</SelectItem>
-                        <SelectItem value="glass">Glass</SelectItem>
-                        <SelectItem value="bowl">Bowl</SelectItem>
-                        <SelectItem value="bar">Bar</SelectItem>
-                        <SelectItem value="utensils">Utensils</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      defaultValue={Benifyciary?.registeredAddress || ""}
+                    />
                   )}
                 />
-                {showOtherArticleDetails && (
-                  <Controller
-                    name="otherArticleDetails"
-                    control={control}
-                    defaultValue={Benifyciary?.otherArticleDetails || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Article Type"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherArticleDetails || ""}
-                      />
-                    )}
-                  />
-                )}
 
-                {errors.registrationAddress && (
+                {errors.registeredAddress && (
                   <span className="text-red-500">
-                    {errors.registrationAddress.message}
+                    {errors.registeredAddress.message}
                   </span>
                 )}
               </div>
@@ -349,17 +313,26 @@ const PropritorshipEdit = () => {
                   control={control}
                   defaultValue={Benifyciary?.firmRegistrationNumber || ""}
                   render={({ field }) => (
-                    <Input
+                    <Select
                       id="firmRegistrationNumber"
-                      type="number"
-                      {...field}
-                      placeholder="Enter Number Of Article"
-                      value={parseInt(field.value)}
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherFirmsRegistrationNumber(value);
+                      }}
                       className={
                         errors.firmRegistrationNumber ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.firmRegistrationNumber || ""}
-                    />
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Firm's Registration Number" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="CIN">CIN</SelectItem>
+                        <SelectItem value="PAN">PAN</SelectItem>
+                        <SelectItem value="FIRM NO">FIRM NO</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
                 {errors.firmRegistrationNumber && (
@@ -399,22 +372,15 @@ const PropritorshipEdit = () => {
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-                <Controller
-                  name="name"
-                  control={control}
+
+                <Input
+                  id="name"
+                  placeholder="Enter Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   defaultValue={Benifyciary?.name || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="name"
-                      placeholder="Enter Name"
-                      value={field.value}
-                      onChange={(e) => setName(e.target.value)}
-                      {...field}
-                      className={errors.name ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.name || ""}
-                    />
-                  )}
                 />
+
                 {errors.name && (
                   <span className="text-red-500">{errors.name.message}</span>
                 )}
@@ -430,6 +396,7 @@ const PropritorshipEdit = () => {
                       id="email"
                       placeholder="Enter Email"
                       {...field}
+                      value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className={errors.email ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.email || ""}
@@ -441,26 +408,26 @@ const PropritorshipEdit = () => {
                 )}
               </div>
               <div className="w-[40%] space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="mobile">mobile</Label>
                 <Controller
-                  name="phone"
+                  name="mobile"
                   control={control}
-                  defaultValue={Benifyciary?.phone || ""}
+                  defaultValue={Benifyciary?.mobile || ""}
                   render={({ field }) => (
                     <PhoneInput
-                      id="phone"
+                      id="mobile"
                       type="tel"
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setPhone(e.target)}
-                      defaultValue={Benifyciary?.phone || ""}
+                      value={mobile}
+                      onChange={(e) => setmobile(e.target)}
+                      defaultValue={Benifyciary?.mobile || ""}
                     />
                   )}
                 />
-                {errors.phone && (
-                  <span className="text-red-500">{errors.phone.message}</span>
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
                 )}
               </div>
             </div>

@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 import cross from "@/components/image/close.png";
 
-
 const PropritershipMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
@@ -77,7 +76,7 @@ const PropritershipMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Propritoriship Assets</h1>
-          <Button onMouseDown={() => navigate("/propritorship/add")}>
+          <Button onMouseDown={() => navigate("/propritership/add")}>
             Add Propritoriship Assets
           </Button>
           {alertDialog && (
@@ -114,7 +113,7 @@ const PropritershipMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/propritorship/edit");
+                          navigate("/propritership/edit");
                         }}
                       >
                         Edit

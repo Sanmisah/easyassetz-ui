@@ -5,7 +5,6 @@ import { Button } from "@com/ui/button";
 import axios from "axios";
 import cross from "@/components/image/close.png";
 
-
 const BusinessAssetsMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
   const [Propritorship, setPropritorship] = useState([]);
@@ -108,7 +107,7 @@ const BusinessAssetsMainForm = () => {
       </div>
       <div className="mt-8 flex flex-col gap-4">
         <div
-          onClick={() => navigate("/propritorship")}
+          onClick={() => navigate("/propritership")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
