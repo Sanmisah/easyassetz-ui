@@ -50,7 +50,7 @@ const MembershipEdit = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [mobile, setMobile] = useState("");
   console.log(lifeInsuranceEditId);
   useEffect(() => {
     if (lifeInsuranceEditId) {
@@ -178,7 +178,7 @@ const MembershipEdit = () => {
     console.log(data);
     data.name = name;
     data.email = email;
-    data.phone = phone;
+    data.mobile = mobile;
     console.log("membership:", data.membership);
     if (data.membershipType === "other") {
       data.membersipType = data.otherMembershipType;
@@ -437,26 +437,26 @@ const MembershipEdit = () => {
                 )}
               </div>
               <div className="w-[40%] space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="mobile">Phone</Label>
                 <Controller
-                  name="phone"
+                  name="mobile"
                   control={control}
-                  defaultValue={Benifyciary?.phone || ""}
+                  defaultValue={Benifyciary?.mobile || ""}
                   render={({ field }) => (
                     <PhoneInput
-                      id="phone"
+                      id="mobile"
                       type="tel"
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}
                       value={field.value}
-                      onChange={(e) => setPhone(e.target)}
-                      defaultValue={Benifyciary?.phone || ""}
+                      onChange={(e) => setMobile(e.target)}
+                      defaultValue={Benifyciary?.mobile || ""}
                     />
                   )}
                 />
-                {errors.phone && (
-                  <span className="text-red-500">{errors.phone.message}</span>
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
                 )}
               </div>
             </div>

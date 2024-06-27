@@ -223,12 +223,6 @@ const Auth = () => {
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <Link
-                      to="/forgot-password"
-                      className="ml-auto inline-block text-sm underline"
-                    >
-                      Forgot your password?
-                    </Link>
                   </div>
                   <Input
                     id="password"
@@ -239,6 +233,12 @@ const Auth = () => {
                       getFieldError("password") ? "border-red-500" : ""
                     }
                   />
+                   <Link
+                      to="/forgot-password"
+                      className="ml-auto inline-block text-sm underline"
+                    >
+                      Forgot your password?
+                    </Link>
                   {getFieldError("password") && (
                     <p className="text-red-500">{getFieldError("password")}</p>
                   )}
