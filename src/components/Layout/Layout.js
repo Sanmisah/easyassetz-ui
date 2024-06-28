@@ -5,9 +5,14 @@ import BeneficiaryDetails from "@/components/Beneficiarydetails/Benificiarydetai
 import Logo from "../image/Logo.png";
 import Hamburger from "../image/hamburger.svg";
 import Insurance from "@/components/Insurance/Lifeinsurance/LifeInsurance";
+import Crypto from "@/components/DigitalAssets/crypto/Crypto";
 import InsuranceMainForm from "@/components/Insurance/InsuranceMainForm";
+import DigitalAssetsMainForm from "@/components/DigitalAssets/DigitalAssetsMainForm";
 import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
+import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
+import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
+
 import {
   Sheet,
   SheetContent,
@@ -41,9 +46,7 @@ import PropritershipEditForm from "@/components/BusinessAssets/Propritorship/Pro
 import IntellectualPropertyMainForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyMainForm";
 import IntellectualPropertyOtherForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyOtherForm";
 import OtherAssetsMainForm from "@/components/OtherAssets/OtherAssetsMainForm";
-
 import Dashboard from "@/components/Dashboard/Dashboard";
-
 import PartnershipFirmMainForm from "@/components/BusinessAssets/PartnershipFirm/partnershipMainForm";
 import PartnershipFirmOtherForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipOtherForm";
 import PartnershipFirmEditForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipEdit";
@@ -129,6 +132,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Other Assets
           </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/digitalasset"
+          >
+            <UserIcon className="h-5 w-5" />
+            Digital Assets
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -180,6 +190,13 @@ const Layout = () => {
                     <HomeIcon className="h-5 w-5" />
                     Other Assets
                   </NavLink>
+                  <NavLink
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                    to="/digitalassets"
+                  >
+                    <HomeIcon className="h-5 w-5" />
+                    Digital Assets
+                  </NavLink>
                 </nav>
               </SheetDescription>
             </SheetHeader>
@@ -191,9 +208,14 @@ const Layout = () => {
       {location.pathname === "/personal" && <PersonalDetails />}
       {location.pathname === "/benificiary" && <BeneficiaryDetails />}
       {location.pathname === "/insurance" && <InsuranceMainForm />}
+      {location.pathname === "/digitalasset" && <DigitalAssetsMainForm />}
       {location.pathname === "/lifeinsurance" && <Insurance />}
+      {location.pathname === "/crypto" && <Crypto />}
+
       {location.pathname === "/lifeinsurance/add" && <InsuranceForm />}
+      {location.pathname === "/crypto/add" && <CryptoForm />}
       {location.pathname === "/lifeinsurance/edit" && <EditInsuranceForm />}
+      {location.pathname === "/crypto/edit" && <EditCryptoForm />}
       {location.pathname === "/motorinsurance" && <MotorInsurance />}
       {location.pathname === "/motorinsurance/add" && <MotorForm />}
       {location.pathname === "/motorinsurance/edit" && <EditMotorForm />}
@@ -235,7 +257,6 @@ const Layout = () => {
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
       {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
-     
     </div>
   );
 };
