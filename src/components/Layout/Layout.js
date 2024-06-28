@@ -53,6 +53,10 @@ import PartnershipFirmEditForm from "@/components/BusinessAssets/PartnershipFirm
 import CompanyMainForm from "@/components/BusinessAssets/Company/CompanyMainForm";
 import CompanyOtherForm from "@/components/BusinessAssets/Company/CompanyOtherForm";
 import CompanyEditForm from "@/components/BusinessAssets/Company/CompanyEdit";
+import VehicleDetailsMainForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsMainForm";
+import VehicleDetailsOtherForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsOtherForm";
+import HUFMainForm from "@/components/OtherAssets/HUF/HUFMainForm";
+import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -257,6 +261,20 @@ const Layout = () => {
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
       {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
+
+      {location.pathname === "/vehicle" && (
+        <VehicleDetailsMainForm />
+      )}
+      {location.pathname === "/vehicle/add" && (
+        <VehicleDetailsOtherForm />
+      )}
+        {location.pathname === "/huf" && (
+        <HUFMainForm />
+      )}
+        {location.pathname === "/huf/add" && (
+        <HUFOtherForm />
+      )}
+ 
     </div>
   );
 };

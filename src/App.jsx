@@ -48,6 +48,10 @@ function App() {
         <Route path="/membership/add" element={<Personalpage />} />
         <Route path="/membership/edit" element={<Personalpage />} />
         <Route path="/other-assets" element={<Personalpage />} />
+        <Route path="/vehicle" element={<Personalpage />} />
+        <Route path="/vehicle/add" element={<Personalpage />} />  
+        <Route path="/huf" element={<Personalpage />} />
+        <Route path="/huf/add" element={<Personalpage />} />
         <Route path="/Digitalasset" element={<Personalpage />} />
         <Route path="/crypto" element={<Personalpage />} />
         <Route path="/crypto/add" element={<Personalpage />} />
