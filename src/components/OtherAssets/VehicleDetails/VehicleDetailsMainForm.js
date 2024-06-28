@@ -18,9 +18,8 @@ import {
 } from "@/Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
-import cross from "@/components/image/close.png";
 
-const PartnershipFirmMainForm = () => {
+const BullionMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -32,13 +31,13 @@ const PartnershipFirmMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/business-assets`, {
+    const response = await axios.get(`/api/bullions`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-    console.log(response.data.data.PartnershipFirm);
-    return response.data.data.PartnershipFirm;
+
+    return response.data.data.Bullion;
   };
 
   const {
@@ -51,7 +50,6 @@ const PartnershipFirmMainForm = () => {
 
     onSuccess: (data) => {
       console.log("Data:", data);
-      console.log("Data:", data.firmName);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -61,7 +59,7 @@ const PartnershipFirmMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/business-assets/${lifeInsuranceDeleteId}`,
+      `/api/bullions/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -69,16 +67,16 @@ const PartnershipFirmMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("   Intellectual Property deleted successfully!");
+    toast.success("Other Insurance deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Partnership Firm Assets</h1>
-          <Button onMouseDown={() => navigate("/partnershipfirm/add")}>
-            Add Partnership Firm Assets
+          <h1 className="text-2xl font-bold">Bullion</h1>
+          <Button onMouseDown={() => navigate("/bullion/add")}>
+            Add Bullion
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -97,8 +95,8 @@ const PartnershipFirmMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.firmName}</h1>
-                  <p className="text-sm ">{data.registeredAddress}</p>
+                  <h1 className="font-bold">{data.metalType}</h1>
+                  <p className="text-sm">{data.articleDetails}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -114,7 +112,7 @@ const PartnershipFirmMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/partnershipfirm/edit");
+                          navigate("/bullion/edit");
                         }}
                       >
                         Edit
@@ -138,4 +136,4 @@ const PartnershipFirmMainForm = () => {
   );
 };
 
-export default PartnershipFirmMainForm;
+export default BullionMainForm;

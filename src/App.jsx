@@ -47,6 +47,7 @@ function App() {
         <Route path="/membership" element={<Personalpage />} />
         <Route path="/membership/add" element={<Personalpage />} />
         <Route path="/membership/edit" element={<Personalpage />} />
+        <Route path="/other-assets" element={<Personalpage />} />
       </Routes>
     </div>
   );

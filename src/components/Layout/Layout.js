@@ -40,6 +40,7 @@ import PropritershipForm from "@/components/BusinessAssets/Propritorship/Proprit
 import PropritershipEditForm from "@/components/BusinessAssets/Propritorship/PropritorshipEdit";
 import IntellectualPropertyMainForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyMainForm";
 import IntellectualPropertyOtherForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyOtherForm";
+import OtherAssetsMainForm from "@/components/OtherAssets/OtherAssetsMainForm";
 
 import Dashboard from "@/components/Dashboard/Dashboard";
 
@@ -121,6 +122,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Membership
           </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/other-assets"
+          >
+            <UserIcon className="h-5 w-5" />
+            Other Assets
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -164,6 +172,13 @@ const Layout = () => {
                   >
                     <HomeIcon className="h-5 w-5" />
                     Membership
+                  </NavLink>
+                  <NavLink
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                    to="#"
+                  >
+                    <HomeIcon className="h-5 w-5" />
+                    Other Assets
                   </NavLink>
                 </nav>
               </SheetDescription>
@@ -219,6 +234,8 @@ const Layout = () => {
       {location.pathname === "/company" && <CompanyMainForm />}
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
+      {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
+     
     </div>
   );
 };

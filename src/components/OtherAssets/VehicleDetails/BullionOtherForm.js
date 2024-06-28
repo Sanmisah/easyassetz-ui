@@ -26,28 +26,24 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
-import Addnominee from "./addNominee";
-import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  firmName: z.string().nonempty({ message: "Firm Name is required" }),
-  registrationAddress: z
+  metalType: z.string().nonempty({ message: "Metal Name is required" }),
+  articleDetails: z
     .string()
-    .nonempty({ message: "Registration Address is required" }),
-  registrationNumber: z
+    .nonempty({ message: "Article Details is required" }),
+  weightPerArticle: z
     .string()
-    .min(2, { message: "  Registration Number is required" }),
-  holdingPercentage: z
+    .min(2, { message: "Weight Per Article is required" }),
+  numberOfArticles: z
     .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+    .nonempty({ message: "Number of Article Details is required" }),
   additionalInformation: z
     .string()
-    .min(3, { message: "Additional Information is required" }),
+    .min(3, { message: "Additional Information is required" })
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .transform((value) => (value === null ? null : Number(value))),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -56,7 +52,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const PropritershipForm = () => {
+const BullionForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -68,13 +64,6 @@ const PropritershipForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [displaynominie, setDisplaynominie] = useState([]);
-
-  const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] =
-    useState(false);
-  const [otherFirmRegistrationNumber, setOtherFirmRegistrationNumber] =
-    useState("");
-  const [otherFirmName, setOtherFirmName] = useState("");
   const {
     handleSubmit,
     control,
@@ -83,9 +72,10 @@ const PropritershipForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      firmName: "",
-      registrationAddress: "",
-      registrationNumber: "",
+      metalType: "",
+      articleDetails: "",
+      weightPerArticle: "",
+      numberOfArticles: "",
       additionalInformation: "",
       name: "",
       email: "",
@@ -95,18 +85,18 @@ const PropritershipForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/business-assets`, data, {
+      const response = await axios.post(`/api/bullions`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.PartnershipFirm;
+      return response.data.data.Bullion;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Partnership added successfully!");
-      navigate("/partnershipfirm");
+      toast.success("Other Insurance added successfully!");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -121,23 +111,9 @@ const PropritershipForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    if (selectedNommie.length < 1) {
-      toast.error("Please select atleast one nominee");
-      setNomineeError(true);
-      return;
-    }
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
-    }
-    data.type = "partnershipFirm";
-    console.log(data.name, name);
     data.name = name;
     data.email = email;
     data.mobile = phone;
-    if (data) {
-      data.firmName = data.otherFirmName;
-    }
-
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -148,10 +124,10 @@ const PropritershipForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Partnership Firm Details
+                Bullion Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Partnership Firm.
+                Fill out the form to add a new Bullion.
               </CardDescription>
             </div>
           </div>
@@ -163,28 +139,28 @@ const PropritershipForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmName">Firm Name</Label>
+                <Label htmlFor="metalType">Metal Type</Label>
                 <Controller
-                  name="firmName"
+                  name="metalType"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmName"
+                      id="metalType"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherMetalType(value === "other");
                       }}
-                      className={errors.firmName ? "border-red-500" : ""}
+                      className={errors.metalType ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select   Firm Name" />
+                        <SelectValue placeholder="Select Metal Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="silver">Silver</SelectItem>
+                        <SelectItem value="copper">Copper</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -204,40 +180,51 @@ const PropritershipForm = () => {
                     )}
                   />
                 )}
-                {errors.firmName && (
+                {errors.metalType && (
                   <span className="text-red-500">
-                    {errors.firmName.message}
+                    {errors.metalType.message}
                   </span>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Regitration Address </Label>
+              <Label htmlFor="articleDetails">Article Details</Label>
               <Controller
-                name="registrationAddress"
+                name="articleDetails"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    id="registrationAddress"
-                    placeholder="Enter Address"
-                    {...field}
+                  <Select
+                    id="articleDetails"
                     value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className={
-                      errors.registrationAddress ? "border-red-500" : ""
-                    }
-                  />
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherArticleDetails(value === "other");
+                    }}
+                    className={errors.articleDetails ? "border-red-500" : ""}
+                  >
+                    <FocusableSelectTrigger>
+                      <SelectValue placeholder="Select Article Type" />
+                    </FocusableSelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="plates">Plates</SelectItem>
+                      <SelectItem value="glass">Glass</SelectItem>
+                      <SelectItem value="bowl">Bowl</SelectItem>
+                      <SelectItem value="bar">Bar</SelectItem>
+                      <SelectItem value="utensils">Utensils</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 )}
               />
               {showOtherArticleDetails && (
                 <Controller
-                  name="otherRegistrationAddress"
+                  name="otherArticleDetails"
                   control={control}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder="Specify Registration Address"
+                      placeholder="Specify Article Type"
                       className="mt-2"
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -245,137 +232,63 @@ const PropritershipForm = () => {
                   )}
                 />
               )}
-              {errors.registrationAddress && (
+              {errors.articleDetails && (
                 <span className="text-red-500">
-                  {errors.registrationAddress.message}
+                  {errors.articleDetails.message}
                 </span>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Label htmlFor="weightPerArticle">Weight Per Article</Label>
                 <Controller
-                  name="registrationNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="registrationNumber"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRegistrationNumber(value);
-                      }}
-                      className={
-                        errors.registrationNumber ? "border-red-500" : ""
-                      }
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select  Registration Number" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="CIN">CIN</SelectItem>
-                        <SelectItem value="PAN">PAN</SelectItem>
-                        <SelectItem value="FIRM NO">FIRM NO</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherRegistrationNumber && (
-                  <Controller
-                    name="otherRegistrationNumber"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Registration Number"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                )}
-                {errors.firmsRegistrationNumber && (
-                  <span className="text-red-500">
-                    {errors.firmsRegistrationNumber.message}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  Holding Percentage
-                </Label>
-                <Controller
-                  name="holdingPercentage"
+                  name="weightPerArticle"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="holdingPercentage"
-                      placeholder="Enter Holding Percentage"
+                      id="weightPerArticle"
+                      placeholder="Enter Weight Per Article amount"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
-                        errors.holdingPercentage ? "border-red-500" : ""
+                        errors.weightPerArticle ? "border-red-500" : ""
                       }
                     />
                   )}
                 />
-                {errors.holdingPercentage && (
+                {errors.weightPerArticle && (
                   <span className="text-red-500">
-                    {errors.holdingPercentage.message}
+                    {errors.weightPerArticle.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="numberOfArticles">Number Of Article</Label>
+                <Controller
+                  name="numberOfArticles"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="numberOfArticles"
+                      placeholder="Enter Number Of Article"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={
+                        errors.numberOfArticles ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.numberOfArticles && (
+                  <span className="text-red-500">
+                    {errors.numberOfArticles.message}
                   </span>
                 )}
               </div>
             </div>
-
-            {displaynominie && displaynominie.length > 0 && (
-              <div className="space-y-2">
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  <Label className="text-lg font-bold">Selected Nominees</Label>
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
-              <Addnominee
-                setSelectedNommie={setSelectedNommie}
-                selectedNommie={selectedNommie}
-                displaynominie={displaynominie}
-                setDisplaynominie={setDisplaynominie}
-              />{" "}
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
@@ -491,4 +404,4 @@ const PropritershipForm = () => {
   );
 };
 
-export default PropritershipForm;
+export default BullionForm;

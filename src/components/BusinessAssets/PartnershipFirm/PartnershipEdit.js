@@ -17,7 +17,6 @@ import {
 } from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -26,54 +25,28 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { PhoneInput } from "react-international-phone";
-import cross from "@/components/image/close.png";
-
 
 const schema = z.object({
-  firmName: z.string().nonempty({ message: "Metal Name is required" }),
-  registrationAddress: z
-    .string()
-    .nonempty({ message: "Article Detail is required" }),
-  firmRegistrationNumber: z.string().optional(),
-  holdingPercentage: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-
-  additionalInformation: z
-    .string()
-    .min(1, { message: "Additional Information is Required" }),
+  firmName: z.string().nonempty({ message: "Firm Name is required" }),
+  otherFirmType: z.string().optional(),
+  registeredAddress: z.string().nonempty({ message: "Registration Address is required" }),
+  firmRegistrationNumber: z.string().nonempty({ message: "Registration Number is required" }),
+  otherRegistrationNumber: z.string().optional(),
+  holdingPercentage: z.string().nonempty({ message: "Holding Percentage is required" }),
+  nomination: z.boolean(),
+  additionalInformation: z.string().min(1, { message: "Additional Information is Required" }),
 });
 
-const PartnershipFirmEdit = () => {
+const PartnershipEdit = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
-  const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  console.log(lifeInsuranceEditId);
-  useEffect(() => {
-    if (lifeInsuranceEditId) {
-      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
-    }
-  }, [lifeInsuranceEditId]);
-  const [showOtherPartnershipFirm, setShowOtherPartnershipFirm] =
-    useState(false);
-  const [defaultValues, setDefaultValues] = useState(null);
-  const [displaynominie, setDisplaynominie] = useState([]);
-  const [selectedNommie, setSelectedNommie] = useState([]);
-  const [nomineeerror, setNomineeError] = useState(false);
-
+  
+  const [showOtherFirmType, setShowOtherFirmType] = useState(false);
+  const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] = useState(false);
+  
   const {
     handleSubmit,
     control,
@@ -82,92 +55,42 @@ const PartnershipFirmEdit = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || {},
+    defaultValues: {},
   });
 
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/partnership-firms/${lifeInsuranceEditId}`,
+      `/api/business-assets/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    let othertype = response.data.data.PartnershipFirm?.firmName;
-    let otherarticle = response.data.data.PartnershipFirm?.registrationAddress;
-    if (
-      othertype === "gold" ||
-      othertype === "silver" ||
-      othertype === "copper"
-    ) {
-      setShowOtherMetalType(false);
-      setValue("firmName", othertype);
-    } else {
-      setShowOtherMetalType(true);
-      setValue("otherMetalType", othertype);
-    }
-
-    if (
-      otherarticle === "plates" ||
-      otherarticle === "glass" ||
-      otherarticle === "bowl" ||
-      otherarticle === "bar" ||
-      otherarticle === "utensils"
-    ) {
-      setShowOtherArticleDetails(false);
-      setValue("registrationAddress", otherarticle);
-    } else {
-      setShowOtherArticleDetails(true);
-      setValue("otherArticleDetails", otherarticle);
-    }
-    console.log(typeof response.data.data.PartnershipFirm?.premium);
-    return response.data.data.PartnershipFirm;
+    return response.data.data.BusinessAsset;
   };
 
-  const {
-    data: Benifyciary,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["PartnershipFrim", lifeInsuranceEditId],
+  const { data: Data, isLoading, isError } = useQuery({
+    queryKey: ["partnershipDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
-
     onSuccess: (data) => {
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
-      setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("metaltype", data.metaltype);
-      setValue("otherInsuranceCompany", data.otherInsuranceCompany);
-      setValue("firmRegistrationNumber", data.firmRegistrationNumber);
-      setValue("additionalInformation", data.additionalInformation);
-      setValue("pointOfContact", data.pointOfContact);
 
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
+      if (data.firmName === "other") {
+        setShowOtherFirmType(true);
       }
-
-      setShowOtherPartnershipFirm(data.PartnershipFirm === "other");
-
-      console.log(data);
+      if (["CIN", "PAN", "FIRM NO"].includes(data.firmRegistrationNumber)) {
+        setShowOtherRegistrationNumber(true);
+      }
     },
     onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
+      toast.error("Failed to fetch data", error.message);
     },
   });
 
-  const bullionMutate = useMutation({
+  const mutateData = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
         `/api/business-assets/${lifeInsuranceEditId}`,
@@ -178,200 +101,147 @@ const PartnershipFirmEdit = () => {
           },
         }
       );
-      return response.data.data.PartnershipFirm;
+      return response.data.data.BusinessAsset;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("PartnershipFrim", lifeInsuranceEditId);
-      toast.success("PartnershipFirm added successfully!");
-      navigate("/bullion");
+      queryClient.invalidateQueries("partnershipDataUpdate", lifeInsuranceEditId);
+      toast.success("Partnership details updated successfully!");
+      navigate("/partnership");
     },
     onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile");
+      toast.error("Failed to update data");
     },
   });
-  useEffect(() => {
-    console.log("Form values:", control._formValues);
-  }, [control._formValues]);
-
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
-    }
-  }, [Benifyciary?.nominees]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    data.name = name;
-    data.type = "partnershipFirm";
-    data.email = email;
-    data.phone = phone;
-    console.log("bullion:", data.bullion);
     if (data.firmName === "other") {
-      data.firmName = data.otherMetalType;
+      data.firmName = data.otherFirmType;
     }
-
-    bullionMutate.mutate(data);
+    if (["CIN", "PAN", "FIRM NO"].includes(data.firmRegistrationNumber)) {
+      data.firmRegistrationNumber = data.otherRegistrationNumber;
+    }
+    mutateData.mutate(data);
   };
 
-  useEffect(() => {
-    console.log(Benifyciary);
-  }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading bullion data</div>;
+  if (isError) return <div>Error loading partnership data</div>;
+
   return (
     <div className="w-full">
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                PartnershipFirm Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the bullion details.
-              </CardDescription>
+              <CardTitle className="text-2xl font-bold">Partnership Details</CardTitle>
+              <CardDescription>Edit the form to update the partnership details.</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="grid gap-6">
-          <form
-            className="space-y-6 flex flex-col"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmName">Metal Type</Label>
+                <Label htmlFor="firmName">Firm Name</Label>
                 <Controller
                   name="firmName"
                   control={control}
-                  defaultValue={Benifyciary?.firmName}
                   render={({ field }) => (
                     <Select
                       id="firmName"
-                      value={field.value}
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherMetalType(value === "other");
+                        setShowOtherFirmType(value === "other");
                       }}
                       className={errors.firmName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.firmName || ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
+                        <SelectValue placeholder="Select Firm Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="company one">company one</SelectItem>
+                        <SelectItem value="other">other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherMetalType && (
+                {showOtherFirmType && (
                   <Controller
-                    name="otherMetalType"
+                    name="otherFirmType"
                     control={control}
-                    defaultValue={Benifyciary?.otherMetalType || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Metal Type"
+                        placeholder="Specify Firm Type"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherMetalType || ""}
                       />
                     )}
                   />
                 )}
                 {errors.firmName && (
+                  <span className="text-red-500">{errors.firmName.message}</span>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="registeredAddress">Registered Address</Label>
+                <Controller
+                  name="registeredAddress"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Enter Registered Address"
+                      className={errors.registeredAddress ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.registeredAddress && (
                   <span className="text-red-500">
-                    {errors.firmName.message}
+                    {errors.registeredAddress.message}
                   </span>
                 )}
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="registrationAddress">Ariticle Details </Label>
+                <Label htmlFor="firmRegistrationNumber">Firm Registration Number</Label>
                 <Controller
-                  name="registrationAddress"
+                  name="firmRegistrationNumber"
                   control={control}
-                  defaultValue={Benifyciary?.registrationAddress || ""}
                   render={({ field }) => (
                     <Select
-                      id="registrationAddress"
-                      value={field.value}
+                      id="firmRegistrationNumber"
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherArticleDetails(value === "other");
+                        setShowOtherRegistrationNumber(true);
                       }}
-                      className={
-                        errors.registrationAddress ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.registrationAddress || ""}
+                      className={errors.firmRegistrationNumber ? "border-red-500" : ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Article Type" />
+                        <SelectValue placeholder="Select Registration Number" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="plates">Plates</SelectItem>
-                        <SelectItem value="glass">Glass</SelectItem>
-                        <SelectItem value="bowl">Bowl</SelectItem>
-                        <SelectItem value="bar">Bar</SelectItem>
-                        <SelectItem value="utensils">Utensils</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="CIN">CIN</SelectItem>
+                        <SelectItem value="PAN">PAN</SelectItem>
+                        <SelectItem value="FIRM NO">FIRM NO</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherArticleDetails && (
+                {showOtherRegistrationNumber && (
                   <Controller
-                    name="otherArticleDetails"
+                    name="otherRegistrationNumber"
                     control={control}
-                    defaultValue={Benifyciary?.otherArticleDetails || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Article Type"
+                        placeholder="Specify Registration Number"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherArticleDetails || ""}
                       />
                     )}
                   />
                 )}
-
-                {errors.registrationAddress && (
-                  <span className="text-red-500">
-                    {errors.registrationAddress.message}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firmRegistrationNumber">
-                  Firm Registration Number
-                </Label>
-                <Controller
-                  name="firmRegistrationNumber"
-                  control={control}
-                  defaultValue={Benifyciary?.firmRegistrationNumber || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="firmRegistrationNumber"
-                      type="number"
-                      {...field}
-                      placeholder="Enter Number Of Article"
-                      value={parseInt(field.value)}
-                      className={
-                        errors.firmRegistrationNumber ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.firmRegistrationNumber || ""}
-                    />
-                  )}
-                />
                 {errors.firmRegistrationNumber && (
                   <span className="text-red-500">
                     {errors.firmRegistrationNumber.message}
@@ -384,18 +254,13 @@ const PartnershipFirmEdit = () => {
                 <Controller
                   name="holdingPercentage"
                   control={control}
-                  defaultValue={Benifyciary?.holdingPercentage || ""}
                   render={({ field }) => (
                     <Input
-                      id="holdingPercentage"
-                      type="number"
                       {...field}
-                      placeholder="Enter Number Of Article"
-                      value={parseInt(field.value)}
+                      placeholder="Enter Holding Percentage"
                       className={
                         errors.holdingPercentage ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.holdingPercentage || ""}
                     />
                   )}
                 />
@@ -406,149 +271,57 @@ const PartnershipFirmEdit = () => {
                 )}
               </div>
 
-              {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2">
-                  <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
               <div className="space-y-2">
-                <Label htmlFor="registered-mobile">Add nominee</Label>
-                {console.log(Benifyciary?.nominees)}
-                <Addnominee
-                  setSelectedNommie={setSelectedNommie}
-                  AllNominees={Benifyciary?.nominees}
-                  selectedNommie={selectedNommie}
-                  displaynominie={displaynominie}
-                  setDisplaynominie={setDisplaynominie}
-                />{" "}
+                <Label htmlFor="nomination">Nomination</Label>
+                <Controller
+                  name="nomination"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        {...field}
+                        value="true"
+                        id="nomination-yes"
+                        checked={field.value === "true"}
+                      />
+                      <Label htmlFor="nomination-yes">Yes</Label>
+                      <input
+                        type="radio"
+                        {...field}
+                        value="false"
+                        id="nomination-no"
+                        checked={field.value === "false"}
+                      />
+                      <Label htmlFor="nomination-no">No</Label>
+                    </div>
+                  )}
+                />
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  {" "}
-                  Additional Information
-                </Label>
-                <Controller
-                  name="additionalInformation"
-                  control={control}
-                  defaultValue={Benifyciary?.additionalInformation || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="additionalInformation"
-                      placeholder="Enter Addtional Information"
-                      {...field}
-                      className={
-                        errors.additionalInformation ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.additionalInformation || ""}
-                    />
-                  )}
-                />
-                {errors.additionalInformation && (
-                  <span className="text-red-500">
-                    {errors.additionalInformation.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">Additional Information</Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="Enter Additional Information"
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
+                  />
                 )}
-              </div>
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
             </div>
-            <div className="w-full grid grid-cols-1 gap-4 mt-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  defaultValue={Benifyciary?.name || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="name"
-                      placeholder="Enter Name"
-                      value={field.value}
-                      onChange={(e) => setName(e.target.value)}
-                      {...field}
-                      className={errors.name ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.name || ""}
-                    />
-                  )}
-                />
-                {errors.name && (
-                  <span className="text-red-500">{errors.name.message}</span>
-                )}
-              </div>
-              <div className="w-[40%] space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Controller
-                  name="email"
-                  control={control}
-                  defaultValue={Benifyciary?.email || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="email"
-                      placeholder="Enter Email"
-                      {...field}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className={errors.email ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.email || ""}
-                    />
-                  )}
-                />
-                {errors.email && (
-                  <span className="text-red-500">{errors.email.message}</span>
-                )}
-              </div>
-              <div className="w-[40%] space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Controller
-                  name="phone"
-                  control={control}
-                  defaultValue={Benifyciary?.phone || ""}
-                  render={({ field }) => (
-                    <PhoneInput
-                      id="phone"
-                      type="tel"
-                      placeholder="Enter mobile number"
-                      defaultCountry="in"
-                      inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setPhone(e.target)}
-                      defaultValue={Benifyciary?.phone || ""}
-                    />
-                  )}
-                />
-                {errors.phone && (
-                  <span className="text-red-500">{errors.phone.message}</span>
-                )}
-              </div>
-            </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
@@ -559,4 +332,4 @@ const PartnershipFirmEdit = () => {
   );
 };
 
-export default PartnershipFirmEdit;
+export default PartnershipEdit;

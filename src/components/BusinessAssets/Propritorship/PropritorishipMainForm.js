@@ -32,12 +32,12 @@ const PropritershipMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/propriterships`, {
+    const response = await axios.get(`/api/business-assets`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-
+    console.log(response.data.data.Propritership);
     return response.data.data.Propritership;
   };
 
