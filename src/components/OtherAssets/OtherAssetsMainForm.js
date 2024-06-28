@@ -100,14 +100,14 @@ const OtherAssetsMainForm = () => {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold">Business Asset</h1>
+        <h1 className="text-2xl font-bold">Other Assets</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Fill out the form to add a new Business Asset.
+          Fill out the form to add a new Other Asset.
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">
         <div
-          onClick={() => navigate("/VehicleDetailsMainForm")}
+          onClick={() => navigate("/vehicle")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
@@ -124,16 +124,16 @@ const OtherAssetsMainForm = () => {
         </div>
 
         <div
-          onMouseDown={() => navigate("/HUF")}
+          onMouseDown={() => navigate("/huf")}
           className=" cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold"> HUF </h1>
+            <h1 className="text-xl font-bold"> HUF Details </h1>
             {HUF && HUF?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HUF?.length} HUF
+                  {HUF?.length} HUF Details
                 </p>
               </div>
             )}

@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const VehicleDetailsMainForm = () => {
+const HUFMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -36,8 +36,8 @@ const VehicleDetailsMainForm = () => {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-
-    return response.data.data.Bullion;
+    console.log(response.data.data.HUF);
+    return response.data.data.HUF;
   };
 
   const {
@@ -67,16 +67,16 @@ const VehicleDetailsMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("HUF deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Vehicle Details</h1>
-          <Button onMouseDown={() => navigate("/vehicle/add")}>
-            Add Vehicle Details
+          <h1 className="text-2xl font-bold">HUF Details</h1>
+          <Button onMouseDown={() => navigate("/huf/add")}>
+            Add HUF Details
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -112,7 +112,7 @@ const VehicleDetailsMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/vehicle/edit");
+                          navigate("/dashboard");
                         }}
                       >
                         Edit
@@ -136,4 +136,4 @@ const VehicleDetailsMainForm = () => {
   );
 };
 
-export default VehicleDetailsMainForm;
+export default HUFMainForm;

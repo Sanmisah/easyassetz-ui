@@ -41,15 +41,17 @@ import PropritershipEditForm from "@/components/BusinessAssets/Propritorship/Pro
 import IntellectualPropertyMainForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyMainForm";
 import IntellectualPropertyOtherForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyOtherForm";
 import OtherAssetsMainForm from "@/components/OtherAssets/OtherAssetsMainForm";
-
 import Dashboard from "@/components/Dashboard/Dashboard";
-
 import PartnershipFirmMainForm from "@/components/BusinessAssets/PartnershipFirm/partnershipMainForm";
 import PartnershipFirmOtherForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipOtherForm";
 import PartnershipFirmEditForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipEdit";
 import CompanyMainForm from "@/components/BusinessAssets/Company/CompanyMainForm";
 import CompanyOtherForm from "@/components/BusinessAssets/Company/CompanyOtherForm";
 import CompanyEditForm from "@/components/BusinessAssets/Company/CompanyEdit";
+import VehicleDetailsMainForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsMainForm";
+import VehicleDetailsOtherForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsOtherForm";
+import HUFMainForm from "@/components/OtherAssets/HUF/HUFMainForm";
+import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -235,7 +237,19 @@ const Layout = () => {
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
       {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
-     
+      {location.pathname === "/vehicle" && (
+        <VehicleDetailsMainForm />
+      )}
+      {location.pathname === "/vehicle/add" && (
+        <VehicleDetailsOtherForm />
+      )}
+        {location.pathname === "/huf" && (
+        <HUFMainForm />
+      )}
+        {location.pathname === "/huf/add" && (
+        <HUFOtherForm />
+      )}
+  
     </div>
   );
 };
