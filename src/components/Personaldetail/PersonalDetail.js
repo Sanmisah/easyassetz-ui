@@ -493,10 +493,10 @@ const Personaldetail = () => {
                         setMarriedUnderAct(false);
                       }
                       if (
-                        value === "married" ||
-                        value === "widowed" ||
-                        value === "divorced" ||
-                        value === "other"
+                        value === "Married" ||
+                        value === "Widowed" ||
+                        value === "Divorced" ||
+                        value === "Other"
                       ) {
                         setMarriedUnderAct(true);
                       }
