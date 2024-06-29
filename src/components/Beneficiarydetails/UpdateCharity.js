@@ -28,6 +28,40 @@ import { PhoneInput } from "react-international-phone";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+
+
+
+const States = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+];
+
+
 const charitySchema = z.object({
   charityName: z.string().nonempty("Organization name is required"),
   charityAddress1: z.string().nonempty("Address 1 is required"),
@@ -36,7 +70,7 @@ const charitySchema = z.object({
   charityState: z.string().nonempty("State is required"),
   charityNumber: z.string().optional(),
   charityEmail: z.string().email("Invalid charityEmail address"),
-  charityContactPerson: z.string().nonempty("Contact person name is required"),
+  charityName: z.string().nonempty("Contact person name is required"),
   charityWebsite: z.string().url("Invalid URL").optional(),
   charitySpecificInstrucion: z.string().optional(),
 });
@@ -216,11 +250,14 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                     <SelectTrigger>
                       <SelectValue placeholder="Select charityState" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ca">California</SelectItem>
-                      <SelectItem value="ny">New York</SelectItem>
-                      <SelectItem value="tx">Texas</SelectItem>
-                    </SelectContent>
+                    <SelectContent> 
+                      {States.map((state) => (
+                        <SelectItem key={state} value={state}>
+                          {state}
+                        </SelectItem>
+                      ))}
+
+                                          </SelectContent>
                   </Select>
                 )}
               />
@@ -274,25 +311,25 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="contact-name"
                 placeholder="Enter full legal name"
-                defaultValue={Charitydata?.charityContactPerson}
-                {...register("charityContactPerson")}
+                defaultValue={Charitydata?.charityName}
+                {...register("charityName")}
                 className="w-full"
               />
-              {errors.charityContactPerson && (
+              {errors.charityName && (
                 <p className="text-red-500">
-                  {errors.charityContactPerson.message}
+                  {errors.charityName.message}
                 </p>
               )}
             </div>
             <div className="space-y-2 p-2">
               <Label
-                htmlFor="charitycontactperson"
+                htmlFor="charityName"
                 className="text-base font-medium"
               >
                 Website
               </Label>
               <Input
-                id="charitycontactperson"
+                id="charityName"
                 type="url"
                 placeholder="Enter charityWebsite"
                 defaultValue={Charitydata?.charityWebsite}

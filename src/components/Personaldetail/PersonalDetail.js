@@ -18,143 +18,12 @@ import Datepicker from "./Datepicker";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Skletonpersonal from "./Skletonpersonal";
 import { toast } from "sonner";
-
+import dropdownData from "./value.json";
 import { format, parse } from "date-fns";
-
-const dropdownData = {
-  genders: ["male", "female", "other"],
-  nationalities: ["indian", "foreign"],
-  specificNationalities: [
-    "afghan",
-    "argentine",
-    "australian",
-    "austrian",
-    "bangladeshi",
-    "belgian",
-    "brazilian",
-    "british",
-    "canadian",
-    "chilean",
-    "colombian",
-    "costa-rican",
-    "other",
-  ],
-  countries: [
-    "united states",
-    "canada",
-    "united kingdom",
-    "australia",
-    "other",
-    "Afghanistan",
-    "Albania",
-    "Algeria",
-    "Andorra",
-    "Angola",
-    "Antigua and Barbuda",
-    "Argentina",
-    "Armenia",
-    "Australia",
-    "Austria",
-    "Azerbaijan",
-    "Bahamas",
-    "Bahrain",
-    "Bangladesh",
-    "Barbados",
-    "Belarus",
-    "Belgium",
-    "Belize",
-    "Benin",
-    "Bhutan",
-    "Bolivia",
-    "Bosnia and Herzegovina",
-    "Botswana",
-    "Brazil",
-    "Brunei",
-    "Bulgaria",
-    "Burkina Faso",
-    "Burundi",
-    "Cabo Verde",
-    "Cambodia",
-    "Cameroon",
-    "Canada",
-    "Central African Republic",
-    "Chad",
-    "Chile",
-    "China",
-    "Colombia",
-    "Comoros",
-    "Congo, Democratic Republic of the",
-    "Congo, Republic of the",
-    "Costa Rica",
-    "Croatia",
-    "Cuba",
-    "Cyprus",
-    "Czech Republic",
-    "Denmark",
-    "Djibouti",
-    "Dominica",
-    "Dominican Republic",
-    "East Timor (Timor-Leste)",
-    "Ecuador",
-    "Egypt",
-    "El Salvador",
-    "Equatorial Guinea",
-    "Eritrea",
-    "Estonia",
-    "Eswatini",
-    "Ethiopia",
-    "Fiji",
-    "Finland",
-    "France",
-    "Gabon",
-    "Gambia",
-    "Georgia",
-    "Germany",
-    "Ghana",
-    "Greece",
-    "Grenada",
-    "Guatemala",
-    "Guinea",
-    "Guinea-Bissau",
-    "Guyana",
-    "Haiti",
-    "Honduras",
-    "Hungary",
-    "Iceland",
-    "India",
-    "Indonesia",
-    "Iran",
-    "Iraq",
-    "Ireland",
-    "Israel",
-    "Italy",
-    "Jamaica",
-    "Japan",
-    "Jordan",
-    "Kazakhstan",
-    "Kenya",
-    "Kiribati",
-    "Korea, North",
-    "Korea, South",
-    "Kosovo",
-    "Kuwait",
-    "Kyrgyzstan",
-    "Laos",
-    "Latvia",
-    "Lebanon",
-  ],
-  religions: [
-    "christian",
-    "islam",
-    "muslim",
-    "jain",
-    "sikh",
-    "hinduism",
-    "buddhism",
-    "other",
-  ],
-  maritalStatuses: ["bachelor", "married", "divorced", "widowed", "other"],
-};
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+ import { useNavigate } from "react-router-dom";
+import { PhoneInput } from "react-international-phone";
 
 const Personaldetail = () => {
   const [showAdharFields, setShowAdharFields] = useState(false);
@@ -191,9 +60,14 @@ const Personaldetail = () => {
     );
     console.log(response.data.data.profile);
     setDefaultData(response.data.data.profile);
-    if (response.data.data.profile?.nationality === "indian")
+    if(response.data.data.profile?.nationality === ""  || response.data.data.profile?.nationality === null)
+    {
+      response.data.data.profile.nationality = "Indian";
       setIsForeign(false);
-    if (response.data.data.profile?.nationality !== "indian")
+    }
+    if (response.data.data.profile?.nationality === "Indian")
+      setIsForeign(false);
+    if (response.data.data.profile?.nationality !== "Indian")
       setIsForeign(true);
     if (response.data.data.profile?.dob) {
       setdefaultDate(new Date(response.data.data.profile.dob));
@@ -211,10 +85,14 @@ const Personaldetail = () => {
     onSuccess: (data) => {
       console.log("Data:", data);
       
-      if (data.nationality === "") setIsForeign(false); 
-      if (data.nationality === "indian") setIsForeign(false);
-      if (data.nationality !== null) setIsForeign(false);
-      if (data.nationality !== null && data.nationality !== "indian") setIsForeign(true);
+      if (data.nationality === ""){
+        data.nationality = "Indian";
+        setIsForeign(false); }
+      if (data.nationality === "Indian") setIsForeign(false);
+      if (data.nationality !== null){
+        data.nationality = "Indian";
+        setIsForeign(false);}
+      if (data.nationality !== null && data.nationality !== "Indian") setIsForeign(true);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -274,7 +152,7 @@ const Personaldetail = () => {
   });
 
   // useEffect(() => {
-  //   if (defaultData?.nationality !== "indian") {
+  //   if (defaultData?.nationality !== "Indian") {
   //     setValue("nationality", defaultData?.nationality);
   //     setIsForeign(true);
   //   } else {
@@ -284,35 +162,38 @@ const Personaldetail = () => {
   // }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
-    console.log("file:", file);
-    data.aadharFile = file;
-    if (isForeign && data.specificNationality) {
-      data.nationality = data.specificNationality;
-    }
-    if (marriedUnderAct && data.maritalStatus === "bachelor") {
-      data.maritalStatus = "bachelor";
-      data.marriedUnderSpecialAct = "false";
-    }
-    delete data.specificNationality;
-    data.marriedUnderSpecialAct = specialactundermarriange;
+    
     const date = new Date(data.dob);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
     data.dob = newdate;
+    
+    console.log("file:", file);
+    data.aadharFile = file;
+    if (isForeign && data.specificNationality) {
+      data.nationality = data.specificNationality;
+    }
+    if (marriedUnderAct && data.maritalStatus === "Bachelor") {
+      data.maritalStatus = "Bachelor";
+      data.marriedUnderSpecialAct = "false";
+    }
+    delete data.specificNationality;
+    data.marriedUnderSpecialAct = specialactundermarriange;
+    
 
     Profilemutate.mutate(data);
   };
 
   const permanentAddress = watch([
-    "permanentHouseFlatNo",
-    "permanentAddressLine1",
-    "permanentAddressLine2",
-    "permanentPincode",
-    "permanentCity",
-    "permanentState",
-    "permanentCountry",
+    "PermanentHouseFlatNo",
+    "PermanentAddressLine1",
+    "PermanentAddressLine2",
+    "PermanentPincode",
+    "PermanentCity",
+    "PermanentState",
+    "PermanentCountry",
   ]);
 
   useEffect(() => {
@@ -438,7 +319,7 @@ const Personaldetail = () => {
                 <Controller
                   name="nationality"
                   defaultValue={
-                    defaultData?.nationality !== "indian" ? "foreign" : "indian"
+                    defaultData?.nationality !== "Inidan" ? "Foreign" : "Indian"
                   }
                   control={control}
                   rules={{
@@ -454,7 +335,7 @@ const Personaldetail = () => {
                       value={field.value} // Use the field's value
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setIsForeign(value === "foreign");
+                        setIsForeign(value === "Foreign");
                       }}
                     >
                       {dropdownData.nationalities?.map((nationality) => (
@@ -592,7 +473,7 @@ const Personaldetail = () => {
               )}
             </div>
             <div className="space-y-2 min-w-[300px] max-md:col-span-2">
-              <Label htmlFor="marital-status">Marital Status</Label>
+              <Label htmlFor="<Marital-status">Marital Status</Label>
               <Controller
                 name="maritalStatus"
                 control={control}
@@ -605,7 +486,7 @@ const Personaldetail = () => {
                     {...field}
                     value={defaultData?.maritalStatus}
                     onValueChange={(value) => {
-                      if (value === "bachelor") {
+                      if (value === "Bachelor") {
                         setMarriedUnderAct(false);
                       }
                       if (
@@ -620,8 +501,8 @@ const Personaldetail = () => {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select marital status">
-                        {field.value || "Select marital status"}
+                      <SelectValue placeholder="Select Marital status">
+                        {field.value || "Select Marital status"}
                       </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
@@ -640,7 +521,7 @@ const Personaldetail = () => {
                 </span>
               )}
             </div>
-            {marriedUnderAct && defaultData?.maritalStatus !== "bachelor" && (
+            {marriedUnderAct && defaultData?.maritalStatus !== "Bachelor" && (
               <div className="space-y-2 mt-6 gap-2 flex  flex-col ">
                 <div div className="flex justify-start item-center  gap-2">
                   <Checkbox

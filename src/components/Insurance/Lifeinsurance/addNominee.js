@@ -28,7 +28,7 @@ const AddNominee = ({
     axios
       .get(`/api/beneficiaries`, {
         headers: {
-          Authorization: `Bearer ${user.data.token}`,
+          Authorization: `Bearer ${user?.data?.token}`,
         },
       })
       .then((res) => {

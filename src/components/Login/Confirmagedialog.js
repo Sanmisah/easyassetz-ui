@@ -17,9 +17,7 @@ const Confirmagedialog = ({ onConfirm, alertDialog, setAlertDialog }) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            By Checking this box I confirm that i am atleast 18 years of age and
-            have read and aggree to easy asstsz terms of service privat notice
+          <AlertDialogDescription>"By checking this box, I confirm that I am at least 18 years of age, and I have read and agree to Easy Assist's Terms of Service and Privacy Notice."
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -499,10 +499,10 @@ const EditMotorForm = () => {
                         <SelectValue placeholder="Select vehicleType" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="self">Two Wheeler</SelectItem>
-                        <SelectItem value="spouse">Three Wheeler</SelectItem>
-                        <SelectItem value="parent">Four Wheeler</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
+                        <SelectItem value="threewheeler">Three Wheeler</SelectItem>
+                        <SelectItem value="fourwheeler">Four Wheeler</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

@@ -35,7 +35,7 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  othercompanyName: z.string().optional(),
+    otherInsuranceCompany: z.string().optional(),
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
@@ -132,7 +132,7 @@ const InsuranceForm = () => {
     mutationFn: async (data) => {
       const response = await axios.post(`/api/life-insurances`, data, {
         headers: {
-          Authorization: `Bearer ${user.data.token}`,
+          Authorization: `Bearer ${user?.data?.token}`,
         },
       });
 
@@ -163,12 +163,19 @@ const InsuranceForm = () => {
     const newdate = `${month}/${day}/${year}`;
     data.maturityDate = newdate;
     console.log("Nomiee:", selectedNommie.length > 0);
+    if(data.companyName === "other") {
+      console.log("INDSANASDn")
+      data.companyName = data.otherInsuranceCompany;
+    }
+    
     if (selectedNommie.length < 1) {
       console.log("Nomiee:", selectedNommie.length > 0);
 
       setnomineeerror(true);
       return;
     }
+ 
+    
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };

@@ -248,11 +248,11 @@ const MotorForm = () => {
                       >
                         <div className="flex items-center gap-2 text-center">
                           <RadioGroupItem id="company1" value="company1" />
-                          <Label htmlFor="company1">Third Party</Label>
+                          <Label htmlFor="thirdparty">Third Party</Label>
                         </div>
                         <div className="flex items-center gap-2">
                           <RadioGroupItem id="company2" value="company2" />
-                          <Label htmlFor="company2">Comprehensive</Label>
+                          <Label htmlFor="comprehensive">Comprehensive</Label>
                         </div>
                       </RadioGroup>
                     </div>
@@ -386,10 +386,10 @@ const MotorForm = () => {
                         <SelectValue placeholder="Select vehicleType" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="self">Two Wheeler</SelectItem>
-                        <SelectItem value="spouse">Three Wheeler</SelectItem>
-                        <SelectItem value="parent">Four Wheeler</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
+                        <SelectItem value="threewheeler">Three Wheeler</SelectItem>
+                        <SelectItem value="fourwheeler">Four Wheeler</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

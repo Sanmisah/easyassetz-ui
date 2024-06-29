@@ -35,7 +35,7 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  othercompanyName: z.string().optional(),
+    otherInsuranceCompany: z.string().optional(),
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
@@ -50,6 +50,7 @@ const schema = z.object({
     .nonempty({ message: "Policy Holder Name is required" }),
 
   additionalDetails: z.string().optional(),
+  
   modeOfPurchase: z
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
@@ -137,6 +138,11 @@ const GeneralForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if(data.companyName === "other") {
+      console.log("INDSANASDn")
+      data.companyName = data.otherInsuranceCompany;
+    } 
+
     console.log(data);
     const date = new Date(data.maturityDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -357,52 +363,7 @@ const GeneralForm = () => {
                   </span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="vehicleType">Vehical Type</Label>
-                <Controller
-                  name="vehicleType"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="vehicleType"
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRelationship(value === "other");
-                      }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select vehicleType" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="self">Two Wheeler</SelectItem>
-                        <SelectItem value="spouse">Three Wheeler</SelectItem>
-                        <SelectItem value="parent">Four Wheeler</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherRelationship && (
-                  <Controller
-                    name="specificVehicalType"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Vehical Type"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
-                {errors.vehicleType && (
-                  <span className="text-red-500">
-                    {errors.vehicleType.message}
-                  </span>
-                )}
-              </div>
+               
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
