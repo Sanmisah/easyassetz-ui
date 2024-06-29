@@ -35,10 +35,11 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  othercompanyName: z.string().optional(),
+    otherInsuranceCompany: z.string().optional(),
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
+    specifyInsuranceType : z.string().optional(),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
 
   maturityDate: z.date().optional(),
@@ -160,7 +161,7 @@ const HealthForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    console.log("Nomiee:", selectedNommie.length < 1);
+    console.log("Nomiee:", data.companyName, data.otherInsuranceCompany);
     if (selectedNommie.length < 1) {
       console.log("Nomiee:", selectedNommie.length < 1);
 
@@ -176,8 +177,8 @@ const HealthForm = () => {
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.specificVehicalType;
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
     }
     if (data.insuranceType === "other") {
       data.insuranceType = data.specifyInsuranceType;
@@ -221,7 +222,7 @@ const HealthForm = () => {
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="insurance-company"
+                      id="companyName"
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -248,6 +249,7 @@ const HealthForm = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
+
                         placeholder="Specify Insurance Company"
                         className="mt-2"
                       />

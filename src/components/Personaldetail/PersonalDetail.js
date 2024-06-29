@@ -201,6 +201,7 @@ const Personaldetail = () => {
     console.log(new Date("2022-01-01"));
     console.log(new Date("22-01-01"));
     console.log(new Date());
+
     return response.data.data.profile || {};
   };
 
@@ -209,8 +210,11 @@ const Personaldetail = () => {
     queryFn: getPersonalData,
     onSuccess: (data) => {
       console.log("Data:", data);
+      
+      if (data.nationality === "") setIsForeign(false); 
       if (data.nationality === "indian") setIsForeign(false);
-      if (data.nationality !== "indian") setIsForeign(true);
+      if (data.nationality !== null) setIsForeign(false);
+      if (data.nationality !== null && data.nationality !== "indian") setIsForeign(true);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

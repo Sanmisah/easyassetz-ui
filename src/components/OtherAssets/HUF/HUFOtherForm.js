@@ -27,7 +27,6 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import cross from "@/components/image/close.png";
-import { assertAccessor } from "../../../../../../../.cache/typescript/5.4/node_modules/@babel/types/lib/index";
 
 const schema = z.object({
   hufName: z.string().nonempty({ message: " HUF Name is required" }),
