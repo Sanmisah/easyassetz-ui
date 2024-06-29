@@ -22,7 +22,7 @@ import dropdownData from "./value.json";
 import { format, parse } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
- import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const Personaldetail = () => {
@@ -60,8 +60,10 @@ const Personaldetail = () => {
     );
     console.log(response.data.data.profile);
     setDefaultData(response.data.data.profile);
-    if(response.data.data.profile?.nationality === ""  || response.data.data.profile?.nationality === null)
-    {
+    if (
+      response.data.data.profile?.nationality === "" ||
+      response.data.data.profile?.nationality === null
+    ) {
       response.data.data.profile.nationality = "Indian";
       setIsForeign(false);
     }
@@ -84,15 +86,18 @@ const Personaldetail = () => {
     queryFn: getPersonalData,
     onSuccess: (data) => {
       console.log("Data:", data);
-      
-      if (data.nationality === ""){
+
+      if (data.nationality === "") {
         data.nationality = "Indian";
-        setIsForeign(false); }
+        setIsForeign(false);
+      }
       if (data.nationality === "Indian") setIsForeign(false);
-      if (data.nationality !== null){
+      if (data.nationality !== null) {
         data.nationality = "Indian";
-        setIsForeign(false);}
-      if (data.nationality !== null && data.nationality !== "Indian") setIsForeign(true);
+        setIsForeign(false);
+      }
+      if (data.nationality !== null && data.nationality !== "Indian")
+        setIsForeign(true);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -162,14 +167,13 @@ const Personaldetail = () => {
   // }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
-    
     const date = new Date(data.dob);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
     data.dob = newdate;
-    
+
     console.log("file:", file);
     data.aadharFile = file;
     if (isForeign && data.specificNationality) {
@@ -181,7 +185,6 @@ const Personaldetail = () => {
     }
     delete data.specificNationality;
     data.marriedUnderSpecialAct = specialactundermarriange;
-    
 
     Profilemutate.mutate(data);
   };
