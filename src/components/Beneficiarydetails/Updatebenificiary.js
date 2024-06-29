@@ -210,7 +210,7 @@ const Benificiaryform = ({
         data,
         {
           headers: {
-            Authorization: `Bearer ${user.data.token}`,
+            Authorization: `Bearer ${user?.data?.token}`,
           },
         }
       );
@@ -229,14 +229,11 @@ const Benificiaryform = ({
 
   const onSubmit = (data) => {
     data.type = "beneficiary";
-    console.log("ASDSD", data.dob)
+    console.log("ASDSD", data.dob);
     console.log(data);
-    if (data.dob !== null  && data.dob !== "") {
+    if (data.dob !== null && data.dob !== "") {
       data.dob = Benifyciary?.dob;
-    
-    }
-    else{
-
+    } else {
       const date = new Date(data.dob);
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
@@ -244,7 +241,7 @@ const Benificiaryform = ({
       const newdate = `${month}/${day}/${year}`;
       data.dob = newdate;
     }
-    
+
     console.log(data);
     benificiaryMutate.mutate(data);
   };
