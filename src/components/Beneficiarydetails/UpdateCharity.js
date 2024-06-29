@@ -28,9 +28,6 @@ import { PhoneInput } from "react-international-phone";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-
-
-
 const States = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -60,7 +57,6 @@ const States = [
   "Uttar Pradesh",
   "Uttarakhand",
 ];
-
 
 const charitySchema = z.object({
   charityName: z.string().nonempty("Organization name is required"),
@@ -250,14 +246,13 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                     <SelectTrigger>
                       <SelectValue placeholder="Select charityState" />
                     </SelectTrigger>
-                    <SelectContent> 
+                    <SelectContent>
                       {States.map((state) => (
                         <SelectItem key={state} value={state}>
                           {state}
                         </SelectItem>
                       ))}
-
-                                          </SelectContent>
+                    </SelectContent>
                   </Select>
                 )}
               />
@@ -316,16 +311,11 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 className="w-full"
               />
               {errors.charityName && (
-                <p className="text-red-500">
-                  {errors.charityName.message}
-                </p>
+                <p className="text-red-500">{errors.charityName.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label
-                htmlFor="charityName"
-                className="text-base font-medium"
-              >
+              <Label htmlFor="charityName" className="text-base font-medium">
                 Website
               </Label>
               <Input
@@ -348,10 +338,10 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 Specific Instructions
               </Label>
               <Textarea
-                id="charityspecificInstrucion"
-                placeholder="Enter any specific charityspecificInstrucion"
-                defaultValue={Charitydata?.charitySpecificInstrucion}
-                {...register("charitySpecificInstrucion")}
+                id="charityspecificInstruction"
+                placeholder="Enter any specific charityspecificInstruction"
+                defaultValue={Charitydata?.charitySpecificInstruction}
+                {...register("charitySpecificInstruction")}
                 className="w-full"
               />
             </div>
