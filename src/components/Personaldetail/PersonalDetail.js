@@ -1178,7 +1178,7 @@ const Personaldetail = () => {
               {showDLFields && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="driving-license-number">DL Number</Label>
+                    <Label htmlFor="driving-license-number">Driving License Number</Label>
                     <Controller
                       name="drivingLicenseNumber"
                       control={control}
@@ -1186,7 +1186,7 @@ const Personaldetail = () => {
                       render={({ field }) => (
                         <InputMask
                           id="driving-license-number"
-                          placeholder="DL Number"
+                          placeholder="Driving License Number"
                           mask="aa99-99999999999"
                           maskChar={null}
                           {...field}
@@ -1203,7 +1203,7 @@ const Personaldetail = () => {
                       rules={{
                         required:
                           !defaultData?.drivingLicenseNumber &&
-                          "DL Number is required",
+                          "Driving License Number is required",
                         pattern: {
                           value: /^[A-Z0-9-]{15}$/,
                           message: "Invalid Driving License Number",
@@ -1330,7 +1330,7 @@ const Personaldetail = () => {
               {showPassportFields && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="pp-number">PP Number</Label>
+                    <Label htmlFor="pp-number">Passport Number</Label>
                     <Controller
                       name="passportNumber"
                       control={control}
@@ -1365,10 +1365,10 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="pp-name">Name as per PP</Label>
+                    <Label htmlFor="pp-name">Name as per Passport</Label>
                     <Input
                       id="pp-name"
-                      placeholder="Name as per PP"
+                      placeholder="Name as per Passport"
                       type="text"
                       defaultValue={defaultData?.passportName}
                       {...register("passportName", {
