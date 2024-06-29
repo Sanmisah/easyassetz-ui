@@ -445,7 +445,71 @@ const Benificiaryform = ({
                               </p>
                             )}
                           </div>
-                          <div className="space-y-2">
+                          <div>
+                            <h3 className="text-lg font-medium">Document</h3>
+                            <div className="space-y-2">
+                              <Label htmlFor="document">Document</Label>
+                              <Controller
+                                name="document"
+                                control={control}
+                                defaultValue={Benifyciary.document}
+                                render={({ field }) => (
+                                  <Select
+                                    value={field.value}
+                                    onValueChange={(value) => {
+                                      field.onChange(value);
+                                      setSelectedDocument(value);
+                                    }}
+                                  >
+                                    <SelectTrigger
+                                      id="document"
+                                      aria-label="Document"
+                                    >
+                                      <SelectValue placeholder="Select document" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="adhar">
+                                        Aadhaar
+                                      </SelectItem>
+                                      <SelectItem value="passport">
+                                        Passport
+                                      </SelectItem>
+                                      <SelectItem value="driving-license">
+                                        Driving License
+                                      </SelectItem>
+                                      <SelectItem value="voter-id">
+                                        Voter ID
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                              {errors.document && (
+                                <p className="text-red-500">
+                                  {errors.document.message}
+                                </p>
+                              )}
+                            </div>
+                            {selectedDocument && (
+                              <div className="space-y-2">
+                                <Label htmlFor="documentData">
+                                  {selectedDocument} Number
+                                </Label>
+                                <Input
+                                  id="documentData"
+                                  placeholder={`Enter ${selectedDocument} number`}
+                                  {...register("documentData")}
+                                  defaultValue={Benifyciary.documentData}
+                                />
+                                {errors.documentData && (
+                                  <p className="text-red-500">
+                                    {errors.documentData.message}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          {/* <div className="space-y-2">
                             <Label htmlFor="documentData">Document Data</Label>
                             <Input
                               id="documentData"
@@ -458,7 +522,7 @@ const Benificiaryform = ({
                                 {errors.documentData.message}
                               </p>
                             )}
-                          </div>
+                          </div> */}
                           <div className="space-y-2">
                             <Label htmlFor="houseNo">House Number</Label>
                             <Input
