@@ -229,18 +229,18 @@ const Benificiaryform = ({
 
   const onSubmit = (data) => {
     data.type = "beneficiary";
-    console.log("ASDSD", data.dob);
+    // console.log("ASDSD", data.dob);
     console.log(data);
-    if (data.dob !== null && data.dob !== "") {
-      data.dob = Benifyciary?.dob;
-    } else {
-      const date = new Date(data.dob);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.dob = newdate;
-    }
+    // if (data.dob !== null && !data.dob) {
+    //   data.dob = Benifyciary?.dob;
+    // } else {
+    //   const date = new Date(data.dob);
+    //   const month = String(date.getMonth() + 1).padStart(2, "0");
+    //   const day = String(date.getDate()).padStart(2, "0");
+    //   const year = date.getFullYear();
+    //   const newdate = `${month}/${day}/${year}`;
+    //   data.dob = newdate;
+    // }
 
     console.log(data);
     benificiaryMutate.mutate(data);
@@ -394,7 +394,9 @@ const Benificiaryform = ({
                               render={({ field }) => (
                                 <Datepicker
                                   selected={field.value}
-                                  defaultValue={Benifyciary.dob}
+                                  defaultValue={
+                                    Benifyciary.dob ? Benifyciary.dob : null
+                                  }
                                   onChange={field.onChange}
                                   id="dob"
                                 />
