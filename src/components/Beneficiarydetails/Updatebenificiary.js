@@ -126,6 +126,10 @@ const Benificiaryform = ({
       },
     });
 
+    if (response.data.data.Beneficiary?.document !== null) {
+      setSelectedDocument(response.data.data.Beneficiary?.documentData);
+    }
+
     return response.data.data.Beneficiary;
   };
 
@@ -446,7 +450,6 @@ const Benificiaryform = ({
                             )}
                           </div>
                           <div>
-                            <h3 className="text-lg font-medium">Document</h3>
                             <div className="space-y-2">
                               <Label htmlFor="document">Document</Label>
                               <Controller
