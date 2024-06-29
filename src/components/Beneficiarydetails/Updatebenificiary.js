@@ -495,9 +495,7 @@ const Benificiaryform = ({
                             </div>
                             {selectedDocument && (
                               <div className="space-y-2">
-                                <Label htmlFor="documentData">
-                                  {selectedDocument} Number
-                                </Label>
+                                <Label htmlFor="documentData"></Label>
                                 <Input
                                   id="documentData"
                                   placeholder={`Enter ${selectedDocument} number`}
