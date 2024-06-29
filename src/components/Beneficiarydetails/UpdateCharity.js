@@ -68,7 +68,7 @@ const charitySchema = z.object({
   charityEmail: z.string().email("Invalid charityEmail address"),
   charityName: z.string().nonempty("Contact person name is required"),
   charityWebsite: z.string().url("Invalid URL").optional(),
-  charitySpecificInstrucion: z.string().optional(),
+  charitySpecificInstruction: z.string().optional(),
 });
 
 const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
