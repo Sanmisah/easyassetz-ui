@@ -138,6 +138,16 @@ const OtherForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if (data.modeOfPurchase === "broker") {
+      data.registeredMobile = null;
+      data.registeredEmail = null;
+    }
+    if (data.modeOfPurchase === "e-insurance") {
+      data.brokerName = null;
+      data.contactPerson = null;
+      data.contactNumber = null;
+      data.email = null;
+    }
     console.log(data);
     const date = new Date(data.maturityDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");

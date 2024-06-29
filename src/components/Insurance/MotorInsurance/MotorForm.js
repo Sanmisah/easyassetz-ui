@@ -138,6 +138,16 @@ const MotorForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if (data.modeOfPurchase === "broker") {
+      data.registeredMobile = null;
+      data.registeredEmail = null;
+    }
+    if (data.modeOfPurchase === "e-insurance") {
+      data.brokerName = null;
+      data.contactPerson = null;
+      data.contactNumber = null;
+      data.email = null;
+    }
     console.log(data);
     const date = new Date(data.expiryDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -387,9 +397,13 @@ const MotorForm = () => {
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="twowheeler">Two Wheeler</SelectItem>
-                        <SelectItem value="threewheeler">Three Wheeler</SelectItem>
-                        <SelectItem value="fourwheeler">Four Wheeler</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="threewheeler">
+                          Three Wheeler
+                        </SelectItem>
+                        <SelectItem value="fourwheeler">
+                          Four Wheeler
+                        </SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

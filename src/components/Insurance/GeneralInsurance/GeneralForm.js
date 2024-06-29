@@ -35,7 +35,7 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-    otherInsuranceCompany: z.string().optional(),
+  otherInsuranceCompany: z.string().optional(),
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
@@ -50,7 +50,7 @@ const schema = z.object({
     .nonempty({ message: "Policy Holder Name is required" }),
 
   additionalDetails: z.string().optional(),
-  
+
   modeOfPurchase: z
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
@@ -138,10 +138,21 @@ const GeneralForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
-    if(data.companyName === "other") {
-      console.log("INDSANASDn")
+    if (data.modeOfPurchase === "broker") {
+      data.registeredMobile = null;
+      data.registeredEmail = null;
+    }
+    if (data.modeOfPurchase === "e-insurance") {
+      data.brokerName = null;
+      data.contactPerson = null;
+      data.contactNumber = null;
+      data.email = null;
+    }
+
+    if (data.companyName === "other") {
+      console.log("INDSANASDn");
       data.companyName = data.otherInsuranceCompany;
-    } 
+    }
 
     console.log(data);
     const date = new Date(data.maturityDate);
@@ -363,7 +374,6 @@ const GeneralForm = () => {
                   </span>
                 )}
               </div>
-               
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -429,7 +439,6 @@ const GeneralForm = () => {
                   Please select atleast one nominee
                 </span>
               )}
-
             </div>
 
             <div className="space-y-4 flex flex-col">

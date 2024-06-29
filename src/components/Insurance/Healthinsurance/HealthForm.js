@@ -35,11 +35,11 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-    otherInsuranceCompany: z.string().optional(),
+  otherInsuranceCompany: z.string().optional(),
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-    specifyInsuranceType : z.string().optional(),
+  specifyInsuranceType: z.string().optional(),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
 
   maturityDate: z.date().optional(),
@@ -160,6 +160,16 @@ const HealthForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if (data.modeOfPurchase === "broker") {
+      data.registeredMobile = null;
+      data.registeredEmail = null;
+    }
+    if (data.modeOfPurchase === "e-insurance") {
+      data.brokerName = null;
+      data.contactPerson = null;
+      data.contactNumber = null;
+      data.email = null;
+    }
     console.log(data);
     console.log("Nomiee:", data.companyName, data.otherInsuranceCompany);
     if (selectedNommie.length < 1) {
@@ -183,7 +193,7 @@ const HealthForm = () => {
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
-    
+
     if (data.insuranceType === "other") {
       data.insuranceType = data.specifyInsuranceType;
     }
@@ -253,7 +263,6 @@ const HealthForm = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-
                         placeholder="Specify Insurance Company"
                         className="mt-2"
                       />
