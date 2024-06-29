@@ -212,6 +212,16 @@ const EditFormGeneral = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
+    if (data.modeOfPurchase === "broker") {
+      data.registeredMobile = null;
+      data.registeredEmail = null;
+    }
+    if (data.modeOfPurchase === "e-insurance") {
+      data.brokerName = null;
+      data.contactPerson = null;
+      data.contactNumber = null;
+      data.email = null;
+    }
     console.log("I am in here", data);
     console.log("brokerName:", data.brokerName);
 

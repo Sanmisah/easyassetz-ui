@@ -175,6 +175,10 @@ const Personaldetail = () => {
     data.dob = newdate;
 
     console.log("file:", file);
+    if (data.maritalStatus === "Bachelor") {
+      data.marriedUnderSpecialAct = "false";
+    }
+
     data.aadharFile = file;
     if (isForeign && data.specificNationality) {
       data.nationality = data.specificNationality;

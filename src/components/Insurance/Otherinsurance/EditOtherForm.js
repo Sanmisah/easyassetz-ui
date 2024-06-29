@@ -215,6 +215,16 @@ const EditOtherForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
+    if (data.modeOfPurchase === "broker") {
+      data.registeredMobile = null;
+      data.registeredEmail = null;
+    }
+    if (data.modeOfPurchase === "e-insurance") {
+      data.brokerName = null;
+      data.contactPerson = null;
+      data.contactNumber = null;
+      data.email = null;
+    }
     console.log(data);
     console.log("Initial Value of data:", data.maturityDate);
     const date = new Date(data.maturityDate);
