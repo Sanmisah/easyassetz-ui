@@ -69,6 +69,12 @@ import HomeLoanOtherForm from "@/components/Liabilities/HomeLoans/HomeLoanOtherF
 import EditHomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanEdit";
 import HomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanMainForm";
 import Liabilities from "@/components/Liabilities/LibilitiesMainForm";
+import VehicleLoanMainForm from "@/components/Liabilities/VehicleLoan/VehicleLoanMainForm";
+import VehicleLoanOtherForm from "@/components/Liabilities/VehicleLoan/VehicleLoanOtherForm";
+import VehicleLoanEdit from "@/components/Liabilities/VehicleLoan/VehicleLoanEdit";
+import LitigationMainForm from "@/components/Liabilities/Litigation/LitigationMainForm";
+import LitigationOtherForm from "@/components/Liabilities/Litigation/LitigationOtherForm";
+import LitigationEdit from "@/components/Liabilities/Litigation/LitigationEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -300,6 +306,12 @@ const Layout = () => {
       {location.pathname === "/homeloans" && <HomeLoanForm />}
       {location.pathname === "/homeloans/add" && <HomeLoanOtherForm />}
       {location.pathname === "/homeloans/edit" && <EditHomeLoanForm />}
+      {location.pathname === "/vehicleloan" && <VehicleLoanMainForm />}
+      {location.pathname === "/vehicleloan/add" && <VehicleLoanOtherForm />}
+      {location.pathname === "/vehicleloan/edit" && <VehicleLoanEdit />}
+      {location.pathname === "/litigation" && <LitigationMainForm />}
+      {location.pathname === "/litigation/add" && <LitigationOtherForm />}
+      {location.pathname === "/litigation/edit" && <LitigationEdit />}
     </div>
   );
 };

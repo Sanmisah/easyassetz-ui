@@ -71,6 +71,12 @@ function App() {
         <Route path="/homeloans" element={<Personalpage />} />
         <Route path="/homeloans/add" element={<Personalpage />} />
         <Route path="/homeloans/edit" element={<Personalpage />} />
+        <Route path="/vehicleloan" element={<Personalpage />} />
+        <Route path="/vehicleloan/add" element={<Personalpage />} />
+        <Route path="/vehicleloan/edit" element={<Personalpage />} />
+        <Route path="/litigation" element={<Personalpage />} />
+        <Route path="/litigation/add" element={<Personalpage />} />
+        <Route path="/litigation/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

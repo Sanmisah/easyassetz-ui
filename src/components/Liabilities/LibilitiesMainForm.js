@@ -111,6 +111,22 @@ const InsuranceMainForm = () => {
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold">Home Loans</h1>
+            {HealthInsurance?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {HealthInsurance?.length && HealthInsurance?.length} Loans
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        <div
+          onClick={() => navigate("/lifeinsurance")}
+          className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Personal Loans</h1>
             {HealthInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
@@ -122,7 +138,7 @@ const InsuranceMainForm = () => {
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/lifeinsurance")}
+          onMouseDown={() => navigate("/vehicleloan")}
           className=" cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
@@ -138,7 +154,7 @@ const InsuranceMainForm = () => {
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/generalinsurance")}
+          onMouseDown={() => navigate("/otherinsurance")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
@@ -155,7 +171,7 @@ const InsuranceMainForm = () => {
           </div>
         </div>
         <div
-          onClick={() => navigate("/otherinsurance")}
+          onClick={() => navigate("/litigation")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
