@@ -12,7 +12,6 @@ import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
 import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
-
 import {
   Sheet,
   SheetContent,
@@ -66,7 +65,10 @@ import WatchOtherForm from "@/components/OtherAssets/Watch/WatchOtherForm";
 import WatchEdit from "@/components/OtherAssets/Watch/WatchEdit";
 import ArtifactsMainForm from "@/components/OtherAssets/Artifacts/MainForm";
 import ArtifactsOtherForm from "@/components/OtherAssets/Artifacts/ArtifactsOtherForm";
-
+import HomeLoanOtherForm from "@/components/Liabilities/HomeLoans/HomeLoanOtherForm";
+import EditHomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanEdit";
+import HomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanMainForm";
+import Liabilities from "@/components/Liabilities/LibilitiesMainForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -152,6 +154,13 @@ const Layout = () => {
           >
             <UserIcon className="h-5 w-5" />
             Digital Assets
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/liabilities"
+          >
+            <UserIcon className="h-5 w-5" />
+            Liabilities
           </NavLink>
         </nav>
 
@@ -253,6 +262,7 @@ const Layout = () => {
       {location.pathname === "/propritership/add" && <PropritershipForm />}
       {location.pathname === "/propritership/edit" && <PropritershipEditForm />}
       {location.pathname === "/partnershipfirm" && <PartnershipFirmMainForm />}
+
       {location.pathname === "/partnershipfirm/add" && (
         <PartnershipFirmOtherForm />
       )}
@@ -272,50 +282,24 @@ const Layout = () => {
       {location.pathname === "/company/edit" && <CompanyEditForm />}
       {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
 
-      {location.pathname === "/vehicle" && (
-        <VehicleDetailsMainForm />
-      )}
-      {location.pathname === "/vehicle/add" && (
-        <VehicleDetailsOtherForm />
-      )}
-        {location.pathname === "/huf" && (
-        <HUFMainForm />
-      )}
-        {location.pathname === "/huf/add" && (
-        <HUFOtherForm />
-      )}
-        {location.pathname === "/jewellery" && (
-        <JewelleryMainForm />
-      )}
-        {location.pathname === "/jewellery/add" && (
-        <JewelleryOtherForm />
-      )}
-        {location.pathname === "/jewellery/edit" && (
-        <JewelleryEdit />
-      )}  
-        {location.pathname === "/digital-assets" && (
-          <DigitalAssetMainForm />
-      )}
-       {location.pathname === "/digital-assets/add" && (
-          <DigitalAssetOtherForm />
-      )}
-        {location.pathname === "/watch" && (
-          <WatchMainForm />
-      )}
-        {location.pathname === "/watch/add" && (
-          <WatchOtherForm />
-      )}
-        {location.pathname === "/watch/edit" && (
-          <WatchEdit />
-      )}
-        {location.pathname === "/artifacts" && (
-          <ArtifactsMainForm />
-      )}
-        {location.pathname === "/artifacts/add" && (
-          <ArtifactsOtherForm />
-      )}
-       
- 
+      {location.pathname === "/vehicle" && <VehicleDetailsMainForm />}
+      {location.pathname === "/vehicle/add" && <VehicleDetailsOtherForm />}
+      {location.pathname === "/huf" && <HUFMainForm />}
+      {location.pathname === "/huf/add" && <HUFOtherForm />}
+      {location.pathname === "/jewellery" && <JewelleryMainForm />}
+      {location.pathname === "/jewellery/add" && <JewelleryOtherForm />}
+      {location.pathname === "/jewellery/edit" && <JewelleryEdit />}
+      {location.pathname === "/digital-assets" && <DigitalAssetMainForm />}
+      {location.pathname === "/digital-assets/add" && <DigitalAssetOtherForm />}
+      {location.pathname === "/watch" && <WatchMainForm />}
+      {location.pathname === "/watch/add" && <WatchOtherForm />}
+      {location.pathname === "/watch/edit" && <WatchEdit />}
+      {location.pathname === "/artifacts" && <ArtifactsMainForm />}
+      {location.pathname === "/artifacts/add" && <ArtifactsOtherForm />}
+      {location.pathname === "/liabilities" && <Liabilities />}
+      {location.pathname === "/homeloans" && <HomeLoanForm />}
+      {location.pathname === "/homeloans/add" && <HomeLoanOtherForm />}
+      {location.pathname === "/homeloans/edit" && <EditHomeLoanForm />}
     </div>
   );
 };

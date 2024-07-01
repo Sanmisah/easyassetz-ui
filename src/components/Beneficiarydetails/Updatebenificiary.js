@@ -17,6 +17,8 @@ import {
   SelectItem,
 } from "@com/ui/select";
 import "react-international-phone/style.css";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { Button } from "@com/ui/button";
 import {
   Sheet,
@@ -32,13 +34,12 @@ import * as z from "zod";
 import axios from "axios";
 import Datepicker from "./Datepicker";
 import { PhoneInput } from "react-international-phone";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const beneficiarySchema = z
   .object({
     fullLegalName: z.string().nonempty("Full Legal Name is required"),
-    relationship: z.string().optional(),
+    relationship: z.string().nonempty("Relationship is required"),
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
     dob: z.date().optional(),
@@ -47,17 +48,16 @@ const beneficiarySchema = z
     guardianEmail: z.string().optional(),
     guardianCity: z.string().optional(),
     guardianState: z.string().optional(),
-    guardianDocument: z.string().optional(),
-    guardianDocumentData: z.string().optional(),
+    document: z.string().optional(),
+    documentData: z.string().optional(),
     guardianReligion: z.string().optional(),
     guardianNationality: z.string().optional(),
-    guardianAddress1: z.string().optional(),
-    guardianAddress2: z.string().optional(),
-    guardianPincode: z.string().optional(),
-    guardianCountry: z.string().optional(),
+    addressLine1: z.string().optional(),
+    addressLine2: z.string().optional(),
+    pincode: z.string().optional(),
+    country: z.string().optional(),
     mobile: z.string().optional(),
     email: z.string().optional(),
-    documentData: z.string().optional(),
     city: z.string().optional(),
     state: z.string().optional(),
     houseNo: z.string().optional(),
@@ -96,14 +96,15 @@ const Benificiaryform = ({
   setUpdateBenificiaryOpen,
   benificiaryId,
 }) => {
+  console.log(benificiaryId);
   const queryClient = useQueryClient();
-  const [dummy, setdummy] = useState([]);
   const {
     register,
     handleSubmit,
     control,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(beneficiarySchema),
@@ -114,74 +115,8 @@ const Benificiaryform = ({
   const [relationship, setRelationship] = useState("");
 
   const watchDOB = watch("dob", null);
-
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-
-  const getPersonalData = async () => {
-    if (!user) return;
-    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
-
-    if (response.data.data.Beneficiary?.document !== null) {
-      setSelectedDocument(response.data.data.Beneficiary?.documentData);
-    }
-
-    return response.data.data.Beneficiary;
-  };
-
-  const {
-    data: Benifyciary,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["beneficiaryDataUpdate", benificiaryId],
-    queryFn: getPersonalData,
-    enabled: !!benificiaryId,
-
-    onSuccess: (data) => {
-      console.log("Data:", data);
-      if (data.dob) {
-        const age = calculateAge(data.dob);
-        if (age >= 18) {
-          clearGuardianFields();
-        }
-      }
-      setdummy(data);
-      setValue("dob", new Date(data.dob));
-      setValue("gender", data.gender);
-      setValue("relationship", data.relationship);
-      setValue("specificRelationship", data.specificRelationship);
-      setValue("mobile", data.mobile);
-      setValue("email", data.email);
-      setValue("documentData", data.documentData);
-      setValue("houseNo", data.houseNo);
-      setValue("addressLine1", data.addressLine1);
-      setValue("addressLine2", data.addressLine2);
-      setValue("pincode", data.pincode);
-      setValue("country", data.country);
-      setValue("city", data.city);
-      setValue("state", data.state);
-      setValue("religion", data.religion);
-      setValue("nationality", data.nationality);
-      setValue("fullLegalName", data.fullLegalName);
-      // Prefill the form with the fetched data
-      // for (const [key, value] of Object.entries(data)) {
-      //   if (key === "dob") {
-      //     setValue(key, new Date(value)); // Convert ISO string to Date object
-      //   } else {
-      //     setValue(key, value);
-      //   }
-      // }
-    },
-    onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
-    },
-  });
 
   useEffect(() => {
     if (watchDOB) {
@@ -192,6 +127,10 @@ const Benificiaryform = ({
     }
   }, [watchDOB]);
 
+  useEffect(() => {
+    console.log(Benificiary);
+  }, [Benificiary]);
+
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
     const ageDiff = Date.now() - birthDate.getTime();
@@ -199,63 +138,112 @@ const Benificiaryform = ({
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
-  const clearGuardianFields = () => {};
-  useEffect(() => {
-    console.log("Beneficiary ID:", benificiaryId); // Add this line before useQuery to check the value of benificiaryId
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
+      headers: {
+        Authorization: `Bearer ${user?.data?.token}`,
+      },
+    });
 
-    console.log(dummy);
-  }, [dummy, benificiaryId]);
+    return response?.data?.data?.Beneficiary;
+  };
 
-  const benificiaryMutate = useMutation({
-    mutationFn: async (data) => {
-      console.log("data:", data);
-      const response = await axios.put(
-        `/api/beneficiaries/${benificiaryId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.data?.token}`,
-          },
-        }
-      );
-      return response.data.data.Beneficiary;
+  const {
+    data: Benificiary,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["charityData", benificiaryId],
+    queryFn: getPersonalData,
+    enabled: !!benificiaryId,
+
+    onSuccess: (data) => {
+      reset(data);
+      console.log("Data:", data);
+      // if (data.dob) {
+      //   const age = calculateAge(data.dob);
+      //   if (age >= 18) {
+      //     clearGuardianFields();
+      //   }
+      // }
+
+      // for (const [key, value] of Object.entries(data)) {
+      //   setValue(key, value);
+      // }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["beneficiaryDataUpdate", benificiaryId]);
-      toast.success("Beneficiary updated successfully!");
-      setUpdateBenificiaryOpen(false);
-    },
+
     onError: (error) => {
       console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile ", error.message);
+      toast.error("Failed to submit profile", error.message);
     },
   });
 
-  const onSubmit = (data) => {
-    data.type = "beneficiary";
-    // console.log("ASDSD", data.dob);
-    console.log(data);
-    // if (data.dob !== null && !data.dob) {
-    //   data.dob = Benifyciary?.dob;
-    // } else {
-    //   const date = new Date(data.dob);
-    //   const month = String(date.getMonth() + 1).padStart(2, "0");
-    //   const day = String(date.getDate()).padStart(2, "0");
-    //   const year = date.getFullYear();
-    //   const newdate = `${month}/${day}/${year}`;
-    //   data.dob = newdate;
-    // }
-
-    console.log(data);
-    benificiaryMutate.mutate(data);
+  const clearGuardianFields = () => {
+    setValue("guardianName", "");
+    setValue("guardianMobile", "");
+    setValue("guardianEmail", "");
+    setValue("guardianCity", "");
+    setValue("guardianState", "");
+    setValue("guardianReligion", "");
+    setValue("guardianNationality", "");
   };
 
-  const isMinor = watchDOB
-    ? calculateAge(watchDOB) < 18 || calculateAge(Benifyciary.dob) < 18
-    : true;
+  const benificiaryMutate = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post(`/api/beneficiaries`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
+      return response.data.data.profile;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("benificiaryData");
+      toast.success("Beneficiary added successfully!");
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    },
+  });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading beneficiary data</div>;
+  const onSubmit = async (data) => {
+    console.log(data);
+    const date = new Date(data.dob);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.dob = newdate;
+    data.type = "beneficiary";
+    if (relationship === "other") {
+      data.relationship = data.specificRelationship;
+    }
+    delete data.specificRelationship;
+
+    if (data.dob > new Date() === 18) {
+      delete data.guardianCity;
+      delete data.guardianState;
+      delete data.document;
+      delete data.documentData;
+      delete data.guardianReligion;
+      delete data.guardianNationality;
+      delete data.houseNo;
+      delete data.addressLine1;
+      delete data.addressLine2;
+      delete data.pincode;
+      delete data.country;
+    }
+    try {
+      benificiaryMutate.mutate(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    }
+  };
+
+  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
 
   return (
     <div>
@@ -264,9 +252,9 @@ const Benificiaryform = ({
         open={updateBenificiaryOpen}
         onOpenChange={setUpdateBenificiaryOpen}
       >
-        <SheetContent side="right">
+        <SheetContent>
           <SheetHeader>
-            <SheetTitle>Update Beneficiary</SheetTitle>
+            <SheetTitle>Add Beneficiary</SheetTitle>
             <SheetDescription className="flex flex-col justify-center">
               <ScrollArea className="w-full h-[85vh] rounded-md">
                 <form onSubmit={handleSubmit(onSubmit)} className="scrollable">
@@ -274,7 +262,7 @@ const Benificiaryform = ({
                     <CardHeader>
                       <CardTitle>Beneficiary Form</CardTitle>
                       <CardDescription>
-                        Please update the necessary details.
+                        Please fill out the following details.
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8">
@@ -286,7 +274,6 @@ const Benificiaryform = ({
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
-                              defaultValue={Benifyciary.fullLegalName}
                               {...register("fullLegalName")}
                             />
                             {errors.fullLegalName && (
@@ -303,7 +290,6 @@ const Benificiaryform = ({
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
-                                  defaultValue={Benifyciary.relationship}
                                   onValueChange={(value) => {
                                     field.onChange(value);
                                     setRelationship(value);
@@ -345,9 +331,10 @@ const Benificiaryform = ({
                               </Label>
                               <Input
                                 id="specific-relationship"
-                                defaultValue={Benifyciary.specificRelationship}
                                 placeholder="Enter specific relationship"
-                                {...register("specificRelationship")}
+                                {...register("specificRelationship", {
+                                  required: relationship === "other",
+                                })}
                               />
                               {errors.specificRelationship && (
                                 <p className="text-red-500">
@@ -361,11 +348,9 @@ const Benificiaryform = ({
                             <Controller
                               name="gender"
                               control={control}
-                              defaultValue={Benifyciary.gender}
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
-                                  defaultValue={Benifyciary.gender}
                                   onValueChange={field.onChange}
                                 >
                                   <SelectTrigger
@@ -390,19 +375,16 @@ const Benificiaryform = ({
                               </p>
                             )}
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="dob">Date of Birth</Label>
                             <Controller
                               name="dob"
                               control={control}
                               render={({ field }) => (
                                 <Datepicker
-                                  selected={field.value}
-                                  defaultValue={
-                                    Benifyciary.dob ? Benifyciary.dob : null
-                                  }
+                                  value={field.value}
                                   onChange={field.onChange}
-                                  id="dob"
+                                  className="min-w-[190rem]"
                                 />
                               )}
                             />
@@ -412,20 +394,20 @@ const Benificiaryform = ({
                               </p>
                             )}
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
-                            {console.log(Benifyciary?.mobile)}
                             <Controller
                               name="mobile"
                               control={control}
                               render={({ field }) => (
                                 <PhoneInput
-                                  // defaultCountry="in"
-                                  value={field.value || Benifyciary?.mobile}
-                                  defaultValue={Benifyciary?.mobile}
-                                  onChange={(value) => {
-                                    field.onChange(value);
-                                  }}
+                                  id="mobile"
+                                  type="tel"
+                                  placeholder="Enter mobile number"
+                                  defaultCountry="in"
+                                  inputStyle={{ minWidth: "15.5rem" }}
+                                  value={field.value}
+                                  onChange={field.onChange}
                                 />
                               )}
                             />
@@ -436,12 +418,12 @@ const Benificiaryform = ({
                             )}
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="email">Email Address</Label>
+                            <Label htmlFor="email">Email</Label>
                             <Input
                               id="email"
-                              placeholder="Enter your email address"
+                              type="email"
+                              placeholder="Enter email"
                               {...register("email")}
-                              defaultValue={Benifyciary.email}
                             />
                             {errors.email && (
                               <p className="text-red-500">
@@ -449,189 +431,162 @@ const Benificiaryform = ({
                               </p>
                             )}
                           </div>
-                          <div>
+                        </div>
+                      </div>
+                      {isMinor && (
+                        <div>
+                          <h3 className="text-lg font-medium">
+                            Guardian Details
+                          </h3>
+                          <div className="grid grid-cols-1 gap-6 mt-4">
                             <div className="space-y-2">
-                              <Label htmlFor="document">Document</Label>
-                              <Controller
-                                name="document"
-                                control={control}
-                                defaultValue={Benifyciary.document}
-                                render={({ field }) => (
-                                  <Select
-                                    value={field.value}
-                                    onValueChange={(value) => {
-                                      field.onChange(value);
-                                      setSelectedDocument(value);
-                                    }}
-                                  >
-                                    <SelectTrigger
-                                      id="document"
-                                      aria-label="Document"
-                                    >
-                                      <SelectValue placeholder="Select document" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="adhar">
-                                        Aadhaar
-                                      </SelectItem>
-                                      <SelectItem value="passport">
-                                        Passport
-                                      </SelectItem>
-                                      <SelectItem value="driving-license">
-                                        Driving License
-                                      </SelectItem>
-                                      <SelectItem value="voter-id">
-                                        Voter ID
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                )}
+                              <Label htmlFor="guardian-name">
+                                Full Legal Name
+                              </Label>
+                              <Input
+                                id="guardian-name"
+                                placeholder="Enter guardian's full legal name"
+                                {...register("guardianName")}
                               />
-                              {errors.document && (
+                              {errors.guardianName && (
                                 <p className="text-red-500">
-                                  {errors.document.message}
+                                  {errors.guardianName.message}
                                 </p>
                               )}
                             </div>
-                            {selectedDocument && (
-                              <div className="space-y-2">
-                                <Label htmlFor="documentData"></Label>
-                                <Input
-                                  id="documentData"
-                                  placeholder={`Enter ${selectedDocument} number`}
-                                  {...register("documentData")}
-                                  defaultValue={Benifyciary.documentData}
-                                />
-                                {errors.documentData && (
-                                  <p className="text-red-500">
-                                    {errors.documentData.message}
-                                  </p>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-mobile">
+                                Mobile Number
+                              </Label>
+                              <Controller
+                                name="guardianMobile"
+                                control={control}
+                                render={({ field }) => (
+                                  <PhoneInput
+                                    id="guardian-mobile"
+                                    type="tel"
+                                    placeholder="Enter guardian's mobile number"
+                                    defaultCountry="in"
+                                    value={field.value}
+                                    inputStyle={{ minWidth: "15.5rem" }}
+                                    onChange={field.onChange}
+                                  />
                                 )}
-                              </div>
-                            )}
-                          </div>
-                          {/* <div className="space-y-2">
-                            <Label htmlFor="documentData">Document Data</Label>
-                            <Input
-                              id="documentData"
-                              placeholder="Enter document data"
-                              {...register("documentData")}
-                              defaultValue={Benifyciary.documentData}
-                            />
-                            {errors.documentData && (
-                              <p className="text-red-500">
-                                {errors.documentData.message}
-                              </p>
-                            )}
-                          </div> */}
-                          <div className="space-y-2">
-                            <Label htmlFor="houseNo">House Number</Label>
-                            <Input
-                              id="houseNo"
-                              placeholder="Enter house number"
-                              {...register("houseNo")}
-                              defaultValue={Benifyciary.houseNo}
-                            />
-                            {errors.houseNo && (
-                              <p className="text-red-500">
-                                {errors.houseNo.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="address1">Address Line 1</Label>
-                            <Input
-                              id="address1"
-                              placeholder="Enter address line 1"
-                              {...register("addressLine1")}
-                              defaultValue={Benifyciary.addressLine1}
-                            />
-                            {errors.addressLine1 && (
-                              <p className="text-red-500">
-                                {errors.addressLine1.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="address2">Address Line 2</Label>
-                            <Input
-                              id="address2"
-                              placeholder="Enter address line 2"
-                              defaultValue={Benifyciary.addressLine2}
-                              {...register("addressLine2")}
-                            />
-                            {errors.addressLine2 && (
-                              <p className="text-red-500">
-                                {errors.addressLine2.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="pincode">Pincode</Label>
-                            <Input
-                              id="pincode"
-                              placeholder="Enter pincode"
-                              defaultValue={Benifyciary.pincode}
-                              {...register("pincode")}
-                            />
-                            {errors.pincode && (
-                              <p className="text-red-500">
-                                {errors.pincode.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="country">Country</Label>
-                            <Input
-                              id="country"
-                              placeholder="Enter country"
-                              defaultValue={Benifyciary.country}
-                              {...register("country")}
-                            />
-                            {errors.country && (
-                              <p className="text-red-500">
-                                {errors.country.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="city">City</Label>
-                            <Input
-                              id="city"
-                              placeholder="Enter city"
-                              defaultValue={Benifyciary.city}
-                              {...register("city")}
-                            />
-                            {errors.city && (
-                              <p className="text-red-500">
-                                {errors.city.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="state">State</Label>
-                            <Input
-                              id="state"
-                              placeholder="Enter state"
-                              defaultValue={Benifyciary.state}
-                              {...register("state")}
-                            />
-                            {errors.state && (
-                              <p className="text-red-500">
-                                {errors.state.message}
-                              </p>
-                            )}
+                              />
+                              {errors.guardianMobile && (
+                                <p className="text-red-500">
+                                  {errors.guardianMobile.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-email">Email</Label>
+                              <Input
+                                id="guardian-email"
+                                type="email"
+                                placeholder="Enter guardian's email"
+                                {...register("guardianEmail")}
+                              />
+                              {errors.guardianEmail && (
+                                <p className="text-red-500">
+                                  {errors.guardianEmail.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-city">City</Label>
+                              <Input
+                                id="guardian-city"
+                                placeholder="Enter guardian's city"
+                                {...register("guardianCity")}
+                              />
+                              {errors.guardianCity && (
+                                <p className="text-red-500">
+                                  {errors.guardianCity.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-state">State</Label>
+                              <Input
+                                id="guardian-state"
+                                placeholder="Enter guardian's state"
+                                {...register("guardianState")}
+                              />
+                              {errors.guardianState && (
+                                <p className="text-red-500">
+                                  {errors.guardianState.message}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
+                      )}
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-document">
+                          Identification Document
+                        </Label>
+                        <Controller
+                          name="document"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={(value) => {
+                                setSelectedDocument(value);
+                                field.onChange(value);
+                              }}
+                            >
+                              <SelectTrigger
+                                id="guardian-document"
+                                aria-label="Identification Document"
+                              >
+                                <SelectValue placeholder="Select document" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="adhar">Aadhaar</SelectItem>
+                                <SelectItem value="passport">
+                                  Passport
+                                </SelectItem>
+                                <SelectItem value="driving-license">
+                                  Driving License
+                                </SelectItem>
+                                <SelectItem value="voter-id">
+                                  Voter ID
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.document && (
+                          <p className="text-red-500">
+                            {errors.document.message}
+                          </p>
+                        )}
                       </div>
-
+                      {selectedDocument && (
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-document-data">
+                            {selectedDocument} Number
+                          </Label>
+                          <Input
+                            id="guardian-document-data"
+                            placeholder={`Enter guardian's ${selectedDocument} number`}
+                            {...register("documentData")}
+                          />
+                          {errors.documentData && (
+                            <p className="text-red-500">
+                              {errors.documentData.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
                       <div className="space-y-2">
                         <Label htmlFor="guardian-religion">Religion</Label>
                         <Input
                           id="guardian-religion"
-                          defaultValue={Benifyciary.religion}
                           placeholder="Enter guardian's religion"
-                          {...register("guardianReligion")}
+                          {...register("religion")}
                         />
                         {errors.guardianReligion && (
                           <p className="text-red-500">
@@ -645,9 +600,8 @@ const Benificiaryform = ({
                         </Label>
                         <Input
                           id="guardian-nationality"
-                          defaultValue={Benifyciary.nationality}
                           placeholder="Enter guardian's nationality"
-                          {...register("guardianNationality")}
+                          {...register("nationality")}
                         />
                         {errors.guardianNationality && (
                           <p className="text-red-500">
@@ -655,138 +609,100 @@ const Benificiaryform = ({
                           </p>
                         )}
                       </div>
-                      {isMinor ||
-                        (calculateAge(Benifyciary.dob) < 18 && (
-                          <div>
-                            <h3 className="text-lg font-medium">
-                              Guardian Details
-                            </h3>
-                            <div className="grid grid-cols-1 gap-6 mt-4">
-                              <div className="space-y-2">
-                                <Label htmlFor="guardian-name">
-                                  Guardian's Full Name
-                                </Label>
-                                <Input
-                                  id="guardian-name"
-                                  placeholder="Enter guardian's full name"
-                                  defaultValue={Benifyciary.guardianName}
-                                  {...register("guardianName")}
-                                />
-                                {errors.guardianName && (
-                                  <p className="text-red-500">
-                                    {errors.guardianName.message}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="space-y-2">
-                                <Label htmlFor="guardian-mobile">
-                                  Guardian's Mobile Number
-                                </Label>
-                                <Controller
-                                  name="guardianMobile"
-                                  control={control}
-                                  render={({ field }) => (
-                                    <PhoneInput
-                                      international
-                                      countryCallingCodeEditable={false}
-                                      defaultCountry="in"
-                                      defaultValue={Benifyciary.guardianMobile}
-                                      value={field.value}
-                                      onChange={(value) => {
-                                        field.onChange(value);
-                                      }}
-                                    />
-                                  )}
-                                />
-                                {errors.guardianMobile && (
-                                  <p className="text-red-500">
-                                    {errors.guardianMobile.message}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="space-y-2">
-                                <Label htmlFor="guardian-email">
-                                  Guardian's Email Address
-                                </Label>
-                                <Input
-                                  id="guardian-email"
-                                  placeholder="Enter guardian's email address"
-                                  defaultValue={Benifyciary.guardianEmail}
-                                  {...register("guardianEmail")}
-                                />
-                                {errors.guardianEmail && (
-                                  <p className="text-red-500">
-                                    {errors.guardianEmail.message}
-                                  </p>
-                                )}
-                              </div>
-                              {/* <div className="space-y-2">
-                              <Label htmlFor="guardian-document">
-                                Guardian's Document
-                              </Label>
-                              <Input
-                                id="guardian-document"
-                                defaultValue={Benifyciary.guardianDocument}
-                                placeholder="Enter guardian's document"
-                                {...register("guardianDocument")}
-                              />
-                              {errors.guardianDocument && (
-                                <p className="text-red-500">
-                                  {errors.guardianDocument.message}
-                                </p>
-                              )}
-                            </div> */}
-                              <div className="space-y-2">
-                                <Label htmlFor="guardian-document-data">
-                                  Guardian's Document Data
-                                </Label>
-                                <Input
-                                  id="guardian-document-data"
-                                  defaultValue={
-                                    Benifyciary.guardianDocumentData
-                                  }
-                                  placeholder="Enter guardian's document data"
-                                  {...register("guardianDocumentData")}
-                                />
-                                {errors.guardianDocumentData && (
-                                  <p className="text-red-500">
-                                    {errors.guardianDocumentData.message}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="space-y-2">
-                                <Label htmlFor="guardian-city">City</Label>
-                                <Input
-                                  id="guardian-city"
-                                  defaultValue={Benifyciary.guardianCity}
-                                  placeholder="Enter guardian's city"
-                                  {...register("guardianCity")}
-                                />
-                                {errors.guardianCity && (
-                                  <p className="text-red-500">
-                                    {errors.guardianCity.message}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="space-y-2">
-                                <Label htmlFor="guardian-state">
-                                  Guardian State
-                                </Label>
-                                <Input
-                                  id="guardian-state"
-                                  defaultValue={Benifyciary.state}
-                                  placeholder="Enter guardian's state"
-                                  {...register("guardianState")}
-                                />
-                                {errors.guardianState && (
-                                  <p className="text-red-500">
-                                    {errors.guardianState.message}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-house-no">
+                          House/Flat No.
+                        </Label>
+                        <Input
+                          id="guardian-house-no"
+                          placeholder="Enter house/flat number"
+                          {...register("houseNo")}
+                        />
+                        {errors.houseNo && (
+                          <p className="text-red-500">
+                            {errors.houseNo.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-address1">
+                          Address Line 1
+                        </Label>
+                        <Input
+                          id="guardian-address1"
+                          placeholder="Enter address line 1"
+                          {...register("addressLine1")}
+                        />
+                        {errors.addressLine1 && (
+                          <p className="text-red-500">
+                            {errors.addressLine1.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-address2">
+                          Address Line 2
+                        </Label>
+                        <Input
+                          id="guardian-address2"
+                          placeholder="Enter address line 2"
+                          {...register("addressLine2")}
+                        />
+                        {errors.addressLine2 && (
+                          <p className="text-red-500">
+                            {errors.addressLine2.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-pincode">Pincode</Label>
+                        <Input
+                          id="guardian-pincode"
+                          placeholder="Enter pincode"
+                          {...register("pincode")}
+                        />
+                        {errors.pincode && (
+                          <p className="text-red-500">
+                            {errors.pincode.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-country">Country</Label>
+                        <Input
+                          id="guardian-country"
+                          placeholder="Enter country"
+                          {...register("country")}
+                        />
+                        {errors.country && (
+                          <p className="text-red-500">
+                            {errors.country.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-city">City</Label>
+                        <Input
+                          id="guardian-city"
+                          placeholder="Enter guardian's city"
+                          {...register("city", { required: true })}
+                        />
+                        {errors.city && (
+                          <p className="text-red-500">{errors.city.message}</p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian-state">State</Label>
+                        <Input
+                          id="guardian-state"
+                          placeholder="Enter guardian's state"
+                          {...register("state", { required: true })}
+                        />
+                        {errors.state && (
+                          <p className="text-red-500">{errors.state.message}</p>
+                        )}
+                      </div>
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
                       <Button type="submit">Submit</Button>
