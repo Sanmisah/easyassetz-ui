@@ -175,7 +175,7 @@ const OtherAssetsMainForm = () => {
         </div>
 
         <div
-          onClick={() => navigate("/intellectualproperty")}
+          onClick={() => navigate("/artifacts")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
@@ -191,8 +191,28 @@ const OtherAssetsMainForm = () => {
             )}
           </div>
         </div>
-      </div>
-    </div>
+
+        <div
+          onClick={() => navigate("/digital-assets")}
+          className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold"> Digital Assets</h1>
+            {Artifacts && Artifacts?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {Artifacts && Artifacts?.length}{" "}
+                   Digital Assets
+                </p>
+              </div>
+            )}
+         </div>
+        </div>
+
+
+        </div>
+        </div>
   );
 };
 

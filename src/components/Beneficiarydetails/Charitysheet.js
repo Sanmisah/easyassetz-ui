@@ -174,7 +174,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               </Label>
               <Input
                 id="charityCity"
-                placeholder="Enter charityCity"
+                placeholder="Enter City"
                 {...register("charityCity")}
                 className="w-full"
               />
@@ -192,7 +192,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select charityState" />
+                      <SelectValue placeholder="Select State" />
                     </SelectTrigger>
                     <SelectContent>
                       {States.map((state) => (
@@ -217,7 +217,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
                 type="tel"
                 inputStyle={{ minWidth: "15.5rem" }}
                 defaultCountry="in"
-                placeholder="Enter charityNumber number"
+                placeholder="Enter Phone Number"
                 {...register("charityNumber")}
                 className="w-full"
               />
@@ -232,7 +232,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Input
                 id="charityEmail"
                 type="charityEmail"
-                placeholder="Enter charityEmail"
+                placeholder="Enter Email"
                 {...register("charityEmail")}
                 className="w-full"
               />
@@ -261,7 +261,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Input
                 id="charityWebsite"
                 type="url"
-                placeholder="Enter charityWebsite"
+                placeholder="Enter Website"
                 {...register("charityWebsite")}
                 className="w-full"
               />
@@ -278,7 +278,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               </Label>
               <Textarea
                 id="charitySpecificInstruction"
-                placeholder="Enter any specific charitySpecificInstruction"
+                placeholder="Enter any specific instructions"
                 {...register("charitySpecificInstruction")}
                 className="w-full"
               />

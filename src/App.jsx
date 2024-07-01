@@ -58,7 +58,14 @@ function App() {
         <Route path="/crypto/edit" element={<Personalpage />} />
         <Route path="/jewellery" element={<Personalpage />} />
         <Route path="/jewellery/add" element={<Personalpage />} />
-      </Routes>
+        <Route path="/artifacts" element={<Personalpage />} />
+        <Route path="/artifacts/add" element={<Personalpage />} />
+        <Route path="/artifacts/edit" element={<Personalpage />} />
+        <Route path="/digital-assets" element={<Personalpage />} />
+        <Route path="/digital-assets/add" element={<Personalpage />} />
+
+
+        </Routes>
     </div>
   );
 }

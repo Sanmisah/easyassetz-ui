@@ -59,6 +59,7 @@ import HUFMainForm from "@/components/OtherAssets/HUF/HUFMainForm";
 import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
 import JewelleryMainForm from "@/components/OtherAssets/Jewellery/JewelleryMainForm";
 import JewelleryOtherForm from "@/components/OtherAssets/Jewellery/JewelleryOtherForm";
+import DigitalAssetMainForm from "@/components/OtherAssets/DigitalAssets/DigitalAssetMainForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -285,6 +286,9 @@ const Layout = () => {
         {location.pathname === "/jewellery/edit" && (
         <JewelleryEdit />
       )}  
+        {location.pathname === "/digital-assets" && (
+          <DigitalAssetMainForm />
+      )}
  
     </div>
   );
