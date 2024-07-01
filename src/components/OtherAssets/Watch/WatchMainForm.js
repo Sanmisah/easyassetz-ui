@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const DigitalAssetsMainForm = () => {
+const WatchMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -74,10 +74,8 @@ const DigitalAssetsMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Digital Assets</h1>
-          <Button onMouseDown={() => navigate("/digital-assets/add")}>
-            Add Digital Assets
-          </Button>
+          <h1 className="text-2xl font-bold">Watch</h1>
+          <Button onMouseDown={() => navigate("/watch/add")}>Add Watch</Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}
@@ -112,7 +110,7 @@ const DigitalAssetsMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/digital-assets/edit");
+                          navigate("/bullion/edit");
                         }}
                       >
                         Edit
@@ -136,4 +134,4 @@ const DigitalAssetsMainForm = () => {
   );
 };
 
-export default DigitalAssetsMainForm;
+export default WatchMainForm;

@@ -322,6 +322,32 @@ const JewelleryOtherForm = () => {
                 )}
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="quantityOfJewellery">Quantity</Label>
+                <Controller
+                  name="quantityOfJewellery"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="quantityOfJewellery"
+                      placeholder="Enter Quantity (units)"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={
+                        errors.quantityOfJewellery ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.quantityOfJewellery && (
+                  <span className="text-red-500">
+                    {errors.quantityOfJewellery.message}
+                  </span>
+                )}
+              </div>
+
+
             
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">

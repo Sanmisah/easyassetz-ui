@@ -75,9 +75,7 @@ const VehicleDetailsMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Vehicle Details</h1>
-          <Button onMouseDown={() => navigate("/vehicle/add")}>
-            Add Vehicle Details
-          </Button>
+          <Button onMouseDown={() => navigate("/vehicle/add")}>Add Vehicle Details</Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}

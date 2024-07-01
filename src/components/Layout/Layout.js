@@ -60,6 +60,13 @@ import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
 import JewelleryMainForm from "@/components/OtherAssets/Jewellery/JewelleryMainForm";
 import JewelleryOtherForm from "@/components/OtherAssets/Jewellery/JewelleryOtherForm";
 import DigitalAssetMainForm from "@/components/OtherAssets/DigitalAssets/DigitalAssetMainForm";
+import DigitalAssetOtherForm from "@/components/OtherAssets/DigitalAssets/DigitalAssetOtherForm";
+import WatchMainForm from "@/components/OtherAssets/Watch/WatchMainForm";
+import WatchOtherForm from "@/components/OtherAssets/Watch/WatchOtherForm";
+import WatchEdit from "@/components/OtherAssets/Watch/WatchEdit";
+import ArtifactsMainForm from "@/components/OtherAssets/Artifacts/MainForm";
+import ArtifactsOtherForm from "@/components/OtherAssets/Artifacts/ArtifactsOtherForm";
+
 
 const Layout = () => {
   const location = useLocation();
@@ -289,6 +296,25 @@ const Layout = () => {
         {location.pathname === "/digital-assets" && (
           <DigitalAssetMainForm />
       )}
+       {location.pathname === "/digital-assets/add" && (
+          <DigitalAssetOtherForm />
+      )}
+        {location.pathname === "/watch" && (
+          <WatchMainForm />
+      )}
+        {location.pathname === "/watch/add" && (
+          <WatchOtherForm />
+      )}
+        {location.pathname === "/watch/edit" && (
+          <WatchEdit />
+      )}
+        {location.pathname === "/artifacts" && (
+          <ArtifactsMainForm />
+      )}
+        {location.pathname === "/artifacts/add" && (
+          <ArtifactsOtherForm />
+      )}
+       
  
     </div>
   );

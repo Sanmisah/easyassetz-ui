@@ -120,12 +120,8 @@ const VehicleDetailsOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Vehicle Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Vehicle Details.
-              </CardDescription>
+              <CardTitle className="text-2xl font-bold">Vehicle Details</CardTitle>
+              <CardDescription>Fill out the form to add a new Vehicle Details.</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -154,9 +150,7 @@ const VehicleDetailsOtherForm = () => {
                         <SelectValue placeholder="Select Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="fourWheeler">
-                          Four Wheeler
-                        </SelectItem>
+                        <SelectItem value="fourWheeler">Four Wheeler</SelectItem>
                         <SelectItem value="twoWheeler">Two Wheeler</SelectItem>
                         <SelectItem value="tractor">Tractor</SelectItem>
                         <SelectItem value="bulidozer">Bulidozer</SelectItem>

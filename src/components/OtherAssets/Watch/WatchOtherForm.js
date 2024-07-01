@@ -28,22 +28,10 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  digitalAssets: z.string().nonempty({ message: "Digital Assets is required" }),
-  account: z
+  company: z.string().nonempty({ message: "Company is required" }),
+  model: z
     .string()
-    .nonempty({ message: "Account is required" }),
-  linkedMobileNumber: z
-    .string()
-    .min(2, { message: "Mobile Number is required" }),
-  description: z
-    .string()
-    .nonempty({ message: "Description is required" }),
-  additionalInformation: z
-    .string()
-    .min(3, { message: "Additional Information is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .transform((value) => (value === null ? null : Number(value))),
+    .nonempty({ message: "Model is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -52,12 +40,12 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const DigitalAssetOtherForm = () => {
+const WatchOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [showOtherdigitalAssets, setShowOtherdigitalAssets] = useState(false);
+  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
@@ -72,10 +60,8 @@ const DigitalAssetOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      digitalAssets: "",
-      linkedMobileNumber: "",
-      description: "",
-      additionalInformation: "",
+      company: "",
+      model: "",
       name: "",
       email: "",
       phone: "",
@@ -94,7 +80,7 @@ const DigitalAssetOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Digital Assets added successfully!");
+      toast.success("Watch added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -123,10 +109,10 @@ const DigitalAssetOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Digital Assets
+                Watch Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Digital Assets.
+                Fill out the form to add a new Watch.
               </CardDescription>
             </div>
           </div>
@@ -136,158 +122,55 @@ const DigitalAssetOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="digitalAssets">Digital Assets</Label>
-                <Controller
-                  name="digitalAssets"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="digitalAssets"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherdigitalAssets(value === "other");
-                      }}
-                      className={errors.digitalAssets ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Digital Assets" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="socialMedia">Social Media</SelectItem>
-                        <SelectItem value="website">Website</SelectItem>
-                        <SelectItem value="email">Email</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherdigitalAssets && (
-                  <Controller
-                    name="otherdigitalAssets"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Digital Assets"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                )}
-                {errors.digitalAssets && (
-                  <span className="text-red-500">
-                    {errors.digitalAssets.message}
-                  </span>
-                )}
-              </div>
-            </div>
-
-    
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="account">Account/ID</Label>
-                <Controller
-                  name="account"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="account"
-                      placeholder="Enter Account/ID"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.account ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.account && (
-                  <span className="text-red-500">
-                    {errors.account.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="linkedMobileNumber"> Mobile Number</Label>
-                <Controller
-                  name="linkedMobileNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="linkedMobileNumber"
-                      placeholder="Enter Linked Mobile Number"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.linkedMobileNumber ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.linkedMobileNumber && (
-                  <span className="text-red-500">
-                    {errors.linkedMobileNumber.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="description"
-                      placeholder="Enter Description"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.description ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.description && (
-                  <span className="text-red-500">
-                    {errors.description.message}
-                  </span>
-                )}
-              </div>
             
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  Additional Information
-                </Label>
+                <Label htmlFor="company">Company</Label>
                 <Controller
-                  name="additionalInformation"
+                  name="company"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="additionalInformation"
-                      placeholder="Enter Additional Information"
+                      id="company"
+                      placeholder="Enter Company"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
-                        errors.additionalInformation ? "border-red-500" : ""
+                        errors.company ? "border-red-500" : ""
                       }
                     />
                   )}
                 />
-                {errors.additionalInformation && (
+                {errors.company && (
                   <span className="text-red-500">
-                    {errors.additionalInformation.message}
+                    {errors.company.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="model">Model</Label>
+                <Controller
+                  name="model"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="model"
+                      placeholder="Enter Model"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={
+                        errors.model ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.model && (
+                  <span className="text-red-500">
+                    {errors.model.message}
                   </span>
                 )}
               </div>
@@ -379,4 +262,4 @@ const DigitalAssetOtherForm = () => {
   );
 };
 
-export default DigitalAssetOtherForm;
+export default WatchOtherForm;

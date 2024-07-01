@@ -28,16 +28,16 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  digitalAssets: z.string().nonempty({ message: "Digital Assets is required" }),
-  account: z
+  typeOfArtifacts: z.string().nonempty({ message: "Type Of Artifacts is required" }),
+  articleDetails: z
     .string()
-    .nonempty({ message: "Account is required" }),
-  linkedMobileNumber: z
+    .nonempty({ message: "Article Details is required" }),
+  weightPerArticle: z
     .string()
-    .min(2, { message: "Mobile Number is required" }),
-  description: z
+    .min(2, { message: "Weight Per Article is required" }),
+  numberOfArticles: z
     .string()
-    .nonempty({ message: "Description is required" }),
+    .nonempty({ message: "Number of Article Details is required" }),
   additionalInformation: z
     .string()
     .min(3, { message: "Additional Information is required" })
@@ -52,12 +52,12 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const DigitalAssetOtherForm = () => {
+const ArtifactsOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [showOtherdigitalAssets, setShowOtherdigitalAssets] = useState(false);
+  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
@@ -72,9 +72,10 @@ const DigitalAssetOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      digitalAssets: "",
-      linkedMobileNumber: "",
-      description: "",
+      metalType: "",
+      articleDetails: "",
+      weightPerArticle: "",
+      numberOfArticles: "",
       additionalInformation: "",
       name: "",
       email: "",
@@ -94,7 +95,7 @@ const DigitalAssetOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Digital Assets added successfully!");
+      toast.success("Other Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -123,10 +124,10 @@ const DigitalAssetOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Digital Assets
+                Bullion Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Digital Assets.
+                Fill out the form to add a new Bullion.
               </CardDescription>
             </div>
           </div>
@@ -138,40 +139,40 @@ const DigitalAssetOtherForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="digitalAssets">Digital Assets</Label>
+                <Label htmlFor="metalType">Metal Type</Label>
                 <Controller
-                  name="digitalAssets"
+                  name="metalType"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="digitalAssets"
+                      id="metalType"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherdigitalAssets(value === "other");
+                        setShowOtherMetalType(value === "other");
                       }}
-                      className={errors.digitalAssets ? "border-red-500" : ""}
+                      className={errors.metalType ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Digital Assets" />
+                        <SelectValue placeholder="Select Metal Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="socialMedia">Social Media</SelectItem>
-                        <SelectItem value="website">Website</SelectItem>
-                        <SelectItem value="email">Email</SelectItem>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="silver">Silver</SelectItem>
+                        <SelectItem value="copper">Copper</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherdigitalAssets && (
+                {showOtherMetalType && (
                   <Controller
-                    name="otherdigitalAssets"
+                    name="otherMetalType"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Digital Assets"
+                        placeholder="Specify Metal Type"
                         className="mt-2"
                         value={field.value || ""}
                         onChange={field.onChange}
@@ -179,91 +180,115 @@ const DigitalAssetOtherForm = () => {
                     )}
                   />
                 )}
-                {errors.digitalAssets && (
+                {errors.metalType && (
                   <span className="text-red-500">
-                    {errors.digitalAssets.message}
+                    {errors.metalType.message}
                   </span>
                 )}
               </div>
             </div>
 
-    
+            <div className="space-y-2">
+              <Label htmlFor="articleDetails">Article Details</Label>
+              <Controller
+                name="articleDetails"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="articleDetails"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherArticleDetails(value === "other");
+                    }}
+                    className={errors.articleDetails ? "border-red-500" : ""}
+                  >
+                    <FocusableSelectTrigger>
+                      <SelectValue placeholder="Select Article Type" />
+                    </FocusableSelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="plates">Plates</SelectItem>
+                      <SelectItem value="glass">Glass</SelectItem>
+                      <SelectItem value="bowl">Bowl</SelectItem>
+                      <SelectItem value="bar">Bar</SelectItem>
+                      <SelectItem value="utensils">Utensils</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {showOtherArticleDetails && (
+                <Controller
+                  name="otherArticleDetails"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Specify Article Type"
+                      className="mt-2"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              )}
+              {errors.articleDetails && (
+                <span className="text-red-500">
+                  {errors.articleDetails.message}
+                </span>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="account">Account/ID</Label>
+                <Label htmlFor="weightPerArticle">Weight Per Article</Label>
                 <Controller
-                  name="account"
+                  name="weightPerArticle"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="account"
-                      placeholder="Enter Account/ID"
+                      id="weightPerArticle"
+                      placeholder="Enter Weight Per Article amount"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
-                        errors.account ? "border-red-500" : ""
+                        errors.weightPerArticle ? "border-red-500" : ""
                       }
                     />
                   )}
                 />
-                {errors.account && (
+                {errors.weightPerArticle && (
                   <span className="text-red-500">
-                    {errors.account.message}
+                    {errors.weightPerArticle.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="linkedMobileNumber"> Mobile Number</Label>
+                <Label htmlFor="numberOfArticles">Number Of Article</Label>
                 <Controller
-                  name="linkedMobileNumber"
+                  name="numberOfArticles"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="linkedMobileNumber"
-                      placeholder="Enter Linked Mobile Number"
+                      id="numberOfArticles"
+                      placeholder="Enter Number Of Article"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
-                        errors.linkedMobileNumber ? "border-red-500" : ""
+                        errors.numberOfArticles ? "border-red-500" : ""
                       }
                     />
                   )}
                 />
-                {errors.linkedMobileNumber && (
+                {errors.numberOfArticles && (
                   <span className="text-red-500">
-                    {errors.linkedMobileNumber.message}
+                    {errors.numberOfArticles.message}
                   </span>
                 )}
               </div>
             </div>
-            <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="description"
-                      placeholder="Enter Description"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.description ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.description && (
-                  <span className="text-red-500">
-                    {errors.description.message}
-                  </span>
-                )}
-              </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
@@ -379,4 +404,4 @@ const DigitalAssetOtherForm = () => {
   );
 };
 
-export default DigitalAssetOtherForm;
+export default ArtifactsOtherForm;

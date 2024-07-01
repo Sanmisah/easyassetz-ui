@@ -63,6 +63,9 @@ function App() {
         <Route path="/artifacts/edit" element={<Personalpage />} />
         <Route path="/digital-assets" element={<Personalpage />} />
         <Route path="/digital-assets/add" element={<Personalpage />} />
+        <Route path="/watch" element={<Personalpage />} />
+        <Route path="/watch/add" element={<Personalpage />} />
+        <Route path="/watch/edit" element={<Personalpage />} />
 
 
         </Routes>
