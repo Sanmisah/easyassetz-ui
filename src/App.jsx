@@ -66,6 +66,13 @@ function App() {
         <Route path="/watch" element={<Personalpage />} />
         <Route path="/watch/add" element={<Personalpage />} />
         <Route path="/watch/edit" element={<Personalpage />} />
+        <Route path="/bank" element={<Personalpage />} />
+        <Route path="/bankAccount" element={<Personalpage />} />
+        <Route path="/bankAccount/add" element={<Personalpage />} />
+        <Route path="/bankAccount/edit" element={<Personalpage />} />
+
+
+        </Routes>
         <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/liabilities" element={<Personalpage />} />
         <Route path="/homeloans" element={<Personalpage />} />

@@ -12,6 +12,8 @@ import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
 import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
+import BankContentForm from "@/components/Bank&Post/contents";
+
 import {
   Sheet,
   SheetContent,
@@ -65,6 +67,9 @@ import WatchOtherForm from "@/components/OtherAssets/Watch/WatchOtherForm";
 import WatchEdit from "@/components/OtherAssets/Watch/WatchEdit";
 import ArtifactsMainForm from "@/components/OtherAssets/Artifacts/MainForm";
 import ArtifactsOtherForm from "@/components/OtherAssets/Artifacts/ArtifactsOtherForm";
+import BankAccountMainForm from "@/components/Bank&Post/Bank Accounts/MainForm";
+import BankAccountForm from "@/components/Bank&Post/Bank Accounts/Bank&Post";
+
 import HomeLoanOtherForm from "@/components/Liabilities/HomeLoans/HomeLoanOtherForm";
 import EditHomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanEdit";
 import HomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanMainForm";
@@ -163,6 +168,10 @@ const Layout = () => {
           </NavLink>
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/bank"
+          >
+            <UserIcon className="h-5 w-5" />
+            Bank & Post
             to="/liabilities"
           >
             <UserIcon className="h-5 w-5" />
@@ -226,6 +235,13 @@ const Layout = () => {
                     <HomeIcon className="h-5 w-5" />
                     Digital Assets
                   </NavLink>
+                  <NavLink
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                    to="/bank"
+                  >
+                    <HomeIcon className="h-5 w-5" />
+                    Bank Details
+                  </NavLink>
                 </nav>
               </SheetDescription>
             </SheetHeader>
@@ -288,6 +304,59 @@ const Layout = () => {
       {location.pathname === "/company/edit" && <CompanyEditForm />}
       {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
 
+      {location.pathname === "/vehicle" && (
+        <VehicleDetailsMainForm />
+      )}
+      {location.pathname === "/vehicle/add" && (
+        <VehicleDetailsOtherForm />
+      )}
+        {location.pathname === "/huf" && (
+        <HUFMainForm />
+      )}
+        {location.pathname === "/huf/add" && (
+        <HUFOtherForm />
+      )}
+        {location.pathname === "/jewellery" && (
+        <JewelleryMainForm />
+      )}
+        {location.pathname === "/jewellery/add" && (
+        <JewelleryOtherForm />
+      )}
+        {location.pathname === "/jewellery/edit" && (
+        <JewelleryEdit />
+      )}  
+        {location.pathname === "/digital-assets" && (
+          <DigitalAssetMainForm />
+      )}
+       {location.pathname === "/digital-assets/add" && (
+          <DigitalAssetOtherForm />
+      )}
+        {location.pathname === "/watch" && (
+          <WatchMainForm />
+      )}
+        {location.pathname === "/watch/add" && (
+          <WatchOtherForm />
+      )}
+        {location.pathname === "/watch/edit" && (
+          <WatchEdit />
+      )}
+        {location.pathname === "/artifacts" && (
+          <ArtifactsMainForm />
+      )}
+        {location.pathname === "/artifacts/add" && (
+          <ArtifactsOtherForm />
+      )}
+        {location.pathname === "/bank" && (
+          <BankContentForm />
+      )}
+        {location.pathname === "/bankAccount" && (
+          <BankAccountMainForm />
+      )}
+        {location.pathname === "/bankAccount/add" && (
+          <BankAccountForm />
+      )}
+       
+ 
       {location.pathname === "/vehicle" && <VehicleDetailsMainForm />}
       {location.pathname === "/vehicle/add" && <VehicleDetailsOtherForm />}
       {location.pathname === "/huf" && <HUFMainForm />}
