@@ -8,7 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
 } from "@com/ui/dropdown-menu";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import axios from "axios";
+import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -19,7 +23,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const VehicleDetailsMainForm = () => {
+const BankAccountMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -31,13 +35,13 @@ const VehicleDetailsMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/other-assets`, {
+    const response = await axios.get(`/api/motor-insurances`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.OtherAsset;
+    return response.data.data.MotorInsurances;
   };
 
   const {
@@ -45,7 +49,7 @@ const VehicleDetailsMainForm = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["HeathinsuranceData"],
+    queryKey: ["MotorInsuranceData"],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -59,7 +63,7 @@ const VehicleDetailsMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/other-assets/${lifeInsuranceDeleteId}`,
+      `/api/motor-insurances/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -67,15 +71,17 @@ const VehicleDetailsMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Motor Insurance deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Vehicle Details</h1>
-          <Button onMouseDown={() => navigate("/vehicle/add")}>Add Vehicle Details</Button>
+          <h1 className="text-2xl font-bold">Bank Account</h1>
+          <Button onMouseDown={() => navigate("/bankAccount/add")}>
+            Add Bank Account
+          </Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}
@@ -93,8 +99,8 @@ const VehicleDetailsMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.metalType}</h1>
-                  <p className="text-sm">{data.articleDetails}</p>
+                  <h1 className="font-bold">{data.companyName}</h1>
+                  <p className="text-sm">{data.insuranceSubType}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -110,7 +116,7 @@ const VehicleDetailsMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/vehicle/edit");
+                          navigate("/bankAccount/edit");
                         }}
                       >
                         Edit
@@ -134,4 +140,4 @@ const VehicleDetailsMainForm = () => {
   );
 };
 
-export default VehicleDetailsMainForm;
+export default BankAccountMainForm;

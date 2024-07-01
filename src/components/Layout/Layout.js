@@ -12,6 +12,7 @@ import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
 import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
+import BankContentForm from "@/components/Bank&Post/contents";
 
 import {
   Sheet,
@@ -66,6 +67,8 @@ import WatchOtherForm from "@/components/OtherAssets/Watch/WatchOtherForm";
 import WatchEdit from "@/components/OtherAssets/Watch/WatchEdit";
 import ArtifactsMainForm from "@/components/OtherAssets/Artifacts/MainForm";
 import ArtifactsOtherForm from "@/components/OtherAssets/Artifacts/ArtifactsOtherForm";
+import BankAccountMainForm from "@/components/Bank&Post/Bank Accounts/MainForm";
+import BankAccountForm from "@/components/Bank&Post/Bank Accounts/Bank&Post";
 
 
 const Layout = () => {
@@ -153,6 +156,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Digital Assets
           </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/bank"
+          >
+            <UserIcon className="h-5 w-5" />
+            Bank & Post
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -210,6 +220,13 @@ const Layout = () => {
                   >
                     <HomeIcon className="h-5 w-5" />
                     Digital Assets
+                  </NavLink>
+                  <NavLink
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                    to="/bank"
+                  >
+                    <HomeIcon className="h-5 w-5" />
+                    Bank Details
                   </NavLink>
                 </nav>
               </SheetDescription>
@@ -313,6 +330,15 @@ const Layout = () => {
       )}
         {location.pathname === "/artifacts/add" && (
           <ArtifactsOtherForm />
+      )}
+        {location.pathname === "/bank" && (
+          <BankContentForm />
+      )}
+        {location.pathname === "/bankAccount" && (
+          <BankAccountMainForm />
+      )}
+        {location.pathname === "/bankAccount/add" && (
+          <BankAccountForm />
       )}
        
  

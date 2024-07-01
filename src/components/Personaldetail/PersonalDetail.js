@@ -135,12 +135,20 @@ const Personaldetail = () => {
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
       const mergedData = { ...defaultData, ...data };
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(mergedData)) {
+        formData.append(key, value);
+      }
+      if (file) {
+        formData.append("aadharFile", file);
+      }
       const response = await axios.put(
         `/api/profiles/${user.data.user.profile.id}`,
-        mergedData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -155,6 +163,7 @@ const Personaldetail = () => {
       toast.error("Failed to submit profile");
     },
   });
+  
 
   // useEffect(() => {
   //   if (defaultData?.nationality !== "Indian") {
@@ -179,7 +188,6 @@ const Personaldetail = () => {
       data.marriedUnderSpecialAct = "false";
     }
 
-    data.aadharFile = file;
     if (isForeign && data.specificNationality) {
       data.nationality = data.specificNationality;
     }
@@ -233,8 +241,11 @@ const Personaldetail = () => {
   };
 
   const handleFileChange = (e) => {
-    setValue("aadharFile", file);
+    console.log(e.target);
+    console.log("ASDSD", e.target.files[0]);
+    setFile(e.target.files[0]);
   };
+  
 
   return (
     <Suspense fallback={<Skletonpersonal />}>
@@ -998,9 +1009,7 @@ const Personaldetail = () => {
                       id="aadharFile"
                       placeholder="Full Name - Name as per Adhar"
                       type="file"
-                      onChange={(e) => setFile(e.target.files[0])}
-                      f
-                      defaultValue={defaultData?.aadharFile}
+                      onChange={handleFileChange}
                       {...register("aadharFile", {
                         required:
                           !defaultData?.aadharFile && "file is required",
