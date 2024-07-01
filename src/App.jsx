@@ -56,6 +56,8 @@ function App() {
         <Route path="/crypto" element={<Personalpage />} />
         <Route path="/crypto/add" element={<Personalpage />} />
         <Route path="/crypto/edit" element={<Personalpage />} />
+        <Route path="/jewellery" element={<Personalpage />} />
+        <Route path="/jewellery/add" element={<Personalpage />} />
       </Routes>
     </div>
   );

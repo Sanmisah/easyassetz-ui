@@ -57,6 +57,8 @@ import VehicleDetailsMainForm from "@/components/OtherAssets/VehicleDetails/Vehi
 import VehicleDetailsOtherForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsOtherForm";
 import HUFMainForm from "@/components/OtherAssets/HUF/HUFMainForm";
 import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
+import JewelleryMainForm from "@/components/OtherAssets/Jewellery/JewelleryMainForm";
+import JewelleryOtherForm from "@/components/OtherAssets/Jewellery/JewelleryOtherForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -274,6 +276,15 @@ const Layout = () => {
         {location.pathname === "/huf/add" && (
         <HUFOtherForm />
       )}
+        {location.pathname === "/jewellery" && (
+        <JewelleryMainForm />
+      )}
+        {location.pathname === "/jewellery/add" && (
+        <JewelleryOtherForm />
+      )}
+        {location.pathname === "/jewellery/edit" && (
+        <JewelleryEdit />
+      )}  
  
     </div>
   );
