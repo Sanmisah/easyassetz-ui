@@ -888,7 +888,9 @@ const Personaldetail = () => {
               )}
             </div>
             <div className="relative col-span-full space-y-4 mt-6 min-w-full md:min-w-[300px]">
-              <h2 className="text-2xl font-bold mt-4">Identification(KYC) Details</h2>
+              <h2 className="text-2xl font-bold mt-4">
+                Identification(KYC) Details
+              </h2>
               <h2 className="text-2xl font-medium">Aadhar</h2>
               <div className="col-span-full space-y-4 min-w-[300px]">
                 <Label htmlFor="adhar">Do you have an Adhar?</Label>
@@ -1112,9 +1114,7 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="pan-name">
-                      Full Name as per PAN
-                    </Label>
+                    <Label htmlFor="pan-name">Full Name as per PAN</Label>
                     <Input
                       id="pan-name"
                       defaultValue={defaultData?.panName}
@@ -1191,7 +1191,9 @@ const Personaldetail = () => {
               {showDLFields && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="driving-license-number">Driving License Number</Label>
+                    <Label htmlFor="driving-license-number">
+                      Driving License Number
+                    </Label>
                     <Controller
                       name="drivingLicenseNumber"
                       control={control}
@@ -1230,7 +1232,9 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="driving-license-name">Name as per Driving License</Label>
+                    <Label htmlFor="driving-license-name">
+                      Name as per Driving License
+                    </Label>
                     <Input
                       id="driving-license-name"
                       placeholder="Name as per Driving License"

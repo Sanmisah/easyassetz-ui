@@ -128,6 +128,10 @@ const Benificiaryform = ({
   }, [watchDOB]);
 
  
+  useEffect(() => {
+    console.log(Benificiary);
+  }, [Benificiary]);
+
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
     const ageDiff = Date.now() - birthDate.getTime();
@@ -178,6 +182,17 @@ const Benificiaryform = ({
   useEffect(() => {
     console.log(Benificiary);
   }, [Benificiary]);
+
+
+  const clearGuardianFields = () => {
+    setValue("guardianName", "");
+    setValue("guardianMobile", "");
+    setValue("guardianEmail", "");
+    setValue("guardianCity", "");
+    setValue("guardianState", "");
+    setValue("guardianReligion", "");
+    setValue("guardianNationality", "");
+  };
 
 
   const clearGuardianFields = () => {
@@ -245,6 +260,40 @@ const Benificiaryform = ({
     }
   };
 
+    console.log(data);
+    const date = new Date(data.dob);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.dob = newdate;
+    data.type = "beneficiary";
+    if (relationship === "other") {
+      data.relationship = data.specificRelationship;
+    }
+    delete data.specificRelationship;
+
+    if (data.dob > new Date() === 18) {
+      delete data.guardianCity;
+      delete data.guardianState;
+      delete data.document;
+      delete data.documentData;
+      delete data.guardianReligion;
+      delete data.guardianNationality;
+      delete data.houseNo;
+      delete data.addressLine1;
+      delete data.addressLine2;
+      delete data.pincode;
+      delete data.country;
+    }
+    try {
+      benificiaryMutate.mutate(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    }
+  };
+
   const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
 
   return (
@@ -277,6 +326,7 @@ const Benificiaryform = ({
                               id="full-name"
                               placeholder="Enter your full legal name"
                               defaultValue={Benificiary?.fullLegalName}
+
                               {...register("fullLegalName")}
                             />
                             {errors.fullLegalName && (
@@ -295,6 +345,7 @@ const Benificiaryform = ({
                                 <Select
                                   value={field.value}
                                   defaultValue={Benificiary?.relationship}  
+
                                   onValueChange={(value) => {
                                     field.onChange(value);
 
@@ -341,6 +392,10 @@ const Benificiaryform = ({
                                 {...register("specificRelationship", {
                                   required: relationship === "other",
                                   defaultValue: Benificiary?.specificRelationship,
+                                id="specific-relationship"
+                                placeholder="Enter specific relationship"
+                                {...register("specificRelationship", {
+                                  required: relationship === "other",
                                 })}
                               />
                               {errors.specificRelationship && (
@@ -415,6 +470,7 @@ const Benificiaryform = ({
                                   type="tel"
                                   placeholder="Enter mobile number"
                                   defaultValue={Benificiary?.mobile}
+
                                   defaultCountry="in"
                                   inputStyle={{ minWidth: "15.5rem" }}
                                   value={field.value}
@@ -436,6 +492,7 @@ const Benificiaryform = ({
                               placeholder="Enter email"
                               {...register("email")}
                               defaultValue={Benificiary?.email}
+
                             />
                             {errors.email && (
                               <p className="text-red-500">
@@ -460,6 +517,7 @@ const Benificiaryform = ({
                                 placeholder="Enter guardian's full legal name"
                                 {...register("guardianName")}
                                 defaultValue={Benificiary?.guardianName}
+
                               />
                               {errors.guardianName && (
                                 <p className="text-red-500">
@@ -501,6 +559,7 @@ const Benificiaryform = ({
                                 placeholder="Enter guardian's email"
                                 {...register("guardianEmail")}
                                 defaultValue={Benificiary?.guardianEmail}
+
                               />
                               {errors.guardianEmail && (
                                 <p className="text-red-500">
@@ -515,6 +574,7 @@ const Benificiaryform = ({
                                 placeholder="Enter guardian's city"
                                 {...register("guardianCity")}
                                 defaultValue={Benificiary?.guardianCity}
+
                               />
                               {errors.guardianCity && (
                                 <p className="text-red-500">
@@ -639,6 +699,8 @@ const Benificiaryform = ({
                           placeholder="Enter house/flat number"
                           {...register("houseNo")}
                           defaultValue={Benificiary?.houseNo}
+
+
                         />
                         {errors.houseNo && (
                           <p className="text-red-500">
@@ -655,6 +717,7 @@ const Benificiaryform = ({
                           placeholder="Enter address line 1"
                           {...register("addressLine1")}
                           defaultValue={Benificiary?.addressLine1}
+
                         />
                         {errors.addressLine1 && (
                           <p className="text-red-500">
@@ -671,6 +734,7 @@ const Benificiaryform = ({
                           placeholder="Enter address line 2"
                           {...register("addressLine2")}
                           defaultValue={Benificiary?.addressLine2}
+
                         />
                         {errors.addressLine2 && (
                           <p className="text-red-500">
@@ -685,6 +749,7 @@ const Benificiaryform = ({
                           placeholder="Enter pincode"
                           {...register("pincode")}
                           defaultValue={Benificiary?.pincode}
+
                         />
                         {errors.pincode && (
                           <p className="text-red-500">
@@ -699,6 +764,7 @@ const Benificiaryform = ({
                           placeholder="Enter country"
                           {...register("country")}
                           defaultValue={Benificiary?.country}
+
                         />
                         {errors.country && (
                           <p className="text-red-500">
@@ -714,6 +780,7 @@ const Benificiaryform = ({
                           placeholder="Enter guardian's city"
                           {...register("city", { required: true })}
                           defaultValue={Benificiary?.city}
+
                         />
                         {errors.city && (
                           <p className="text-red-500">{errors.city.message}</p>
@@ -726,6 +793,7 @@ const Benificiaryform = ({
                           placeholder="Enter guardian's state"
                           {...register("state", { required: true })}
                           defaultValue={Benificiary?.state}
+
                         />
                         {errors.state && (
                           <p className="text-red-500">{errors.state.message}</p>

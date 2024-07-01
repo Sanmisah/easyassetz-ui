@@ -49,7 +49,7 @@ function App() {
         <Route path="/membership/edit" element={<Personalpage />} />
         <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/vehicle" element={<Personalpage />} />
-        <Route path="/vehicle/add" element={<Personalpage />} />  
+        <Route path="/vehicle/add" element={<Personalpage />} />
         <Route path="/huf" element={<Personalpage />} />
         <Route path="/huf/add" element={<Personalpage />} />
         <Route path="/Digitalasset" element={<Personalpage />} />
@@ -73,6 +73,12 @@ function App() {
 
 
         </Routes>
+        <Route path="/other-assets" element={<Personalpage />} />
+        <Route path="/liabilities" element={<Personalpage />} />
+        <Route path="/homeloans" element={<Personalpage />} />
+        <Route path="/homeloans/add" element={<Personalpage />} />
+        <Route path="/homeloans/edit" element={<Personalpage />} />
+      </Routes>
     </div>
   );
 }

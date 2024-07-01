@@ -29,9 +29,11 @@ import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   metalType: z.string().nonempty({ message: "Metal Name is required" }),
+  otherMetalType: z.string().optional(),
   articleDetails: z
     .string()
     .nonempty({ message: "Article Details is required" }),
+  otherArticleDetails: z.string().optional(),
   weightPerArticle: z
     .string()
     .min(2, { message: "Weight Per Article is required" }),
@@ -44,6 +46,9 @@ const schema = z.object({
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .transform((value) => (value === null ? null : Number(value))),
+  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email" }),
+  phone: z.string().nonempty({ message: "Phone number is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -73,7 +78,9 @@ const BullionForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       metalType: "",
+      otherMetalType: "",
       articleDetails: "",
+      otherArticleDetails: "",
       weightPerArticle: "",
       numberOfArticles: "",
       additionalInformation: "",
@@ -111,9 +118,19 @@ const BullionForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
+    console.log(data);
+    if (data.metalType === "other") {
+      data.metalType = data.otherMetalType;
+    }
+    if (data.articleDetails === "other") {
+      data.articleDetails = data.otherArticleDetails;
+    }
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = phone;
+    delete data.otherMetalType;
+    delete data.otherArticleDetails;
+
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -331,8 +348,7 @@ const BullionForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={field.onChange}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -353,8 +369,7 @@ const BullionForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={field.onChange}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -368,20 +383,16 @@ const BullionForm = () => {
                   <div className="w-[40%] space-y-2">
                     <Label htmlFor="phone">Phone</Label>
                     <Controller
-                      name="mobile"
+                      name="phone"
                       control={control}
                       render={({ field }) => (
                         <PhoneInput
-                          id="mobile"
+                          id="phone"
                           type="tel"
                           placeholder="Enter mobile number"
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
-                          value={field.value}
-                          onChange={(value) => {
-                            console.log(value);
-                            setPhone(value);
-                          }}
+                          onChange={field.onChange}
                         />
                       )}
                     />
