@@ -126,6 +126,10 @@ const Benificiaryform = ({
       },
     });
 
+    if (response.data.data.Beneficiary?.document !== null) {
+      setSelectedDocument(response.data.data.Beneficiary?.documentData);
+    }
+
     return response.data.data.Beneficiary;
   };
 
@@ -229,18 +233,18 @@ const Benificiaryform = ({
 
   const onSubmit = (data) => {
     data.type = "beneficiary";
-    console.log("ASDSD", data.dob);
+    // console.log("ASDSD", data.dob);
     console.log(data);
-    if (data.dob !== null && data.dob !== "") {
-      data.dob = Benifyciary?.dob;
-    } else {
-      const date = new Date(data.dob);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.dob = newdate;
-    }
+    // if (data.dob !== null && !data.dob) {
+    //   data.dob = Benifyciary?.dob;
+    // } else {
+    //   const date = new Date(data.dob);
+    //   const month = String(date.getMonth() + 1).padStart(2, "0");
+    //   const day = String(date.getDate()).padStart(2, "0");
+    //   const year = date.getFullYear();
+    //   const newdate = `${month}/${day}/${year}`;
+    //   data.dob = newdate;
+    // }
 
     console.log(data);
     benificiaryMutate.mutate(data);
@@ -394,7 +398,9 @@ const Benificiaryform = ({
                               render={({ field }) => (
                                 <Datepicker
                                   selected={field.value}
-                                  defaultValue={Benifyciary.dob}
+                                  defaultValue={
+                                    Benifyciary.dob ? Benifyciary.dob : null
+                                  }
                                   onChange={field.onChange}
                                   id="dob"
                                 />
@@ -443,7 +449,68 @@ const Benificiaryform = ({
                               </p>
                             )}
                           </div>
-                          <div className="space-y-2">
+                          <div>
+                            <div className="space-y-2">
+                              <Label htmlFor="document">Document</Label>
+                              <Controller
+                                name="document"
+                                control={control}
+                                defaultValue={Benifyciary.document}
+                                render={({ field }) => (
+                                  <Select
+                                    value={field.value}
+                                    onValueChange={(value) => {
+                                      field.onChange(value);
+                                      setSelectedDocument(value);
+                                    }}
+                                  >
+                                    <SelectTrigger
+                                      id="document"
+                                      aria-label="Document"
+                                    >
+                                      <SelectValue placeholder="Select document" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="adhar">
+                                        Aadhaar
+                                      </SelectItem>
+                                      <SelectItem value="passport">
+                                        Passport
+                                      </SelectItem>
+                                      <SelectItem value="driving-license">
+                                        Driving License
+                                      </SelectItem>
+                                      <SelectItem value="voter-id">
+                                        Voter ID
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                              {errors.document && (
+                                <p className="text-red-500">
+                                  {errors.document.message}
+                                </p>
+                              )}
+                            </div>
+                            {selectedDocument && (
+                              <div className="space-y-2">
+                                <Label htmlFor="documentData"></Label>
+                                <Input
+                                  id="documentData"
+                                  placeholder={`Enter ${selectedDocument} number`}
+                                  {...register("documentData")}
+                                  defaultValue={Benifyciary.documentData}
+                                />
+                                {errors.documentData && (
+                                  <p className="text-red-500">
+                                    {errors.documentData.message}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          {/* <div className="space-y-2">
                             <Label htmlFor="documentData">Document Data</Label>
                             <Input
                               id="documentData"
@@ -456,7 +523,7 @@ const Benificiaryform = ({
                                 {errors.documentData.message}
                               </p>
                             )}
-                          </div>
+                          </div> */}
                           <div className="space-y-2">
                             <Label htmlFor="houseNo">House Number</Label>
                             <Input

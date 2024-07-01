@@ -138,6 +138,9 @@ const MotorForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;
@@ -257,11 +260,11 @@ const MotorForm = () => {
                         className="flex items-center gap-2"
                       >
                         <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="company1" value="company1" />
+                          <RadioGroupItem id="thirdparty" value="thirdparty" />
                           <Label htmlFor="thirdparty">Third Party</Label>
                         </div>
                         <div className="flex items-center gap-2">
-                          <RadioGroupItem id="company2" value="company2" />
+                          <RadioGroupItem id="" value="comprehensive" />
                           <Label htmlFor="comprehensive">Comprehensive</Label>
                         </div>
                       </RadioGroup>

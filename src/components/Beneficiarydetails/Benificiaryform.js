@@ -58,7 +58,6 @@ const beneficiarySchema = z
     country: z.string().optional(),
     mobile: z.string().optional(),
     email: z.string().optional(),
-    documentData: z.string().optional(),
     city: z.string().optional(),
     state: z.string().optional(),
     houseNo: z.string().optional(),
