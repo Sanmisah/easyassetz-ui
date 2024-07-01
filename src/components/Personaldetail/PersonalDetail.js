@@ -877,7 +877,7 @@ const Personaldetail = () => {
               )}
             </div>
             <div className="relative col-span-full space-y-4 mt-6 min-w-full md:min-w-[300px]">
-              <h2 className="text-2xl font-bold mt-4">Optional Documents</h2>
+              <h2 className="text-2xl font-bold mt-4">Identification(KYC) Details</h2>
               <h2 className="text-2xl font-medium">Aadhar</h2>
               <div className="col-span-full space-y-4 min-w-[300px]">
                 <Label htmlFor="adhar">Do you have an Adhar?</Label>
@@ -1104,12 +1104,12 @@ const Personaldetail = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="pan-name">
-                      Full Name - Name as per PAN
+                      Full Name as per PAN
                     </Label>
                     <Input
                       id="pan-name"
                       defaultValue={defaultData?.panName}
-                      placeholder="Full Name - Name as per PAN"
+                      placeholder="Full Name as per PAN"
                       type="text"
                       {...register("panName", {
                         required:
@@ -1221,16 +1221,16 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="driving-license-name">Name as per DL</Label>
+                    <Label htmlFor="driving-license-name">Name as per Driving License</Label>
                     <Input
                       id="driving-license-name"
-                      placeholder="Name as per DL"
+                      placeholder="Name as per Driving License"
                       defaultValue={defaultData?.drivingLicenseName}
                       type="text"
                       {...register("drivingLicenseName", {
                         required:
                           !defaultData?.drivingLicenseName &&
-                          "Name as per DL is required",
+                          "Name as per Driving License is required",
                       })}
                     />
                     {errors.drivingLicenseName && (
