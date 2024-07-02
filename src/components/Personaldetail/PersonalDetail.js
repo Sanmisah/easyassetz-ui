@@ -167,16 +167,6 @@ const Personaldetail = () => {
     },
   });
 
-  // useEffect(() => {
-  //   if (defaultData?.nationality !== "Indian") {
-  //     setValue("nationality", defaultData?.nationality);
-  //     setIsForeign(true);
-  //   } else {
-  //     setValue("nationality", defaultData?.nationality);
-  //     setIsForeign(false);
-  //   }
-  // }, [defaultData, isForeign]);
-
   const onSubmit = async (data) => {
     console.log(data);
     const date = new Date(data.dob);
@@ -413,9 +403,9 @@ const Personaldetail = () => {
                         </SelectTrigger>
                         <SelectContent>
                           {dropdownData.specificNationalities?.map(
-                            (specificNationality) => (
+                            (specificNationality, index) => (
                               <SelectItem
-                                key={specificNationality}
+                                key={index}
                                 value={specificNationality}
                               >
                                 {specificNationality.charAt(0).toUpperCase() +
@@ -453,8 +443,8 @@ const Personaldetail = () => {
                       </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
-                      {dropdownData.countries?.map((country) => (
-                        <SelectItem key={country} value={country}>
+                      {dropdownData.countries?.map((country, index) => (
+                        <SelectItem key={index} value={country}>
                           {country
                             .split("-")
                             .map((word) => word.charAt(0) + word.slice(1))
@@ -489,8 +479,8 @@ const Personaldetail = () => {
                       </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
-                      {dropdownData.religions?.map((religion) => (
-                        <SelectItem key={religion} value={religion}>
+                      {dropdownData.religions?.map((religion, index) => (
+                        <SelectItem key={index} value={religion}>
                           {religion.charAt(0) + religion.slice(1)}
                         </SelectItem>
                       ))}
