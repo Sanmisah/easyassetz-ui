@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const ppfMainForm = () => {
+const NPSMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -71,9 +71,9 @@ const ppfMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ppf</h1>
-          <Button onMouseDown={() => navigate("/providentfund/add")}>
-            Add ppf
+          <h1 className="text-2xl font-bold">NPS</h1>
+          <Button onMouseDown={() => navigate("/nps/add")}>
+            Add NPS
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -109,7 +109,7 @@ const ppfMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/providentfund/edit");
+                          navigate("/nps/edit");
                         }}
                       >
                         Edit
@@ -133,4 +133,4 @@ const ppfMainForm = () => {
   );
 };
 
-export default ppfMainForm;
+export default NPSMainForm;

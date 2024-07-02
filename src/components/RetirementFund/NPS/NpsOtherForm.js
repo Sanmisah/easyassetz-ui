@@ -37,7 +37,7 @@ const schema = z.object({
     .nonempty({ message: "Point of Contact Email is required" }),
 });
 
-const PranForm = () => {
+const NPSOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -101,9 +101,9 @@ const PranForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">PRAN Details</CardTitle>
+              <CardTitle className="text-2xl font-bold">NPS Details</CardTitle>
               <CardDescription>
-                Fill out the form to add new PRAN details.
+                Fill out the form to add new NPS details.
               </CardDescription>
             </div>
           </div>
@@ -320,4 +320,4 @@ const PranForm = () => {
   );
 };
 
-export default PranForm;
+export default NPSOtherForm;

@@ -111,9 +111,9 @@ const PpfForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">PPF Details</CardTitle>
+              <CardTitle className="text-2xl font-bold">Public Providend Fund</CardTitle>
               <CardDescription>
-                Fill out the form to add new PPF details.
+                Fill out the form to add new Public Providend Fund details.
               </CardDescription>
             </div>
           </div>

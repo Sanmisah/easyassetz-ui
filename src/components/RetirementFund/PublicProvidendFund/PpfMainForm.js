@@ -71,8 +71,8 @@ const ppfMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ppf</h1>
-          <Button onMouseDown={() => navigate("/ppf/add")}>Add ppf</Button>
+          <h1 className="text-2xl font-bold">Public Providend Fund</h1>
+          <Button onMouseDown={() => navigate("/ppf/add")}>Add Public Providend Fund</Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}

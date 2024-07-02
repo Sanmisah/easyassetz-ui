@@ -8,6 +8,13 @@ import {
   CardFooter,
 } from "@com/ui/card";
 import { Label } from "@com/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { useForm, Controller } from "react-hook-form";
@@ -18,15 +25,18 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
-  companyName: z.string().nonempty({ message: "Company Name is required" }),
-  masterPolicyNumber: z
+  bankName: z.string().nonempty({ message: "Bank/Post Name is required" }),
+  ppfAccountNumber: z
     .string()
-    .nonempty({ message: "Master Policy Number is required" }),
-  empNo: z.string().nonempty({ message: "Emp No/LIC ID No is required" }),
-  address: z.string().optional(),
-  annuityAmount: z.string().optional(),
+    .nonempty({ message: "PPF Account Number is required" }),
+  branch: z.string().optional(),
+  holdingNature: z
+    .string()
+    .nonempty({ message: "Nature of Holding is required" }),
+  jointHolderName: z.string().optional(),
   additionalDetails: z.string().optional(),
   pointOfContactName: z
     .string()
@@ -40,26 +50,29 @@ const schema = z.object({
     .nonempty({ message: "Point of Contact Email is required" }),
 });
 
-const SuperAnnuationOtherForm = () => {
+const BankAccountForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
+  const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [nomineeDetails, setNomineeDetails] = useState([]);
   const [nomineeError, setNomineeError] = useState(false);
+  
 
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      companyName: "",
-      masterPolicyNumber: "",
-      empNo: "",
-      address: "",
-      annuityAmount: "",
+      bankName: "",
+      ppfAccountNumber: "",
+      branch: "",
+      holdingNature: "",
+      jointHolderName: "",
       additionalDetails: "",
       pointOfContactName: "",
       pointOfContactMobile: "",
@@ -67,38 +80,30 @@ const SuperAnnuationOtherForm = () => {
     },
   });
 
-  const companyMutate = useMutation({
+  const ppfMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/company`, data, {
+      const response = await axios.post(`/api/ppf`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Company;
+      return response.data.data.PPF;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("companyData");
-      toast.success("Company details added successfully!");
+      queryClient.invalidateQueries("PpfData");
+      toast.success("PPF details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error submitting company details:", error);
-      toast.error("Failed to submit company details");
+      console.error("Error submitting PPF details:", error);
+      toast.error("Failed to submit PPF details");
     },
   });
 
   const onSubmit = (data) => {
-    if (nomineeDetails.length === 0) {
-      setNomineeError(true);
-      return;
-    }
+    console.log(data);
 
-    companyMutate.mutate(data);
-  };
-
-  const addNominee = () => {
-    const newNominee = { name: "", relation: "" }; // Replace with actual nominee fields
-    setNomineeDetails([...nomineeDetails, newNominee]);
+    ppfMutate.mutate(data);
   };
 
   return (
@@ -107,11 +112,9 @@ const SuperAnnuationOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Super Annuation Details
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold">Bank Account Details</CardTitle>
               <CardDescription>
-                Fill out the form to add new Super Annuation details.
+                Fill out the form to add new Bank Account Details.
               </CardDescription>
             </div>
           </div>
@@ -122,130 +125,218 @@ const SuperAnnuationOtherForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
+              <Label htmlFor="bankName">Bank Name</Label>
               <Controller
-                name="companyName"
+                name="bankName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="companyName"
-                    placeholder="Enter Company Name"
+                    id="bankName"
+                    placeholder="Enter Bank Name"
                     {...field}
-                    className={errors.companyName ? "border-red-500" : ""}
+                    className={errors.bankName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.companyName && (
+              {errors.bankName && (
+                <span className="text-red-500">{errors.bankName.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="accountType">Account Type</Label> 
+              <Controller
+                name="accountType"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="holdingNature"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className={errors.holdingNature ? "border-red-500" : ""}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Nature of Holding" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="current">Current</SelectItem>
+                      <SelectItem value="savings">Savings</SelectItem>
+                      <SelectItem value="recurring">Recurring</SelectItem>
+                      <SelectItem value="nri">NRI</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                    
+                )}  
+              />
+              {errors.accountType && (
                 <span className="text-red-500">
-                  {errors.companyName.message}
+                  {errors.accountType.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
+              <Label htmlFor="branch">Branch</Label>
               <Controller
-                name="masterPolicyNumber"
+                name="branch"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="masterPolicyNumber"
-                    placeholder="Enter Master Policy Number"
+                    id="branch"
+                    placeholder="Enter Branch"
                     {...field}
-                    className={
-                      errors.masterPolicyNumber ? "border-red-500" : ""
-                    }
+                    className={errors.branch ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.masterPolicyNumber && (
+              {errors.branch && (
+                <span className="text-red-500">{errors.branch.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="accountNumber">Account Number</Label>
+              <Controller
+                name="accountNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="accountNumber"
+                    placeholder="Enter Account Number"
+                    {...field}
+                    className={errors.accountNumber ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.accountNumber && (
                 <span className="text-red-500">
-                  {errors.masterPolicyNumber.message}
+                  {errors.accountNumber.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="empNo">Emp No/LIC ID No</Label>
+              <Label htmlFor="branchName">Branch Name</Label>
               <Controller
-                name="empNo"
+                name="branchName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="empNo"
-                    placeholder="Enter Emp No/LIC ID No"
+                    id="branchName"
+                    placeholder="Enter Branch Name"
                     {...field}
-                    className={errors.empNo ? "border-red-500" : ""}
+                    className={errors.branchName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.empNo && (
-                <span className="text-red-500">{errors.empNo.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Controller
-                name="address"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="address"
-                    placeholder="Enter Address"
-                    {...field}
-                    className={errors.address ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.address && (
-                <span className="text-red-500">{errors.address.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="annuityAmount">Annuity Amount</Label>
-              <Controller
-                name="annuityAmount"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="annuityAmount"
-                    placeholder="Enter Annuity Amount"
-                    {...field}
-                    className={errors.annuityAmount ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.annuityAmount && (
+              {errors.branchName && (
                 <span className="text-red-500">
-                  {errors.annuityAmount.message}
+                  {errors.branchName.message}
                 </span>
               )}
             </div>
 
+
             <div className="space-y-2">
-              <Label htmlFor="additionalDetails">Additional Details</Label>
+              <Label htmlFor="city">City</Label>
               <Controller
-                name="additionalDetails"
+                name="city"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="additionalDetails"
-                    placeholder="Enter Additional Details"
+                    id="city"
+                    placeholder="Enter City"
                     {...field}
-                    className={errors.additionalDetails ? "border-red-500" : ""}
+                    className={errors.city ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.additionalDetails && (
+              {errors.city && (
                 <span className="text-red-500">
-                  {errors.additionalDetails.message}
+                  {errors.city.message}
                 </span>
               )}
             </div>
 
+
             <div className="space-y-2">
+              <Label htmlFor="holdingType">Holding type</Label>
+              <Controller
+                name="holdingType"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowJointHolderName(value === "joint");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="single" value="single" />
+                      <Label htmlFor="single">Single</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="joint" value="joint" />
+                      <Label htmlFor="joint">Joint</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+              {errors.holdingType && (
+                <span className="text-red-500">
+                  {errors.holdingType.message}
+                </span>
+              )}
+            </div>
+
+            {showJointHolderName && (
+              <div className="space-y-2">
+                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                <Controller
+                  name="jointHolderName"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="jointHolderName"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className={errors.jointHolderName ? "border-red-500" : ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Joint Holder Name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="family_member_1">
+                          Family Member 1
+                        </SelectItem>
+                        <SelectItem value="family_member_2">
+                          Family Member 2
+                        </SelectItem>
+                        <SelectItem value="other_contact_1">
+                          Other Contact 1
+                        </SelectItem>
+                        <SelectItem value="other_contact_2">
+                          Other Contact 2
+                        </SelectItem>
+                        {/* Add more options as needed */}
+                      </SelectContent>
+                    </Select>
+
+                  )}
+                />
+                {errors.jointHolderName && (
+                  <span className="text-red-500">
+                    {errors.jointHolderName.message}
+                  </span>
+                )}
+              </div>
+            )}
+
+
+<div className="space-y-2">
               <Label htmlFor="nomineeDetails">Nominee Details</Label>
               <Button type="button" onClick={addNominee}>
                 Add (+) Nominee
@@ -279,28 +370,6 @@ const SuperAnnuationOtherForm = () => {
                 </div>
               ))}
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
-            </div>
-
             <div className="space-y-2">
               <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
               <Controller
@@ -376,6 +445,26 @@ const SuperAnnuationOtherForm = () => {
                 </span>
               )}
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="imageUpload">Image Upload</Label>
+              <Controller
+                name="imageUpload"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="file"
+                    id="imageUpload"
+                    {...field}
+                    className={errors.imageUpload ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.imageUpload && (
+                <span className="text-red-500">
+                  {errors.imageUpload.message}
+                </span>
+              )}
+            </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
@@ -387,4 +476,4 @@ const SuperAnnuationOtherForm = () => {
   );
 };
 
-export default SuperAnnuationOtherForm;
+export default BankAccountForm;

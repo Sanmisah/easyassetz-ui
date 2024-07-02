@@ -40,7 +40,7 @@ const schema = z.object({
     .nonempty({ message: "Point of Contact Email is required" }),
 });
 
-const CompanyEditForm = () => {
+const SuperAnnuationEditForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const getitem = localStorage.getItem("user");
@@ -353,4 +353,4 @@ const CompanyEditForm = () => {
   );
 };
 
-export default CompanyEditForm;
+export default SuperAnnuationEditForm;

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@com/ui/button";
 import axios from "axios";
 
-const BankContentForm = () => {
+const RetirementFundMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
   const [motorInsuranceData, setMotorInsuranceData] = useState([]);
   const [otherInsuranceData, setOtherInsuranceData] = useState([]);
@@ -99,87 +99,87 @@ const BankContentForm = () => {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold">Bank & Post Form</h1>
+        <h1 className="text-2xl font-bold">Insurance Main Form</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Fill out the form to add a new Bank & Post Form.
+          Fill out the form to add a new Retirement Fund.
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">
         <div
-          onClick={() => navigate("/bankaccount/add")}
+          onClick={() => navigate("/ppf")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Bank Account</h1>
+            <h1 className="text-xl font-bold">Public Providend Fund</h1>
             {HealthInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Bank Accouns
+                  {HealthInsurance?.length && HealthInsurance?.length} Funds
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onClick={() => navigate("/fix-deposit")}
+          onClick={() => navigate("/providentfund")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Fix Deposit</h1>
+            <h1 className="text-xl font-bold">Providend Fund</h1>
             {HealthInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Fix Deposits
+                  {HealthInsurance?.length && HealthInsurance?.length} Funds
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/bank-locker")}
+          onMouseDown={() => navigate("/nps")}
           className=" cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Bank Locker</h1>
+            <h1 className="text-xl font-bold">NPS</h1>
             {lifeInsuranceData && lifeInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {lifeInsuranceData?.length} Bank Lockers
+                  {lifeInsuranceData?.length} NPS
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/Scheme")}
+          onMouseDown={() => navigate("/gratuity")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Post Saving Scheme</h1>
+            <h1 className="text-xl font-bold">Gratuity</h1>
             {GeneralInsurance && GeneralInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {GeneralInsurance && GeneralInsurance?.length} Post Saving Schemes
+                  {GeneralInsurance && GeneralInsurance?.length} Gratuity
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onClick={() => navigate("/other-deposits")}
+          onClick={() => navigate("/superannuation")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Other Deposit</h1>
+            <h1 className="text-xl font-bold">Super Annuation</h1>
             {otherInsuranceData && otherInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherInsuranceData && otherInsuranceData?.length} Other Deposits
+                  {otherInsuranceData && otherInsuranceData?.length} Super Annuation
                 </p>
               </div>
             )}
@@ -190,4 +190,4 @@ const BankContentForm = () => {
   );
 };
 
-export default BankContentForm;
+export default RetirementFundMainForm;

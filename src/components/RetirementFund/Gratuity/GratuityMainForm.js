@@ -71,9 +71,9 @@ const ppfMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ppf</h1>
-          <Button onMouseDown={() => navigate("/providentfund/add")}>
-            Add ppf
+          <h1 className="text-2xl font-bold">Gratuity</h1>
+          <Button onMouseDown={() => navigate("/gratuity/add")}>
+            Add Gratuity
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -109,7 +109,7 @@ const ppfMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/providentfund/edit");
+                          navigate("/gratuity/edit");
                         }}
                       >
                         Edit

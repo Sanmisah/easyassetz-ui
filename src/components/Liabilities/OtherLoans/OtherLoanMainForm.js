@@ -74,9 +74,9 @@ const OtherLoanMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Home Loan</h1>
-          <Button onMouseDown={() => navigate("/homeloans/add")}>
-            Add Home Loan
+          <h1 className="text-2xl font-bold">Other Loan</h1>
+          <Button onMouseDown={() => navigate("/otherloan/add")}>
+            Add Other Loan
           </Button>
           {alertDialog && (
             <DeleteAlert

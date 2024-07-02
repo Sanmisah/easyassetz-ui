@@ -29,7 +29,6 @@ import { toast } from "sonner";
 import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
@@ -83,7 +82,7 @@ const schema = z.object({
   brokerName: z.string().optional(),
 });
 
-const EditMotorForm = () => {
+const BankEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -577,83 +576,11 @@ const EditMotorForm = () => {
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
-              <Addnominee
-                setSelectedNommie={setSelectedNommie}
-                AllNominees={Benifyciary?.nominees}
-                selectedNommie={selectedNommie}
-                displaynominie={displaynominie}
-                setDisplaynominie={setDisplaynominie}
-              />{" "}
-            </div>
-            <div className="space-y-2">
-              <Label>Mode of Purchase</Label>
-              <Controller
-                name="modeOfPurchase"
-                defaultValue={Benifyciary?.modeOfPurchase || ""}
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    {...field}
-                    defaultValue={Benifyciary?.modeOfPurchase || ""}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setHideRegisteredFields(value === "e-insurance");
-                      setBrokerSelected(value === "broker");
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="broker" value="broker" />
-                      <Label htmlFor="broker">Broker</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="e-insurance" value="e-insurance" />
-                      <Label htmlFor="e-insurance">E-Insurance</Label>
-                    </div>
-                  </RadioGroup>
-                )}
-              />
-            </div>
+            
 
-            {hideRegisteredFields && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registered-mobile">Registered Mobile</Label>
-                  <Controller
-                    name="registeredMobile"
-                    control={control}
-                    defaultValue={Benifyciary?.registeredMobile || ""}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-mobile"
-                        placeholder="Enter registered mobile"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredMobile || ""}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="registered-email">Registered Email ID</Label>
-                  <Controller
-                    name="registeredEmail"
-                    defaultValue={Benifyciary?.registeredEmail || ""}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-email"
-                        placeholder="Enter registered email"
-                        type="email"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredEmail || ""}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-            )}
+            
+                
+               
 
             {brokerSelected && (
               <>
@@ -782,4 +709,4 @@ const EditMotorForm = () => {
   );
 };
 
-export default EditMotorForm;
+export default BankEditForm;

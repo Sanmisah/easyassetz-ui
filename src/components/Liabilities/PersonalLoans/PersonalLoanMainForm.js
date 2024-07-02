@@ -67,16 +67,16 @@ const PersonalLoanMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Personal Loan deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Home Loan</h1>
-          <Button onMouseDown={() => navigate("/homeloans/add")}>
-            Add Home Loan
+          <h1 className="text-2xl font-bold">Personal Loan</h1>
+          <Button onMouseDown={() => navigate("/personalloan/add")}>
+            Add Personal Loan
           </Button>
           {alertDialog && (
             <DeleteAlert

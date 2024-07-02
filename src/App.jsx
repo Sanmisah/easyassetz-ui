@@ -82,15 +82,31 @@ function App() {
         <Route path="/litigation" element={<Personalpage />} />
         <Route path="/litigation/add" element={<Personalpage />} />
         <Route path="/litigation/edit" element={<Personalpage />} />
+        <Route path="/personalloan" element={<Personalpage />} />
+        <Route path="/personalloan/add" element={<Personalpage />} />
+        <Route path="/personalloan/edit" element={<Personalpage />} />
+        <Route path="/otherloan" element={<Personalpage />} />
+        <Route path="/otherloan/add" element={<Personalpage />} />
+        <Route path="/otherloan/edit" element={<Personalpage />} />
         <Route path="/ppf" element={<Personalpage />} />
         <Route path="/ppf/add" element={<Personalpage />} />
         <Route path="/ppf/edit" element={<Personalpage />} />
         <Route path="/providentfund" element={<Personalpage />} />
         <Route path="/providentfund/add" element={<Personalpage />} />
         <Route path="/providentfund/edit" element={<Personalpage />} />
+        <Route path="/nps" element={<Personalpage />} />
+        <Route path="/nps/add" element={<Personalpage />} />
+        <Route path="/nps/edit" element={<Personalpage />} />
         <Route path="/gratuity" element={<Personalpage />} />
         <Route path="/gratuity/add" element={<Personalpage />} />
         <Route path="/gratuity/edit" element={<Personalpage />} />
+        <Route path="/superannuation" element={<Personalpage />} />
+        <Route path="/superannuation/add" element={<Personalpage />} />
+        <Route path="/superannuation/edit" element={<Personalpage />} />
+        <Route path="/retirementfund" element={<Personalpage />} />
+        <Route path="/bankaccount" element={<Personalpage />} />
+        <Route path="/bankaccount/add" element={<Personalpage />} />
+        <Route path="/bankaccount/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

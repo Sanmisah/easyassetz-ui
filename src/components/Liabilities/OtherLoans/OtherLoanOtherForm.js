@@ -243,6 +243,25 @@ const OtherLoanOtherForm = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="description"
+                    placeholder="Enter Description"
+                    {...field}
+                    className={errors.description ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.description && (
+                <span className="text-red-500">{errors.description.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="guarantorName">Guarantor Name</Label>
               <Controller
                 name="guarantorName"

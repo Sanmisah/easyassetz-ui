@@ -108,10 +108,10 @@ const CompanyForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Company Details
+                 Gratuity Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add new company details.
+                Fill out the form to add new Gratuity details.
               </CardDescription>
             </div>
           </div>

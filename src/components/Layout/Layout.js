@@ -81,10 +81,26 @@ import PpfEditForm from "@/components/RetirementFund/PublicProvidendFund/PpfEdit
 import ProvidentFund from "@/components/RetirementFund/ProvidentFund/ProvidentFundMainForm";
 import ProvidentFundOtherForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundOtherForm";
 import ProvidentFundEditForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundEdit";
+import NPSMainForm from "@/components/RetirementFund/NPS/NpsMainForm";
+import NPSOtherForm from "@/components/RetirementFund//NPS/NpsOtherForm";
+import NPSEditForm from "@/components/RetirementFund/NPS/NpsEdit";
 import GratuityMainForm from "@/components/RetirementFund/Gratuity/GratuityMainForm";
 import GratuityOtherForm from "@/components/RetirementFund/Gratuity/GratuityOtherForm";
 import GratuityEditForm from "@/components/RetirementFund/Gratuity/GratuityEdit";
-
+import SuperAnnuationMainForm from "@/components/RetirementFund/SuperAnnuation/SuperAnnuationMainForm";
+import SuperAnnuationOtherForm from "@/components/RetirementFund/SuperAnnuation/SuperAnnuationOtherForm";
+import SuperAnnuationEditForm from "@/components/RetirementFund/SuperAnnuation/SuperAnnuationEdit";
+import PersonalLoanMainForm from "@/components/Liabilities/PersonalLoans/PersonalLoanMainForm";
+import PersonalLoanOtherForm from "@/components/Liabilities/PersonalLoans/PersonalLoanOtherForm";
+import PersonalLoanEdit from "@/components/Liabilities/PersonalLoans/PersonalLoanEdit";
+import OtherLoanMainForm from "@/components/Liabilities/OtherLoans/OtherLoanMainForm";
+import OtherLoanOtherForm from "@/components/Liabilities/OtherLoans/OtherLoanOtherForm";
+import OtherLoanEdit from "@/components/Liabilities/OtherLoans/OtherLoanMainForm";
+import RetirementFundMainForm from "@/components/RetirementFund/RetirementFundsMainForm";
+import BankContentForm from "@/components/Bank&Post/contents";
+import BankAccountMainForm from "@/components/Bank&Post/Bank Accounts/MainForm";
+import BankAccountForm from "@/components/Bank&Post/Bank Accounts/BankAccountAdd";
+import BankEditForm from "@/components/Bank&Post/Bank Accounts/BankAccountEdit";
 const Layout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -179,17 +195,17 @@ const Layout = () => {
           </NavLink>
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/ppf"
+            to="/retirementfund"
           >
             <UserIcon className="h-5 w-5" />
-            Public Provident Fund
+            Retirement Fund
           </NavLink>
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/providentfund"
+            to="/bank"
           >
             <UserIcon className="h-5 w-5" />
-            Provident Fund
+            Bank & Post
           </NavLink>
         </nav>
 
@@ -218,26 +234,20 @@ const Layout = () => {
                     className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
                     to="/nomination"
                   >
-                    <UserIcon className="h-5 w-5" />
-                    Nomination Module
+                   
+                    <HomeIcon className="h-5 w-5" />
+                    Insurance
                   </NavLink>
                   <NavLink
                     className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="#"
+                    to="/insurance"
                   >
                     <HomeIcon className="h-5 w-5" />
-                    Financial assets
+                    Bullion
                   </NavLink>
                   <NavLink
                     className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="#"
-                  >
-                    <HomeIcon className="h-5 w-5" />
-                    Membership
-                  </NavLink>
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="#"
+                    to="/bullion"
                   >
                     <HomeIcon className="h-5 w-5" />
                     Other Assets
@@ -263,7 +273,6 @@ const Layout = () => {
       {location.pathname === "/digitalasset" && <DigitalAssetsMainForm />}
       {location.pathname === "/lifeinsurance" && <Insurance />}
       {location.pathname === "/crypto" && <Crypto />}
-
       {location.pathname === "/lifeinsurance/add" && <InsuranceForm />}
       {location.pathname === "/crypto/add" && <CryptoForm />}
       {location.pathname === "/lifeinsurance/edit" && <EditInsuranceForm />}
@@ -329,9 +338,15 @@ const Layout = () => {
       {location.pathname === "/homeloans" && <HomeLoanForm />}
       {location.pathname === "/homeloans/add" && <HomeLoanOtherForm />}
       {location.pathname === "/homeloans/edit" && <EditHomeLoanForm />}
+      {location.pathname === "/personalloan" && <PersonalLoanMainForm />}
+      {location.pathname === "/personalloan/add" && <PersonalLoanOtherForm />}
+      {location.pathname === "/personalloan/edit" && <PersonalLoanEdit />}
       {location.pathname === "/vehicleloan" && <VehicleLoanMainForm />}
       {location.pathname === "/vehicleloan/add" && <VehicleLoanOtherForm />}
       {location.pathname === "/vehicleloan/edit" && <VehicleLoanEdit />}
+      {location.pathname === "/otherloan" && <OtherLoanMainForm />}
+      {location.pathname === "/otherloan/add" && <OtherLoanOtherForm />}
+      {location.pathname === "/otherloan/edit" && <OtherLoanEdit />}
       {location.pathname === "/litigation" && <LitigationMainForm />}
       {location.pathname === "/litigation/add" && <LitigationOtherForm />}
       {location.pathname === "/litigation/edit" && <LitigationEdit />}
@@ -344,6 +359,18 @@ const Layout = () => {
       {location.pathname === "/gratuity" && <GratuityMainForm />}
       {location.pathname === "/gratuity/add" && <GratuityOtherForm />}
       {location.pathname === "/gratuity/edit" && <GratuityEditForm />}
+      {location.pathname === "/superannuation" && <SuperAnnuationMainForm />}
+      {location.pathname === "/superannuation/add" && <SuperAnnuationOtherForm />}
+      {location.pathname === "/superannuation/edit" && <SuperAnnuationEditForm />}
+      {location.pathname === "/retirementfund" && <RetirementFundMainForm />}
+      {location.pathname === "/nps" && <NPSMainForm />}
+      {location.pathname === "/nps/add" && <NPSOtherForm />}
+      {location.pathname === "/nps/edit" && <NPSEditForm />}
+      {location.pathname === "/bank" && <BankContentForm />}
+      {location.pathname === "/bankaccount" && <BankAccountMainForm />}
+      {location.pathname === "/bankaccount/add" && <BankAccountForm />}
+      {location.pathname === "/bankaccount/edit" && <BankEditForm />}
+
     </div>
   );
 };

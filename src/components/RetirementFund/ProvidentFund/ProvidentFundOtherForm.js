@@ -97,10 +97,10 @@ const EmployeeDetailsForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Employee Details
+                Providend Fund Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add new employee details.
+                Fill out the form to add new Providend Fund.
               </CardDescription>
             </div>
           </div>

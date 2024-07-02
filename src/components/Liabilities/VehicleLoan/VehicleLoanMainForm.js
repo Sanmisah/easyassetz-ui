@@ -74,9 +74,9 @@ const VehicleLoanMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Home Loan</h1>
+          <h1 className="text-2xl font-bold">Vehicle Loan</h1>
           <Button onMouseDown={() => navigate("/homeloans/add")}>
-            Add Home Loan
+            Add Vehicle Loan
           </Button>
           {alertDialog && (
             <DeleteAlert
