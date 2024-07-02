@@ -79,7 +79,7 @@ const BankAccountMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Bank Account</h1>
-          <Button onMouseDown={() => navigate("/bankAccount/add")}>
+          <Button onMouseDown={() => navigate("/bankaccount/add")}>
             Add Bank Account
           </Button>
           {alertDialog && (

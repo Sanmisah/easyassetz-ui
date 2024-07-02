@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -49,6 +49,12 @@ const schema = z.object({
     .email({ message: "Invalid Email" })
     .nonempty({ message: "Point of Contact Email is required" }),
 });
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+
 
 const BankAccountForm = () => {
   const navigate = useNavigate();
@@ -56,9 +62,9 @@ const BankAccountForm = () => {
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
   const [showJointHolderName, setShowJointHolderName] = useState(false);
+  const [showOtherAccountType, setShowOtherAccountType] = useState(false);
   const [nomineeDetails, setNomineeDetails] = useState([]);
   const [nomineeError, setNomineeError] = useState(false);
-  
 
   const {
     handleSubmit,
@@ -143,56 +149,57 @@ const BankAccountForm = () => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="accountType">Account Type</Label> 
-              <Controller
-                name="accountType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    id="holdingNature"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className={errors.holdingNature ? "border-red-500" : ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Nature of Holding" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="current">Current</SelectItem>
-                      <SelectItem value="savings">Savings</SelectItem>
-                      <SelectItem value="recurring">Recurring</SelectItem>
-                      <SelectItem value="nri">NRI</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                    
-                )}  
-              />
-              {errors.accountType && (
-                <span className="text-red-500">
-                  {errors.accountType.message}
-                </span>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="branch">Branch</Label>
-              <Controller
-                name="branch"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="branch"
-                    placeholder="Enter Branch"
-                    {...field}
-                    className={errors.branch ? "border-red-500" : ""}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="accountType">Account Type</Label>
+                <Controller
+                  name="accountType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="accountType"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherAccountType(value === "other");
+                      }}
+                      className={errors.accountType ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Account Type" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="saving">Saving</SelectItem>
+                        <SelectItem value="current">Current</SelectItem>
+                        <SelectItem value="recurring">Recurring</SelectItem>
+                        <SelectItem value="nri">NRI</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {showOtherAccountType && (
+                  <Controller
+                    name="otheraccountType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Account Type"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    )}
                   />
                 )}
-              />
-              {errors.branch && (
-                <span className="text-red-500">{errors.branch.message}</span>
-              )}
+                {errors.accountType && (
+                  <span className="text-red-500">
+                    {errors.accountType.message}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -231,12 +238,9 @@ const BankAccountForm = () => {
                 )}
               />
               {errors.branchName && (
-                <span className="text-red-500">
-                  {errors.branchName.message}
-                </span>
+                <span className="text-red-500">{errors.branchName.message}</span>
               )}
             </div>
-
 
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
@@ -253,17 +257,14 @@ const BankAccountForm = () => {
                 )}
               />
               {errors.city && (
-                <span className="text-red-500">
-                  {errors.city.message}
-                </span>
+                <span className="text-red-500">{errors.city.message}</span>
               )}
             </div>
 
-
             <div className="space-y-2">
-              <Label htmlFor="holdingType">Holding type</Label>
+              <Label htmlFor="holdingNature">Nature of Holding</Label>
               <Controller
-                name="holdingType"
+                name="holdingNature"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
@@ -285,9 +286,9 @@ const BankAccountForm = () => {
                   </RadioGroup>
                 )}
               />
-              {errors.holdingType && (
+              {errors.holdingNature && (
                 <span className="text-red-500">
-                  {errors.holdingType.message}
+                  {errors.holdingNature.message}
                 </span>
               )}
             </div>
@@ -324,7 +325,6 @@ const BankAccountForm = () => {
                         {/* Add more options as needed */}
                       </SelectContent>
                     </Select>
-
                   )}
                 />
                 {errors.jointHolderName && (
@@ -335,41 +335,27 @@ const BankAccountForm = () => {
               </div>
             )}
 
-
-<div className="space-y-2">
-              <Label htmlFor="nomineeDetails">Nominee Details</Label>
-              <Button type="button" onClick={addNominee}>
-                Add (+) Nominee
-              </Button>
-              {nomineeError && (
+            <div className="space-y-2">
+              <Label htmlFor="additionalDetails">Additional Details</Label>
+              <Controller
+                name="additionalDetails"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="additionalDetails"
+                    placeholder="Enter Additional Details"
+                    {...field}
+                    className={errors.additionalDetails ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.additionalDetails && (
                 <span className="text-red-500">
-                  Please add nominee details.
+                  {errors.additionalDetails.message}
                 </span>
               )}
-              {nomineeDetails.map((nominee, index) => (
-                <div key={index} className="mt-2">
-                  <Input
-                    placeholder="Nominee Name"
-                    value={nominee.name}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].name = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                  />
-                  <Input
-                    placeholder="Nominee Relation"
-                    value={nominee.relation}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].relation = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                    className="mt-2"
-                  />
-                </div>
-              ))}
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
               <Controller

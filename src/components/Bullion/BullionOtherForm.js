@@ -49,11 +49,11 @@ const schema = z.object({
   phone: z.string().nonempty({ message: "Phone number is required" }),
 });
 
-const FocusableSelectTrigger = forwardRef((props, ref) => (
-  <SelectTrigger ref={ref} {...props} />
-));
+  const FocusableSelectTrigger = forwardRef((props, ref) => (
+    <SelectTrigger ref={ref} {...props} />
+  ));
 
-FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+  FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
 const BullionForm = () => {
   const navigate = useNavigate();
