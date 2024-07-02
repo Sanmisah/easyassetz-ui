@@ -88,10 +88,11 @@ const beneficiarySchema = z
   );
 
 const BenificiaryForm = ({
-  updateBeneficiaryOpen,
-  setUpdateBeneficiaryOpen,
-  beneficiaryId,
+  updateBenificiaryOpen,
+  setUpdateBenificiaryOpen,
+  benificiaryId,
 }) => {
+  const [defaultData, setDefaultData] = useState({});
   const queryClient = useQueryClient();
   const {
     register,
@@ -130,11 +131,19 @@ const BenificiaryForm = ({
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/beneficiaries/${beneficiaryId}`, {
+    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
       headers: {
         Authorization: `Bearer ${user?.data?.token}`,
       },
     });
+    console.log("MEsage", response.data.data.Beneficiary);
+    setDefaultData(response.data.data.Beneficiary);
+    if (response.data.data.Beneficiary?.relationship === "other") {
+      setRelationship(response.data.data.Beneficiary?.specificRelationship);
+    }
+    if (calculateAge(response.data.data.Beneficiary?.dob) < 18) {
+      setMarriedUnderAct(true);
+    }
 
     return response?.data?.data?.Beneficiary;
   };
@@ -144,9 +153,9 @@ const BenificiaryForm = ({
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["benificiaryData", beneficiaryId],
+    queryKey: ["benificiaryData", benificiaryId],
     queryFn: getPersonalData,
-    enabled: !!beneficiaryId,
+    enabled: !!benificiaryId,
 
     onSuccess: (data) => {
       reset(data);
@@ -227,8 +236,8 @@ const BenificiaryForm = ({
     <div>
       <Sheet
         className="w-[800px]"
-        open={updateBeneficiaryOpen}
-        onOpenChange={setUpdateBeneficiaryOpen}
+        open={updateBenificiaryOpen}
+        onOpenChange={setUpdateBenificiaryOpen}
       >
         <SheetContent>
           <SheetHeader>
@@ -252,6 +261,7 @@ const BenificiaryForm = ({
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
+                              defaultValue={defaultData?.fullLegalName}
                               {...register("fullLegalName")}
                             />
                             {errors.fullLegalName && (
@@ -265,11 +275,14 @@ const BenificiaryForm = ({
                             <Controller
                               name="relationship"
                               control={control}
+                              defaultValues={defaultData?.relationship}
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
+                                  defaultValue={defaultData?.relationship}
                                   onValueChange={(value) => {
                                     field.onChange(value);
+
                                     setRelationship(value);
                                   }}
                                 >
@@ -308,7 +321,8 @@ const BenificiaryForm = ({
                                 Specific Relationship
                               </Label>
                               <Input
-                                id="specific-relationship"
+                                id="specificRelationship"
+                                defaultValue={defaultData?.relationship}
                                 placeholder="Enter specific relationship"
                                 {...register("specificRelationship", {
                                   required: relationship === "other",
@@ -325,6 +339,7 @@ const BenificiaryForm = ({
                             <Label htmlFor="gender">Gender</Label>
                             <Controller
                               name="gender"
+                              defaultValue={defaultData?.gender}
                               control={control}
                               render={({ field }) => (
                                 <Select
@@ -358,10 +373,12 @@ const BenificiaryForm = ({
                             <Controller
                               name="dob"
                               control={control}
+                              defaultValue={defaultData?.dob}
                               render={({ field }) => (
                                 <Datepicker
                                   value={field.value}
                                   onChange={field.onChange}
+                                  defaultValue={defaultData?.dob}
                                   className="min-w-[190rem]"
                                 />
                               )}
@@ -376,6 +393,7 @@ const BenificiaryForm = ({
                             <Label htmlFor="mobile">Mobile Number</Label>
                             <Controller
                               name="mobile"
+                              defaultValue={defaultData?.mobile}
                               control={control}
                               render={({ field }) => (
                                 <PhoneInput
@@ -383,6 +401,7 @@ const BenificiaryForm = ({
                                   type="tel"
                                   placeholder="Enter mobile number"
                                   defaultCountry="in"
+                                  defaultValue={defaultData?.mobile}
                                   inputStyle={{ minWidth: "15.5rem" }}
                                   value={field.value}
                                   onChange={field.onChange}
@@ -400,6 +419,7 @@ const BenificiaryForm = ({
                             <Input
                               id="email"
                               type="email"
+                              defaultValue={defaultData?.email}
                               placeholder="Enter email"
                               {...register("email")}
                             />
@@ -424,6 +444,7 @@ const BenificiaryForm = ({
                               <Input
                                 id="guardian-name"
                                 placeholder="Enter guardian's full legal name"
+                                defaultValue={defaultData?.guardianName}
                                 {...register("guardianName")}
                               />
                               {errors.guardianName && (
@@ -438,6 +459,7 @@ const BenificiaryForm = ({
                               </Label>
                               <Controller
                                 name="guardianMobile"
+                                defaultValue={defaultData?.guardianMobile}
                                 control={control}
                                 render={({ field }) => (
                                   <PhoneInput
@@ -445,6 +467,7 @@ const BenificiaryForm = ({
                                     type="tel"
                                     placeholder="Enter guardian's mobile number"
                                     defaultCountry="in"
+                                    defaultValue={defaultData?.guardianMobile}
                                     value={field.value}
                                     inputStyle={{ minWidth: "15.5rem" }}
                                     onChange={field.onChange}
@@ -462,6 +485,7 @@ const BenificiaryForm = ({
                               <Input
                                 id="guardian-email"
                                 type="email"
+                                defaultValue={defaultData?.guardianEmail}
                                 placeholder="Enter guardian's email"
                                 {...register("guardianEmail")}
                               />
@@ -475,6 +499,7 @@ const BenificiaryForm = ({
                               <Label htmlFor="guardian-city">City</Label>
                               <Input
                                 id="guardian-city"
+                                defaultValue={defaultData?.guardianCity}
                                 placeholder="Enter guardian's city"
                                 {...register("guardianCity")}
                               />
@@ -488,6 +513,7 @@ const BenificiaryForm = ({
                               <Label htmlFor="guardian-state">State</Label>
                               <Input
                                 id="guardian-state"
+                                defaultValue={defaultData?.guardianState}
                                 placeholder="Enter guardian's state"
                                 {...register("guardianState")}
                               />
@@ -510,6 +536,7 @@ const BenificiaryForm = ({
                           render={({ field }) => (
                             <Select
                               value={field.value}
+                              defaultValue={defaultData?.document}
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
                                 field.onChange(value);
@@ -550,6 +577,7 @@ const BenificiaryForm = ({
                           <Input
                             id="document-data"
                             placeholder={`Enter ${selectedDocument} number`}
+                            defaultValue={defaultData?.documentData}
                             {...register("documentData")}
                           />
                           {errors.documentData && (
@@ -565,6 +593,7 @@ const BenificiaryForm = ({
                           id="religion"
                           placeholder="Enter religion"
                           {...register("religion")}
+                          defaultValue={defaultData?.religion}
                         />
                         {errors.religion && (
                           <p className="text-red-500">
@@ -577,6 +606,7 @@ const BenificiaryForm = ({
                         <Input
                           id="nationality"
                           placeholder="Enter nationality"
+                          defaultValue={defaultData?.nationality}
                           {...register("nationality")}
                         />
                         {errors.nationality && (
@@ -590,6 +620,7 @@ const BenificiaryForm = ({
                         <Input
                           id="house-no"
                           placeholder="Enter house/flat number"
+                          defaultValue={defaultData?.houseNo}
                           {...register("houseNo")}
                         />
                         {errors.houseNo && (
@@ -603,6 +634,7 @@ const BenificiaryForm = ({
                         <Input
                           id="address-line1"
                           placeholder="Enter address line 1"
+                          defaultValue={defaultData?.addressLine1}
                           {...register("addressLine1")}
                         />
                         {errors.addressLine1 && (
@@ -616,6 +648,7 @@ const BenificiaryForm = ({
                         <Input
                           id="address-line2"
                           placeholder="Enter address line 2"
+                          defaultValue={defaultData?.addressLine2}
                           {...register("addressLine2")}
                         />
                         {errors.addressLine2 && (
@@ -629,6 +662,7 @@ const BenificiaryForm = ({
                         <Input
                           id="pincode"
                           placeholder="Enter pincode"
+                          defaultValue={defaultData?.pincode}
                           {...register("pincode")}
                         />
                         {errors.pincode && (
@@ -642,6 +676,7 @@ const BenificiaryForm = ({
                         <Input
                           id="country"
                           placeholder="Enter country"
+                          defaultValue={defaultData?.country}
                           {...register("country")}
                         />
                         {errors.country && (
@@ -656,6 +691,7 @@ const BenificiaryForm = ({
                         <Input
                           id="city"
                           placeholder="Enter city"
+                          defaultValue={defaultData?.city}
                           {...register("city", { required: true })}
                         />
                         {errors.city && (
@@ -667,6 +703,7 @@ const BenificiaryForm = ({
                         <Input
                           id="state"
                           placeholder="Enter state"
+                          defaultValue={defaultData?.state}
                           {...register("state", { required: true })}
                         />
                         {errors.state && (
@@ -679,7 +716,7 @@ const BenificiaryForm = ({
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setUpdateBeneficiaryOpen(false)}
+                        onClick={() => setUpdateBenificiaryOpen(false)}
                       >
                         Cancel
                       </Button>

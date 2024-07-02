@@ -93,7 +93,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
       },
     });
 
-    return response.data.data.Beneficiary;
+    return response.data.data.Beneficiaries;
   };
 
   const {
