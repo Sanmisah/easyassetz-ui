@@ -210,7 +210,7 @@ const Personaldetail = () => {
     }
     delete data.specificNationality;
     data.marriedUnderSpecialAct = specialactundermarriange;
-
+    console.log("FIAL", data);
     Profilemutate.mutate(data);
   };
 
@@ -765,7 +765,7 @@ const Personaldetail = () => {
                       House / Flat No.
                     </Label>
                     <Input
-                      id="current-house-flat-no"
+                      id="currentHouseFlatNo"
                       placeholder="House / Flat No."
                       defaultValue={defaultData?.currentHouseFlatNo}
                       type="text"
@@ -786,7 +786,7 @@ const Personaldetail = () => {
                       Address Line 1
                     </Label>
                     <Input
-                      id="current-address-line-1"
+                      id="currentAddressLine1"
                       placeholder="Address Line 1"
                       defaultValue={defaultData?.currentAddressLine1}
                       type="text"
@@ -807,7 +807,7 @@ const Personaldetail = () => {
                       Address Line 2
                     </Label>
                     <Input
-                      id="current-address-line-2"
+                      id="currentAddressLine2"
                       placeholder="Address Line 2"
                       defaultValue={defaultData?.currentAddressLine2}
                       type="text"
@@ -826,7 +826,7 @@ const Personaldetail = () => {
                   <div className="space-y-2">
                     <Label htmlFor="current-pincode">Pincode</Label>
                     <Input
-                      id="current-pincode"
+                      id="currentPincode"
                       placeholder="Pincode"
                       defaultValue={defaultData?.currentPincode}
                       type="text"
@@ -845,7 +845,7 @@ const Personaldetail = () => {
                   <div className="space-y-2">
                     <Label htmlFor="current-city">City</Label>
                     <Input
-                      id="current-city"
+                      id="currentCity"
                       placeholder="City"
                       type="text"
                       defaultValue={defaultData?.currentCity}
@@ -863,7 +863,7 @@ const Personaldetail = () => {
                   <div className="space-y-2">
                     <Label htmlFor="current-state">State</Label>
                     <Input
-                      id="current-state"
+                      id="currentState"
                       placeholder="State"
                       type="text"
                       defaultValue={defaultData?.currentState}
@@ -881,7 +881,7 @@ const Personaldetail = () => {
                   <div className="space-y-2">
                     <Label htmlFor="current-country">Country</Label>
                     <Input
-                      id="current-country"
+                      id="currentCountry"
                       placeholder="Country"
                       defaultValue={defaultData?.currentCountry}
                       type="text"
