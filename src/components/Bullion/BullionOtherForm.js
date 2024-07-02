@@ -42,10 +42,8 @@ const schema = z.object({
     .nonempty({ message: "Number of Article Details is required" }),
   additionalInformation: z
     .string()
-    .min(3, { message: "Additional Information is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .transform((value) => (value === null ? null : Number(value))),
+    .min(3, { message: "Additional Information is required" }),
+
   name: z.string().nonempty({ message: "Name is required" }),
   email: z.string().email({ message: "Invalid email" }),
   phone: z.string().nonempty({ message: "Phone number is required" }),
