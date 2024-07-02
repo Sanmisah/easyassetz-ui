@@ -71,8 +71,6 @@ function App() {
         <Route path="/bankAccount/add" element={<Personalpage />} />
         <Route path="/bankAccount/edit" element={<Personalpage />} />
 
-
-        </Routes>
         <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/liabilities" element={<Personalpage />} />
         <Route path="/homeloans" element={<Personalpage />} />
@@ -84,6 +82,15 @@ function App() {
         <Route path="/litigation" element={<Personalpage />} />
         <Route path="/litigation/add" element={<Personalpage />} />
         <Route path="/litigation/edit" element={<Personalpage />} />
+        <Route path="/ppf" element={<Personalpage />} />
+        <Route path="/ppf/add" element={<Personalpage />} />
+        <Route path="/ppf/edit" element={<Personalpage />} />
+        <Route path="/providentfund" element={<Personalpage />} />
+        <Route path="/providentfund/add" element={<Personalpage />} />
+        <Route path="/providentfund/edit" element={<Personalpage />} />
+        <Route path="/gratuity" element={<Personalpage />} />
+        <Route path="/gratuity/add" element={<Personalpage />} />
+        <Route path="/gratuity/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

@@ -75,6 +75,15 @@ import VehicleLoanEdit from "@/components/Liabilities/VehicleLoan/VehicleLoanEdi
 import LitigationMainForm from "@/components/Liabilities/Litigation/LitigationMainForm";
 import LitigationOtherForm from "@/components/Liabilities/Litigation/LitigationOtherForm";
 import LitigationEdit from "@/components/Liabilities/Litigation/LitigationEdit";
+import PpfMainForm from "@/components/RetirementFund/PublicProvidendFund/PpfMainForm";
+import PpfOtherForm from "@/components/RetirementFund/PublicProvidendFund/PpfOtherForm";
+import PpfEditForm from "@/components/RetirementFund/PublicProvidendFund/PpfEdit";
+import ProvidentFund from "@/components/RetirementFund/ProvidentFund/ProvidentFundMainForm";
+import ProvidentFundOtherForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundOtherForm";
+import ProvidentFundEditForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundEdit";
+import GratuityMainForm from "@/components/RetirementFund/Gratuity/GratuityMainForm";
+import GratuityOtherForm from "@/components/RetirementFund/Gratuity/GratuityOtherForm";
+import GratuityEditForm from "@/components/RetirementFund/Gratuity/GratuityEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -167,6 +176,20 @@ const Layout = () => {
           >
             <UserIcon className="h-5 w-5" />
             Liabilities
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/ppf"
+          >
+            <UserIcon className="h-5 w-5" />
+            Public Provident Fund
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/providentfund"
+          >
+            <UserIcon className="h-5 w-5" />
+            Provident Fund
           </NavLink>
         </nav>
 
@@ -312,6 +335,15 @@ const Layout = () => {
       {location.pathname === "/litigation" && <LitigationMainForm />}
       {location.pathname === "/litigation/add" && <LitigationOtherForm />}
       {location.pathname === "/litigation/edit" && <LitigationEdit />}
+      {location.pathname === "/ppf" && <PpfMainForm />}
+      {location.pathname === "/ppf/add" && <PpfOtherForm />}
+      {location.pathname === "/ppf/edit" && <PpfEditForm />}
+      {location.pathname === "/providentfund" && <ProvidentFund />}
+      {location.pathname === "/providentfund/add" && <ProvidentFundOtherForm />}
+      {location.pathname === "/providentfund/edit" && <ProvidentFundEditForm />}
+      {location.pathname === "/gratuity" && <GratuityMainForm />}
+      {location.pathname === "/gratuity/add" && <GratuityOtherForm />}
+      {location.pathname === "/gratuity/edit" && <GratuityEditForm />}
     </div>
   );
 };

@@ -53,11 +53,7 @@ const PropritorshipEdit = () => {
   const [email, setEmail] = useState("");
   const [mobile, setmobile] = useState();
   console.log(lifeInsuranceEditId);
-  useEffect(() => {
-    if (lifeInsuranceEditId) {
-      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
-    }
-  }, [lifeInsuranceEditId]);
+
   const [showOtherBullion, setShowOtherBullion] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
 
@@ -84,32 +80,8 @@ const PropritorshipEdit = () => {
     );
     let othertype = response.data.data.BusinessAsset?.firmName;
     let otherarticle = response.data.data.BusinessAsset?.registeredAddress;
-    if (
-      othertype === "gold" ||
-      othertype === "silver" ||
-      othertype === "copper"
-    ) {
-      setShowOtherMetalType(false);
-      setValue("firmName", othertype);
-    } else {
-      setShowOtherMetalType(true);
-      setValue("otherFirmType", othertype);
-    }
+    reset(data);
 
-    if (
-      otherarticle === "plates" ||
-      otherarticle === "glass" ||
-      otherarticle === "bowl" ||
-      otherarticle === "bar" ||
-      otherarticle === "utensils"
-    ) {
-      setShowOtherArticleDetails(false);
-      setValue("registeredAddress", otherarticle);
-    } else {
-      setShowOtherArticleDetails(true);
-      setValue("otherArticleDetails", otherarticle);
-    }
-    console.log(typeof response.data.data.BusinessAsset?.premium);
     return response.data.data.BusinessAsset;
   };
 
@@ -120,33 +92,14 @@ const PropritorshipEdit = () => {
   } = useQuery({
     queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
-
     onSuccess: (data) => {
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
-      setDefaultValues(data);
-      reset(data);
-      setValue(data);
-      setValue("metaltype", data.metaltype);
-      setValue("otherInsuranceCompany", data.otherInsuranceCompany);
-      setValue("firmRegistrationNumber", data.firmRegistrationNumber);
-      setValue("additionalInformation", data.additionalInformation);
-      setValue("pointOfContact", data.pointOfContact);
+      if (data) {
+        setDefaultValues(data);
+        reset(data);
+        setValue(data);
 
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
+        console.log(data);
       }
-
-      setShowOtherBullion(data.BusinessAsset === "other");
-
-      console.log(data);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -177,9 +130,6 @@ const PropritorshipEdit = () => {
       toast.error("Failed to submit profile");
     },
   });
-  useEffect(() => {
-    console.log("Form values:", control._formValues);
-  }, [control._formValues]);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -206,15 +156,8 @@ const PropritorshipEdit = () => {
     bullionMutate.mutate(data);
   };
 
-  useEffect(() => {
-    console.log(Benifyciary);
-  }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading bullion data</div>;
-
-  useEffect(() => {
-    console.log("Phone:", mobile);
-  }, [mobile]);
 
   return (
     <div className="w-full">
@@ -241,19 +184,17 @@ const PropritorshipEdit = () => {
                 <Label htmlFor="firmName"> Firm Name</Label>
                 <Controller
                   name="firmName"
-                  control={control}
                   defaultValue={Benifyciary?.firmName}
+                  control={control}
                   render={({ field }) => (
                     <Select
                       id="firmName"
                       value={field.value}
-                      {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherMetalType(value === "other");
                       }}
                       className={errors.firmName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.firmName || ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Firm Type" />
@@ -316,6 +257,7 @@ const PropritorshipEdit = () => {
                     <Select
                       id="firmRegistrationNumber"
                       value={field.value}
+                      defaultValue={Benifyciary?.firmRegistrationNumber || ""}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherFirmsRegistrationNumber(value);
@@ -376,9 +318,9 @@ const PropritorshipEdit = () => {
                 <Input
                   id="name"
                   placeholder="Enter Name"
+                  defaultValue={Benifyciary?.name || ""}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  defaultValue={Benifyciary?.name || ""}
                 />
 
                 {errors.name && (
