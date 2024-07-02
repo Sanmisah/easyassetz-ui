@@ -70,9 +70,6 @@ function App() {
         <Route path="/bankAccount" element={<Personalpage />} />
         <Route path="/bankAccount/add" element={<Personalpage />} />
         <Route path="/bankAccount/edit" element={<Personalpage />} />
-
-
-        </Routes>
         <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/liabilities" element={<Personalpage />} />
         <Route path="/homeloans" element={<Personalpage />} />

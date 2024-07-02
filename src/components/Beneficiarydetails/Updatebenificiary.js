@@ -61,10 +61,6 @@ const beneficiarySchema = z
     city: z.string().optional(),
     state: z.string().optional(),
     houseNo: z.string().optional(),
-    address1: z.string().optional(),
-    address2: z.string().optional(),
-    pincode: z.string().optional(),
-    country: z.string().optional(),
     religion: z.string().optional(),
     nationality: z.string().optional(),
   })
@@ -91,12 +87,11 @@ const beneficiarySchema = z
     }
   );
 
-const Benificiaryform = ({
-  updateBenificiaryOpen,
-  setUpdateBenificiaryOpen,
-  benificiaryId,
+const BenificiaryForm = ({
+  updateBeneficiaryOpen,
+  setUpdateBeneficiaryOpen,
+  beneficiaryId,
 }) => {
-  console.log(benificiaryId);
   const queryClient = useQueryClient();
   const {
     register,
@@ -111,7 +106,6 @@ const Benificiaryform = ({
   });
 
   const [selectedDocument, setSelectedDocument] = useState("");
-  const [dateCountryCode, setDateCountryCode] = useState("+91");
   const [relationship, setRelationship] = useState("");
 
   const watchDOB = watch("dob", null);
@@ -127,11 +121,6 @@ const Benificiaryform = ({
     }
   }, [watchDOB]);
 
- 
-  useEffect(() => {
-    console.log(Benificiary);
-  }, [Benificiary]);
-
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
     const ageDiff = Date.now() - birthDate.getTime();
@@ -141,7 +130,7 @@ const Benificiaryform = ({
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
+    const response = await axios.get(`/api/beneficiaries/${beneficiaryId}`, {
       headers: {
         Authorization: `Bearer ${user?.data?.token}`,
       },
@@ -151,27 +140,16 @@ const Benificiaryform = ({
   };
 
   const {
-    data: Benificiary,
+    data: Beneficiary,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["charityData", benificiaryId],
+    queryKey: ["charityData", beneficiaryId],
     queryFn: getPersonalData,
-    enabled: !!benificiaryId,
+    enabled: !!beneficiaryId,
 
     onSuccess: (data) => {
       reset(data);
-      console.log("Data:", data);
-      // if (data.dob) {
-      //   const age = calculateAge(data.dob);
-      //   if (age >= 18) {
-      //     clearGuardianFields();
-      //   }
-      // }
-
-      // for (const [key, value] of Object.entries(data)) {
-      //   setValue(key, value);
-      // }
     },
 
     onError: (error) => {
@@ -179,10 +157,6 @@ const Benificiaryform = ({
       toast.error("Failed to submit profile", error.message);
     },
   });
-  useEffect(() => {
-    console.log(Benificiary);
-  }, [Benificiary]);
-
 
   const clearGuardianFields = () => {
     setValue("guardianName", "");
@@ -194,18 +168,7 @@ const Benificiaryform = ({
     setValue("guardianNationality", "");
   };
 
-
-  const clearGuardianFields = () => {
-    setValue("guardianName", "");
-    setValue("guardianMobile", "");
-    setValue("guardianEmail", "");
-    setValue("guardianCity", "");
-    setValue("guardianState", "");
-    setValue("guardianReligion", "");
-    setValue("guardianNationality", "");
-  };
-
-  const benificiaryMutate = useMutation({
+  const beneficiaryMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(`/api/beneficiaries`, data, {
         headers: {
@@ -215,7 +178,7 @@ const Benificiaryform = ({
       return response.data.data.profile;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("benificiaryData");
+      queryClient.invalidateQueries("beneficiaryData");
       toast.success("Beneficiary added successfully!");
     },
     onError: (error) => {
@@ -225,8 +188,6 @@ const Benificiaryform = ({
   });
 
   const onSubmit = async (data) => {
-
-    console.log(data);
     const date = new Date(data.dob);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -239,7 +200,7 @@ const Benificiaryform = ({
     }
     delete data.specificRelationship;
 
-    if (data.dob > new Date() === 18) {
+    if (calculateAge(data.dob) >= 18) {
       delete data.guardianCity;
       delete data.guardianState;
       delete data.document;
@@ -253,41 +214,7 @@ const Benificiaryform = ({
       delete data.country;
     }
     try {
-      benificiaryMutate.mutate(data);
-    } catch (error) {
-      toast.error("Failed to add beneficiary");
-      console.error("Error adding beneficiary:", error);
-    }
-  };
-
-    console.log(data);
-    const date = new Date(data.dob);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.dob = newdate;
-    data.type = "beneficiary";
-    if (relationship === "other") {
-      data.relationship = data.specificRelationship;
-    }
-    delete data.specificRelationship;
-
-    if (data.dob > new Date() === 18) {
-      delete data.guardianCity;
-      delete data.guardianState;
-      delete data.document;
-      delete data.documentData;
-      delete data.guardianReligion;
-      delete data.guardianNationality;
-      delete data.houseNo;
-      delete data.addressLine1;
-      delete data.addressLine2;
-      delete data.pincode;
-      delete data.country;
-    }
-    try {
-      benificiaryMutate.mutate(data);
+      beneficiaryMutate.mutate(data);
     } catch (error) {
       toast.error("Failed to add beneficiary");
       console.error("Error adding beneficiary:", error);
@@ -300,8 +227,8 @@ const Benificiaryform = ({
     <div>
       <Sheet
         className="w-[800px]"
-        open={updateBenificiaryOpen}
-        onOpenChange={setUpdateBenificiaryOpen}
+        open={updateBeneficiaryOpen}
+        onOpenChange={setUpdateBeneficiaryOpen}
       >
         <SheetContent>
           <SheetHeader>
@@ -325,8 +252,6 @@ const Benificiaryform = ({
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
-                              defaultValue={Benificiary?.fullLegalName}
-
                               {...register("fullLegalName")}
                             />
                             {errors.fullLegalName && (
@@ -340,15 +265,11 @@ const Benificiaryform = ({
                             <Controller
                               name="relationship"
                               control={control}
-                              defaultValue={Benificiary?.relationship}
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
-                                  defaultValue={Benificiary?.relationship}  
-
                                   onValueChange={(value) => {
                                     field.onChange(value);
-
                                     setRelationship(value);
                                   }}
                                 >
@@ -387,11 +308,6 @@ const Benificiaryform = ({
                                 Specific Relationship
                               </Label>
                               <Input
-                                id="specifyRelationship"
-                                placeholder="Enter specific relationship"
-                                {...register("specificRelationship", {
-                                  required: relationship === "other",
-                                  defaultValue: Benificiary?.specificRelationship,
                                 id="specific-relationship"
                                 placeholder="Enter specific relationship"
                                 {...register("specificRelationship", {
@@ -414,14 +330,12 @@ const Benificiaryform = ({
                                 <Select
                                   value={field.value}
                                   onValueChange={field.onChange}
-                                  defaultValue={Benificiary?.gender}
                                 >
                                   <SelectTrigger
                                     id="gender"
                                     aria-label="Gender"
                                   >
                                     <SelectValue placeholder="Select gender" />
-
                                   </SelectTrigger>
                                   <SelectContent>
                                     <SelectItem value="male">Male</SelectItem>
@@ -444,7 +358,6 @@ const Benificiaryform = ({
                             <Controller
                               name="dob"
                               control={control}
-                              defaultValue={Benificiary?.dob}
                               render={({ field }) => (
                                 <Datepicker
                                   value={field.value}
@@ -469,8 +382,6 @@ const Benificiaryform = ({
                                   id="mobile"
                                   type="tel"
                                   placeholder="Enter mobile number"
-                                  defaultValue={Benificiary?.mobile}
-
                                   defaultCountry="in"
                                   inputStyle={{ minWidth: "15.5rem" }}
                                   value={field.value}
@@ -491,8 +402,6 @@ const Benificiaryform = ({
                               type="email"
                               placeholder="Enter email"
                               {...register("email")}
-                              defaultValue={Benificiary?.email}
-
                             />
                             {errors.email && (
                               <p className="text-red-500">
@@ -516,8 +425,6 @@ const Benificiaryform = ({
                                 id="guardian-name"
                                 placeholder="Enter guardian's full legal name"
                                 {...register("guardianName")}
-                                defaultValue={Benificiary?.guardianName}
-
                               />
                               {errors.guardianName && (
                                 <p className="text-red-500">
@@ -537,7 +444,6 @@ const Benificiaryform = ({
                                     id="guardian-mobile"
                                     type="tel"
                                     placeholder="Enter guardian's mobile number"
-                                    defaultValue={Benificiary?.guardianMobile}
                                     defaultCountry="in"
                                     value={field.value}
                                     inputStyle={{ minWidth: "15.5rem" }}
@@ -558,8 +464,6 @@ const Benificiaryform = ({
                                 type="email"
                                 placeholder="Enter guardian's email"
                                 {...register("guardianEmail")}
-                                defaultValue={Benificiary?.guardianEmail}
-
                               />
                               {errors.guardianEmail && (
                                 <p className="text-red-500">
@@ -573,8 +477,6 @@ const Benificiaryform = ({
                                 id="guardian-city"
                                 placeholder="Enter guardian's city"
                                 {...register("guardianCity")}
-                                defaultValue={Benificiary?.guardianCity}
-
                               />
                               {errors.guardianCity && (
                                 <p className="text-red-500">
@@ -588,7 +490,6 @@ const Benificiaryform = ({
                                 id="guardian-state"
                                 placeholder="Enter guardian's state"
                                 {...register("guardianState")}
-                                defaultValue={Benificiary?.guardianState}
                               />
                               {errors.guardianState && (
                                 <p className="text-red-500">
@@ -600,7 +501,7 @@ const Benificiaryform = ({
                         </div>
                       )}
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-document">
+                        <Label htmlFor="document">
                           Identification Document
                         </Label>
                         <Controller
@@ -609,20 +510,19 @@ const Benificiaryform = ({
                           render={({ field }) => (
                             <Select
                               value={field.value}
-                              defaultValue={Benificiary?.document}
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
                                 field.onChange(value);
                               }}
                             >
                               <SelectTrigger
-                                id="guardian-document"
+                                id="document"
                                 aria-label="Identification Document"
                               >
                                 <SelectValue placeholder="Select document" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="adhar">Aadhaar</SelectItem>
+                                <SelectItem value="aadhar">Aadhaar</SelectItem>
                                 <SelectItem value="passport">
                                   Passport
                                 </SelectItem>
@@ -644,14 +544,13 @@ const Benificiaryform = ({
                       </div>
                       {selectedDocument && (
                         <div className="space-y-2">
-                          <Label htmlFor="guardian-document-data">
+                          <Label htmlFor="document-data">
                             {selectedDocument} Number
                           </Label>
                           <Input
-                            id="guardian-document-data"
-                            placeholder={`Enter guardian's ${selectedDocument} number`}
+                            id="document-data"
+                            placeholder={`Enter ${selectedDocument} number`}
                             {...register("documentData")}
-                            defaultValue={Benificiary?.documentData}
                           />
                           {errors.documentData && (
                             <p className="text-red-500">
@@ -661,46 +560,37 @@ const Benificiaryform = ({
                         </div>
                       )}
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-religion">Religion</Label>
+                        <Label htmlFor="religion">Religion</Label>
                         <Input
-                          id="guardian-religion"
-                          placeholder="Enter guardian's religion"
+                          id="religion"
+                          placeholder="Enter religion"
                           {...register("religion")}
-                          defaultValue={Benificiary?.religion}
                         />
-                        {errors.guardianReligion && (
+                        {errors.religion && (
                           <p className="text-red-500">
-                            {errors.guardianReligion.message}
+                            {errors.religion.message}
                           </p>
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-nationality">
-                          Nationality
-                        </Label>
+                        <Label htmlFor="nationality">Nationality</Label>
                         <Input
-                          id="guardian-nationality"
-                          placeholder="Enter guardian's nationality"
+                          id="nationality"
+                          placeholder="Enter nationality"
                           {...register("nationality")}
-                          defaultValue={Benificiary?.nationality}
                         />
-                        {errors.guardianNationality && (
+                        {errors.nationality && (
                           <p className="text-red-500">
-                            {errors.guardianNationality.message}
+                            {errors.nationality.message}
                           </p>
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-house-no">
-                          House/Flat No.
-                        </Label>
+                        <Label htmlFor="house-no">House/Flat No.</Label>
                         <Input
-                          id="guardian-house-no"
+                          id="house-no"
                           placeholder="Enter house/flat number"
                           {...register("houseNo")}
-                          defaultValue={Benificiary?.houseNo}
-
-
                         />
                         {errors.houseNo && (
                           <p className="text-red-500">
@@ -709,15 +599,11 @@ const Benificiaryform = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-address1">
-                          Address Line 1
-                        </Label>
+                        <Label htmlFor="address-line1">Address Line 1</Label>
                         <Input
-                          id="guardian-address1"
+                          id="address-line1"
                           placeholder="Enter address line 1"
                           {...register("addressLine1")}
-                          defaultValue={Benificiary?.addressLine1}
-
                         />
                         {errors.addressLine1 && (
                           <p className="text-red-500">
@@ -726,15 +612,11 @@ const Benificiaryform = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-address2">
-                          Address Line 2
-                        </Label>
+                        <Label htmlFor="address-line2">Address Line 2</Label>
                         <Input
-                          id="guardian-address2"
+                          id="address-line2"
                           placeholder="Enter address line 2"
                           {...register("addressLine2")}
-                          defaultValue={Benificiary?.addressLine2}
-
                         />
                         {errors.addressLine2 && (
                           <p className="text-red-500">
@@ -743,13 +625,11 @@ const Benificiaryform = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-pincode">Pincode</Label>
+                        <Label htmlFor="pincode">Pincode</Label>
                         <Input
-                          id="guardian-pincode"
+                          id="pincode"
                           placeholder="Enter pincode"
                           {...register("pincode")}
-                          defaultValue={Benificiary?.pincode}
-
                         />
                         {errors.pincode && (
                           <p className="text-red-500">
@@ -758,13 +638,11 @@ const Benificiaryform = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-country">Country</Label>
+                        <Label htmlFor="country">Country</Label>
                         <Input
-                          id="guardian-country"
+                          id="country"
                           placeholder="Enter country"
                           {...register("country")}
-                          defaultValue={Benificiary?.country}
-
                         />
                         {errors.country && (
                           <p className="text-red-500">
@@ -774,26 +652,22 @@ const Benificiaryform = ({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-city">City</Label>
+                        <Label htmlFor="city">City</Label>
                         <Input
-                          id="guardian-city"
-                          placeholder="Enter guardian's city"
+                          id="city"
+                          placeholder="Enter city"
                           {...register("city", { required: true })}
-                          defaultValue={Benificiary?.city}
-
                         />
                         {errors.city && (
                           <p className="text-red-500">{errors.city.message}</p>
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-state">State</Label>
+                        <Label htmlFor="state">State</Label>
                         <Input
-                          id="guardian-state"
-                          placeholder="Enter guardian's state"
+                          id="state"
+                          placeholder="Enter state"
                           {...register("state", { required: true })}
-                          defaultValue={Benificiary?.state}
-
                         />
                         {errors.state && (
                           <p className="text-red-500">{errors.state.message}</p>
@@ -805,7 +679,7 @@ const Benificiaryform = ({
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setUpdateBenificiaryOpen(false)}
+                        onClick={() => setUpdateBeneficiaryOpen(false)}
                       >
                         Cancel
                       </Button>
@@ -821,4 +695,4 @@ const Benificiaryform = ({
   );
 };
 
-export default Benificiaryform;
+export default BenificiaryForm;
