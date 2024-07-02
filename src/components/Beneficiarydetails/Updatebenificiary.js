@@ -43,7 +43,7 @@ const beneficiarySchema = z
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
     dob: z.date().optional(),
-    guardianName: z.string().optional(),
+    guardianName: z.string().nonempty("Guardian Name is required"),
     guardianMobile: z.string().optional(),
     guardianEmail: z.string().optional(),
     guardianCity: z.string().optional(),

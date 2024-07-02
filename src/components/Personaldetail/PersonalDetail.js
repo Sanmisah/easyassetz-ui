@@ -139,10 +139,11 @@ const Personaldetail = () => {
       for (const [key, value] of Object.entries(mergedData)) {
         formData.append(key, value);
       }
+      formData.append("_method", "put");
       if (file) {
         formData.append("aadharFile", file);
       }
-      const response = await axios.put(
+      const response = await axios.post(
         `/api/profiles/${user.data.user.profile.id}`,
         formData,
         {
@@ -163,7 +164,6 @@ const Personaldetail = () => {
       toast.error("Failed to submit profile");
     },
   });
-  
 
   // useEffect(() => {
   //   if (defaultData?.nationality !== "Indian") {
@@ -245,7 +245,6 @@ const Personaldetail = () => {
     console.log("ASDSD", e.target.files[0]);
     setFile(e.target.files[0]);
   };
-  
 
   return (
     <Suspense fallback={<Skletonpersonal />}>
