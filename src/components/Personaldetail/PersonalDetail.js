@@ -136,9 +136,11 @@ const Personaldetail = () => {
     mutationFn: async (data) => {
       const mergedData = { ...defaultData, ...data };
       const formData = new FormData();
+
       for (const [key, value] of Object.entries(mergedData)) {
         formData.append(key, value);
       }
+
       formData.append("_method", "put");
       if (file) {
         formData.append("aadharFile", file);
@@ -176,12 +178,23 @@ const Personaldetail = () => {
   // }, [defaultData, isForeign]);
 
   const onSubmit = async (data) => {
+    console.log(data);
     const date = new Date(data.dob);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
     data.dob = newdate;
+
+    if (data.sameAsPermanentAddress) {
+      data.currentHouseFlatNo = data.permanentHouseFlatNo;
+      data.currentAddressLine1 = data.permanentAddressLine1;
+      data.currentAddressLine2 = data.permanentAddressLine2;
+      data.currentPincode = data.permanentPincode;
+      data.currentCity = data.permanentCity;
+      data.currentState = data.permanentState;
+      data.currentCountry = data.permanentCountry;
+    }
 
     console.log("file:", file);
     if (data.maritalStatus === "Bachelor") {

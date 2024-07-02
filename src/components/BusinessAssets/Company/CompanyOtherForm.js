@@ -50,9 +50,9 @@ const schema = z.object({
     .nonempty({ message: "Document Availability is required" }),
   nomination: z.string().nonempty({ message: " Nomination is required" }),
   additionalInformation: z.string().optional(),
-  pointOfContact: z
-    .string()
-    .nonempty({ message: "Point of Contact is required" }),
+  name: z.string().nonempty({ message: "Name is required" }),
+  mobile: z.string().nonempty({ message: "Mobile is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -77,7 +77,7 @@ const CompanyForm = () => {
   const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(null);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] =
     useState(false);
@@ -86,6 +86,7 @@ const CompanyForm = () => {
   const [otherFirmName, setOtherFirmName] = useState("");
   const [showOtherJointHolderName, setShowOtherJointHolderName] =
     useState(false);
+
   const [showOtherJointName, setShowOtherJointName] = useState(false);
   const {
     handleSubmit,
@@ -133,6 +134,7 @@ const CompanyForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    console.log(data);
     if (selectedNommie.length < 1) {
       toast.error("Please select atleast one nominee");
       setNomineeError(true);
@@ -142,9 +144,9 @@ const CompanyForm = () => {
       data.nominees = selectedNommie;
     }
     data.type = "partnershipFirm";
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = phone;
     if (data) {
       data.firmName = data.otherFirmName;
     }
@@ -331,7 +333,7 @@ const CompanyForm = () => {
                     </Select>
                   )}
                 />
-                {showOtherMyStatus && (
+                {/* {showOtherMyStatus && (
                   <Controller
                     name="otherMyStatus"
                     control={control}
@@ -345,7 +347,7 @@ const CompanyForm = () => {
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors.myStatus && (
                   <span className="text-red-500">
                     {errors.myStatus.message}
@@ -407,74 +409,63 @@ const CompanyForm = () => {
                   >
                     <div className="flex items-center gap-2 text-center">
                       <RadioGroupItem
-                        id="broker"
-                        value="broker"
+                        id="single"
+                        value="single"
                         onValueChange={(value) => {
                           field.onChange(value);
-                          setShowOtherJointName(value === "other");
+                          setShowOtherJointName(value === "joint");
                         }}
                       />
-                      <Label htmlFor="broker">Single</Label>
+                      <Label htmlFor="single">Single</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <RadioGroupItem id="jointType" value="jointType" />
-                      <Label htmlFor="jointType">Joint Name</Label>
+                      <RadioGroupItem id="joint" value="joint" />
+                      <Label htmlFor="joint">Joint Name</Label>
                     </div>
                   </RadioGroup>
                 )}
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                <Controller
-                  name="jointHolderName"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="jointHolderName"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherJointHolderName(value === "other");
-                      }}
-                      className={errors.jointHolderName ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select From Family & Other Contact Details" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="other">
-                          Select From Family{" "}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherJointHolderName && (
+            {showOtherJointName && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="jointHolderName">Joint Holder Name</Label>
                   <Controller
-                    name="otherJointHolderName"
+                    name="jointHolderName"
                     control={control}
                     render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Joint Holder Name"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
+                      <Select
+                        id="jointHolderName"
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowOtherJointHolderName(value === "other");
+                        }}
+                        className={
+                          errors.jointHolderName ? "border-red-500" : ""
+                        }
+                      >
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select From Family & Other Contact Details" />
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="other">
+                            Select From Family{" "}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     )}
                   />
-                )}
-                {errors.typeOfInvestment && (
-                  <span className="text-red-500">
-                    {errors.typeOfInvestment.message}
-                  </span>
-                )}
-              </div>
-            </div>
 
+                  {errors.typeOfInvestment && (
+                    <span className="text-red-500">
+                      {errors.typeOfInvestment.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
@@ -595,7 +586,7 @@ const CompanyForm = () => {
                     )}
                   </div>
                   <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="phone">Mobile</Label>
                     <Controller
                       name="mobile"
                       control={control}
@@ -614,9 +605,9 @@ const CompanyForm = () => {
                         />
                       )}
                     />
-                    {errors.phone && (
+                    {errors.mobile && (
                       <span className="text-red-500">
-                        {errors.phone.message}
+                        {errors.mobile.message}
                       </span>
                     )}
                   </div>

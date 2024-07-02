@@ -55,6 +55,9 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
   additionalInformation: z.string().optional(),
+  name: z.string().nonempty({ message: "Name is required" }),
+  mobile: z.string().nonempty({ message: "mobile is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
 });
 
 const EditFormHealth = () => {
@@ -143,23 +146,22 @@ const EditFormHealth = () => {
       setValue("registeredMobile", data.registeredMobile);
       setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
+      setValue("previousPolicymobile", data.previousPolicymobile);
       setValue("companyRegistration", data.companyRegistration);
       setValue("myStatus", data.myStatus);
       setValue("typeOfInvestment", data.typeOfInvestment);
       setValue("holdingType", data.holdingType);
       setValue("jointHolderName", data.jointHolderName);
       setValue("documentAvailability", data.documentAvailability);
-      setValue("additionalInformation", data.additionalInformation);
-      setValue("contactNumber", data.contactNumber);
+      setValue("contactmobile", data.contactmobile);
       setValue("email", data.email);
       setValue("registeredMobile", data.registeredMobile);
       setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
+      setValue("previousPolicymobile", data.previousPolicymobile);
       setValue("brokerName", data.brokerName);
       setValue("additionalInformation", data.additionalInformation);
-      setValue("contactNumber", data.contactNumber);
+      setValue("contactmobile", data.contactmobile);
 
       // Set fetched values to the form
       for (const key in data) {
@@ -339,7 +341,7 @@ const EditFormHealth = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="policy-number">Policy Number</Label>
+                <Label htmlFor="policy-mobile">Policy Number</Label>
                 <Controller
                   name="companyRegistration"
                   control={control}
@@ -588,7 +590,7 @@ const EditFormHealth = () => {
                   defaultValue={Benifyciary?.additionalInformation || ""}
                   render={({ field }) => (
                     <Input
-                      id="registered-mobile"
+                      id="additionalInformation"
                       placeholder="Enter registered mobile"
                       {...field}
                       defaultValue={Benifyciary?.additionalInformation || ""}
@@ -662,28 +664,28 @@ const EditFormHealth = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="number">Number</Label>
+                    <Label htmlFor="mobile">mobile</Label>
                     <Controller
-                      name="number"
-                      defaultValue={Benifyciary?.number || ""}
+                      name="mobile"
+                      defaultValue={Benifyciary?.mobile || ""}
                       control={control}
                       render={({ field }) => (
                         <PhoneInput
-                          defaultValue={Benifyciary?.number || ""}
+                          defaultValue={Benifyciary?.mobile || ""}
                           id="guardian-mobile"
                           type="tel"
-                          placeholder="Enter number"
+                          placeholder="Enter mobile"
                           defaultCountry="in"
                           value={field.value}
                           inputStyle={{ minWidth: "30.5rem" }}
                           onChange={field.onChange}
-                          className={errors.number ? "border-red-500" : ""}
+                          className={errors.mobile ? "border-red-500" : ""}
                         />
                       )}
                     />
-                    {errors.number && (
+                    {errors.mobile && (
                       <span className="text-red-500">
-                        {errors.number.message}
+                        {errors.mobile.message}
                       </span>
                     )}
                   </div>
