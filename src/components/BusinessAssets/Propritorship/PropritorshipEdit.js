@@ -41,7 +41,7 @@ const schema = z.object({
     .min(1, { message: "Additional Information is Required" }),
 });
 
-const PropritorshipEdit = () => {
+const PropritorshipEdit = ({ benificiaryId }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
