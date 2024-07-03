@@ -35,9 +35,7 @@ const schema = z.object({
   additionalInformation: z
     .string()
     .min(1, { message: " Weight Per Article is Required" }),
-  additionalInformation: z
-    .string()
-
+  additionalInformation: z.string(),
 });
 
 const HUFEdit = () => {

@@ -28,7 +28,6 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import cross from "@/components/image/close.png";
 
-
 const schema = z.object({
   firmName: z.string().nonempty({ message: " Firm Name is required" }),
   registeredAddress: z
@@ -40,10 +39,7 @@ const schema = z.object({
 
   additionalInformation: z
     .string()
-    .min(3, { message: "Additional Information is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .transform((value) => (value === null ? null : Number(value))),
+    .min(3, { message: "Additional Information is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -100,7 +96,7 @@ const PropritershipForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
       toast.success("Other Insurance added successfully!");
-      navigate("/otherinsurance");
+      navigate("/propritership");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -121,11 +117,12 @@ const PropritershipForm = () => {
     data.mobile = phone;
     if (showOtherFirmsRegistrationNumber) {
       data.firmsRegistrationNumberType = showOtherFirmsRegistrationNumber;
-      data.firmsRegistrationNumber = data.otherFirmRegistrationNumber;
+      data.firmsRegistrationNumber = data.otherFirmsRegistrationNumber;
     }
 
     if (data.firmsRegistrationNumber === "other") {
-      data.firmsRegistrationNumber = data.otherFirmRegistrationNumber;
+      data.firmsRegistrationNumberType = "other";
+      data.firmsRegistrationNumber = data.otherFirmsRegistrationNumber;
     }
 
     lifeInsuranceMutate.mutate(data);

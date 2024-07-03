@@ -104,10 +104,12 @@ const BenificiaryForm = ({
     formState: { errors },
   } = useForm({
     resolver: zodResolver(beneficiarySchema),
+    defaultValues: defaultData || {},
   });
 
   const [selectedDocument, setSelectedDocument] = useState("");
   const [relationship, setRelationship] = useState("");
+  const [isMinor, setIsMinor] = useState(true);
 
   const watchDOB = watch("dob", null);
   const getitem = localStorage.getItem("user");
@@ -145,6 +147,21 @@ const BenificiaryForm = ({
       setMarriedUnderAct(true);
     }
 
+    if (
+      ["child", "spouse", "self", "parent", "sibling"].includes(
+        response.data.data.Beneficiary?.relationship
+      )
+    ) {
+      setValue("relationship", response.data.data.Beneficiary?.relationship);
+      return;
+    } else {
+      setRelationship("other");
+      setValue("relationship", response.data.data.Beneficiary?.relationship);
+    }
+    if (calculateAge(response.data.data.Beneficiary?.dob) < 18) {
+      setIsMinor(true);
+    }
+
     return response?.data?.data?.Beneficiary;
   };
 
@@ -159,6 +176,30 @@ const BenificiaryForm = ({
 
     onSuccess: (data) => {
       reset(data);
+      setValue("relationship", data.relationship);
+      setValue("specificRelationship", data.specificRelationship);
+      setValue("gender", data.gender);
+      setValue("dob", data.dob);
+      setValue("guardianName", data.guardianName);
+      setValue("guardianMobile", data.guardianMobile);
+      setValue("guardianEmail", data.guardianEmail);
+      setValue("guardianCity", data.guardianCity);
+      setValue("guardianState", data.guardianState);
+      setValue("document", data.document);
+      setValue("documentData", data.documentData);
+      setValue("guardianReligion", data.guardianReligion);
+      setValue("guardianNationality", data.guardianNationality);
+      setValue("houseNo", data.houseNo);
+      setValue("addressLine1", data.addressLine1);
+      setValue("addressLine2", data.addressLine2);
+      setValue("pincode", data.pincode);
+      setValue("country", data.country);
+      setValue("mobile", data.mobile);
+      setValue("email", data.email);
+      setValue("city", data.city);
+      setValue("state", data.state);
+      setValue("religion", data.religion);
+      setValue("nationality", data.nationality);
     },
 
     onError: (error) => {
@@ -230,7 +271,11 @@ const BenificiaryForm = ({
     }
   };
 
-  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
+  useEffect(() => {
+    if (watchDOB) {
+      setIsMinor(calculateAge(watchDOB) < 18);
+    }
+  }, [watchDOB]);
 
   return (
     <div>
@@ -345,6 +390,7 @@ const BenificiaryForm = ({
                                 <Select
                                   value={field.value}
                                   onValueChange={field.onChange}
+                                  defaultValue={defaultData?.gender}
                                 >
                                   <SelectTrigger
                                     id="gender"
@@ -401,9 +447,11 @@ const BenificiaryForm = ({
                                   type="tel"
                                   placeholder="Enter mobile number"
                                   defaultCountry="in"
+                                  value={
+                                    field.value || defaultData?.mobile || ""
+                                  }
                                   defaultValue={defaultData?.mobile}
                                   inputStyle={{ minWidth: "15.5rem" }}
-                                  value={field.value}
                                   onChange={field.onChange}
                                 />
                               )}
@@ -592,7 +640,11 @@ const BenificiaryForm = ({
                         <Input
                           id="religion"
                           placeholder="Enter religion"
-                          {...register("religion")}
+                          value={defaultData?.religion || ""}
+                          {...register("religion", {
+                            required:
+                              !defaultData?.religion && "Religion is required",
+                          })}
                           defaultValue={defaultData?.religion}
                         />
                         {errors.religion && (

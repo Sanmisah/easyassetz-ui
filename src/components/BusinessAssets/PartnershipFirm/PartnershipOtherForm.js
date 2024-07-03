@@ -48,6 +48,9 @@ const schema = z.object({
   additionalInformation: z
     .string()
     .min(3, { message: "Additional Information is required" }),
+  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  mobile: z.string().nonempty({ message: "Mobile is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -131,9 +134,9 @@ const PropritershipForm = () => {
     }
     data.type = "partnershipFirm";
     console.log(data.name, name);
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = phone;
     if (data) {
       data.firmName = data.otherFirmName;
     }
@@ -296,9 +299,9 @@ const PropritershipForm = () => {
                     )}
                   />
                 )}
-                {errors.firmsRegistrationNumber && (
+                {errors.registrationNumber && (
                   <span className="text-red-500">
-                    {errors.firmsRegistrationNumber.message}
+                    {errors.registrationNumber.message}
                   </span>
                 )}
               </div>
@@ -418,8 +421,7 @@ const PropritershipForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={field.onChange}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -440,8 +442,7 @@ const PropritershipForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={field.onChange}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -453,7 +454,7 @@ const PropritershipForm = () => {
                     )}
                   </div>
                   <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="mobile">Phone</Label>
                     <Controller
                       name="mobile"
                       control={control}
@@ -465,16 +466,13 @@ const PropritershipForm = () => {
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
                           value={field.value}
-                          onChange={(value) => {
-                            console.log(value);
-                            setPhone(value);
-                          }}
+                          onChange={field.onChange}
                         />
                       )}
                     />
-                    {errors.phone && (
+                    {errors.mobile && (
                       <span className="text-red-500">
-                        {errors.phone.message}
+                        {errors.mobile.message}
                       </span>
                     )}
                   </div>

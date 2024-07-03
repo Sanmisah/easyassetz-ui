@@ -66,7 +66,7 @@ const charitySchema = z.object({
   charityState: z.string().nonempty("State is required"),
   charityNumber: z.string().optional(),
   charityEmail: z.string().email("Invalid charityEmail address"),
-  charityName: z.string().nonempty("Contact person name is required"),
+  contactName: z.string().nonempty("Contact person name is required"),
   charityWebsite: z.string().url("Invalid URL").optional(),
   charitySpecificInstruction: z.string().optional(),
 });
@@ -92,8 +92,8 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-
-    return response.data.data.Beneficiaries;
+    console.log("response:", response.data.data.Beneficiary);
+    return response.data.data.Beneficiary;
   };
 
   const {
@@ -136,6 +136,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
           },
         }
       );
+      console.log("response:", response.data.data.Beneficiary);
       return response.data.data.Beneficiary;
     },
     onSuccess: () => {
@@ -261,18 +262,18 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="charityNumber" className="text-base font-medium">
+              <Label htmlFor="contactName" className="text-base font-medium">
                 Phone Number
               </Label>
               <Controller
-                name="charityNumber"
+                name="contactName"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
                     id="charityNumber"
                     countryCallingCodeEditable={false}
                     defaultCountry="in"
-                    value={field.value || Charitydata?.charityNumber}
+                    value={field.value || Charitydata?.charityNumber || ""}
                     defaultValue={Charitydata?.charityNumber}
                     onChange={field.onChange}
                     className="w-full"
@@ -319,7 +320,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 Website
               </Label>
               <Input
-                id="charityName"
+                id="charityWebsite"
                 type="url"
                 placeholder="Enter charityWebsite"
                 defaultValue={Charitydata?.charityWebsite}
@@ -338,8 +339,8 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
                 Specific Instructions
               </Label>
               <Textarea
-                id="charityspecificInstruction"
-                placeholder="Enter any specific charityspecificInstruction"
+                id="charitySpecificInstruction"
+                placeholder="Enter any specific charitySpecificInstruction"
                 defaultValue={Charitydata?.charitySpecificInstruction}
                 {...register("charitySpecificInstruction")}
                 className="w-full"

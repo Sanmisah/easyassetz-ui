@@ -25,16 +25,26 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import EditNominiee from "./EditNominee";
+import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Firm Name is required" }),
   otherFirmType: z.string().optional(),
-  registeredAddress: z.string().nonempty({ message: "Registration Address is required" }),
-  firmRegistrationNumber: z.string().nonempty({ message: "Registration Number is required" }),
+  registeredAddress: z
+    .string()
+    .nonempty({ message: "Registration Address is required" }),
+  firmRegistrationNumber: z
+    .string()
+    .nonempty({ message: "Registration Number is required" }),
   otherRegistrationNumber: z.string().optional(),
-  holdingPercentage: z.string().nonempty({ message: "Holding Percentage is required" }),
+  holdingPercentage: z
+    .string()
+    .nonempty({ message: "Holding Percentage is required" }),
   nomination: z.boolean(),
-  additionalInformation: z.string().min(1, { message: "Additional Information is Required" }),
+  additionalInformation: z
+    .string()
+    .min(1, { message: "Additional Information is Required" }),
 });
 
 const PartnershipEdit = () => {
@@ -43,10 +53,13 @@ const PartnershipEdit = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
-  
+
   const [showOtherFirmType, setShowOtherFirmType] = useState(false);
-  const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] = useState(false);
-  
+  const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] =
+    useState(false);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [displaynominie, setDisplaynominie] = useState([]);
+
   const {
     handleSubmit,
     control,
@@ -71,7 +84,11 @@ const PartnershipEdit = () => {
     return response.data.data.BusinessAsset;
   };
 
-  const { data: Data, isLoading, isError } = useQuery({
+  const {
+    data: Data,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["partnershipDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
     onSuccess: (data) => {
@@ -104,7 +121,10 @@ const PartnershipEdit = () => {
       return response.data.data.BusinessAsset;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("partnershipDataUpdate", lifeInsuranceEditId);
+      queryClient.invalidateQueries(
+        "partnershipDataUpdate",
+        lifeInsuranceEditId
+      );
       toast.success("Partnership details updated successfully!");
       navigate("/partnership");
     },
@@ -114,6 +134,7 @@ const PartnershipEdit = () => {
   });
 
   const onSubmit = (data) => {
+    data.nominee = selectedNommie;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
     }
@@ -132,8 +153,12 @@ const PartnershipEdit = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Partnership Details</CardTitle>
-              <CardDescription>Edit the form to update the partnership details.</CardDescription>
+              <CardTitle className="text-2xl font-bold">
+                Partnership Details
+              </CardTitle>
+              <CardDescription>
+                Edit the form to update the partnership details.
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -179,7 +204,9 @@ const PartnershipEdit = () => {
                   />
                 )}
                 {errors.firmName && (
-                  <span className="text-red-500">{errors.firmName.message}</span>
+                  <span className="text-red-500">
+                    {errors.firmName.message}
+                  </span>
                 )}
               </div>
 
@@ -192,7 +219,9 @@ const PartnershipEdit = () => {
                     <Input
                       {...field}
                       placeholder="Enter Registered Address"
-                      className={errors.registeredAddress ? "border-red-500" : ""}
+                      className={
+                        errors.registeredAddress ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
@@ -204,7 +233,9 @@ const PartnershipEdit = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="firmRegistrationNumber">Firm Registration Number</Label>
+                <Label htmlFor="firmRegistrationNumber">
+                  Firm Registration Number
+                </Label>
                 <Controller
                   name="firmRegistrationNumber"
                   control={control}
@@ -216,7 +247,9 @@ const PartnershipEdit = () => {
                         field.onChange(value);
                         setShowOtherRegistrationNumber(true);
                       }}
-                      className={errors.firmRegistrationNumber ? "border-red-500" : ""}
+                      className={
+                        errors.firmRegistrationNumber ? "border-red-500" : ""
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Registration Number" />
@@ -272,36 +305,20 @@ const PartnershipEdit = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="nomination">Nomination</Label>
-                <Controller
-                  name="nomination"
-                  control={control}
-                  render={({ field }) => (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        {...field}
-                        value="true"
-                        id="nomination-yes"
-                        checked={field.value === "true"}
-                      />
-                      <Label htmlFor="nomination-yes">Yes</Label>
-                      <input
-                        type="radio"
-                        {...field}
-                        value="false"
-                        id="nomination-no"
-                        checked={field.value === "false"}
-                      />
-                      <Label htmlFor="nomination-no">No</Label>
-                    </div>
-                  )}
-                />
+                <Label htmlFor="registered-mobile">Add nominee</Label>
+                <EditNominiee
+                  setSelectedNommie={setSelectedNommie}
+                  selectedNommie={selectedNommie}
+                  displaynominie={displaynominie}
+                  setDisplaynominie={setDisplaynominie}
+                />{" "}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="additionalInformation">Additional Information</Label>
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
               <Controller
                 name="additionalInformation"
                 control={control}
@@ -320,6 +337,66 @@ const PartnershipEdit = () => {
                   {errors.additionalInformation.message}
                 </span>
               )}
+            </div>
+            <div className="w-full grid grid-cols-1 gap-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      {...field}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <span className="text-red-500">{errors.name.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter Email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobile">Mobile</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      {...field}
+                      className={errors.mobile ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
+                )}
+              </div>
             </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">

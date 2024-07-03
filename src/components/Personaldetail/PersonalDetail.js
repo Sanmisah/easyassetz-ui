@@ -140,11 +140,24 @@ const Personaldetail = () => {
       for (const [key, value] of Object.entries(mergedData)) {
         formData.append(key, value);
       }
+      formData.set("currentHouseFlatNo", formData.get("permanentHouseFlatNo"));
+      formData.set(
+        "currentAddressLine1",
+        formData.get("permanentAddressLine1")
+      );
+      formData.set(
+        "currentAddressLine2",
+        formData.get("permanentAddressLine2")
+      );
+      formData.set("currentPincode", formData.get("permanentPincode"));
+      formData.set("currentCity", formData.get("permanentCity"));
+      formData.set("currentState", formData.get("permanentState"));
+      formData.set("currentCountry", formData.get("permanentCountry"));
 
       formData.append("_method", "put");
-      if (file) {
-        formData.append("aadharFile", file);
-      }
+      // if (file) {
+      //   formData.append("aadharFile", file);
+      // }
       const response = await axios.post(
         `/api/profiles/${user.data.user.profile.id}`,
         formData,
@@ -176,17 +189,6 @@ const Personaldetail = () => {
     const newdate = `${month}/${day}/${year}`;
     data.dob = newdate;
 
-    if (data.sameAsPermanentAddress) {
-      data.currentHouseFlatNo = data.permanentHouseFlatNo;
-      data.currentAddressLine1 = data.permanentAddressLine1;
-      data.currentAddressLine2 = data.permanentAddressLine2;
-      data.currentPincode = data.permanentPincode;
-      data.currentCity = data.permanentCity;
-      data.currentState = data.permanentState;
-      data.currentCountry = data.permanentCountry;
-    }
-
-    console.log("file:", file);
     if (data.maritalStatus === "Bachelor") {
       data.marriedUnderSpecialAct = "false";
     }
@@ -244,9 +246,8 @@ const Personaldetail = () => {
   };
 
   const handleFileChange = (e) => {
-    console.log(e.target);
-    console.log("ASDSD", e.target.files[0]);
-    setFile(e.target.files[0]);
+    const uploadedFile = e.target.files[0];
+    setFile(uploadedFile);
   };
 
   return (
@@ -1008,16 +1009,26 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="aadharFile">Upload Your Aadhar File</Label>
-                    <Input
-                      id="aadharFile"
-                      placeholder="Full Name - Name as per Adhar"
-                      type="file"
-                      onChange={handleFileChange}
-                      {...register("aadharFile", {
-                        required:
-                          !defaultData?.aadharFile && "file is required",
-                      })}
+                    <Label htmlFor="aadharFile">
+                      Upload Your dfas Aadhar File
+                    </Label>
+                    <Controller
+                      name="aadharFile"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="aadharFile"
+                          placeholder="Full Name - Name as per Adhar"
+                          type="file"
+                          onChange={(event) => {
+                            field.onChange(
+                              event.target.files && event.target.files[0]
+                            );
+                            console.log("sadsA", event.target.files);
+                          }}
+                          className={errors.aadharFile ? "border-red-500" : ""}
+                        />
+                      )}
                     />
                     {errors.aadharFile && (
                       <span className="text-red-500">

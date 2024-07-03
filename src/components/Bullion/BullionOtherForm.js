@@ -46,14 +46,14 @@ const schema = z.object({
 
   name: z.string().nonempty({ message: "Name is required" }),
   email: z.string().email({ message: "Invalid email" }),
-  phone: z.string().nonempty({ message: "Phone number is required" }),
+  mobile: z.string().nonempty({ message: "Phone number is required" }),
 });
 
-  const FocusableSelectTrigger = forwardRef((props, ref) => (
-    <SelectTrigger ref={ref} {...props} />
-  ));
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
 
-  FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
 const BullionForm = () => {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const BullionForm = () => {
   const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [mobile, setPhone] = useState("");
   const {
     handleSubmit,
     control,
@@ -84,7 +84,7 @@ const BullionForm = () => {
       additionalInformation: "",
       name: "",
       email: "",
-      phone: "",
+      mobile: "",
     },
   });
 
@@ -125,7 +125,7 @@ const BullionForm = () => {
     }
     // data.name = name;
     // data.email = email;
-    // data.mobile = phone;
+    // data.mobile = mobile;
     delete data.otherMetalType;
     delete data.otherArticleDetails;
 
@@ -379,13 +379,13 @@ const BullionForm = () => {
                     )}
                   </div>
                   <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="mobile">Mobile</Label>
                     <Controller
-                      name="phone"
+                      name="mobile"
                       control={control}
                       render={({ field }) => (
                         <PhoneInput
-                          id="phone"
+                          id="mobile"
                           type="tel"
                           placeholder="Enter mobile number"
                           defaultCountry="in"
@@ -394,9 +394,9 @@ const BullionForm = () => {
                         />
                       )}
                     />
-                    {errors.phone && (
+                    {errors.mobile && (
                       <span className="text-red-500">
-                        {errors.phone.message}
+                        {errors.mobile.message}
                       </span>
                     )}
                   </div>

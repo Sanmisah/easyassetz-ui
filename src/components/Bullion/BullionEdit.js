@@ -56,8 +56,9 @@ const BullionEdit = () => {
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [mobile, setMobile] = useState(null);
   const [defaultValues, setDefaultValues] = useState(null);
+  const [numberOfArticles, setNumberOfArticles] = useState(null);
 
   useEffect(() => {
     if (lifeInsuranceEditId) {
@@ -86,7 +87,9 @@ const BullionEdit = () => {
     const bullion = response.data.data.Bullion;
     const metalType = bullion.metalType;
     const articleDetails = bullion.articleDetails;
-
+    setValue("name", bullion.name);
+    setValue("email", bullion.email);
+    setValue("mobile", bullion.mobile);
     if (["gold", "silver", "copper"].includes(metalType)) {
       setShowOtherMetalType(false);
       setValue("metalType", metalType);
@@ -109,7 +112,7 @@ const BullionEdit = () => {
 
     setName(bullion.name);
     setEmail(bullion.email);
-    setMobile(bullion.mobile);
+    setMobile(bullion?.mobile);
 
     return bullion;
   };
@@ -123,6 +126,21 @@ const BullionEdit = () => {
     queryFn: getPersonalData,
     onSuccess: (data) => {
       reset(data);
+      setDefaultValues(data);
+      setValue("metaltype", data.metaltype);
+      setValue("otherInsuranceCompany", data.otherInsuranceCompany);
+      setValue("weightPerArticle", data.weightPerArticle);
+      setValue("numberOfArticles", data.numberOfArticles);
+      setValue("additionalInformation", data.additionalInformation);
+      setValue("pointOfContact", data.pointOfContact);
+      setValue("name", data.name);
+      setValue("email", data.email);
+      setValue("mobile", data.mobile);
+
+      // Set fetched values to the form
+      for (const key in data) {
+        setValue(key, data[key]);
+      }
     },
     onError: (error) => {
       console.error("Error fetching profile:", error);
@@ -155,15 +173,24 @@ const BullionEdit = () => {
   });
 
   const onSubmit = (data) => {
+    console.log("data:", data);
     if (data.metalType === "other") {
       data.metalType = data.otherMetalType;
     }
     if (data.articleDetails === "other") {
       data.articleDetails = data.otherArticleDetails;
     }
-    data.name = name;
-    data.email = email;
-    data.mobile = mobile;
+    if (name) {
+      data.name = name;
+    }
+    if (email) {
+      data.email = email;
+    }
+    if (mobile) {
+      data.mobile = mobile;
+    }
+    console.log("NumberOFarticles:", data.numberOfArticles);
+
     bullionMutate.mutate(data);
   };
 
@@ -291,10 +318,12 @@ const BullionEdit = () => {
               <Label htmlFor="weightPerArticle">Weight Per Article</Label>
               <Controller
                 name="weightPerArticle"
+                defaultValue={Benifyciary?.weightPerArticle || ""}
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="weightPerArticle"
+                    defaultValue={Benifyciary?.weightPerArticle || ""}
                     placeholder="Weight Per Article"
                     {...field}
                     className={errors.weightPerArticle ? "border-red-500" : ""}
@@ -314,12 +343,13 @@ const BullionEdit = () => {
                 <Controller
                   name="numberOfArticles"
                   control={control}
+                  defaultValue={Benifyciary?.numberOfArticles || ""}
                   render={({ field }) => (
                     <Input
                       id="numberOfArticles"
-                      type="number"
-                      {...field}
+                      defaultValue={Benifyciary?.numberOfArticles || ""}
                       placeholder="Enter Number Of Articles"
+                      {...field}
                       className={
                         errors.numberOfArticles ? "border-red-500" : ""
                       }
@@ -338,10 +368,12 @@ const BullionEdit = () => {
                 </Label>
                 <Controller
                   name="additionalInformation"
+                  defaultValue={Benifyciary?.additionalInformation || ""}
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="additionalInformation"
+                      defaultValue={Benifyciary?.additionalInformation || ""}
                       placeholder="Enter Additional Information"
                       {...field}
                       className={
@@ -360,12 +392,20 @@ const BullionEdit = () => {
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  placeholder="Enter Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className={errors.name ? "border-red-500" : ""}
+                <Controller
+                  name="name"
+                  defaultValue={Benifyciary?.name || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultValue={Benifyciary?.name || ""}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
                 />
                 {errors.name && (
                   <span className="text-red-500">{errors.name.message}</span>
@@ -380,8 +420,9 @@ const BullionEdit = () => {
                     <Input
                       id="email"
                       placeholder="Enter Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      defaultValue={Benifyciary?.email || ""}
+                      value={field.value}
+                      onChange={field.onChange}
                       className={errors.email ? "border-red-500" : ""}
                     />
                   )}
@@ -401,9 +442,10 @@ const BullionEdit = () => {
                       type="tel"
                       placeholder="Enter mobile number"
                       defaultCountry="in"
+                      defaultValue={Benifyciary?.mobile || ""}
+                      value={field.value || Benifyciary?.mobile || ""}
                       inputStyle={{ minWidth: "15.5rem" }}
-                      value={mobile}
-                      onChange={(value) => setMobile(value)}
+                      onChange={field.onChange}
                       className={errors.mobile ? "border-red-500" : ""}
                     />
                   )}

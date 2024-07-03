@@ -257,6 +257,7 @@ const MotorForm = () => {
                         onValueChange={(value) => {
                           field.onChange(value);
                         }}
+                        defaultValue="thirdparty"
                         className="flex items-center gap-2"
                       >
                         <div className="flex items-center gap-2 text-center">

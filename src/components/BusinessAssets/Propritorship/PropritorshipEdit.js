@@ -80,6 +80,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     );
     let othertype = response.data.data.BusinessAsset?.firmName;
     let otherarticle = response.data.data.BusinessAsset?.registeredAddress;
+    console.log(response.data.data.BusinessAsset);
     reset(data);
 
     return response.data.data.BusinessAsset;
@@ -148,7 +149,6 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     data.email = email;
     data.mobile = mobile;
 
-    console.log("bullion:", data.bullion);
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
     }
@@ -157,7 +157,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading bullion data</div>;
+  if (isError) return <div>Error loading propritorship data</div>;
 
   return (
     <div className="w-full">
