@@ -92,7 +92,7 @@ const VehicleDetailsOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Other Insurance added successfully!");
+      toast.success("Vehicle details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {

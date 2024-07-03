@@ -26,9 +26,9 @@ import * as z from "zod";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
@@ -48,7 +48,7 @@ const schema = z.object({
       message: "Policy Number must be a number",
     })
     .transform((value) => (value === null ? null : Number(value))),
-  maturityDate: z.date().optional(),
+  expiryDate: z.date().optional(),
   premium: z
     .string()
     .transform((value) => (value === "" ? null : value))
@@ -65,32 +65,24 @@ const schema = z.object({
       message: "Sum Insured must be a number",
     })
     .transform((value) => (value === null ? null : Number(value))),
-  policyHolderName: z
+  insurerName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
-  relationship: z.string().nonempty({ message: "Relationship is required" }),
-  otherRelationship: z.string().optional(),
+  vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
+  specificVehicalType: z.string().optional(),
   modeOfPurchase: z
     .string()
     .nonempty({ message: "Mode of Purchase is required" }),
-  contactPerson: z.string().nonempty({ message: "Contact Person is required" }),
-  contactNumber: z.string().min(7, { message: "Contact Number is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  contactPerson: z.string().optional(),
+  contactNumber: z.string().optional(),
+  email: z.string().optional(),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
-  brokerName: z.string().nonempty({ message: "Broker Name is required" }),
-  previousPolicyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  brokerName: z.string().optional(),
 });
 
-const EditCryptoForm = () => {
+const BankEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -126,22 +118,24 @@ const EditCryptoForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/cryptos/${lifeInsuranceEditId}`,
+      `/api/motor-insurances/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    if (response.data.data.LifeInsurance?.modeOfPurchase === "broker") {
+    console.log(typeof response.data.data.MotorInsurance?.premium);
+    if (response.data.data.MotorInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
     }
-    if (response.data.data.LifeInsurance?.modeOfPurchase === "e-insurance") {
+    if (response.data.data.MotorInsurance?.modeOfPurchase === "e-insurance") {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    return response.data.data.Crypto;
+    console.log(typeof response.data.data.MotorInsurance?.premium);
+    return response.data.data.MotorInsurance;
   };
 
   const {
@@ -164,17 +158,17 @@ const EditCryptoForm = () => {
       setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("relationship", data.relationship);
-      setValue("otherRelationship", data.otherRelationship);
+      setValue("vehicleType", data.vehicleType);
+      setValue("specificVehicalType", data.specificVehicalType);
       setValue("registeredMobile", data.registeredMobile);
       setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("policyNumber", data.policyNumber);
-      setValue("maturityDate", data.maturityDate);
+      setValue("expiryDate", data.expiryDate);
       setValue("premium", data.premium);
       setValue("sumInsured", data.sumInsured);
-      setValue("policyHolderName", data.policyHolderName);
+      setValue("insurerName", data.insurerName);
       setValue("modeOfPurchase", data.modeOfPurchase);
       setValue("contactPerson", data.contactPerson);
       setValue("contactNumber", data.contactNumber);
@@ -193,7 +187,7 @@ const EditCryptoForm = () => {
       }
 
       setShowOtherInsuranceCompany(data.companyName === "other");
-      setShowOtherRelationship(data.relationship === "other");
+      setShowOtherRelationship(data.vehicleType === "other");
 
       console.log(data);
     },
@@ -206,7 +200,7 @@ const EditCryptoForm = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/cryptos/${lifeInsuranceEditId}`,
+        `/api/motor-insurances/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -214,14 +208,14 @@ const EditCryptoForm = () => {
           },
         }
       );
-      return response.data.data.Crypto;
+      return response.data.data.MotorInsurances;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("lifeinsurance added successfully!");
+      toast.success("motorinsurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -239,42 +233,38 @@ const EditCryptoForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
-    console.log(data);
-    if(data.typeOfCurrency === "other"){
-      data.typeOfCurrency = data.specifyCurrencyType;
+    if (data.modeOfPurchase === "broker") {
+      data.registeredMobile = null;
+      data.registeredEmail = null;
     }
-    const date = new Date(data.maturityDate);
+    if (data.modeOfPurchase === "e-insurance") {
+      data.brokerName = null;
+      data.contactPerson = null;
+      data.contactNumber = null;
+      data.email = null;
+    }
+    console.log(data);
+    const date = new Date(data.expiryDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
-    console.log("brokerName:", data.brokerName);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
-
-      setnomineeerror(true);
-      return;
-    }
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
-    }
+    data.expiryDate = newdate;
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
-    data.nominees = selectedNommie;
+    console.log("brokerName:", data.brokerName);
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
     lifeInsuranceMutate.mutate(data);
   };
-  useEffect(() => {
-    console.log("displaynominie:", displaynominie);
-  }, [displaynominie]);
 
-  
   useEffect(() => {
     console.log(Benifyciary);
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error Loading Crypto Data</div>;
+  if (isError) return <div>Error loading insurance data</div>;
   return (
     <div className="w-full">
       <Card>
@@ -349,20 +339,32 @@ const EditCryptoForm = () => {
               </div>
               {console.log(Benifyciary)}
               <div className="space-y-2">
-                <Label htmlFor="insuranceType">Insurance Sub Type</Label>
+                <Label htmlFor="insuranceType">Insurance Type</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
                   defaultValue={Benifyciary?.insuranceType || ""}
                   render={({ field }) => (
-                    <Input
-                      id="insuranceType"
-                      placeholder="Enter sub type"
-                      value={field.value}
-                      {...field}
-                      className={errors.insuranceType ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.insuranceType || ""}
-                    />
+                    <div className="flex items-center gap-2">
+                      <RadioGroup
+                        {...field}
+                        defaultValue={Benifyciary?.insuranceType || ""}
+                        onValueChange={(value) => {
+                          console.log("value:", value);
+                          field.onChange(value);
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <div className="flex items-center gap-2 text-center">
+                          <RadioGroupItem id="company1" value="ThirdParty" />
+                          <Label htmlFor="company1">Third Party</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <RadioGroupItem id="company2" value="Comprehensive" />
+                          <Label htmlFor="company2">Comprehensive</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
                   )}
                 />
                 {errors.insuranceType && (
@@ -399,21 +401,21 @@ const EditCryptoForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
-                  name="maturityDate"
-                  defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                  name="expiryDate"
+                  defaultValue={new Date(Benifyciary?.expiryDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                      defaultValue={new Date(Benifyciary?.expiryDate) || ""}
                     />
                   )}
                 />
-                {errors.maturityDate && (
+                {errors.expiryDate && (
                   <span className="text-red-500">
-                    {errors.maturityDate.message}
+                    {errors.expiryDate.message}
                   </span>
                 )}
               </div>
@@ -466,52 +468,53 @@ const EditCryptoForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
                 <Controller
-                  name="policyHolderName"
+                  name="insurerName"
                   control={control}
-                  defaultValue={Benifyciary?.policyHolderName || ""}
+                  defaultValue={Benifyciary?.insurerName || ""}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
                       placeholder="Enter policy holder name"
                       {...field}
-                      className={
-                        errors.policyHolderName ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.policyHolderName || ""}
+                      className={errors.insurerName ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.insurerName || ""}
                     />
                   )}
                 />
-                {errors.policyHolderName && (
+                {errors.insurerName && (
                   <span className="text-red-500">
-                    {errors.policyHolderName.message}
+                    {errors.insurerName.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="relationship">Relationship</Label>
+                <Label htmlFor="vehicleType">Vehical Type</Label>
                 <Controller
-                  name="relationship"
-                  defaultValue={Benifyciary?.relationship || ""}
+                  name="vehicleType"
+                  defaultValue={Benifyciary?.vehicleType || ""}
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="relationship"
+                      id="vehicleType"
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherRelationship(value === "other");
                       }}
-                      className={errors.relationship ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.relationship || ""}
+                      className={errors.vehicleType ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.vehicleType || ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select relationship" />
+                        <SelectValue placeholder="Select vehicleType" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="self">Self</SelectItem>
-                        <SelectItem value="spouse">Spouse</SelectItem>
-                        <SelectItem value="parent">Parent</SelectItem>
-                        <SelectItem value="child">Child</SelectItem>
+                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
+                        <SelectItem value="threewheeler">
+                          Three Wheeler
+                        </SelectItem>
+                        <SelectItem value="fourwheeler">
+                          Four Wheeler
+                        </SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -519,60 +522,27 @@ const EditCryptoForm = () => {
                 />
                 {showOtherRelationship && (
                   <Controller
-                    name="otherRelationship"
+                    name="specificVehicalType"
                     control={control}
-                    defaultValue={Benifyciary?.otherRelationship || ""}
+                    defaultValue={Benifyciary?.specificVehicalType || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Relationship"
+                        placeholder="Specify Vehical Type"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherRelationship || ""}
+                        defaultValue={Benifyciary?.specificVehicalType || ""}
                       />
                     )}
                   />
                 )}
-                {errors.relationship && (
+                {errors.vehicleType && (
                   <span className="text-red-500">
-                    {errors.relationship.message}
+                    {errors.vehicleType.message}
                   </span>
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="previous-policy">Previous Policy Number</Label>
-                <Controller
-                  name="previousPolicyNumber"
-                  control={control}
-                  defaultValue={Benifyciary?.previousPolicyNumber || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="previousPolicyNumber"
-                      placeholder="Enter previous policy number"
-                      {...field}
-                      defaultValue={Benifyciary?.previousPolicyNumber || ""}
-                    />
-                  )}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="additional-details">Additional Details</Label>
-                <Controller
-                  name="additionalDetails"
-                  control={control}
-                  defaultValue={Benifyciary?.additionalDetails || ""}
-                  render={({ field }) => (
-                    <Textarea
-                      id="additional-details"
-                      placeholder="Enter additional details"
-                      {...field}
-                      defaultValue={Benifyciary?.additionalDetails || ""}
-                    />
-                  )}
-                />
-              </div>
-            </div>
+
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
@@ -606,83 +576,11 @@ const EditCryptoForm = () => {
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
-              <Addnominee
-                setSelectedNommie={setSelectedNommie}
-                AllNominees={Benifyciary?.nominees}
-                selectedNommie={selectedNommie}
-                displaynominie={displaynominie}
-                setDisplaynominie={setDisplaynominie}
-              />{" "}
-            </div>
-            <div className="space-y-2">
-              <Label>Mode of Purchase</Label>
-              <Controller
-                name="modeOfPurchase"
-                defaultValue={Benifyciary?.modeOfPurchase || ""}
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    {...field}
-                    defaultValue={Benifyciary?.modeOfPurchase || ""}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setHideRegisteredFields(value === "e-insurance");
-                      setBrokerSelected(value === "broker");
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="broker" value="broker" />
-                      <Label htmlFor="broker">Broker</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="e-insurance" value="e-insurance" />
-                      <Label htmlFor="e-insurance">E-Insurance</Label>
-                    </div>
-                  </RadioGroup>
-                )}
-              />
-            </div>
+            
 
-            {hideRegisteredFields && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registered-mobile">Registered Mobile</Label>
-                  <Controller
-                    name="registeredMobile"
-                    control={control}
-                    defaultValue={Benifyciary?.registeredMobile || ""}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-mobile"
-                        placeholder="Enter registered mobile"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredMobile || ""}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="registered-email">Registered Email ID</Label>
-                  <Controller
-                    name="registeredEmail"
-                    defaultValue={Benifyciary?.registeredEmail || ""}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-email"
-                        placeholder="Enter registered email"
-                        type="email"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredEmail || ""}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-            )}
+            
+                
+               
 
             {brokerSelected && (
               <>
@@ -811,4 +709,4 @@ const EditCryptoForm = () => {
   );
 };
 
-export default EditCryptoForm;
+export default BankEditForm;

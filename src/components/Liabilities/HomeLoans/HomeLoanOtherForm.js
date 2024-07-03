@@ -75,12 +75,12 @@ const HomeLoanOtherForm = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/loans`, data, {
+      const response = await axios.post(`/api/home-loans`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Loan;
+      return response.data.data.HomeLoan;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");

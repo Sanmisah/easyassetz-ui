@@ -89,9 +89,17 @@ const JewelleryOtherForm = () => {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
+        mutationFn: async (data) => {
+          const mergedData = { ...defaultData, ...data };
+          const formData = new FormData();
+
+          for (const [key, value] of Object.entries(mergedData)) {
+            formData.append(key, value);
+          }
+        },
       });
 
-      return response.data.data.Bullion;
+      return response.data.data.Jewellery;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -111,6 +119,16 @@ const JewelleryOtherForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    if (data.metalType === "other") {
+      data.metalType = data.otherMetalType;
+    }
+    if (data.preciousStone === "other") {
+      data.preciousStone = data.otherPreciousStone;
+    }
+    if (data.typeofJewellery === "other") {
+      data.typeofJewellery = data.otherTypeOfJewellery;
+    }
+
     data.name = name;
     data.email = email;
     data.mobile = phone;
@@ -339,6 +357,31 @@ const JewelleryOtherForm = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="jewellery">Upload Your Jewellery File</Label>
+              <Controller
+                name="jewellery"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="jewellery"
+                    placeholder="Enter Jewellery File"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.jewellery ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.jewellery && (
+                <span className="text-red-500">{errors.jewellery.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="additionalInformation">
                 Additional Information
               </Label>
@@ -358,6 +401,8 @@ const JewelleryOtherForm = () => {
                   />
                 )}
               />
+
+              
               {errors.additionalInformation && (
                 <span className="text-red-500">
                   {errors.additionalInformation.message}

@@ -9,9 +9,10 @@ const OtherAssetsMainForm = () => {
   const [VehicleDetails, setVehicleDetails] = useState([]);
   const [HUF, setHUF] = useState([]);
   const [IntellectualProperty, setIntellectualProperty] = useState([]);
-  const [Jewellery, setGeneralInsuranceData] = useState([]);
-  const [HealthInsurance, setHealthInsuranceData] = useState([]);
+  const [Jewellery, setJewellery] = useState([]);
   const [Artifacts, setArtifacts] = useState([]);
+  const [Watch, setWatch] = useState([]);
+  const [DigitalAssets, setDigitalAssets] = useState([]);
 
   const navigate = useNavigate();
 
@@ -26,12 +27,12 @@ const OtherAssetsMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        VehicleDetails(response?.data?.data?.Vehicle);
+        setVehicleDetails(response?.data?.data?.Vehicle);
       } catch (error) {
-        console.error("Error fetching the Business Asset data", error);
+        console.error("Error fetching the Vehicle details data", error);
       }
     };
-    const fetchDataMotorinsurance = async () => {
+    const fetchDataHUF = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
@@ -43,59 +44,76 @@ const OtherAssetsMainForm = () => {
         });
         setHUF(response?.data?.data?.HUF);
       } catch (error) {
-        console.error("Error fetching the Business Asset data", error);
+        console.error("Error fetching the HUF data", error);
       }
     };
-    const fetchDataOtherinsurance = async () => {
+    const fetchDataJewellery = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/other-insurances`, {
+        const response = await axios.get(`/api/other-assets`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setIntellectualProperty(response?.data?.data?.MotorInsurances);
+        setJewellery(response?.data?.data?.Jewellery);
       } catch (error) {
-        console.error("Error fetching the Business Asset data", error);
+        console.error("Error fetching the Jewellery data", error);
       }
     };
-    const fetchDataGeneralinsurance = async () => {
+    const fetchDataWatch = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/general-insurances`, {
+        const response = await axios.get(`/api/other-assets`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setIntellectualProperty(response?.data?.data?.MotorInsurances);
+        setWatch(response?.data?.data?.Watch);
       } catch (error) {
-        console.error("Error fetching the Business Asset data", error);
+        console.error("Error fetching the Watch data", error);
       }
     };
-    const fetchDataHealthinsurance = async () => {
+    const fetchDataArtifacts = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/health-insurances`, {
+        const response = await axios.get(`/api/other-assets`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setHealthInsuranceData(response?.data?.data?.HealthInsurances);
+        setArtifacts(response?.data?.data?.Artifacts);
       } catch (error) {
-        console.error("Error fetching the Business Asset data", error);
+        console.error("Error fetching the Artifacts data", error);
       }
     };
-    fetchDataGeneralinsurance();
-    fetchDataHealthinsurance();
-    fetchDataOtherinsurance();
+    const fetchDataDigitalAssets = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/other-assets`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setDigitalAssets(response?.data?.data?.DigitalAssets);
+      } catch (error) {
+        console.error("Error fetching the Digital Assets data", error);
+      }
+    };
+
+    fetchDataWatch();
+    fetchDataHUF();
+    fetchDataJewellery();
     fetchDataVehicheDetails();
-    fetchDataMotorinsurance();
+    fetchDataArtifacts();
+    fetchDataDigitalAssets();
   }, []);
 
   return (
@@ -161,12 +179,12 @@ const OtherAssetsMainForm = () => {
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
-          <div className="flex  items-center gap-2 justify-center">
+          <div className="flex items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Watch</h1>
-            {IntellectualProperty && IntellectualProperty?.length > 0 && (
+            {Watch && Watch?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {IntellectualProperty && IntellectualProperty?.length}{" "}
+                  {Watch && Watch?.length}{" "}
                   Watch
                 </p>
               </div>
@@ -198,12 +216,30 @@ const OtherAssetsMainForm = () => {
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold"> Digital Assets</h1>
+            <h1 className="text-xl font-bold">Digital Assets</h1>
+            {DigitalAssets && DigitalAssets?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {DigitalAssets && DigitalAssets?.length}{" "}
+                  Digital Assets
+                </p>
+              </div>
+            )}
+         </div>
+        </div>
+
+        <div
+          onClick={() => navigate("/re")}
+          className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold"> Recoverable</h1>
             {Artifacts && Artifacts?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
                   {Artifacts && Artifacts?.length}{" "}
-                   Digital Assets
+                  Recoverable
                 </p>
               </div>
             )}

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@com/ui/button";
 import axios from "axios";
 
-const InsuranceMainForm = () => {
+const LibilitiesMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
   const [motorInsuranceData, setMotorInsuranceData] = useState([]);
   const [otherInsuranceData, setOtherInsuranceData] = useState([]);
@@ -99,9 +99,9 @@ const InsuranceMainForm = () => {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold">Insurance Main Form</h1>
+        <h1 className="text-2xl font-bold">Libilities Main Form</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Fill out the form to add a new insurance policy.
+          Fill out the form to add a new Libilities.
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">
@@ -191,4 +191,4 @@ const InsuranceMainForm = () => {
   );
 };
 
-export default InsuranceMainForm;
+export default LibilitiesMainForm;

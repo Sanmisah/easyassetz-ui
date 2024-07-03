@@ -90,7 +90,7 @@ const LitigationEditForm = () => {
   } = useQuery(
     ["litigationData", id],
     async () => {
-      const response = await axios.get(`/api/litigation/${id}`, {
+      const response = await axios.get(`/api/litigations/${id}`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
@@ -118,7 +118,7 @@ const LitigationEditForm = () => {
 
   const litigationMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/litigation/${id}`, data, {
+      const response = await axios.put(`/api/litigations/${id}`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
