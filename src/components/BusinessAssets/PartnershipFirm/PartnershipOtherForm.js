@@ -31,10 +31,10 @@ import cross from "@/components/image/close.png";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Firm Name is required" }),
-  registrationAddress: z
+  registeredAddress: z
     .string()
     .nonempty({ message: "Registration Address is required" }),
-  registrationNumber: z
+  firmRegistrationNumber: z
     .string()
     .min(2, { message: "  Registration Number is required" }),
   holdingPercentage: z
@@ -87,8 +87,8 @@ const PropritershipForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       firmName: "",
-      registrationAddress: "",
-      registrationNumber: "",
+      registeredAddress: "",
+      firmRegistrationNumber: "",
       additionalInformation: "",
       name: "",
       email: "",
@@ -124,6 +124,11 @@ const PropritershipForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    if (showOtherRegistrationNumber) {
+      data.firmRegistrationNumberType = showOtherRegistrationNumber;
+      console.log(data.otherRegistrationNumber);
+      data.firmRegistrationNumber = data.otherRegistrationNumber;
+    }
     if (selectedNommie.length < 1) {
       toast.error("Please select atleast one nominee");
       setNomineeError(true);
@@ -137,9 +142,6 @@ const PropritershipForm = () => {
     // data.name = name;
     // data.email = email;
     // data.mobile = phone;
-    if (data) {
-      data.firmName = data.otherFirmName;
-    }
 
     lifeInsuranceMutate.mutate(data);
   };
@@ -171,25 +173,12 @@ const PropritershipForm = () => {
                   name="firmName"
                   control={control}
                   render={({ field }) => (
-                    <Select
+                    <Input
                       id="firmName"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherMetalType(value === "other");
-                      }}
+                      placeholder="Enter Firm Name"
+                      {...field}
                       className={errors.firmName ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select   Firm Name" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
                 {showOtherMetalType && (
@@ -216,20 +205,18 @@ const PropritershipForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registrationAddress">Regitration Address </Label>
+              <Label htmlFor="registeredAddress">Regitration Address </Label>
               <Controller
-                name="registrationAddress"
+                name="registeredAddress"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="registrationAddress"
+                    id="registeredAddress"
                     placeholder="Enter Address"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
-                    className={
-                      errors.registrationAddress ? "border-red-500" : ""
-                    }
+                    className={errors.registeredAddress ? "border-red-500" : ""}
                   />
                 )}
               />
@@ -248,29 +235,31 @@ const PropritershipForm = () => {
                   )}
                 />
               )}
-              {errors.registrationAddress && (
+              {errors.registeredAddress && (
                 <span className="text-red-500">
-                  {errors.registrationAddress.message}
+                  {errors.registeredAddress.message}
                 </span>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Label htmlFor="firmRegistrationNumber">
+                  Registration Number
+                </Label>
                 <Controller
-                  name="registrationNumber"
+                  name="firmRegistrationNumber"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="registrationNumber"
+                      id="firmRegistrationNumber"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherRegistrationNumber(value);
                       }}
                       className={
-                        errors.registrationNumber ? "border-red-500" : ""
+                        errors.firmRegistrationNumber ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
@@ -290,18 +279,23 @@ const PropritershipForm = () => {
                     control={control}
                     render={({ field }) => (
                       <Input
+                        id="otherRegistrationNumber"
+                        value={field.value}
+                        onChange={field.onChange}
+                        className={
+                          errors.firmRegistrationNumber
+                            ? "border-red-500 mt-2"
+                            : "mt-2"
+                        }
                         {...field}
                         placeholder="Specify Registration Number"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
                       />
                     )}
                   />
                 )}
-                {errors.registrationNumber && (
+                {errors.firmRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.registrationNumber.message}
+                    {errors.firmRegistrationNumber.message}
                   </span>
                 )}
               </div>

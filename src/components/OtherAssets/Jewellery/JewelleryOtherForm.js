@@ -401,6 +401,8 @@ const JewelleryOtherForm = () => {
                   />
                 )}
               />
+
+              
               {errors.additionalInformation && (
                 <span className="text-red-500">
                   {errors.additionalInformation.message}

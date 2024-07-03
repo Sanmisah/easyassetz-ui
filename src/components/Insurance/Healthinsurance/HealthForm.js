@@ -160,6 +160,9 @@ const HealthForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;

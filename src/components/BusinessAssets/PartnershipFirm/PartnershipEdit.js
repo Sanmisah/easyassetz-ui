@@ -27,10 +27,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import EditNominiee from "./EditNominee";
 import { PhoneInput } from "react-international-phone";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Firm Name is required" }),
-  otherFirmType: z.string().optional(),
   registeredAddress: z
     .string()
     .nonempty({ message: "Registration Address is required" }),
@@ -41,7 +41,6 @@ const schema = z.object({
   holdingPercentage: z
     .string()
     .nonempty({ message: "Holding Percentage is required" }),
-  nomination: z.boolean(),
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
@@ -126,7 +125,7 @@ const PartnershipEdit = () => {
         lifeInsuranceEditId
       );
       toast.success("Partnership details updated successfully!");
-      navigate("/partnership");
+      navigate("/partnershipfirm");
     },
     onError: (error) => {
       toast.error("Failed to update data");
@@ -134,6 +133,7 @@ const PartnershipEdit = () => {
   });
 
   const onSubmit = (data) => {
+    data.type = "partnershipFirm";
     data.nominee = selectedNommie;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
@@ -171,38 +171,15 @@ const PartnershipEdit = () => {
                   name="firmName"
                   control={control}
                   render={({ field }) => (
-                    <Select
+                    <Input
                       id="firmName"
+                      placeholder="Enter Firm Name"
                       {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherFirmType(value === "other");
-                      }}
                       className={errors.firmName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Firm Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company one">company one</SelectItem>
-                        <SelectItem value="other">other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherFirmType && (
-                  <Controller
-                    name="otherFirmType"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Firm Type"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.firmName && (
                   <span className="text-red-500">
                     {errors.firmName.message}
@@ -305,6 +282,64 @@ const PartnershipEdit = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="additionalInformation">
+                  Additional Information
+                </Label>
+                <Controller
+                  name="additionalInformation"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Enter Additional Information"
+                      className={
+                        errors.additionalInformation ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.additionalInformation && (
+                  <span className="text-red-500">
+                    {errors.additionalInformation.message}
+                  </span>
+                )}
+              </div>
+              {displaynominie && displaynominie.length > 0 && (
+                <div className="space-y-2 col-span-full">
+                  <div className="grid gap-4 py-4">
+                    {console.log(displaynominie)}
+                    <Label className="text-lg font-bold">
+                      Selected Nominees
+                    </Label>
+                    {displaynominie &&
+                      displaynominie.map((nominee) => (
+                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                          <Label htmlFor={`nominee-${nominee?.id}`}>
+                            {nominee?.fullLegalName || nominee?.charityName}
+                          </Label>
+                          <img
+                            className="w-4 h-4 cursor-pointer"
+                            onClick={() => {
+                              setDisplaynominie(
+                                displaynominie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                              setSelectedNommie(
+                                selectedNommie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                            }}
+                            src={cross}
+                            alt=""
+                          />
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+              <div className="space-y-2 col-span-full">
                 <Label htmlFor="registered-mobile">Add nominee</Label>
                 <EditNominiee
                   setSelectedNommie={setSelectedNommie}
@@ -315,29 +350,6 @@ const PartnershipEdit = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="additionalInformation">
-                Additional Information
-              </Label>
-              <Controller
-                name="additionalInformation"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Enter Additional Information"
-                    className={
-                      errors.additionalInformation ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.additionalInformation && (
-                <span className="text-red-500">
-                  {errors.additionalInformation.message}
-                </span>
-              )}
-            </div>
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>

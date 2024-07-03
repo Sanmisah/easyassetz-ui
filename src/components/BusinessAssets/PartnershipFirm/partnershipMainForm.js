@@ -98,7 +98,7 @@ const PartnershipFirmMainForm = () => {
               >
                 <div className="flex flex-col  ml-8">
                   <h1 className="font-bold">{data.firmName}</h1>
-                  <p className="text-sm ">{data.registeredAddress}</p>
+                  <p className="text-sm ">{data.firmRegistrationNumber}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
