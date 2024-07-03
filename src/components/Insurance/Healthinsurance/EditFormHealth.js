@@ -219,6 +219,9 @@ const EditFormHealth = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;
@@ -369,7 +372,7 @@ const EditFormHealth = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Vehical Type"
+                        placeholder="Specify Insurance Type"
                         className="mt-2"
                       />
                     )}

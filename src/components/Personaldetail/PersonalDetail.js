@@ -135,29 +135,33 @@ const Personaldetail = () => {
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
       const mergedData = { ...defaultData, ...data };
+
       const formData = new FormData();
 
       for (const [key, value] of Object.entries(mergedData)) {
         formData.append(key, value);
       }
-      formData.set("currentHouseFlatNo", formData.get("permanentHouseFlatNo"));
-      formData.set(
-        "currentAddressLine1",
-        formData.get("permanentAddressLine1")
-      );
-      formData.set(
-        "currentAddressLine2",
-        formData.get("permanentAddressLine2")
-      );
-      formData.set("currentPincode", formData.get("permanentPincode"));
-      formData.set("currentCity", formData.get("permanentCity"));
-      formData.set("currentState", formData.get("permanentState"));
-      formData.set("currentCountry", formData.get("permanentCountry"));
+      if (sameAsPermanentAddress) {
+        formData.set(
+          "currentHouseFlatNo",
+          formData.get("permanentHouseFlatNo")
+        );
+        formData.set(
+          "currentAddressLine1",
+          formData.get("permanentAddressLine1")
+        );
+        formData.set(
+          "currentAddressLine2",
+          formData.get("permanentAddressLine2")
+        );
+        formData.set("currentPincode", formData.get("permanentPincode"));
+        formData.set("currentCity", formData.get("permanentCity"));
+        formData.set("currentState", formData.get("permanentState"));
+        formData.set("currentCountry", formData.get("permanentCountry"));
+      }
 
       formData.append("_method", "put");
-      // if (file) {
-      //   formData.append("aadharFile", file);
-      // }
+
       const response = await axios.post(
         `/api/profiles/${user.data.user.profile.id}`,
         formData,
@@ -243,11 +247,6 @@ const Personaldetail = () => {
     } catch (error) {
       console.error("Failed to fetch pincode details:", error);
     }
-  };
-
-  const handleFileChange = (e) => {
-    const uploadedFile = e.target.files[0];
-    setFile(uploadedFile);
   };
 
   return (
@@ -1009,9 +1008,7 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="aadharFile">
-                      Upload Your dfas Aadhar File
-                    </Label>
+                    <Label htmlFor="aadharFile">Upload Your Aadhar File</Label>
                     <Controller
                       name="aadharFile"
                       control={control}

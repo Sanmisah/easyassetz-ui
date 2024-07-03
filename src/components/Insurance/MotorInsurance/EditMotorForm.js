@@ -76,9 +76,11 @@ const schema = z.object({
     .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
-  email: z.string().optional(),
+  email: z
+    .string()
+    .email({ message: "Invalid email" })
+    .nonempty({ message: "Email is required" }),
   registeredMobile: z.string().optional(),
-  registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
 });
@@ -135,6 +137,15 @@ const EditMotorForm = () => {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
+    setValue("email", response.data.data.MotorInsurance?.email);
+    if (
+      response.data.data.MotorInsurance?.vehicleType !== "twowheeler" ||
+      response.data.data.MotorInsurance?.vehicleType !== "threewheeler" ||
+      response.data.data.MotorInsurance?.vehicleType !== "fourwheeler"
+    ) {
+      setShowOtherRelationship(true);
+      setValue("vehicleType", "other");
+    }
     console.log(typeof response.data.data.MotorInsurance?.premium);
     return response.data.data.MotorInsurance;
   };
@@ -148,6 +159,15 @@ const EditMotorForm = () => {
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
+      if (
+        data.vehicleType !== "twowheeler" ||
+        data.vehicleType !== "threewheeler" ||
+        data.vehicleType !== "fourwheeler"
+      ) {
+        console.log("SP SASA");
+        setShowOtherRelationship(true);
+        setValue("vehicleType", "other");
+      }
       if (data.modeOfPurchase === "broker") {
         setBrokerSelected(true);
         setHideRegisteredFields(false);
@@ -162,7 +182,6 @@ const EditMotorForm = () => {
       setValue("vehicleType", data.vehicleType);
       setValue("specificVehicalType", data.specificVehicalType);
       setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("policyNumber", data.policyNumber);
@@ -175,7 +194,6 @@ const EditMotorForm = () => {
       setValue("contactNumber", data.contactNumber);
       setValue("email", data.email);
       setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("brokerName", data.brokerName);
@@ -234,6 +252,9 @@ const EditMotorForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;
@@ -357,11 +378,11 @@ const EditMotorForm = () => {
                         className="flex items-center gap-2"
                       >
                         <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="company1" value="ThirdParty" />
+                          <RadioGroupItem id="company1" value="thirdparty" />
                           <Label htmlFor="company1">Third Party</Label>
                         </div>
                         <div className="flex items-center gap-2">
-                          <RadioGroupItem id="company2" value="Comprehensive" />
+                          <RadioGroupItem id="company2" value="comprehensive" />
                           <Label htmlFor="company2">Comprehensive</Label>
                         </div>
                       </RadioGroup>
@@ -400,7 +421,7 @@ const EditMotorForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label htmlFor="maturity-date">Expiry Date</Label>
                 <Controller
                   name="expiryDate"
                   defaultValue={new Date(Benifyciary?.expiryDate) || ""}
@@ -408,9 +429,9 @@ const EditMotorForm = () => {
                   render={({ field }) => (
                     <Datepicker
                       {...field}
+                      defaultValue={new Date(Benifyciary?.expiryDate)}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={new Date(Benifyciary?.expiryDate) || ""}
                     />
                   )}
                 />
@@ -525,13 +546,13 @@ const EditMotorForm = () => {
                   <Controller
                     name="specificVehicalType"
                     control={control}
-                    defaultValue={Benifyciary?.specificVehicalType || ""}
+                    defaultValue={Benifyciary?.vehicleType || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
                         placeholder="Specify Vehical Type"
                         className="mt-2"
-                        defaultValue={Benifyciary?.specificVehicalType || ""}
+                        defaultValue={Benifyciary?.vehicleType || ""}
                       />
                     )}
                   />
@@ -638,19 +659,24 @@ const EditMotorForm = () => {
                 <div className="space-y-2">
                   <Label htmlFor="registered-email">Registered Email ID</Label>
                   <Controller
-                    name="registeredEmail"
-                    defaultValue={Benifyciary?.registeredEmail || ""}
+                    name="email"
+                    defaultValue={Benifyciary?.email || ""}
                     control={control}
                     render={({ field }) => (
                       <Input
-                        id="registered-email"
+                        id="email"
                         placeholder="Enter registered email"
                         type="email"
                         {...field}
-                        defaultValue={Benifyciary?.registeredEmail || ""}
+                        value={field.value}
+                        onChange={field.onChange}
+                        defaultValue={Benifyciary?.email || ""}
                       />
                     )}
                   />
+                  {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                  )}
                 </div>
               </div>
             )}
