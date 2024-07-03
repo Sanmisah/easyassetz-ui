@@ -75,12 +75,12 @@ const OtherLoansEditForm = () => {
   } = useQuery(
     ["loanData", id],
     async () => {
-      const response = await axios.get(`/api/loans/${id}`, {
+      const response = await axios.get(`/api/other-loans/${id}`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Loan;
+      return response.data.data.OtherLoan;
     },
     {
       onSuccess: (data) => {
@@ -99,12 +99,12 @@ const OtherLoansEditForm = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/loans/${id}`, data, {
+      const response = await axios.put(`/api/other-loans/${id}`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Loan;
+      return response.data.data.OtherLoan;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");

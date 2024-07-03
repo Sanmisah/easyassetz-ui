@@ -110,7 +110,7 @@ const WatchMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/bullion/edit");
+                          navigate("/jewellery/edit");
                         }}
                       >
                         Edit

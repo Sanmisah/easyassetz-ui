@@ -37,7 +37,7 @@ const VehicleDetailsMainForm = () => {
       },
     });
 
-    return response.data.data.OtherAsset;
+    return response.data.data.Vehicle;
   };
 
   const {
@@ -62,12 +62,12 @@ const VehicleDetailsMainForm = () => {
       `/api/other-assets/${lifeInsuranceDeleteId}`,
       {
         headers: {
-          Authorization: `Bearer ${user.data.token}`,
+          Authorization: `Bearer ${user.data.token}`
         },
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Vehicle details deleted successfully!");
   };
 
   return (

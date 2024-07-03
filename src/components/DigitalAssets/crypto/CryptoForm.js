@@ -183,6 +183,15 @@ const CryptoForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if (data.typeOfCurrency === "other") {
+      data.typeOfCurrency = data.otherTypeOfCurrency;
+    }
+    if(data.exchange === "other") {
+      data.exchange = data.otherExchange;
+    }
+    if(data.cryptoWalletAddress === "other") {
+      data.cryptoWalletAddress = data.otherCryptoWalletAddress;
+    } 
     console.log(data);
     const date = new Date(data.maturityDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");

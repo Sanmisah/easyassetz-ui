@@ -48,7 +48,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const VehicleDetailsOtherForm = () => {
+const VehicleDetailsEditForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -73,6 +73,7 @@ const VehicleDetailsOtherForm = () => {
       registrationNumber: "",
       yearOfManufacture: "",
       location: "",
+      type : "vehicle",
     },
   });
 
@@ -333,7 +334,7 @@ const VehicleDetailsOtherForm = () => {
                   </span>
                 )}
               </div>
-            </div>
+            </div>VehicleDetailsOtherForm
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -370,4 +371,4 @@ const VehicleDetailsOtherForm = () => {
   );
 };
 
-export default VehicleDetailsOtherForm;
+export default VehicleDetailsEditForm;

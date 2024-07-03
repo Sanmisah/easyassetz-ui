@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const JewelleryMainForm = () => {
+const RecoverableMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -31,13 +31,13 @@ const JewelleryMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/other-assets`, {
+    const response = await axios.get(`/api/bullions`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Jewellery;
+    return response.data.data.Bullion;
   };
 
   const {
@@ -67,16 +67,16 @@ const JewelleryMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Jewellery deleted successfully!");
+    toast.success("Other Insurance deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Jewellery</h1>
-          <Button onMouseDown={() => navigate("/jewellery/add")}>
-            Add Jewellery
+          <h1 className="text-2xl font-bold"> Recoverable</h1>
+          <Button onMouseDown={() => navigate("/bullion/add")}>
+            Add Recoverable
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -112,7 +112,7 @@ const JewelleryMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/jewellery/edit");
+                          navigate("/bullion/edit");
                         }}
                       >
                         Edit
@@ -136,4 +136,4 @@ const JewelleryMainForm = () => {
   );
 };
 
-export default JewelleryMainForm;
+export default RecoverableMainForm;

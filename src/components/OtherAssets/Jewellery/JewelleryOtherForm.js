@@ -27,16 +27,13 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
-
 const schema = z.object({
-  typeofJewellery: z.string().nonempty({ message: "Type Of Jewellery is required" }),
-  metalType: z
+  typeofJewellery: z
     .string()
-    .nonempty({ message: "Metal Type is required" }),
-   preciousStone: z
-    .string()
-    .min(2, { message: "Precious Stone is required" }),
-    weightPerJewellery: z
+    .nonempty({ message: "Type Of Jewellery is required" }),
+  metalType: z.string().nonempty({ message: "Metal Type is required" }),
+  preciousStone: z.string().min(2, { message: "Precious Stone is required" }),
+  weightPerJewellery: z
     .string()
     .nonempty({ message: "Weight Per Jewellery is required" }),
   additionalInformation: z
@@ -58,7 +55,8 @@ const JewelleryOtherForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [showOthertypeofJewellery, setShowOthertypeofJewellery] = useState(false);
+  const [showOthertypeofJewellery, setShowOthertypeofJewellery] =
+    useState(false);
   const [showOtherpreciousStone, setShowOtherpreciousStone] = useState(false);
   const [showOthermetalType, setShowOthermetalType] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
@@ -91,9 +89,17 @@ const JewelleryOtherForm = () => {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
+        mutationFn: async (data) => {
+          const mergedData = { ...defaultData, ...data };
+          const formData = new FormData();
+
+          for (const [key, value] of Object.entries(mergedData)) {
+            formData.append(key, value);
+          }
+        },
       });
 
-      return response.data.data.Bullion;
+      return response.data.data.Jewellery;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -113,6 +119,16 @@ const JewelleryOtherForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    if (data.metalType === "other") {
+      data.metalType = data.otherMetalType;
+    }
+    if (data.preciousStone === "other") {
+      data.preciousStone = data.otherPreciousStone;
+    }
+    if (data.typeofJewellery === "other") {
+      data.typeofJewellery = data.otherTypeOfJewellery;
+    }
+
     data.name = name;
     data.email = email;
     data.mobile = phone;
@@ -126,7 +142,7 @@ const JewelleryOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-              Jewellery Details
+                Jewellery Details
               </CardTitle>
               <CardDescription>
                 Fill out the form to add a new Jewellery Details.
@@ -139,58 +155,57 @@ const JewelleryOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            
-              <div className="space-y-2">
-                <Label htmlFor="typeofJewellery">Type Of Jewellery</Label>
+            <div className="space-y-2">
+              <Label htmlFor="typeofJewellery">Type Of Jewellery</Label>
+              <Controller
+                name="typeofJewellery"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="typeofJewellery"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOthertypeofJewellery(value === "other");
+                    }}
+                    className={errors.typeofJewellery ? "border-red-500" : ""}
+                  >
+                    <FocusableSelectTrigger>
+                      <SelectValue placeholder="Select Type Of Jewellery" />
+                    </FocusableSelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="necklace">Necklace</SelectItem>
+                      <SelectItem value="earrings">Earrings</SelectItem>
+                      <SelectItem value="bangles">Bangles</SelectItem>
+                      <SelectItem value="bracelet">Bracelet</SelectItem>
+                      <SelectItem value="rings">Rings</SelectItem>
+                      <SelectItem value="clufLinks">Cluf Links</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {showOthertypeofJewellery && (
                 <Controller
-                  name="typeofJewellery"
+                  name="othertypeofJewellery"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="typeofJewellery"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOthertypeofJewellery(value === "other");
-                      }}
-                      className={errors.typeofJewellery ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Type Of Jewellery" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="necklace">Necklace</SelectItem>
-                        <SelectItem value="earrings">Earrings</SelectItem>
-                        <SelectItem value="bangles">Bangles</SelectItem>
-                        <SelectItem value="bracelet">Bracelet</SelectItem>
-                        <SelectItem value="rings">Rings</SelectItem>
-                        <SelectItem value="clufLinks">Cluf Links</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      {...field}
+                      placeholder="Specify Type Of Jewellery"
+                      className="mt-2"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
                   )}
                 />
-                {showOthertypeofJewellery && (
-                  <Controller
-                    name="othertypeofJewellery"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Type Of Jewellery"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                )}
-                {errors.typeofJewellery && (
-                  <span className="text-red-500">
-                    {errors.typeofJewellery.message}
-                  </span>
-                )}
-              </div>
+              )}
+              {errors.typeofJewellery && (
+                <span className="text-red-500">
+                  {errors.typeofJewellery.message}
+                </span>
+              )}
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="metalType">Metal Type</Label>
@@ -217,7 +232,6 @@ const JewelleryOtherForm = () => {
                       <SelectItem value="whiteGold">White Gold</SelectItem>
                       <SelectItem value="diamonds">Diamonds</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
-                      
                     </SelectContent>
                   </Select>
                 )}
@@ -238,9 +252,7 @@ const JewelleryOtherForm = () => {
                 />
               )}
               {errors.metalType && (
-                <span className="text-red-500">
-                  {errors.metalType.message}
-                </span>
+                <span className="text-red-500">{errors.metalType.message}</span>
               )}
             </div>
 
@@ -267,7 +279,7 @@ const JewelleryOtherForm = () => {
                       <SelectItem value="ruby">Ruby</SelectItem>
                       <SelectItem value="sapphire">Sapphire</SelectItem>
                       <SelectItem value="emerald">Emerald</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>  
+                      <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -294,88 +306,107 @@ const JewelleryOtherForm = () => {
               )}
             </div>
 
-            
-              <div className="space-y-2">
-                <Label htmlFor="weightPerJewellery">
-                  Weight Per Jewellery
-                </Label>
-                <Controller
-                  name="weightPerJewellery"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="weightPerJewellery"
-                      placeholder="Enter Weight Per Jewellery(gms)"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.weightPerJewellery ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.weightPerJewellery && (
-                  <span className="text-red-500">
-                    {errors.weightPerJewellery.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="weightPerJewellery">Weight Per Jewellery</Label>
+              <Controller
+                name="weightPerJewellery"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="weightPerJewellery"
+                    placeholder="Enter Weight Per Jewellery(gms)"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={
+                      errors.weightPerJewellery ? "border-red-500" : ""
+                    }
+                  />
                 )}
-              </div>
+              />
+              {errors.weightPerJewellery && (
+                <span className="text-red-500">
+                  {errors.weightPerJewellery.message}
+                </span>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="quantityOfJewellery">Quantity</Label>
-                <Controller
-                  name="quantityOfJewellery"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="quantityOfJewellery"
-                      placeholder="Enter Quantity (units)"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.quantityOfJewellery ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.quantityOfJewellery && (
-                  <span className="text-red-500">
-                    {errors.quantityOfJewellery.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="quantityOfJewellery">Quantity</Label>
+              <Controller
+                name="quantityOfJewellery"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="quantityOfJewellery"
+                    placeholder="Enter Quantity (units)"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={
+                      errors.quantityOfJewellery ? "border-red-500" : ""
+                    }
+                  />
                 )}
-              </div>
+              />
+              {errors.quantityOfJewellery && (
+                <span className="text-red-500">
+                  {errors.quantityOfJewellery.message}
+                </span>
+              )}
+            </div>
 
-
-            
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  Additional Information
-                </Label>
-                <Controller
-                  name="additionalInformation"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="additionalInformation"
-                      placeholder="Enter Additional Information"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.additionalInformation ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.additionalInformation && (
-                  <span className="text-red-500">
-                    {errors.additionalInformation.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="jewellery">Upload Your Jewellery File</Label>
+              <Controller
+                name="jewellery"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="jewellery"
+                    placeholder="Enter Jewellery File"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.jewellery ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
+              />
+              {errors.jewellery && (
+                <span className="text-red-500">{errors.jewellery.message}</span>
+              )}
+            </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter Additional Information"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
+            </div>
 
             <div className="w-full grid grid-cols-1 gap-4">
               <div className="space-y-2">

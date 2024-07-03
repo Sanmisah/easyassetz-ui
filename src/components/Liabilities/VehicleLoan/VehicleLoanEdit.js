@@ -68,12 +68,12 @@ const VehicleLoanEdit = () => {
   } = useQuery(
     ["loanData", id],
     async () => {
-      const response = await axios.get(`/api/loans/${id}`, {
+      const response = await axios.get(`/api/vehicle-loans/${id}`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Loan;
+      return response.data.data.VehicleLoan;
     },
     {
       onSuccess: (data) => {
@@ -92,12 +92,12 @@ const VehicleLoanEdit = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/loans/${id}`, data, {
+      const response = await axios.put(`/api/vehicle-loans/${id}`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Loan;
+      return response.data.data.VehicleLoan;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");

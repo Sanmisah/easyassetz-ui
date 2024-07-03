@@ -82,7 +82,7 @@ const LitigationForm = () => {
 
   const litigationMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/litigation`, data, {
+      const response = await axios.post(`/api/litigations`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },

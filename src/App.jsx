@@ -50,6 +50,7 @@ function App() {
         <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/vehicle" element={<Personalpage />} />
         <Route path="/vehicle/add" element={<Personalpage />} />
+        <Route path="/vehicle/edit" element={<Personalpage />} />
         <Route path="/huf" element={<Personalpage />} />
         <Route path="/huf/add" element={<Personalpage />} />
         <Route path="/Digitalasset" element={<Personalpage />} />
@@ -58,6 +59,7 @@ function App() {
         <Route path="/crypto/edit" element={<Personalpage />} />
         <Route path="/jewellery" element={<Personalpage />} />
         <Route path="/jewellery/add" element={<Personalpage />} />
+        <Route path="/jewellery/edit" element={<Personalpage />} />
         <Route path="/artifacts" element={<Personalpage />} />
         <Route path="/artifacts/add" element={<Personalpage />} />
         <Route path="/artifacts/edit" element={<Personalpage />} />
@@ -70,7 +72,6 @@ function App() {
         <Route path="/bankAccount" element={<Personalpage />} />
         <Route path="/bankAccount/add" element={<Personalpage />} />
         <Route path="/bankAccount/edit" element={<Personalpage />} />
-
         <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/liabilities" element={<Personalpage />} />
         <Route path="/homeloans" element={<Personalpage />} />
@@ -107,6 +108,9 @@ function App() {
         <Route path="/bankaccount" element={<Personalpage />} />
         <Route path="/bankaccount/add" element={<Personalpage />} />
         <Route path="/bankaccount/edit" element={<Personalpage />} />
+        <Route path="/recoverable" element={<Personalpage />} />
+        <Route path="/recoverable/add" element={<Personalpage />} />
+        <Route path="/recoverable/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

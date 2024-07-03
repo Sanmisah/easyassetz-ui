@@ -12,6 +12,7 @@ import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
 import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
+
 import {
   Sheet,
   SheetContent,
@@ -54,10 +55,12 @@ import CompanyOtherForm from "@/components/BusinessAssets/Company/CompanyOtherFo
 import CompanyEditForm from "@/components/BusinessAssets/Company/CompanyEdit";
 import VehicleDetailsMainForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsMainForm";
 import VehicleDetailsOtherForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsOtherForm";
+import VehicleDetailsEditForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsEditForm";
 import HUFMainForm from "@/components/OtherAssets/HUF/HUFMainForm";
 import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
 import JewelleryMainForm from "@/components/OtherAssets/Jewellery/JewelleryMainForm";
 import JewelleryOtherForm from "@/components/OtherAssets/Jewellery/JewelleryOtherForm";
+import JewelleryEdit from "@/components/OtherAssets/Jewellery/JewelleryEdit";
 import DigitalAssetMainForm from "@/components/OtherAssets/DigitalAssets/DigitalAssetMainForm";
 import DigitalAssetOtherForm from "@/components/OtherAssets/DigitalAssets/DigitalAssetOtherForm";
 import WatchMainForm from "@/components/OtherAssets/Watch/WatchMainForm";
@@ -78,7 +81,7 @@ import LitigationEdit from "@/components/Liabilities/Litigation/LitigationEdit";
 import PpfMainForm from "@/components/RetirementFund/PublicProvidendFund/PpfMainForm";
 import PpfOtherForm from "@/components/RetirementFund/PublicProvidendFund/PpfOtherForm";
 import PpfEditForm from "@/components/RetirementFund/PublicProvidendFund/PpfEdit";
-import ProvidentFund from "@/components/RetirementFund/ProvidentFund/ProvidentFundMainForm";
+import ProvidentRecoverableMainFormFund from "@/components/RetirementFund/ProvidentFund/ProvidentFundMainForm";
 import ProvidentFundOtherForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundOtherForm";
 import ProvidentFundEditForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundEdit";
 import NPSMainForm from "@/components/RetirementFund/NPS/NpsMainForm";
@@ -101,6 +104,10 @@ import BankContentForm from "@/components/Bank&Post/contents";
 import BankAccountMainForm from "@/components/Bank&Post/Bank Accounts/MainForm";
 import BankAccountForm from "@/components/Bank&Post/Bank Accounts/BankAccountAdd";
 import BankEditForm from "@/components/Bank&Post/Bank Accounts/BankAccountEdit";
+import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
+import RecoverableForm from "@/components/OtherAssets/Recoverable/RecoverableForm";
+import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEdit";
+
 const Layout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -322,6 +329,7 @@ const Layout = () => {
 
       {location.pathname === "/vehicle" && <VehicleDetailsMainForm />}
       {location.pathname === "/vehicle/add" && <VehicleDetailsOtherForm />}
+      {location.pathname === "/vehicle/edit" && <VehicleDetailsEditForm />}
       {location.pathname === "/huf" && <HUFMainForm />}
       {location.pathname === "/huf/add" && <HUFOtherForm />}
       {location.pathname === "/jewellery" && <JewelleryMainForm />}
@@ -370,6 +378,12 @@ const Layout = () => {
       {location.pathname === "/bankaccount" && <BankAccountMainForm />}
       {location.pathname === "/bankaccount/add" && <BankAccountForm />}
       {location.pathname === "/bankaccount/edit" && <BankEditForm />}
+      {location.pathname === "/fix-deposit" && <FixDepositsMainForm />}
+      {location.pathname === "/fix-deposit/add" && <FixDepositsForm />}
+      {location.pathname === "/fix-deposit/edit" && <FixDepositsEditForm />}
+      {location.pathname === "/recoverable" && <RecoverableMainForm />}
+      {location.pathname === "/recoverable/add" && <RecoverableForm />}
+      {location.pathname === "/recoverable/edit" && <RecoverableEditForm />}
 
     </div>
   );

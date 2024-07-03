@@ -29,15 +29,15 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  typeofJewellery: z.string().nonempty({ message: "Type Of Jewellery is required" }),
-  metalType: z
+  typeofJewellery: z
     .string()
-    .nonempty({ message: "Precious Stone is required" }),
-    preciousStone: z.string().optional(),
-    weightPerJewellery: z
+    .nonempty({ message: "Type Of Jewellery is required" }),
+  metalType: z.string().nonempty({ message: "Precious Stone is required" }),
+  preciousStone: z.string().optional(),
+  weightPerJewellery: z
     .string()
     .min(1, { message: " Weight Per Jewellery is Required" }),
-    additionalInformation: z
+  additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
 });
@@ -47,7 +47,8 @@ const JewelleryEdit = () => {
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const [showOthertypeofJewellery, setShowOthertypeofJewellery] = useState(false);
+  const [showOthertypeofJewellery, setShowOthertypeofJewellery] =
+    useState(false);
   const [showOtherpreciousStone, setShowOtherpreciousStone] = useState(false);
   const [showOthermetalType, setShowOthermetalType] = useState(false);
   const [name, setName] = useState("");
@@ -75,11 +76,14 @@ const JewelleryEdit = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/other-assets/${lifeInsuranceEditId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
+    const response = await axios.get(
+      `/api/other-assets/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
     let othertype = response.data.data.Bullion?.metalType;
     let otherarticle = response.data.data.Bullion?.articleDetails;
     if (
@@ -187,6 +191,7 @@ const JewelleryEdit = () => {
   }, [Benifyciary?.nominees]);
 
   const onSubmit = (data) => {
+    data.type = "jewellery";
     console.log(data);
     if (name) {
       data.name = name;
@@ -209,6 +214,13 @@ const JewelleryEdit = () => {
     if (data.metalType === "other") {
       data.metalType = data.otherMetalType;
     }
+    if (data.preciousStone === "other") {
+      data.preciousStone = data.otherPreciousStone;
+    }
+    if (data.typeofJewellery === "other") {
+      data.typeofJewellery = data.otherTypeOfJewellery;
+    }
+
 
     bullionMutate.mutate(data);
   };
@@ -261,7 +273,7 @@ const JewelleryEdit = () => {
                         <SelectValue placeholder="Select Type Of Jewellery" />
                       </SelectTrigger>
                       <SelectContent>
-                      <SelectItem value="necklace">Necklace</SelectItem>
+                        <SelectItem value="necklace">Necklace</SelectItem>
                         <SelectItem value="earrings">Earrings</SelectItem>
                         <SelectItem value="bangles">Bangles</SelectItem>
                         <SelectItem value="bracelet">Bracelet</SelectItem>
@@ -316,12 +328,12 @@ const JewelleryEdit = () => {
                         <SelectValue placeholder="Select Metal Type" />
                       </SelectTrigger>
                       <SelectContent>
-                      <SelectItem value="gold">Gold</SelectItem>
-                      <SelectItem value="silver">Silver</SelectItem>
-                      <SelectItem value="copper">Copper</SelectItem>
-                      <SelectItem value="whiteGold">White Gold</SelectItem>
-                      <SelectItem value="diamonds">Diamonds</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="silver">Silver</SelectItem>
+                        <SelectItem value="copper">Copper</SelectItem>
+                        <SelectItem value="whiteGold">White Gold</SelectItem>
+                        <SelectItem value="diamonds">Diamonds</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -350,62 +362,60 @@ const JewelleryEdit = () => {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="preciousStone">Precious Stone</Label>
-                <Controller
-                  name="preciousStone"
-                  control={control}
-                  defaultValue={Benifyciary?.preciousStone || ""}
-                  render={({ field }) => (
-                    <Select
-                      id="preciousStone"
-                      value={field.value}
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherpreciousStone(value === "other");
-                      }}
-                      className={errors.preciousStone ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.preciousStone || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Precious Stone" />
-                      </SelectTrigger>
-                      <SelectContent>
+              <Label htmlFor="preciousStone">Precious Stone</Label>
+              <Controller
+                name="preciousStone"
+                control={control}
+                defaultValue={Benifyciary?.preciousStone || ""}
+                render={({ field }) => (
+                  <Select
+                    id="preciousStone"
+                    value={field.value}
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherpreciousStone(value === "other");
+                    }}
+                    className={errors.preciousStone ? "border-red-500" : ""}
+                    defaultValue={Benifyciary?.preciousStone || ""}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Precious Stone" />
+                    </SelectTrigger>
+                    <SelectContent>
                       <SelectItem value="diamond">Diamond</SelectItem>
                       <SelectItem value="ruby">Ruby</SelectItem>
                       <SelectItem value="sapphire">Sapphire</SelectItem>
                       <SelectItem value="emerald">Emerald</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {showOtherpreciousStone && (
+                <Controller
+                  name="otherpreciousStone"
+                  control={control}
+                  defaultValue={Benifyciary?.otherpreciousStone || ""}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Specify Precious Stone"
+                      className="mt-2"
+                      defaultValue={Benifyciary?.otherpreciousStone || ""}
+                    />
                   )}
                 />
-                {showOtherpreciousStone && (
-                  <Controller
-                    name="otherpreciousStone"
-                    control={control}
-                    defaultValue={Benifyciary?.otherpreciousStone || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Precious Stone"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherpreciousStone || ""}
-                      />
-                    )}
-                  />
-                )}
-                {errors.preciousStone && (
-                  <span className="text-red-500">
-                    {errors.preciousStone.message}
-                  </span>
-                )}
-              </div>
+              )}
+              {errors.preciousStone && (
+                <span className="text-red-500">
+                  {errors.preciousStone.message}
+                </span>
+              )}
+            </div>
 
             <div className="space-y-2">
-              <Label htmlFor="weightPerJewellery">
-                Weight Per Jewellery
-              </Label>
+              <Label htmlFor="weightPerJewellery">Weight Per Jewellery</Label>
               <Controller
                 name="weightPerJewellery"
                 defaultValue={Benifyciary?.weightPerJewellery || ""}
@@ -415,7 +425,9 @@ const JewelleryEdit = () => {
                     id="weightPerJewellery"
                     placeholder="Weight Per Jewellery(gms)"
                     {...field}
-                    className={errors.weightPerJewellery ? "border-red-500" : ""}
+                    className={
+                      errors.weightPerJewellery ? "border-red-500" : ""
+                    }
                     defaultValue={Benifyciary?.weightPerJewellery || ""}
                   />
                 )}
@@ -427,35 +439,34 @@ const JewelleryEdit = () => {
               )}
             </div>
 
-           
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  {" "}
-                  Additional Information
-                </Label>
-                <Controller
-                  name="additionalInformation"
-                  control={control}
-                  defaultValue={Benifyciary?.additionalInformation || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="additionalInformation"
-                      placeholder="Enter Addtional Information"
-                      {...field}
-                      className={
-                        errors.additionalInformation ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.additionalInformation || ""}
-                    />
-                  )}
-                />
-                {errors.additionalInformation && (
-                  <span className="text-red-500">
-                    {errors.additionalInformation.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">
+                {" "}
+                Additional Information
+              </Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                defaultValue={Benifyciary?.additionalInformation || ""}
+                render={({ field }) => (
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter Addtional Information"
+                    {...field}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
+                    defaultValue={Benifyciary?.additionalInformation || ""}
+                  />
                 )}
-              </div>
-            
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
+            </div>
+
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
