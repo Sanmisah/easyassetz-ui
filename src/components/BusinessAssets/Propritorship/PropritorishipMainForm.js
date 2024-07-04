@@ -34,10 +34,9 @@ const PropritershipMainForm = () => {
     if (!user) return;
     const response = await axios.get(`/api/business-assets`, {
       headers: {
-        Authorization: `Bearer ${user.data.token}`,
+        Authorization: `Bearer ${user?.data?.token}`,
       },
     });
-    console.log(response.data.data.Propritership);
     return response.data.data.Propritership;
   };
 
@@ -46,7 +45,7 @@ const PropritershipMainForm = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["HeathinsuranceData"],
+    queryKey: ["PropritershipData"],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {

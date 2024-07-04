@@ -142,6 +142,40 @@ const EditMotorForm = () => {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
+    setValue("maturityDate", response.data.data.LifeInsurance?.maturityDate);
+    if (
+      ["company1", "company2", "company3"].includes(
+        response.data.data.LifeInsurance?.relationship
+      )
+    ) {
+      setShowOtherInsuranceCompany(false);
+      setValue("relationship", response.data.data.LifeInsurance?.relationship);
+    } else {
+      setShowOtherInsuranceCompany(true);
+      setValue("relationship", "other");
+      setValue(
+        "otherInsuranceCompany",
+        response.data.data.LifeInsurance?.relationship
+      );
+    }
+    if (
+      ["spouse", "child", "parent", "sibling", "self"].includes(
+        response.data.data.LifeInsurance?.relationship
+      )
+    ) {
+      setShowOtherRelationship(false);
+      setValue("relationship", response.data.data.LifeInsurance?.relationship);
+    } else {
+      setShowOtherRelationship(true);
+      setValue("relationship", "other");
+      setValue(
+        "otherRelationship",
+        response.data.data.LifeInsurance?.relationship
+      );
+    }
+    setSelectedNommie(
+      response.data.data.LifeInsurance?.nominees?.map((nominee) => nominee.id)
+    );
     return response.data.data.LifeInsurance;
   };
 
@@ -240,6 +274,9 @@ const EditMotorForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
+    if (data.relationship === "other") {
+      data.relationship = data.otherRelationship;
+    }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;
@@ -392,14 +429,14 @@ const EditMotorForm = () => {
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
                   name="maturityDate"
-                  defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                  defaultValues={new Date(Benifyciary?.maturityDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
                       onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                      value={field.value}
+                      defaultValues={new Date(Benifyciary?.maturityDate) || ""}
                     />
                   )}
                 />
@@ -513,13 +550,13 @@ const EditMotorForm = () => {
                   <Controller
                     name="otherRelationship"
                     control={control}
-                    defaultValue={Benifyciary?.otherRelationship || ""}
+                    defaultValue={Benifyciary?.relationship || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
                         placeholder="Specify Relationship"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherRelationship || ""}
+                        defaultValue={Benifyciary?.relationship || ""}
                       />
                     )}
                   />

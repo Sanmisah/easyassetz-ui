@@ -31,13 +31,13 @@ const CompanyMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/companies`, {
+    const response = await axios.get(`/api/business-assets`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Propritership;
+    return response.data.data.Company;
   };
 
   const {
@@ -59,7 +59,7 @@ const CompanyMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/companies/${lifeInsuranceDeleteId}`,
+      `/api/business-assets/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -112,7 +112,7 @@ const CompanyMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/bullion/edit");
+                          navigate("/company/edit");
                         }}
                       >
                         Edit

@@ -34,7 +34,8 @@ const schema = z.object({
   registeredAddress: z
     .string()
     .nonempty({ message: "Registration Address is required" }),
-  firmRegistrationNumber: z
+
+  firmsRegistrationNumber: z
     .string()
     .min(2, { message: "  Registration Number is required" }),
   holdingPercentage: z
@@ -88,7 +89,7 @@ const PropritershipForm = () => {
     defaultValues: {
       firmName: "",
       registeredAddress: "",
-      firmRegistrationNumber: "",
+      firmsRegistrationNumber: "",
       additionalInformation: "",
       name: "",
       email: "",
@@ -124,10 +125,11 @@ const PropritershipForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
+    data.firmsRegistrationNumberType = showOtherRegistrationNumber;
     if (showOtherRegistrationNumber) {
       data.firmRegistrationNumberType = showOtherRegistrationNumber;
       console.log(data.otherRegistrationNumber);
-      data.firmRegistrationNumber = data.otherRegistrationNumber;
+      data.firmsRegistrationNumber = data.otherRegistrationNumber;
     }
     if (selectedNommie.length < 1) {
       toast.error("Please select atleast one nominee");
@@ -137,6 +139,7 @@ const PropritershipForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
+
     data.type = "partnershipFirm";
     console.log(data.name, name);
     // data.name = name;
@@ -244,22 +247,22 @@ const PropritershipForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmRegistrationNumber">
+                <Label htmlFor="firmsRegistrationNumber">
                   Registration Number
                 </Label>
                 <Controller
-                  name="firmRegistrationNumber"
+                  name="firmsRegistrationNumber"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmRegistrationNumber"
+                      id="firmsRegistrationNumber"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherRegistrationNumber(value);
                       }}
                       className={
-                        errors.firmRegistrationNumber ? "border-red-500" : ""
+                        errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
@@ -283,7 +286,7 @@ const PropritershipForm = () => {
                         value={field.value}
                         onChange={field.onChange}
                         className={
-                          errors.firmRegistrationNumber
+                          errors.firmsRegistrationNumber
                             ? "border-red-500 mt-2"
                             : "mt-2"
                         }
@@ -293,9 +296,9 @@ const PropritershipForm = () => {
                     )}
                   />
                 )}
-                {errors.firmRegistrationNumber && (
+                {errors.firmsRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.firmRegistrationNumber.message}
+                    {errors.firmsRegistrationNumber.message}
                   </span>
                 )}
               </div>

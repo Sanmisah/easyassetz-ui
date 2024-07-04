@@ -15,17 +15,17 @@ import InputMask from "react-input-mask";
 
 const Datepicker = forwardRef(({ value, onChange, defaultValue }, ref) => {
   const [stringDate, setStringDate] = useState(
-    defaultValue ? format(defaultValue, "dd/MM/yyyy") : ""
+    defaultValue ? format(defaultValue || new Date(value), "dd/MM/yyyy") : ""
   );
   const [date, setDate] = useState(defaultValue || null);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (defaultValue) {
-      setStringDate(format(defaultValue, "dd/MM/yyyy"));
-      setDate(defaultValue);
+    if (defaultValue || value) {
+      setStringDate(format(defaultValue || new Date(value), "dd/MM/yyyy"));
+      setDate(defaultValue || new Date(value));
     }
-  }, [defaultValue]);
+  }, [defaultValue, value]);
 
   useImperativeHandle(ref, () => ({
     clear() {

@@ -34,16 +34,18 @@ const schema = z.object({
   registeredAddress: z
     .string()
     .nonempty({ message: "Registration Address is required" }),
-  firmRegistrationNumber: z
+  firmsRegistrationNumber: z
     .string()
     .nonempty({ message: "Registration Number is required" }),
-  otherRegistrationNumber: z.string().optional(),
   holdingPercentage: z
     .string()
     .nonempty({ message: "Holding Percentage is required" }),
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
+  firmsRegistrationNumberType: z.string().optional(),
+  email: z.string().email({ message: "Invalid email address" }),
+  name: z.string().nonempty({ message: "Name is required" }),
 });
 
 const PartnershipEdit = () => {
@@ -58,7 +60,7 @@ const PartnershipEdit = () => {
     useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
-
+  const [mobile, setmobile] = useState();
   const {
     handleSubmit,
     control,
@@ -80,11 +82,56 @@ const PartnershipEdit = () => {
         },
       }
     );
+    setValue(
+      "firmsRegistrationNumberType",
+      response.data.data.BusinessAsset?.firmsRegistrationNumberType
+    );
+    setValue(
+      "firmsRegistrationNumber",
+      response.data.data.BusinessAsset?.firmsRegistrationNumber
+    );
+    if (
+      response.data.data.BusinessAsset?.firmsRegistrationNumberType === "CIN" ||
+      response.data.data.BusinessAsset?.firmsRegistrationNumberType === "PAN" ||
+      response.data.data.BusinessAsset?.firmsRegistrationNumberType ===
+        "FIRM NO"
+    ) {
+      setShowOtherRegistrationNumber(true);
+    } else {
+      setShowOtherRegistrationNumber(false);
+    }
+    setValue(
+      "registeredAddress",
+      response.data.data.BusinessAsset?.registeredAddress
+    );
+    setValue("firmName", response.data.data.BusinessAsset?.firmName);
+    setValue(
+      "additionalInformation",
+      response.data.data.BusinessAsset?.additionalInformation
+    );
+    setValue("name", response.data.data.BusinessAsset?.name);
+    setValue("email", response.data.data.BusinessAsset?.email);
+    setValue("mobile", response.data.data.BusinessAsset?.mobile);
+    setValue(
+      "holdingPercentage",
+      response.data.data.BusinessAsset?.holdingPercentage
+    );
+    setDisplaynominie(
+      response.data.data.BusinessAsset?.nominees.map((nominee) => ({
+        id: nominee.id,
+        fullLegalName: nominee.fullLegalName,
+        relationship: nominee.relationship,
+      }))
+    );
+    setSelectedNommie(
+      response.data.data.BusinessAsset?.nominees.map((nominee) => nominee.id)
+    );
+    setmobile(response.data.data.BusinessAsset?.mobile);
     return response.data.data.BusinessAsset;
   };
 
   const {
-    data: Data,
+    data: Benifyciary,
     isLoading,
     isError,
   } = useQuery({
@@ -97,7 +144,7 @@ const PartnershipEdit = () => {
       if (data.firmName === "other") {
         setShowOtherFirmType(true);
       }
-      if (["CIN", "PAN", "FIRM NO"].includes(data.firmRegistrationNumber)) {
+      if (["CIN", "PAN", "FIRM NO"].includes(data.firmsRegistrationNumber)) {
         setShowOtherRegistrationNumber(true);
       }
     },
@@ -134,12 +181,20 @@ const PartnershipEdit = () => {
 
   const onSubmit = (data) => {
     data.type = "partnershipFirm";
-    data.nominee = selectedNommie;
+    if (selectedNommie.length < 1) {
+      toast.error("Please select atleast one nominee");
+      return;
+    }
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
+    // data.nominees = selectedNommie;
+    data.mobile = mobile;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
     }
-    if (["CIN", "PAN", "FIRM NO"].includes(data.firmRegistrationNumber)) {
-      data.firmRegistrationNumber = data.otherRegistrationNumber;
+    if (["CIN", "PAN", "FIRM NO"].includes(data.firmsRegistrationNumber)) {
+      data.firmsRegistrationNumber = data.otherRegistrationNumber;
     }
     mutateData.mutate(data);
   };
@@ -210,22 +265,22 @@ const PartnershipEdit = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="firmRegistrationNumber">
+                <Label htmlFor="firmsRegistrationNumberType">
                   Firm Registration Number
                 </Label>
                 <Controller
-                  name="firmRegistrationNumber"
+                  name="firmsRegistrationNumberType"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmRegistrationNumber"
+                      id="firmsRegistrationNumberType"
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherRegistrationNumber(true);
                       }}
                       className={
-                        errors.firmRegistrationNumber ? "border-red-500" : ""
+                        errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
                     >
                       <SelectTrigger>
@@ -241,7 +296,7 @@ const PartnershipEdit = () => {
                 />
                 {showOtherRegistrationNumber && (
                   <Controller
-                    name="otherRegistrationNumber"
+                    name="firmsRegistrationNumber"
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -252,9 +307,9 @@ const PartnershipEdit = () => {
                     )}
                   />
                 )}
-                {errors.firmRegistrationNumber && (
+                {errors.firmsRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.firmRegistrationNumber.message}
+                    {errors.firmsRegistrationNumber.message}
                   </span>
                 )}
               </div>
@@ -388,26 +443,31 @@ const PartnershipEdit = () => {
                   <span className="text-red-500">{errors.email.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="mobile">Mobile</Label>
-                <Controller
-                  name="mobile"
-                  control={control}
-                  render={({ field }) => (
-                    <PhoneInput
-                      id="mobile"
-                      type="tel"
-                      placeholder="Enter mobile number"
-                      defaultCountry="in"
-                      inputStyle={{ minWidth: "15.5rem" }}
-                      {...field}
-                      className={errors.mobile ? "border-red-500" : ""}
-                    />
+              <div>
+                <div className="space-y-2">
+                  <Label htmlFor="mobile">Mobile</Label>
+                  <Controller
+                    name="mobile"
+                    control={control}
+                    render={({ field }) => (
+                      <PhoneInput
+                        id="mobile"
+                        type="tel"
+                        placeholder="Enter mobile number"
+                        defaultCountry="in"
+                        inputStyle={{ minWidth: "15.5rem" }}
+                        onChange={(value) => setmobile(value)}
+                        value={mobile || Benifyciary?.mobile || ""}
+                        defaultValue={Benifyciary?.mobile || ""}
+                      />
+                    )}
+                  />
+                  {errors.mobile && (
+                    <span className="text-red-500">
+                      {errors.mobile.message}
+                    </span>
                   )}
-                />
-                {errors.mobile && (
-                  <span className="text-red-500">{errors.mobile.message}</span>
-                )}
+                </div>
               </div>
             </div>
 

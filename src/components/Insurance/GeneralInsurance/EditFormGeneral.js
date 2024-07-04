@@ -53,7 +53,10 @@ const schema = z.object({
     .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
-  email: z.string().optional(),
+  email: z
+    .string()
+    .email({ message: "Invalid email" })
+    .nonempty({ message: "Email is required" }),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
@@ -495,15 +498,15 @@ const EditFormGeneral = () => {
               <div className="space-y-2">
                 <Label>additional details</Label>
                 <Controller
-                  name="registeredMobile"
+                  name="additionalDetails"
                   control={control}
-                  defaultValue={Benifyciary?.registeredMobile || ""}
+                  defaultValue={Benifyciary?.additionalDetails || ""}
                   render={({ field }) => (
                     <Input
-                      id="registeredMobile"
+                      id="additionalDetails"
                       placeholder="Enter registered mobile"
                       {...field}
-                      defaultValue={Benifyciary?.registeredMobile || ""}
+                      defaultValue={Benifyciary?.additionalDetails || ""}
                     />
                   )}
                 />
@@ -581,6 +584,11 @@ const EditFormGeneral = () => {
                   </RadioGroup>
                 )}
               />
+              {errors.modeOfPurchase && (
+                <span className="text-red-500">
+                  {errors.modeOfPurchase.message}
+                </span>
+              )}
             </div>
 
             {hideRegisteredFields && (

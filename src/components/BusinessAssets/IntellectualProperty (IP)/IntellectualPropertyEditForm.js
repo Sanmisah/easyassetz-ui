@@ -156,7 +156,7 @@ const IntellectualPropertyOtherForm = () => {
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/propriterships/${lifeInsuranceEditId}`,
+        `/api/business-assets/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -164,7 +164,7 @@ const IntellectualPropertyOtherForm = () => {
           },
         }
       );
-      return response.data.data.Propritership;
+      return response.data.data.BusinessAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
@@ -226,7 +226,10 @@ const IntellectualPropertyOtherForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="IntellectualProperty"> Intellectual Property Type</Label>
+                <Label htmlFor="IntellectualProperty">
+                  {" "}
+                  Intellectual Property Type
+                </Label>
                 <Controller
                   name="IntellectualProperty"
                   control={control}
@@ -240,7 +243,9 @@ const IntellectualPropertyOtherForm = () => {
                         field.onChange(value);
                         setShowOtherMetalType(value === "other");
                       }}
-                      className={errors.intellectualProperty ? "border-red-500" : ""}
+                      className={
+                        errors.intellectualProperty ? "border-red-500" : ""
+                      }
                       defaultValue={Benifyciary?.intellectualProperty || ""}
                     >
                       <SelectTrigger>
@@ -250,7 +255,7 @@ const IntellectualPropertyOtherForm = () => {
                         <SelectItem value="tradeMark"> Trade Mark</SelectItem>
                         <SelectItem value=" copyright">Copyright</SelectItem>
                         <SelectItem value=" patent">Patent</SelectItem>
-                       </SelectContent>
+                      </SelectContent>
                     </Select>
                   )}
                 />
@@ -264,7 +269,9 @@ const IntellectualPropertyOtherForm = () => {
                         {...field}
                         placeholder="Specify  Intellectual Property Type"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherIntellectualProperty || ""}
+                        defaultValue={
+                          Benifyciary?.otherIntellectualProperty || ""
+                        }
                       />
                     )}
                   />

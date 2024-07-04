@@ -76,11 +76,9 @@ const schema = z.object({
     .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
-  email: z
-    .string()
-    .email({ message: "Invalid email" })
-    .nonempty({ message: "Email is required" }),
+  email: z.string().optional(),
   registeredMobile: z.string().optional(),
+  registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
 });
@@ -128,7 +126,6 @@ const EditMotorForm = () => {
         },
       }
     );
-    console.log(typeof response.data.data.MotorInsurance?.premium);
     if (response.data.data.MotorInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
@@ -137,7 +134,10 @@ const EditMotorForm = () => {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    setValue("email", response.data.data.MotorInsurance?.email);
+    setValue(
+      "registeredEmail",
+      response.data.data.MotorInsurance?.registeredEmail
+    );
     if (
       response.data.data.MotorInsurance?.vehicleType !== "twowheeler" ||
       response.data.data.MotorInsurance?.vehicleType !== "threewheeler" ||
@@ -146,6 +146,10 @@ const EditMotorForm = () => {
       setShowOtherRelationship(true);
       setValue("vehicleType", "other");
     }
+    setValue("expiryDate", response.data.data.MotorInsurance?.expiryDate);
+    setSelectedNommie(
+      response.data.data.MotorInsurance?.nominees?.map((nominee) => nominee.id)
+    );
     console.log(typeof response.data.data.MotorInsurance?.premium);
     return response.data.data.MotorInsurance;
   };
@@ -176,6 +180,7 @@ const EditMotorForm = () => {
         setBrokerSelected(false);
         setHideRegisteredFields(true);
       }
+
       setDefaultValues(data);
       reset(data);
       setValue(data);
@@ -421,17 +426,17 @@ const EditMotorForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Expiry Date</Label>
+                <Label htmlFor="expiryDate">Expiry Date</Label>
                 <Controller
                   name="expiryDate"
-                  defaultValue={new Date(Benifyciary?.expiryDate) || ""}
+                  defaultValues={new Date(Benifyciary?.expiryDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
-                      defaultValue={new Date(Benifyciary?.expiryDate)}
+                      defaultValues={new Date(Benifyciary?.expiryDate) || ""}
+                      value={field.value}
                       onChange={(date) => field.onChange(date)}
-                      selected={field.value}
                     />
                   )}
                 />
@@ -657,25 +662,27 @@ const EditMotorForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="registered-email">Registered Email ID</Label>
+                  <Label htmlFor="registeredEmail">Registered Email ID</Label>
                   <Controller
-                    name="email"
-                    defaultValue={Benifyciary?.email || ""}
+                    name="registeredEmail"
+                    defaultValue={Benifyciary?.registeredEmail || ""}
                     control={control}
                     render={({ field }) => (
                       <Input
-                        id="email"
+                        id="registeredEmail"
                         placeholder="Enter registered email"
                         type="email"
                         {...field}
                         value={field.value}
                         onChange={field.onChange}
-                        defaultValue={Benifyciary?.email || ""}
+                        defaultValue={Benifyciary?.registeredEmail || ""}
                       />
                     )}
                   />
-                  {errors.email && (
-                    <span className="text-red-500">{errors.email.message}</span>
+                  {errors.registeredEmail && (
+                    <span className="text-red-500">
+                      {errors.registeredEmail.message}
+                    </span>
                   )}
                 </div>
               </div>

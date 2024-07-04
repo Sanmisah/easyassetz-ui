@@ -138,6 +138,9 @@ const OtherForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;
@@ -366,52 +369,6 @@ const OtherForm = () => {
                 {errors.policyHolderName && (
                   <span className="text-red-500">
                     {errors.policyHolderName.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="vehicleType">Vehical Type</Label>
-                <Controller
-                  name="vehicleType"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="vehicleType"
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRelationship(value === "other");
-                      }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select vehicleType" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="self">Two Wheeler</SelectItem>
-                        <SelectItem value="spouse">Three Wheeler</SelectItem>
-                        <SelectItem value="parent">Four Wheeler</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherRelationship && (
-                  <Controller
-                    name="specificVehicalType"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Vehical Type"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
-                {errors.vehicleType && (
-                  <span className="text-red-500">
-                    {errors.vehicleType.message}
                   </span>
                 )}
               </div>

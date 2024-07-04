@@ -41,7 +41,7 @@ const Heathinsurance = () => {
       },
     });
 
-    return response.data.data.HeathInsurance;
+    return response.data.data.HealthInsurance;
   };
 
   const {

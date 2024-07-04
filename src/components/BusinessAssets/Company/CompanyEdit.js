@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -19,7 +19,6 @@ import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { Textarea } from "@com/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
-import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -60,6 +59,10 @@ const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
 });
 
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
 const EditFormHealth = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -86,6 +89,8 @@ const EditFormHealth = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [jointHolderName, setJointHolderName] = useState(false);
+  const [showOtherCompanyRegistration, setShowOtherCompanyRegistration] =
+    useState(false);
 
   const {
     handleSubmit,
@@ -101,25 +106,25 @@ const EditFormHealth = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/health-insurances/${lifeInsuranceEditId}`,
+      `/api/business-assets/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    if (response.data.data.HealthInsurance?.documentAvailability === "broker") {
+    if (response.data.data.BusinessAsset?.documentAvailability === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
     }
     if (
-      response.data.data.HealthInsurance?.documentAvailability === "e-insurance"
+      response.data.data.BusinessAsset?.documentAvailability === "e-insurance"
     ) {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    console.log(typeof response.data.data.HealthInsurance?.typeOfInvestment);
-    return response.data.data.HealthInsurance;
+    console.log(typeof response.data.data.BusinessAsset?.typeOfInvestment);
+    return response.data.data.BusinessAsset;
   };
 
   const {
@@ -162,6 +167,7 @@ const EditFormHealth = () => {
       setValue("brokerName", data.brokerName);
       setValue("additionalInformation", data.additionalInformation);
       setValue("contactmobile", data.contactmobile);
+      setValue("companyRegistrationNumber", data.companyRegistrationNumber);
 
       // Set fetched values to the form
       for (const key in data) {
@@ -169,6 +175,13 @@ const EditFormHealth = () => {
       }
 
       setShowOtherInsuranceCompany(data.companyName === "other");
+      if (
+        data.companyRegistration !== "CIN" &&
+        data.companyRegistration !== "PAN" &&
+        data.companyRegistration !== "FIRM NO"
+      ) {
+        setShowOtherCompanyRegistration(true);
+      }
 
       console.log(data);
     },
@@ -181,7 +194,7 @@ const EditFormHealth = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/health-insurances/${lifeInsuranceEditId}`,
+        `/api/business-assets/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -189,7 +202,7 @@ const EditFormHealth = () => {
           },
         }
       );
-      return response.data.data.HealthInsurance;
+      return response.data.data.BusinessAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
@@ -340,8 +353,8 @@ const EditFormHealth = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="policy-mobile">Policy Number</Label>
+              <div className="space-y-2 col-span-full">
+                <Label>Company Registration</Label>
                 <Controller
                   name="companyRegistration"
                   control={control}
@@ -352,15 +365,15 @@ const EditFormHealth = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherCompanyRegistration(value === "other");
+                        setShowOtherCompanyRegistration(true);
                       }}
                       className={
                         errors.companyRegistration ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select  Company Registration">
-                          {field.value || "Select  Company Registration"}
+                        <SelectValue placeholder="Select Company Registration">
+                          {field.value || "Select Company Registration"}
                         </SelectValue>
                       </FocusableSelectTrigger>
                       <SelectContent>
@@ -371,6 +384,22 @@ const EditFormHealth = () => {
                     </Select>
                   )}
                 />
+                {showOtherCompanyRegistration && (
+                  <Controller
+                    name="otherCompanyRegistration"
+                    control={control}
+                    defaultValue={Benifyciary?.otherCompanyRegistration || ""}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Company Registration"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                )}
                 {errors.companyRegistration && (
                   <span className="text-red-500">
                     {errors.companyRegistration.message}
@@ -561,7 +590,7 @@ const EditFormHealth = () => {
                 setDisplaynominie={setDisplaynominie}
               />{" "}
             </div>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label>Document Availability</Label>
               <Controller
                 name="documentAvailability"
@@ -579,7 +608,7 @@ const EditFormHealth = () => {
                   />
                 )}
               />
-            </div>
+            </div> */}
 
             <div>
               <div className="space-y-2">

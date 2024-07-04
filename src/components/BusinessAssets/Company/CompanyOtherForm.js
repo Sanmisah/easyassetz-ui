@@ -28,30 +28,27 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Addnominee from "./addNominee";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
   companyAddress: z
     .string()
     .nonempty({ message: "Company Address is required" }),
-  companyRegistration: z
+  firmsRegistrationNumber: z
     .string()
     .min(2, { message: " Company Registration is required" }),
-  additionalInformation: z
-    .string()
-    .min(3, { message: "Additional Information is required" }),
+
   myStatus: z.string().nonempty({ message: "My Status is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
-  jointHolderName: z
-    .string()
-    .nonempty({ message: "Joint Holder Name is required" }),
-  documentAvailability: z
-    .string()
-    .nonempty({ message: "Document Availability is required" }),
-  nomination: z.string().nonempty({ message: " Nomination is required" }),
+  // holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName: z.string().optional(),
+  jointHolderPan: z.string().optional(),
+  // documentAvailability: z
+  //   .string()
+  //   .nonempty({ message: "Document Availability is required" }),
   additionalInformation: z.string().optional(),
   name: z.string().nonempty({ message: "Name is required" }),
-  mobile: z.string().nonempty({ message: "Mobile is required" }),
+  // mobile: z.string().nonempty({ message: "Mobile is required" }),
   email: z.string().email({ message: "Invalid email address" }),
 });
 
@@ -67,7 +64,7 @@ const CompanyForm = () => {
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
   const [showOtherCompanyRegistration, setShowOtherCompanyRegistration] =
-    useState(false);
+    useState(true);
   const [showOtherMyStatus, setShowOthermyStatus] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const [setShowOthertypeOfInvestment, showOthertypeOfInvestment] =
@@ -119,7 +116,7 @@ const CompanyForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
       toast.success("Other Insurance added successfully!");
-      navigate("/otherinsurance");
+      navigate("/company");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -135,15 +132,17 @@ const CompanyForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    if (selectedNommie.length < 1) {
-      toast.error("Please select atleast one nominee");
-      setNomineeError(true);
-      return;
-    }
+    data.firmsRegistrationNumberType = showOtherRegistrationNumber;
+
+    // if (selectedNommie.length < 1) {
+    //   toast.error("Please select atleast one nominee");
+    //   setNomineeError(true);
+    //   return;
+    // }
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    data.type = "partnershipFirm";
+    data.type = "company";
     // data.name = name;
     // data.email = email;
     // data.mobile = phone;
@@ -190,21 +189,7 @@ const CompanyForm = () => {
                   />
                 )}
               />
-              {showOtherCompanyName && (
-                <Controller
-                  name="othercompanyName"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Company Name"
-                      className="mt-2"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              )}
+
               {errors.companyName && (
                 <span className="text-red-500">
                   {errors.companyName.message}
@@ -252,22 +237,22 @@ const CompanyForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="companyRegistration">
+                <Label htmlFor="firmsRegistrationNumber">
                   Company Registration
                 </Label>
                 <Controller
-                  name="companyRegistration"
+                  name="firmsRegistrationNumber"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="companyRegistration"
+                      id="firmsRegistrationNumber"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherCompanyRegistration(value === "other");
+                        setShowOtherCompanyRegistration(value);
                       }}
                       className={
-                        errors.companyRegistration ? "border-red-500" : ""
+                        errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
@@ -296,9 +281,9 @@ const CompanyForm = () => {
                     )}
                   />
                 )}
-                {errors.companyRegistration && (
+                {errors.firmsRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.companyRegistration.message}
+                    {errors.firmsRegistrationNumber.message}
                   </span>
                 )}
               </div>
@@ -404,18 +389,12 @@ const CompanyForm = () => {
                     {...field}
                     onValueChange={(value) => {
                       field.onChange(value);
+                      setShowOtherJointName(value === "joint");
                     }}
                     className="flex items-center gap-2"
                   >
                     <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem
-                        id="single"
-                        value="single"
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setShowOtherJointName(value === "joint");
-                        }}
-                      />
+                      <RadioGroupItem id="single" value="single" />
                       <Label htmlFor="single">Single</Label>
                     </div>
                     <div className="flex items-center gap-2">
@@ -425,42 +404,40 @@ const CompanyForm = () => {
                   </RadioGroup>
                 )}
               />
+              {errors.typeOfInvestment && (
+                <span className="text-red-500">
+                  {errors.typeOfInvestment.message}
+                </span>
+              )}
             </div>
 
             {showOtherJointName && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                  <Controller
-                    name="jointHolderName"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        id="jointHolderName"
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setShowOtherJointHolderName(value === "other");
-                        }}
-                        className={
-                          errors.jointHolderName ? "border-red-500" : ""
-                        }
-                      >
-                        <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select From Family & Other Contact Details" />
-                        </FocusableSelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="other">
-                            Select From Family{" "}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
+                  <Input
+                    id="jointHolderName"
+                    placeholder="Enter Joint Holder Name"
+                    {...register("jointHolderName")}
+                    className={errors.jointHolderName ? "border-red-500" : ""}
                   />
-
-                  {errors.typeOfInvestment && (
+                  {errors.jointHolderName && (
                     <span className="text-red-500">
-                      {errors.typeOfInvestment.message}
+                      {errors.jointHolderName.message}
+                    </span>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
+                  <Input
+                    id="jointHolderPan"
+                    placeholder="Enter Joint Holder PAN"
+                    {...register("jointHolderPan")}
+                    className={errors.jointHolderPan ? "border-red-500" : ""}
+                  />
+                  {errors.jointHolderPan && (
+                    <span className="text-red-500">
+                      {errors.jointHolderPan.message}
                     </span>
                   )}
                 </div>
@@ -551,8 +528,8 @@ const CompanyForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          value={field.value}
+                          onChange={field.onChange}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -573,8 +550,8 @@ const CompanyForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          value={field.value}
+                          onChange={field.onChange}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -598,10 +575,7 @@ const CompanyForm = () => {
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
                           value={field.value}
-                          onChange={(value) => {
-                            console.log(value);
-                            setPhone(value);
-                          }}
+                          onChange={field.onChange}
                         />
                       )}
                     />

@@ -118,6 +118,9 @@ const EditOtherForm = () => {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
+    setSelectedNommie(
+      response.data.data.OtherInsurance?.nominees.map((nominee) => nominee.id)
+    );
     console.log(typeof response.data.data.OtherInsurance?.premium);
     return response.data.data.OtherInsurance;
   };
@@ -379,8 +382,8 @@ const EditOtherForm = () => {
                     <Datepicker
                       {...field}
                       onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                      value={field.value}
+                      // defaultValues={new Date(Benifyciary?.maturityDate) || ""}
                     />
                   )}
                 />
@@ -462,49 +465,16 @@ const EditOtherForm = () => {
               </div>
             </div>
 
-            {displaynominie && displaynominie.length > 0 && (
-              <div className="space-y-2">
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
             <div>
               <div className="space-y-2">
                 <Label>additional details</Label>
                 <Controller
-                  name="registeredMobile"
+                  name="additionalDetails"
                   control={control}
                   defaultValue={Benifyciary?.additionalDetails || ""}
                   render={({ field }) => (
                     <Input
-                      id="registered-mobile"
-                      placeholder="Enter registered mobile"
+                      id="additionalDetails"
                       {...field}
                       defaultValue={Benifyciary?.additionalDetails || ""}
                     />

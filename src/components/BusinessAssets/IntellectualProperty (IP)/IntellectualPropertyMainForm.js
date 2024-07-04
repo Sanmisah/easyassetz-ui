@@ -20,7 +20,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const  IntellectualPropertyMainForm = () => {
+const IntellectualPropertyMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -32,14 +32,13 @@ const  IntellectualPropertyMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/intellectual-properties`, {
+    const response = await axios.get(`/api/business-assets`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Propritorship;
-    
+    return response.data.data.IntellectualProperty;
   };
 
   const {

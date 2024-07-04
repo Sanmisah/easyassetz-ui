@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -34,12 +34,22 @@ const schema = z.object({
   registeredAddress: z
     .string()
     .nonempty({ message: "Registration Address is required" }),
-  firmRegistrationNumber: z.string().optional(),
-
+  firmsRegistrationNumber: z
+    .string()
+    .nonempty({ message: "Firm Registration Number is required" }),
+  firmsRegistrationNumberType: z
+    .string()
+    .nonempty({ message: "Firm Registration Number Type is required" }),
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
+  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
 });
+
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
 
 const PropritorshipEdit = ({ benificiaryId }) => {
   const navigate = useNavigate();
@@ -51,6 +61,10 @@ const PropritorshipEdit = ({ benificiaryId }) => {
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [
+    showOtherFirmsRegistrationNumber,
+    setShowOtherFirmsRegistrationNumber,
+  ] = useState(true);
   const [mobile, setmobile] = useState();
   console.log(lifeInsuranceEditId);
 
@@ -81,7 +95,8 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     let othertype = response.data.data.BusinessAsset?.firmName;
     let otherarticle = response.data.data.BusinessAsset?.registeredAddress;
     console.log(response.data.data.BusinessAsset);
-    reset(data);
+    reset(response.data.data.BusinessAsset);
+    setmobile(response.data.data.BusinessAsset?.mobile);
 
     return response.data.data.BusinessAsset;
   };
@@ -91,7 +106,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
+    queryKey: ["businessAssetDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
     onSuccess: (data) => {
       if (data) {
@@ -134,19 +149,13 @@ const PropritorshipEdit = ({ benificiaryId }) => {
 
   const onSubmit = (data) => {
     console.log(data);
-    data.type = "propritership";
+    data.type = "propritorship";
     // if (!name && name !== "") {
     //   data.name = name;
     // }
     // if (!email && email !== "") {
     //   data.email = email;
     // }
-    // if (!mobile && mobile !== "") {
-    //   data.mobile = mobile;
-    // }
-
-    data.name = name;
-    data.email = email;
     data.mobile = mobile;
 
     if (data.firmName === "other") {
@@ -245,30 +254,31 @@ const PropritorshipEdit = ({ benificiaryId }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firmRegistrationNumber">
+              <div className="space-y-2 col-span-full">
+                <Label htmlFor="firmsRegistrationNumberType">
                   Firm Registration Number
                 </Label>
                 <Controller
-                  name="firmRegistrationNumber"
+                  name="firmsRegistrationNumberType"
                   control={control}
-                  defaultValue={Benifyciary?.firmRegistrationNumber || ""}
+                  defaultValue={Benifyciary?.firmsRegistrationNumberType || ""}
                   render={({ field }) => (
                     <Select
-                      id="firmRegistrationNumber"
+                      id="firmsRegistrationNumberType"
                       value={field.value}
-                      defaultValue={Benifyciary?.firmRegistrationNumber || ""}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherFirmsRegistrationNumber(value);
+                        setShowOtherFirmsRegistrationNumber(true);
                       }}
                       className={
-                        errors.firmRegistrationNumber ? "border-red-500" : ""
+                        errors.firmsRegistrationNumberType
+                          ? "border-red-500"
+                          : ""
                       }
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Firm's Registration Number" />
-                      </SelectTrigger>
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Registration Number" />
+                      </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="CIN">CIN</SelectItem>
                         <SelectItem value="PAN">PAN</SelectItem>
@@ -277,10 +287,23 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                     </Select>
                   )}
                 />
-                {errors.firmRegistrationNumber && (
-                  <span className="text-red-500">
-                    {errors.firmRegistrationNumber.message}
-                  </span>
+                {showOtherFirmsRegistrationNumber && (
+                  <Controller
+                    name="firmsRegistrationNumber"
+                    control={control}
+                    defaultValue={Benifyciary?.firmsRegistrationNumber || ""}
+                    render={({ field }) => (
+                      <Input
+                        id="firmsRegistrationNumber"
+                        className="mt-2"
+                        value={field.value || ""}
+                        defaultValue={
+                          Benifyciary?.firmsRegistrationNumber || ""
+                        }
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
                 )}
               </div>
               <div className="space-y-2">
@@ -314,13 +337,19 @@ const PropritorshipEdit = ({ benificiaryId }) => {
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-
-                <Input
-                  id="name"
-                  placeholder="Enter Name"
+                <Controller
+                  name="name"
+                  control={control}
                   defaultValue={Benifyciary?.name || ""}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      defaultValue={Benifyciary?.name || ""}
+                    />
+                  )}
                 />
 
                 {errors.name && (
@@ -338,10 +367,10 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                       id="email"
                       placeholder="Enter Email"
                       {...field}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className={errors.email ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.email || ""}
+                      onChange={field.onChange}
+                      value={field.value || ""}
+                      className={errors.email ? "border-red-500" : ""}
                     />
                   )}
                 />
@@ -351,22 +380,15 @@ const PropritorshipEdit = ({ benificiaryId }) => {
               </div>
               <div className="w-[40%] space-y-2">
                 <Label htmlFor="mobile">mobile</Label>
-                <Controller
-                  name="mobile"
-                  control={control}
-                  defaultValue={Benifyciary?.mobile || ""}
-                  render={({ field }) => (
-                    <PhoneInput
-                      id="mobile"
-                      type="tel"
-                      placeholder="Enter mobile number"
-                      defaultCountry="in"
-                      inputStyle={{ minWidth: "15.5rem" }}
-                      value={mobile}
-                      onChange={(e) => setmobile(e.target)}
-                      defaultValue={Benifyciary?.mobile || ""}
-                    />
-                  )}
+
+                <PhoneInput
+                  id="mobile"
+                  placeholder="Enter mobile number"
+                  defaultCountry="in"
+                  inputStyle={{ minWidth: "15.5rem" }}
+                  value={mobile}
+                  onChange={(value) => setmobile(value)}
+                  defaultValues={Benifyciary?.mobile || ""}
                 />
                 {errors.mobile && (
                   <span className="text-red-500">{errors.mobile.message}</span>
