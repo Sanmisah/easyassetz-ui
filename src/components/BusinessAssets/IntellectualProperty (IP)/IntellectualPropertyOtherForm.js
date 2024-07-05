@@ -87,13 +87,13 @@ const IntellectualPropertyOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/propriterships`, data, {
+      const response = await axios.post(`/api/business-assets`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.Propritership;
+      return response.data.data.BusinessAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -118,8 +118,6 @@ const IntellectualPropertyOtherForm = () => {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   };
-
-
   const onSubmit = (data) => {
     console.log(data);
     data.expiryDate = ConverDate(data.expiryDate);
@@ -136,7 +134,7 @@ const IntellectualPropertyOtherForm = () => {
     //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
     // }
 
-    lifeInsuranceMutate.mutate(data);
+    // lifeInsuranceMutate.mutate(data);
   };
   return (
     <div className="w-full">
