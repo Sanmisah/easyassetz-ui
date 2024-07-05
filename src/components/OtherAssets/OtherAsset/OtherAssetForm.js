@@ -26,16 +26,21 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
-import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  hufName: z.string().nonempty({ message: " HUF Name is required" }),
-  panNumber: z.string().nonempty({ message: "   PAN Number is required" }),
-  hufShare: z.string().min(2, { message: "HUF Share is required" }),
- additionalInformation: z.string().optional(),
- name: z.string().nonempty({ message: "Name is required" }),
- email: z.string().email({ message: "Invalid email address" }),
- mobile: z.string().nonempty({ message: "Mobile is required" }),
+  nameOfAsset: z
+    .string()
+    .min(2, { message: "Name of Asset is required" }),
+  assetDescription: z
+    .string()
+    .nonempty({ message: "Asset Description is required" }),
+  additionalInformation: z
+    .string()
+    .min(3, { message: "Additional Information is required" }),
+
+  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email" }),
+  mobile: z.string().nonempty({ message: "Phone number is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -44,7 +49,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const HUFForm = () => {
+const OtherAssetForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -55,9 +60,7 @@ const HUFForm = () => {
   const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [showOtherHUf, setShowOtherFirmsRegistrationNumber] = useState();
-
+  const [mobile, setPhone] = useState("");
   const {
     handleSubmit,
     control,
@@ -66,13 +69,12 @@ const HUFForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      hufName: "",
-      panNumber: "",
-      hufShare: "",
+      nameOfAsset: "",
+      assetDescription: "",
       additionalInformation: "",
       name: "",
       email: "",
-      phone: "",
+      mobile: "",
     },
   });
 
@@ -87,9 +89,9 @@ const HUFForm = () => {
       return response.data.data.OtherAsset;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("HUFData");
-      toast.success("HUF Details added successfully!");
-      navigate("/huf");
+      queryClient.invalidateQueries("LifeInsuranceData");
+      toast.success("Other Asset added successfully!");
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -104,10 +106,19 @@ const HUFForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
-    console.log("Form Data:", data);
+    console.log(data);
+    if (data.metalType === "other") {
+      data.metalType = data.otherMetalType;
+    }
+    if (data.articleDetails === "other") {
+      data.articleDetails = data.otherArticleDetails;
+    }
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = mobile;
+    delete data.otherMetalType;
+    delete data.otherArticleDetails;
+
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -117,9 +128,11 @@ const HUFForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">HUF Details</CardTitle>
+              <CardTitle className="text-2xl font-bold">
+                Other Asset Details
+              </CardTitle>
               <CardDescription>
-                Fill out the form to add a new HUF.
+                Fill out the form to add a new Other Asset.
               </CardDescription>
             </div>
           </div>
@@ -129,73 +142,58 @@ const HUFForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-2">
-              <Label htmlFor="hufName">HUF Name</Label>
-              <Controller
-                name="hufName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="hufName"
-                    placeholder="Enter HUF Name"
-                    {...field}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.hufName ? "border-red-500" : ""}
-                  />
-                )}
-              />
-
-              {errors.hufName && (
-                <span className="text-red-500">{errors.hufName.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="panNumber">PAN Number</Label>
-              <Controller
-                name="panNumber"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="panNumber"
-                    placeholder="Enter PAN Number"
-                    {...field}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.panNumber ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.panNumber && (
-                <span className="text-red-500">{errors.panNumber.message}</span>
-              )}
-            </div>
-
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="hufShare">HUF Share</Label>
+                <Label htmlFor="nameOfAsset">Name Of Asset</Label>
                 <Controller
-                  name="hufShare"
+                  name="nameOfAsset"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="hufShare"
-                      placeholder="Enter HUF Share"
+                      id="nameOfAsset"
+                      placeholder="Enter Name Of Asset"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
-                      className={errors.hufShare ? "border-red-500" : ""}
+                      className={
+                        errors.nameOfAsset ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.hufShare && (
+                {errors.nameOfAsset && (
                   <span className="text-red-500">
-                    {errors.hufShare.message}
+                    {errors.nameOfAsset.message}
                   </span>
                 )}
               </div>
-
-           
+              <div className="space-y-2">
+                <Label htmlFor="assetDescription">Asset Description</Label>
+                <Controller
+                  name="assetDescription"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="assetDescription"
+                      placeholder="Enter Asset Description"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={
+                        errors.assetDescription ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.assetDescription && (
+                  <span className="text-red-500">
+                    {errors.assetDescription.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
                   Additional Information
@@ -222,7 +220,7 @@ const HUFForm = () => {
                   </span>
                 )}
               </div>
-              
+            </div>
             <div className="w-full grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">Point Of Contact</Label>
@@ -237,8 +235,7 @@ const HUFForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={field.onChange}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -259,8 +256,7 @@ const HUFForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={field.onChange}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -272,7 +268,7 @@ const HUFForm = () => {
                     )}
                   </div>
                   <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="mobile">Mobile</Label>
                     <Controller
                       name="mobile"
                       control={control}
@@ -283,17 +279,13 @@ const HUFForm = () => {
                           placeholder="Enter mobile number"
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
-                          value={field.value}
-                          onChange={(value) => {
-                            console.log(value);
-                            setPhone(value);
-                          }}
+                          onChange={field.onChange}
                         />
                       )}
                     />
-                    {errors.phone && (
+                    {errors.mobile && (
                       <span className="text-red-500">
-                        {errors.phone.message}
+                        {errors.mobile.message}
                       </span>
                     )}
                   </div>
@@ -310,4 +302,4 @@ const HUFForm = () => {
   );
 };
 
-export default HUFForm;
+export default OtherAssetForm;

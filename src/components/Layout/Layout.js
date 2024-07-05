@@ -12,6 +12,8 @@ import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
 import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
+import OtherAssetMainForm from "@/components/OtherAssets/OtherAsset/OtherAssetMainForm";
+
 
 import {
   Sheet,
@@ -107,6 +109,8 @@ import BankEditForm from "@/components/Bank&Post/Bank Accounts/BankAccountEdit";
 import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
 import RecoverableForm from "@/components/OtherAssets/Recoverable/RecoverableForm";
 import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEdit";
+import OtherAssetForm from "@/components/OtherAssets/OtherAsset/OtherAssetForm";
+import OtherAssetEditForm from "@/components/OtherAssets/OtherAsset/OtherAssetEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -307,26 +311,15 @@ const Layout = () => {
       {location.pathname === "/propritership/add" && <PropritershipForm />}
       {location.pathname === "/propritership/edit" && <PropritershipEditForm />}
       {location.pathname === "/partnershipfirm" && <PartnershipFirmMainForm />}
-
-      {location.pathname === "/partnershipfirm/add" && (
-        <PartnershipFirmOtherForm />
-      )}
-      {location.pathname === "/partnershipfirm/edit" && (
-        <PartnershipFirmEditForm />
-      )}
-      {location.pathname === "/intellectualproperty" && (
-        <IntellectualPropertyMainForm />
-      )}
-      {location.pathname === "/intellectualproperty/add" && (
-        <IntellectualPropertyOtherForm />
-      )}
+      {location.pathname === "/partnershipfirm/add" && (<PartnershipFirmOtherForm />)}
+      {location.pathname === "/partnershipfirm/edit" && (<PartnershipFirmEditForm />)}
+      {location.pathname === "/intellectualproperty" && (<IntellectualPropertyMainForm />)}
+      {location.pathname === "/intellectualproperty/add" && (<IntellectualPropertyOtherForm />)}
       {location.pathname === "/dashboard" && <Dashboard />}
-
       {location.pathname === "/company" && <CompanyMainForm />}
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
       {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
-
       {location.pathname === "/vehicle" && <VehicleDetailsMainForm />}
       {location.pathname === "/vehicle/add" && <VehicleDetailsOtherForm />}
       {location.pathname === "/vehicle/edit" && <VehicleDetailsEditForm />}
@@ -384,6 +377,9 @@ const Layout = () => {
       {location.pathname === "/recoverable" && <RecoverableMainForm />}
       {location.pathname === "/recoverable/add" && <RecoverableForm />}
       {location.pathname === "/recoverable/edit" && <RecoverableEditForm />}
+      {location.pathname === "/other-asset" && <OtherAssetMainForm />}
+      {location.pathname === "/other-asset/add" && <OtherAssetForm />}
+      {location.pathname === "/other-asset/edit" && <OtherAssetEditForm />}
 
     </div>
   );

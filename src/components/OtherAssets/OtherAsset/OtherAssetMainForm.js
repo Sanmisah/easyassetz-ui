@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const WatchMainForm = () => {
+const OtherAssetMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -37,7 +37,7 @@ const WatchMainForm = () => {
       },
     });
 
-    return response.data.data.Watch;
+    return response.data.data.OtherAsset;
   };
 
   const {
@@ -74,8 +74,10 @@ const WatchMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Watch</h1>
-          <Button onMouseDown={() => navigate("/watch/add")}>Add Watch</Button>
+          <h1 className="text-2xl font-bold">Other Assets</h1>
+          <Button onMouseDown={() => navigate("/other-asset/add")}>
+            Add Other Asset
+          </Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}
@@ -93,8 +95,9 @@ const WatchMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.company}</h1>
-                  <p className="text-sm">{data.model}</p>
+                  <h1 className="font-bold">{data.nameOfAsset}</h1>
+                  <p className="text-sm">{data.assetDescription}</p>
+                 
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -110,7 +113,7 @@ const WatchMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/watch/edit");
+                          navigate("/other-asset/edit");
                         }}
                       >
                         Edit
@@ -134,4 +137,4 @@ const WatchMainForm = () => {
   );
 };
 
-export default WatchMainForm;
+export default OtherAssetMainForm;

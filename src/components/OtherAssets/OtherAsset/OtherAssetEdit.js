@@ -17,7 +17,6 @@ import {
 } from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -29,19 +28,19 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  hufName: z.string().nonempty({ message: "Metal Name is required" }),
-  panNumber: z.string().nonempty({ message: "Article Detail is required" }),
-  hufShare: z.string().optional(),
+  nameOfAsset: z.string().min(2, { message: "Name of Asset is required" }),
+  assetDescription: z
+    .string()
+    .min(1, { message: "Asset Description is required" }),
   additionalInformation: z
     .string()
-    .min(1, { message: " Weight Per Article is Required" }),
-  additionalInformation: z.string(),
+    .min(1, { message: "Additional Information is required" }),
   name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  mobile: z.string().nonempty({ message: "Mobile is required" }),
+  email: z.string().email({ message: "Invalid email" }),
+  mobile: z.string().nonempty({ message: "Mobile number is required" }),
 });
 
-const HUFEdit = () => {
+const OtherAssetEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -51,15 +50,15 @@ const HUFEdit = () => {
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setPhone] = useState("");
-  console.log(lifeInsuranceEditId);
+  const [mobile, setMobile] = useState(null);
+  const [defaultValues, setDefaultValues] = useState(null);
+  // const [numberOfArticles, setNumberOfArticles] = useState(null);
+
   useEffect(() => {
     if (lifeInsuranceEditId) {
       console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
     }
   }, [lifeInsuranceEditId]);
-  const [showOtherBullion, setShowOtherBullion] = useState(false);
-  const [defaultValues, setDefaultValues] = useState(null);
 
   const {
     handleSubmit,
@@ -74,41 +73,43 @@ const HUFEdit = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions/${lifeInsuranceEditId}`, {
+    const response = await axios.get(`/api/other-assets/${lifeInsuranceEditId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-  //   let othertype = response.data.data.Bullion?.hufName;
-  //   let otherarticle = response.data.data.Bullion?.panNumber;
-  //   if (
-  //     othertype === "gold" ||
-  //     othertype === "silver" ||
-  //     othertype === "copper"
-  //   ) {
-  //     setShowOtherMetalType(false);
-  //     setValue("hufName", othertype);
-  //   } else {
-  //     setShowOtherMetalType(true);
-  //     setValue("otherMetalType", othertype);
-  //   }
+    const bullion = response.data.data.Bullion;
+    const metalType = bullion.metalType;
+    const articleDetails = bullion.articleDetails;
+    setValue("name", bullion.name);
+    setValue("email", bullion.email);
+    setValue("mobile", bullion.mobile);
+    if (["gold", "silver", "copper"].includes(metalType)) {
+      setShowOtherMetalType(false);
+      setValue("metalType", metalType);
+    } else {
+      setShowOtherMetalType(true);
+      setValue("metalType", "other");
+      setValue("otherMetalType", metalType);
+    }
 
-  //   if (
-  //     otherarticle === "plates" ||
-  //     otherarticle === "glass" ||
-  //     otherarticle === "bowl" ||
-  //     otherarticle === "bar" ||
-  //     otherarticle === "utensils"
-  //   ) {
-  //     setShowOtherArticleDetails(false);
-  //     setValue("panNumber", otherarticle);
-  //   } else {
-  //     setShowOtherArticleDetails(true);
-  //     setValue("otherArticleDetails", otherarticle);
-  //   }
-  //   console.log(typeof response.data.data.Bullion?.premium);
-  //   return response.data.data.Bullion;
-  // };
+    if (
+      ["plates", "glass", "bowl", "bar", "utensils"].includes(articleDetails)
+    ) {
+      setShowOtherArticleDetails(false);
+      setValue("articleDetails", articleDetails);
+    } else {
+      setShowOtherArticleDetails(true);
+      setValue("articleDetails", "other");
+      setValue("otherArticleDetails", articleDetails);
+    }
+
+    setName(bullion.name);
+    setEmail(bullion.email);
+    setMobile(bullion?.mobile);
+
+    return bullion;
+  };
 
   const {
     data: Benifyciary,
@@ -117,45 +118,33 @@ const HUFEdit = () => {
   } = useQuery({
     queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
-
     onSuccess: (data) => {
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
-      setDefaultValues(data);
       reset(data);
-      setValue(data);
-      setValue("metaltype", data.metaltype);
+      setDefaultValues(data);
       setValue("otherInsuranceCompany", data.otherInsuranceCompany);
-      setValue("WeightPerArticle", data.WeightPerArticle);
-      setValue("hufShare", data.hufShare);
+      setValue("nameOfAsset", data.nameOfAsset);
+      setValue("assetDescription", data.assetDescription);
       setValue("additionalInformation", data.additionalInformation);
       setValue("pointOfContact", data.pointOfContact);
+      setValue("name", data.name);
+      setValue("email", data.email);
+      setValue("mobile", data.mobile);
 
       // Set fetched values to the form
       for (const key in data) {
         setValue(key, data[key]);
       }
-
-      setShowOtherBullion(data.Bullion === "other");
-
-      console.log(data);
     },
     onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
+      console.error("Error fetching profile:", error);
+      toast.error("Failed to fetch profile");
     },
   });
 
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/bullions/${lifeInsuranceEditId}`,
+        `/api/other-assets/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -163,11 +152,11 @@ const HUFEdit = () => {
           },
         }
       );
-      return response.data.data.Bullion;
+      return response.data.data.OtherAsset;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Bullion added successfully!");
+      queryClient.invalidateQueries("bullionDataUpdate", lifeInsuranceEditId);
+      toast.success("Other Asset updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -175,18 +164,15 @@ const HUFEdit = () => {
       toast.error("Failed to submit profile");
     },
   });
-  useEffect(() => {
-    console.log("Form values:", control._formValues);
-  }, [control._formValues]);
-
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
-    }
-  }, [Benifyciary?.nominees]);
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("data:", data);
+    // if (data.metalType === "other") {
+    //   data.metalType = data.otherMetalType;
+    // }
+    // if (data.articleDetails === "other") {
+    //   data.articleDetails = data.otherArticleDetails;
+    // }
     if (name) {
       data.name = name;
     }
@@ -196,27 +182,14 @@ const HUFEdit = () => {
     if (mobile) {
       data.mobile = mobile;
     }
-    console.log(
-      "bullion:",
-      data.mobile,
-      data.name,
-      data.email,
-      mobile,
-      name,
-      email
-    );
-    if (data.hufName === "other") {
-      data.hufName = data.otherMetalType;
-    }
+    // console.log("NumberOFarticles:", data.numberOfArticles);
 
     bullionMutate.mutate(data);
   };
 
-  useEffect(() => {
-    console.log(Benifyciary);
-  }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading bullion data</div>;
+  if (isError) return <div>Error loading other asset data</div>;
+
   return (
     <div className="w-full">
       <Card>
@@ -224,10 +197,10 @@ const HUFEdit = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                HUF Details
+                Other Asset Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the HUF details.
+                Edit the form to update the other asset details.
               </CardDescription>
             </div>
           </div>
@@ -237,95 +210,73 @@ const HUFEdit = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
+        
+
             <div className="space-y-2">
-              <Label htmlFor="hfName">HUF Share</Label>
+              <Label htmlFor="nameOfAsset">Name Of Asset</Label>
               <Controller
-                name="hfName"
-                defaultValue={Benifyciary?.hfName || ""}
+                name="nameOfAsset"
+                defaultValue={Benifyciary?.nameOfAsset || ""}
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="hfName"
-                    placeholder="HUF Share"
+                    id="nameOfAsset"
+                    defaultValue={Benifyciary?.nameOfAsset || ""}
+                    placeholder="Enter Name Of Asset"
                     {...field}
-                    className={errors.hfName ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.hfName || ""}
+                    className={errors.nameOfAsset ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.hfName && (
-                <span className="text-red-500">{errors.hfName.message}</span>
+              {errors.nameOfAsset && (
+                <span className="text-red-500">
+                  {errors.nameOfAsset.message}
+                </span>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="panNumber">PAN Number</Label>
+                <Label htmlFor="assetDescription">Asset Description</Label>
                 <Controller
-                  name="panNumber"
+                  name="assetDescription"
                   control={control}
-                  defaultValue={Benifyciary?.panNumber || ""}
+                  defaultValue={Benifyciary?.assetDescription || ""}
                   render={({ field }) => (
                     <Input
-                      id="panNumber"
-                      type="number"
+                      id="assetDescription"
+                      defaultValue={Benifyciary?.assetDescription || ""}
+                      placeholder="Enter Asset Description"
                       {...field}
-                      placeholder="Enter PAN Number"
-                      value={parseInt(field.value)}
-                      className={errors.panNumber ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.panNumber || ""}
+                      className={
+                        errors.assetDescription ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.panNumber && (
+                {errors.assetDescription && (
                   <span className="text-red-500">
-                    {errors.panNumber.message}
+                    {errors.assetDescription.message}
                   </span>
                 )}
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="hufShare">HUF Share</Label>
-                <Controller
-                  name="hufShare"
-                  control={control}
-                  defaultValue={Benifyciary?.hufShare || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="hufShare"
-                      type="number"
-                      {...field}
-                      placeholder="Enter HUF Share"
-                      value={parseInt(field.value)}
-                      className={errors.hufShare ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.hufShare || ""}
-                    />
-                  )}
-                />
-                {errors.hufShare && (
-                  <span className="text-red-500">
-                    {errors.hufShare.message}
-                  </span>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">Additional Information</Label>
+                <Label htmlFor="additionalInformation">
+                  Additional Information
+                </Label>
                 <Controller
                   name="additionalInformation"
-                  control={control}
                   defaultValue={Benifyciary?.additionalInformation || ""}
+                  control={control}
                   render={({ field }) => (
                     <Input
                       id="additionalInformation"
-                      placeholder="Enter Addtional Information"
+                      defaultValue={Benifyciary?.additionalInformation || ""}
+                      placeholder="Enter Additional Information"
                       {...field}
                       className={
                         errors.additionalInformation ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.additionalInformation || ""}
                     />
                   )}
                 />
@@ -339,33 +290,38 @@ const HUFEdit = () => {
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  placeholder="Enter Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className={errors.name ? "border-red-500" : ""}
+                <Controller
+                  name="name"
                   defaultValue={Benifyciary?.name || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultValue={Benifyciary?.name || ""}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
                 />
-
                 {errors.name && (
                   <span className="text-red-500">{errors.name.message}</span>
                 )}
               </div>
-              <div className="w-[40%] space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Controller
                   name="email"
                   control={control}
-                  defaultValue={Benifyciary?.email || ""}
                   render={({ field }) => (
                     <Input
                       id="email"
                       placeholder="Enter Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className={errors.email ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.email || ""}
+                      value={field.value}
+                      onChange={field.onChange}
+                      className={errors.email ? "border-red-500" : ""}
                     />
                   )}
                 />
@@ -373,22 +329,22 @@ const HUFEdit = () => {
                   <span className="text-red-500">{errors.email.message}</span>
                 )}
               </div>
-              <div className="w-[40%] space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="mobile">Mobile</Label>
                 <Controller
                   name="mobile"
                   control={control}
-                  defaultValue={Benifyciary?.mobile || ""}
                   render={({ field }) => (
                     <PhoneInput
                       id="mobile"
                       type="tel"
                       placeholder="Enter mobile number"
                       defaultCountry="in"
-                      inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setPhone(e.target)}
                       defaultValue={Benifyciary?.mobile || ""}
+                      value={field.value || Benifyciary?.mobile || ""}
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      onChange={field.onChange}
+                      className={errors.mobile ? "border-red-500" : ""}
                     />
                   )}
                 />
@@ -406,6 +362,5 @@ const HUFEdit = () => {
     </div>
   );
 };
-}
 
-export default HUFEdit;
+export default OtherAssetEditForm;

@@ -32,6 +32,9 @@ const schema = z.object({
   model: z
     .string()
     .nonempty({ message: "Model is required" }),
+  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  mobile: z.string().nonempty({ message: "Mobile is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -123,7 +126,6 @@ const WatchOtherForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>

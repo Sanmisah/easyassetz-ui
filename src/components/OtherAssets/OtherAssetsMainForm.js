@@ -13,6 +13,7 @@ const OtherAssetsMainForm = () => {
   const [Artifacts, setArtifacts] = useState([]);
   const [Watch, setWatch] = useState([]);
   const [DigitalAssets, setDigitalAssets] = useState([]);
+  const [OtherAssets, setOtherAssets] = useState([]);
 
   const navigate = useNavigate();
 
@@ -92,10 +93,10 @@ const OtherAssetsMainForm = () => {
         console.error("Error fetching the Artifacts data", error);
       }
     };
+
     const fetchDataDigitalAssets = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
-
       try {
         const response = await axios.get(`/api/other-assets`, {
           headers: {
@@ -107,6 +108,22 @@ const OtherAssetsMainForm = () => {
         console.error("Error fetching the Digital Assets data", error);
       }
     };
+    
+
+    const fetchDataOtherAssets = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+    try {
+      const response = await axios.get(`/api/other-assets`, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
+      setOtherAssets(response?.data?.data?.OtherAssets);
+    } catch (error) {
+      console.error("Error fetching the Other Assets data", error);
+    };
+  };
 
     fetchDataWatch();
     fetchDataHUF();
@@ -114,6 +131,7 @@ const OtherAssetsMainForm = () => {
     fetchDataVehicheDetails();
     fetchDataArtifacts();
     fetchDataDigitalAssets();
+    fetchDataOtherAssets();
   }, []);
 
   return (
@@ -229,7 +247,25 @@ const OtherAssetsMainForm = () => {
         </div>
 
         <div
-          onClick={() => navigate("/re")}
+          onClick={() => navigate("/other-asset")}
+          className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold"> Other Assets</h1>
+            {OtherAssets && OtherAssets?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {OtherAssets && OtherAssets?.length}{" "}
+                  Other Assets
+                </p>
+              </div>
+            )}
+         </div>
+        </div>
+
+        <div
+          onClick={() => navigate("/recoverable")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />

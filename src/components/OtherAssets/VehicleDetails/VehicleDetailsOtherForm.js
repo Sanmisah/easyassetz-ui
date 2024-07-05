@@ -43,7 +43,6 @@ const schema = z.object({
     .nonempty({ message: "Year of Manufacture is required" }),
   location: z.string().nonempty({ message: "Location is required" }),
 });
-
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
 ));
@@ -130,7 +129,6 @@ const VehicleDetailsOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="type">Type</Label>
                 <Controller
@@ -179,7 +177,6 @@ const VehicleDetailsOtherForm = () => {
                   <span className="text-red-500">{errors.type.message}</span>
                 )}
               </div>
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="fourWheeler">Four Wheeler</Label>
@@ -252,6 +249,7 @@ const VehicleDetailsOtherForm = () => {
                   <span className="text-red-500">{errors.company.message}</span>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="model">Model</Label>
                 <Controller
@@ -273,7 +271,6 @@ const VehicleDetailsOtherForm = () => {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="registrationNumber">Registration Number</Label>
                 <Controller
@@ -298,9 +295,7 @@ const VehicleDetailsOtherForm = () => {
                   </span>
                 )}
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
                 <Controller
@@ -325,9 +320,7 @@ const VehicleDetailsOtherForm = () => {
                   </span>
                 )}
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="location">Location</Label>
                 <Controller
@@ -350,7 +343,6 @@ const VehicleDetailsOtherForm = () => {
                   </span>
                 )}
               </div>
-            </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
