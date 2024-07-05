@@ -97,7 +97,6 @@ const BullionForm = () => {
       for (const [key, value] of Object.entries(data)) {
         Formdata.append(key, value);
       }
-      Formdata.append("_method", "put");
 
       const response = await axios.post(
         `/api/bullions`,
