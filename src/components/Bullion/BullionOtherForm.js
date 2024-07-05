@@ -44,9 +44,10 @@ const schema = z.object({
     .string()
     .min(3, { message: "Additional Information is required" }),
 
-  name: z.string().nonempty({ message: "Name is required" }),
+  name: z.string().optional(),
   email: z.string().email({ message: "Invalid email" }),
   mobile: z.string().nonempty({ message: "Phone number is required" }),
+  bullionFile: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -90,11 +91,25 @@ const BullionForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/bullions`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const Formdata = new FormData();
+      Formdata.append("bullionFile", data.bullionFile);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+      Formdata.append("_method", "put");
+
+      const response = await axios.post(
+        `/api/bullions`,
+
+        Formdata,
+
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
 
       return response.data.data.Bullion;
     },
@@ -403,6 +418,32 @@ const BullionForm = () => {
                 </div>
               </div>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="bullionFile">Upload Image</Label>
+              <Controller
+                name="bullionFile"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="bullionFile"
+                    placeholder="Full Name - Name as per Adhar"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.bullionFile ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.bullionFile && (
+                <span className="text-red-500">
+                  {errors.bullionFile.message}
+                </span>
+              )}
+            </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

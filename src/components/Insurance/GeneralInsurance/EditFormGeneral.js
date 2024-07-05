@@ -114,6 +114,14 @@ const EditFormGeneral = () => {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
+    const companyname = response.data.data.GeneralInsurance?.companyName;
+    if (["company1", "company2", "company3"].includes(companyname)) {
+      setShowOtherInsuranceCompany(false);
+    } else {
+      setShowOtherInsuranceCompany(true);
+      setValue("companyName", "other");
+      setValue("otherInsuranceCompany", companyname);
+    }
     const nomie = response.data.data.GeneralInsurance?.nominees;
     setSelectedNommie(nomie.map((nominee) => nominee.id));
     console.log(typeof response.data.data.GeneralInsurance?.premium);
@@ -216,6 +224,14 @@ const EditFormGeneral = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
+    if (
+      data.companyName === "other" ||
+      data.companyName !== "company1" ||
+      data.companyName !== "company2" ||
+      data.companyName !== "company3"
+    ) {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;

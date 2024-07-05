@@ -40,7 +40,7 @@ const Personaldetail = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [specialactundermarriange, setSpecialactundermarriange] =
-    useState(true);
+    useState(false);
 
   const queryClient = useQueryClient();
 

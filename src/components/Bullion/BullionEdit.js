@@ -44,6 +44,7 @@ const schema = z.object({
   name: z.string().nonempty({ message: "Name is required" }),
   email: z.string().email({ message: "Invalid email" }),
   mobile: z.string().nonempty({ message: "Mobile number is required" }),
+  bullionFile: z.any().optional(),
 });
 
 const BullionEdit = () => {
@@ -150,9 +151,16 @@ const BullionEdit = () => {
 
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
+      const Formdata = new FormData();
+      Formdata.append("bullionFile", data.bullionFile);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+      Formdata.append("_method", "put");
+      const response = await axios.post(
         `/api/bullions/${lifeInsuranceEditId}`,
-        data,
+        Formdata,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
@@ -452,6 +460,30 @@ const BullionEdit = () => {
                 />
                 {errors.mobile && (
                   <span className="text-red-500">{errors.mobile.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bullionFile">Upload Image</Label>
+                <Controller
+                  name="bullionFile"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="bullionFile"
+                      type="file"
+                      onChange={(event) => {
+                        field.onChange(
+                          event.target.files && event.target.files[0]
+                        );
+                      }}
+                      className={errors.bullionFile ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.bullionFile && (
+                  <span className="text-red-500">
+                    {errors.bullionFile.message}
+                  </span>
                 )}
               </div>
             </div>

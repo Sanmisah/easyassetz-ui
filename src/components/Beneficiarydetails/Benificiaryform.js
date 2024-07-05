@@ -47,6 +47,7 @@ const beneficiarySchema = z
     guardianMobile: z.string().optional(),
     guardianEmail: z.string().optional(),
     guardianCity: z.string().optional(),
+
     guardianState: z.string().optional(),
     document: z.string().optional(),
     documentData: z.string().optional(),
@@ -58,15 +59,15 @@ const beneficiarySchema = z
     country: z.string().nonempty("Country is required"),
     mobile: z.string().nonempty("Mobile is required"),
     email: z.string().email("Invalid email").nonempty("Email is required"),
+
     city: z.string().nonempty("City is required"),
     state: z.string().nonempty("State is required"),
     houseNo: z.string().nonempty("House No is required"),
-    address1: z.string().nonempty("Address Line 1 is required"),
-    address2: z.string().nonempty("Address Line 2 is required"),
-    pincode: z.string().nonempty("Pincode is required"),
-    country: z.string().nonempty("Country is required"),
+
     religion: z.string().nonempty("Religion is required"),
     nationality: z.string().nonempty("Nationality is required"),
+    addressLine1: z.string().nonempty("Address Line 1 is required"),
+    addressLine2: z.string().nonempty("Address Line 2 is required"),
   })
   .refine(
     (data) => {
