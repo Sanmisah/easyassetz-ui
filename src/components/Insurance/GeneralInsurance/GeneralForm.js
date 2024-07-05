@@ -162,12 +162,12 @@ const GeneralForm = () => {
     const newdate = `${month}/${day}/${year}`;
     data.maturityDate = newdate;
     console.log("Nomiee:", selectedNommie.length < 1);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
+    // if (selectedNommie.length < 1) {
+    //   console.log("Nomiee:", selectedNommie.length < 1);
 
-      setnomineeerror(true);
-      return;
-    }
+    //   setnomineeerror(true);
+    //   return;
+    // }
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }

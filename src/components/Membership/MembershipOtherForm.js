@@ -38,6 +38,7 @@ const schema = z.object({
   membershipId: z.string().nonempty({ message: "Membership id is required" }),
   membershipType: z.string().optional(),
   membershipPaymentDate: z.date().optional(),
+  email: z.string().email('Invalid Email').nonempty('Email is required'),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
