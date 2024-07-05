@@ -41,9 +41,7 @@ const schema = z.object({
   nameOfAssignee: z
     .string()
     .nonempty({ message: "Name of assignee is required" }),
-  dateOfAssignment: z
-    .string()
-    .min(2, { message: "Date of assignment is required" }),
+  dateOfAssignment: z.date().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -113,19 +111,30 @@ const IntellectualPropertyOtherForm = () => {
       setNomineeError(false);
     }
   }, [selectedNommie]);
+  const ConverDate = (date) => {
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
 
   const onSubmit = (data) => {
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
-    if (showOtherFirmsRegistrationNumber) {
-      data.firmRegistrationNumberType = showOtherFirmsRegistrationNumber;
-      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
-    }
+    console.log(data);
+    data.expiryDate = ConverDate(data.expiryDate);
+    data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = phone;
+    // if (showOtherFirmsRegistrationNumber) {
+    //   data.firmRegistrationNumberType = showOtherFirmsRegistrationNumber;
+    //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+    // }
 
-    if (data.firmRegistrationNumber === "other") {
-      data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
-    }
+    // if (data.firmRegistrationNumber === "other") {
+    //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+    // }
 
     lifeInsuranceMutate.mutate(data);
   };
