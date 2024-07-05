@@ -552,6 +552,7 @@ const EditFormHealth = () => {
                   {console.log(displaynominie)}
                   <Label className="text-lg font-bold">Selected Nominees</Label>
                   {displaynominie &&
+                    displaynominie.length > 0 &&
                     displaynominie.map((nominee) => (
                       <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
                         <Label htmlFor={`nominee-${nominee?.id}`}>

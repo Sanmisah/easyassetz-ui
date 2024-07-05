@@ -61,7 +61,6 @@ const schema = z.object({
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
-  previousPolicy: z.string().min(1, { message: "Previous Policy is required" }),
 });
 
 const EditFormGeneral = () => {

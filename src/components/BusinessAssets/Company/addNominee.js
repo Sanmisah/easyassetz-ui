@@ -13,6 +13,7 @@ import { Button } from "@com/ui/button";
 import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
+import { toast } from "sonner";
 
 const AddNominee = ({
   setSelectedNommie,
@@ -33,6 +34,10 @@ const AddNominee = ({
       })
       .then((res) => {
         console.log(res.data);
+        if (res.data.data.Beneficiaries?.length < 1) {
+          toast.warning("please add beneficiary first");
+          return;
+        }
         setNominees({
           Beneficiaries: res?.data?.data?.Beneficiaries,
           Charities: res?.data?.data?.Charities,
