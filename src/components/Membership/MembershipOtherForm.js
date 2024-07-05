@@ -262,6 +262,7 @@ const MembershipForm = () => {
                   </span>
                 )}
               </div>
+              </div>
 
               {displaynominie && displaynominie.length > 0 && (
                 <div className="space-y-2">
@@ -316,7 +317,6 @@ const MembershipForm = () => {
                   </span>
                 )}
               </div>
-            </div>
             <div className="w-full grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">Point Of Contact</Label>
