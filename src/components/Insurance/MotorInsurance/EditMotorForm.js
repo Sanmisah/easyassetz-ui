@@ -146,7 +146,10 @@ const EditMotorForm = () => {
       setShowOtherRelationship(true);
       setValue("vehicleType", "other");
     }
-    setValue("expiryDate", response.data.data.MotorInsurance?.expiryDate);
+    setValue(
+      "expiryDate",
+      new Date(response.data.data.MotorInsurance?.expiryDate)
+    );
     setSelectedNommie(
       response.data.data.MotorInsurance?.nominees?.map((nominee) => nominee.id)
     );
@@ -190,7 +193,7 @@ const EditMotorForm = () => {
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("policyNumber", data.policyNumber);
-      setValue("expiryDate", data.expiryDate);
+      setValue("expiryDate", new Date(data.expiryDate));
       setValue("premium", data.premium);
       setValue("sumInsured", data.sumInsured);
       setValue("insurerName", data.insurerName);
@@ -223,9 +226,16 @@ const EditMotorForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
+      console.log("data:", data);
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
+      formData.append("_method", "put");
+
+      const response = await axios.post(
         `/api/motor-insurances/${lifeInsuranceEditId}`,
-        data,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
@@ -287,6 +297,11 @@ const EditMotorForm = () => {
     lifeInsuranceMutate.mutate(data);
   };
 
+  const handleUploadFile = () => {
+    window.open(
+      `/storage/motorinsurance/aadharFile/${Benifyciary?.aadharFile}`
+    );
+  };
   useEffect(() => {
     console.log(Benifyciary);
   }, [Benifyciary]);
@@ -795,16 +810,39 @@ const EditMotorForm = () => {
               </>
             )}
             <div className="space-y-2">
-              <Label htmlFor="image-upload">Image Upload</Label>
+              <Label htmlFor="aadharFile">Upload Your image File</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
-                defaultValue={Benifyciary?.imageUpload || ""}
                 render={({ field }) => (
-                  <Input id="image-upload" type="file" {...field} />
+                  <Input
+                    id="image"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.panFile ? "border-red-500" : ""}
+                  />
                 )}
               />
+              {errors.panFile && (
+                <span className="text-red-500">{errors.panFile.message}</span>
+              )}
             </div>
+            {Benifyciary?.panFile && (
+              <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                <Button
+                  variant="ghost"
+                  onClick={handleUploadFile}
+                  className="color-green-500"
+                >
+                  View Uploaded Aadhar File
+                </Button>
+              </div>
+            )}
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

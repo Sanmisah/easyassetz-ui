@@ -122,6 +122,7 @@ const EditFormGeneral = () => {
       setValue("companyName", "other");
       setValue("otherInsuranceCompany", companyname);
     }
+    setValue("maturityDate", response.data.data.GeneralInsurance?.maturityDate);
     const nomie = response.data.data.GeneralInsurance?.nominees;
     setSelectedNommie(nomie.map((nominee) => nominee.id));
     console.log(typeof response.data.data.GeneralInsurance?.premium);
@@ -390,14 +391,14 @@ const EditFormGeneral = () => {
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
                   name="maturityDate"
-                  defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                  defaultValues={new Date(Benifyciary?.maturityDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
                       onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                      value={field.value}
+                      defaultValues={new Date(Benifyciary?.maturityDate) || ""}
                     />
                   )}
                 />

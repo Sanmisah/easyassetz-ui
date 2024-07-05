@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -66,6 +66,10 @@ const schema = z.object({
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
 });
+
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
 
 const EditFormHealth = () => {
   const navigate = useNavigate();
