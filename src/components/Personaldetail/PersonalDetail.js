@@ -74,9 +74,19 @@ const Personaldetail = () => {
     if (response.data.data.profile?.dob) {
       setdefaultDate(new Date(response.data.data.profile.dob));
     }
-    console.log(new Date("2022-01-01"));
-    console.log(new Date("22-01-01"));
-    console.log(new Date());
+
+    if (response.data.data.profile?.drivingLicenceNumber) {
+      setShowDLFields(true);
+    }
+    if (response.data.data.profile?.passportNumber) {
+      setShowPassportFields(true);
+    }
+    if (response.data.data.profile?.panNumber) {
+      setShowPANFields(true);
+    }
+    if (response.data.data.profile?.aadharNumber) {
+      setShowAdharFields(true);
+    }
 
     return response.data.data.profile || {};
   };
@@ -116,11 +126,11 @@ const Personaldetail = () => {
     defaultValues: {
       adhar: "no",
       pan: "no",
-      drivingLicense: "no",
+      drivingLicence: "no",
       passport: "no",
       dob: null,
-      drivingLicenseExpiry: null,
-      passportExpiry: null,
+      drivingLicenceExpiryDate: null,
+      passportExpiryDate: null,
     },
   });
 
@@ -183,15 +193,23 @@ const Personaldetail = () => {
       toast.error("Failed to submit profile");
     },
   });
+  const ConverDate = (date) => {
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
-    const date = new Date(data.dob);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.dob = newdate;
+    data.dob = ConverDate(data.dob);
+    data.drivingLicenceExpiryDateDate = ConverDate(
+      data.drivingLicenceExpiryDateDate
+    );
+    data.passportExpiryDate = ConverDate(data.passportExpiryDate);
+    data.pan;
+    console.log(data.dob);
 
     if (data.maritalStatus === "Bachelor") {
       data.marriedUnderSpecialAct = "false";
@@ -249,6 +267,12 @@ const Personaldetail = () => {
     }
   };
 
+  const handleFileUpload = () => {
+    window.open(`/storage/profiles/aadharFile/${defaultData?.aadharFile}`);
+  };
+  const handleFileUploadPan = () => {
+    window.open(`/storage/profiles/panFile/${defaultData?.panFile}`);
+  };
   return (
     <Suspense fallback={<Skletonpersonal />}>
       {isLoading ? (
@@ -1007,6 +1031,7 @@ const Personaldetail = () => {
                       </span>
                     )}
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="aadharFile">Upload Your Aadhar File</Label>
                     <Controller
@@ -1033,6 +1058,17 @@ const Personaldetail = () => {
                       </span>
                     )}
                   </div>
+                  {defaultData?.aadharFile && (
+                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                      <Button
+                        variant="ghost"
+                        onClick={handleFileUpload}
+                        className="color-green-500"
+                      >
+                        View Uploaded Aadhar File
+                      </Button>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -1094,7 +1130,7 @@ const Personaldetail = () => {
                         <InputMask
                           id="pan-number"
                           placeholder="ABCDE1234F"
-                          mask="aaaa9999a"
+                          mask="aaaaa9999a"
                           className="text-transform: uppercase;"
                           maskChar={null}
                           {...field}
@@ -1111,10 +1147,10 @@ const Personaldetail = () => {
                       rules={{
                         required:
                           !defaultData?.panNumber && "PAN Number is required",
-                        pattern: {
-                          value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
-                          message: "Invalid PAN Number",
-                        },
+                        // pattern: {
+                        //   value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+                        //   message: "Invalid PAN Number",
+                        // },
                       }}
                     />
                     {errors.panNumber && (
@@ -1141,6 +1177,42 @@ const Personaldetail = () => {
                       </span>
                     )}
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="aadharFile">Upload Your Pan File</Label>
+                    <Controller
+                      name="panFile"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="panFile"
+                          type="file"
+                          onChange={(event) => {
+                            field.onChange(
+                              event.target.files && event.target.files[0]
+                            );
+                            console.log("sadsA", event.target.files);
+                          }}
+                          className={errors.panFile ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.panFile && (
+                      <span className="text-red-500">
+                        {errors.panFile.message}
+                      </span>
+                    )}
+                  </div>
+                  {defaultData?.panFile && (
+                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                      <Button
+                        variant="ghost"
+                        onClick={handleFileUploadPan}
+                        className="color-green-500"
+                      >
+                        View Uploaded Aadhar File
+                      </Button>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -1151,12 +1223,12 @@ const Personaldetail = () => {
                   Do you have a Driving License?
                 </Label>
                 <Controller
-                  name="drivingLicense"
+                  name="drivingLicence"
                   control={control}
-                  defaultChecked={defaultData?.drivingLicense}
+                  defaultChecked={defaultData?.drivingLicence}
                   rules={{
                     required:
-                      !defaultData?.drivingLicense && "This field is required",
+                      !defaultData?.drivingLicence && "This field is required",
                   }}
                   render={({ field }) => (
                     <RadioGroup
@@ -1192,9 +1264,9 @@ const Personaldetail = () => {
                     </RadioGroup>
                   )}
                 />
-                {errors.drivingLicense && (
+                {errors.drivingLicence && (
                   <span className="text-red-500">
-                    {errors.drivingLicense.message}
+                    {errors.drivingLicence.message}
                   </span>
                 )}
               </div>
@@ -1205,9 +1277,9 @@ const Personaldetail = () => {
                       Driving License Number
                     </Label>
                     <Controller
-                      name="drivingLicenseNumber"
+                      name="drivingLicenceNumber"
                       control={control}
-                      defaultValue={defaultData?.drivingLicenseNumber}
+                      defaultValue={defaultData?.drivingLicenceNumber}
                       render={({ field }) => (
                         <InputMask
                           id="driving-license-number"
@@ -1227,17 +1299,17 @@ const Personaldetail = () => {
                       )}
                       rules={{
                         required:
-                          !defaultData?.drivingLicenseNumber &&
+                          !defaultData?.drivingLicenceNumber &&
                           "Driving License Number is required",
                         pattern: {
-                          value: /^[A-Z0-9-]{15}$/,
+                          //  value: /^[A-Z]{1}[0-9]{15}$/,
                           message: "Invalid Driving License Number",
                         },
                       }}
                     />
-                    {errors.drivingLicenseNumber && (
+                    {errors.drivingLicenceNumber && (
                       <span className="text-red-500">
-                        {errors.drivingLicenseNumber.message}
+                        {errors.drivingLicenceNumber.message}
                       </span>
                     )}
                   </div>
@@ -1248,26 +1320,26 @@ const Personaldetail = () => {
                     <Input
                       id="driving-license-name"
                       placeholder="Name as per Driving License"
-                      defaultValue={defaultData?.drivingLicenseName}
+                      defaultValue={defaultData?.drivingLicenceName}
                       type="text"
-                      {...register("drivingLicenseName", {
+                      {...register("drivingLicenceName", {
                         required:
-                          !defaultData?.drivingLicenseName &&
+                          !defaultData?.drivingLicenceName &&
                           "Name as per Driving License is required",
                       })}
                     />
-                    {errors.drivingLicenseName && (
+                    {errors.drivingLicenceName && (
                       <span className="text-red-500">
-                        {errors.drivingLicenseName.message}
+                        {errors.drivingLicenceName.message}
                       </span>
                     )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="driving-license-expiry">Expiry Date</Label>
                     <Controller
-                      name="drivingLicenseExpiry"
+                      name="drivingLicenceExpiryDate"
                       control={control}
-                      defaultValue={defaultData?.drivingLicenseExpiry}
+                      defaultValue={defaultData?.drivingLicenceExpiryDate}
                       render={({ field }) => (
                         <Datepicker
                           value={field.value}
@@ -1275,9 +1347,9 @@ const Personaldetail = () => {
                         />
                       )}
                     />
-                    {errors.drivingLicenseExpiry && (
+                    {errors.drivingLicenceExpiryDate && (
                       <span className="text-red-500">
-                        {errors.drivingLicenseExpiry.message}
+                        {errors.drivingLicenceExpiryDate.message}
                       </span>
                     )}
                   </div>
@@ -1288,17 +1360,17 @@ const Personaldetail = () => {
                     <Input
                       id="driving-license-place"
                       placeholder="Place of issue"
-                      defaultValue={defaultData?.drivingLicensePlace}
+                      defaultValue={defaultData?.drivingLicencePlace}
                       type="text"
-                      {...register("drivingLicensePlace", {
+                      {...register("drivingLicencePlace", {
                         required:
-                          !defaultData?.drivingLicensePlace &&
+                          !defaultData?.drivingLicencePlace &&
                           "Place of issue is required",
                       })}
                     />
-                    {errors.drivingLicensePlace && (
+                    {errors.drivingLicencePlace && (
                       <span className="text-red-500">
-                        {errors.drivingLicensePlace.message}
+                        {errors.drivingLicencePlace.message}
                       </span>
                     )}
                   </div>
@@ -1380,7 +1452,7 @@ const Personaldetail = () => {
                           !defaultData?.passportNumber &&
                           "Passport Number is required",
                         pattern: {
-                          value: /^[A-Z][0-9]{7}$/,
+                          // value: /^[A-Z][0-9]{7}$/,
                           message: "Invalid Passport Number",
                         },
                       }}
@@ -1413,9 +1485,9 @@ const Personaldetail = () => {
                   <div className="space-y-2">
                     <Label htmlFor="pp-expiry">Expiry Date</Label>
                     <Controller
-                      name="passportExpiry"
+                      name="passportExpiryDate"
                       control={control}
-                      defaultValue={defaultData?.passportExpiry}
+                      defaultValue={defaultData?.passportExpiryDate}
                       render={({ field }) => (
                         <Datepicker
                           value={field.value}
@@ -1423,28 +1495,28 @@ const Personaldetail = () => {
                         />
                       )}
                     />
-                    {errors.passportExpiry && (
+                    {errors.passportExpiryDate && (
                       <span className="text-red-500">
-                        {errors.passportExpiry.message}
+                        {errors.passportExpiryDate.message}
                       </span>
                     )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="pp-place">Place of issue</Label>
                     <Input
-                      id="pp-place"
+                      id="passportPlaceOfIssue"
                       placeholder="Place of issue"
-                      defaultValue={defaultData?.passportPlace}
+                      defaultValue={defaultData?.passportPlaceOfIssue}
                       type="text"
-                      {...register("passportPlace", {
+                      {...register("passportPlaceOfIssue", {
                         required:
-                          !defaultData?.passportPlace &&
+                          !defaultData?.passportPlaceOfIssue &&
                           "Place of issue is required",
                       })}
                     />
-                    {errors.passportPlace && (
+                    {errors.passportPlaceOfIssue && (
                       <span className="text-red-500">
-                        {errors.passportPlace.message}
+                        {errors.passportPlaceOfIssue.message}
                       </span>
                     )}
                   </div>

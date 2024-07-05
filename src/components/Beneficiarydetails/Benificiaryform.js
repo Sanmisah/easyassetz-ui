@@ -138,11 +138,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("documentData", "");
     setValue("guardianReligion", "");
     setValue("guardianNationality", "");
-    setValue("houseNo", "");
-    setValue("addressLine1", "");
-    setValue("addressLine2", "");
-    setValue("pincode", "");
-    setValue("country", "");
   };
 
   const benificiaryMutate = useMutation({
@@ -185,11 +180,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
       delete data.documentData;
       delete data.guardianReligion;
       delete data.guardianNationality;
-      delete data.houseNo;
-      delete data.addressLine1;
-      delete data.addressLine2;
-      delete data.pincode;
-      delete data.country;
     }
     try {
       benificiaryMutate.mutate(data);
