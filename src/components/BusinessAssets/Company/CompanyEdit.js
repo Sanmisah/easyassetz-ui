@@ -56,7 +56,7 @@ const schema = z.object({
   additionalInformation: z.string().optional(),
   name: z.string().nonempty({ message: "Name is required" }),
   mobile: z.string().nonempty({ message: "mobile is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
