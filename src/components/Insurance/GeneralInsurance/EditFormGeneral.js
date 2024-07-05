@@ -114,6 +114,8 @@ const EditFormGeneral = () => {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
+    const nomie = response.data.data.GeneralInsurance?.nominees;
+    setSelectedNommie(nomie.map((nominee) => nominee.id));
     console.log(typeof response.data.data.GeneralInsurance?.premium);
     return response.data.data.GeneralInsurance;
   };
