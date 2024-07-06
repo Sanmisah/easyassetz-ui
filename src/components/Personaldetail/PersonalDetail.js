@@ -144,6 +144,7 @@ const Personaldetail = () => {
 
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
+      console.log("Mydata:", data);
       const mergedData = { ...defaultData, ...data };
 
       const formData = new FormData();
@@ -204,7 +205,7 @@ const Personaldetail = () => {
   const onSubmit = async (data) => {
     console.log(data);
     if (data.maritalStatus === "Bachelor") {
-      data.marriedUnderSpecialAct = "false";
+      data.marriedUnderSpecialAct = false;
     }
     data.dob = ConverDate(data.dob);
     data.drivingLicenceExpiryDateDate = ConverDate(
