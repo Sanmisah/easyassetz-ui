@@ -47,6 +47,9 @@ const schema = z.object({
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
   additionalInformation: z.string().optional(),
+  typeOfInvestment: z
+    .string()
+    .nonempty({ message: "Type of Investment is required" }),
   name: z.string().nonempty({ message: "Name is required" }),
   // mobile: z.string().nonempty({ message: "Mobile is required" }),
   email: z.string().email({ message: "Invalid email address" }),
@@ -67,7 +70,7 @@ const CompanyForm = () => {
     useState(true);
   const [showOtherMyStatus, setShowOthermyStatus] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
-  const [setShowOthertypeOfInvestment, showOthertypeOfInvestment] =
+  const [showOthertypeOfInvestment, setShowOthertypeOfInvestment] =
     useState(false);
   const [showOtherCompanyName, setshowOtherCompanyName] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
@@ -341,9 +344,9 @@ const CompanyForm = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <div className="space-y-2">
-                <Label htmlFor="typeOfInvestment">Type of Investment</Label>
+                <Label>Type of Investment</Label>
                 <Controller
                   name="typeOfInvestment"
                   control={control}
@@ -353,6 +356,7 @@ const CompanyForm = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
+                        setShowOthertypeOfInvestment(value === "other");
                       }}
                       className={
                         errors.typeOfInvestment ? "border-red-500" : ""
@@ -362,7 +366,7 @@ const CompanyForm = () => {
                         <SelectValue placeholder="Select Type of Investment" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="shrares">Shares</SelectItem>
+                        <SelectItem value="shares">Shares</SelectItem>
                         <SelectItem value="profit">Profit </SelectItem>
                         <SelectItem value="loan">Loan </SelectItem>
                         <SelectItem value="deposit">Deposit </SelectItem>
@@ -371,10 +375,20 @@ const CompanyForm = () => {
                     </Select>
                   )}
                 />
-                {errors.typeOfInvestment && (
-                  <span className="text-red-500">
-                    {errors.typeOfInvestment.message}
-                  </span>
+                {showOthertypeOfInvestment && (
+                  <Controller
+                    name="otherTypeOfInvestment"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Type of Investment"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
                 )}
               </div>
             </div>
