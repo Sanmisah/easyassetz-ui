@@ -208,10 +208,15 @@ const Personaldetail = () => {
     if (data.maritalStatus === "Bachelor") {
       data.marriedUnderSpecialAct = false;
     }
-    data.dob = ConverDate(data.dob);
-
-    data.passportExpiryDate = ConverDate(data.passportExpiryDate);
-    data.drivingLicenceExpiryDate = ConverDate(data.drivingLicenceExpiryDate);
+    if (data.dob) {
+      data.dob = ConverDate(data.dob);
+    }
+    if (data.passportExpiryDate !== null) {
+      data.passportExpiryDate = ConverDate(data.passportExpiryDate);
+    }
+    if (data.drivingLicenceExpiryDate !== null) {
+      data.drivingLicenceExpiryDate = ConverDate(data.drivingLicenceExpiryDate);
+    }
 
     console.log(data.dob);
 
@@ -1353,7 +1358,11 @@ const Personaldetail = () => {
                       render={({ field }) => (
                         <Datepicker
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(date) => field.onChange(date)}
+                          defaultValue={
+                            new Date(defaultData?.drivingLicenceExpiryDate) ||
+                            ""
+                          }
                         />
                       )}
                     />
@@ -1541,6 +1550,9 @@ const Personaldetail = () => {
                         <Datepicker
                           value={field.value}
                           onChange={field.onChange}
+                          defaultValue={
+                            new Date(defaultData?.passportExpiryDate) || ""
+                          }
                         />
                       )}
                     />

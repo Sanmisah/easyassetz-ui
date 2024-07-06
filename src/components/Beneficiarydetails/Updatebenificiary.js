@@ -488,7 +488,7 @@ const BeneficiaryForm = ({
                                     placeholder="Enter guardian's mobile number"
                                     defaultCountry="in"
                                     defaultValue={defaultData?.guardianMobile}
-                                    value={field.value}
+                                    value={field.value || ""}
                                     inputStyle={{ minWidth: "15.5rem" }}
                                     onChange={field.onChange}
                                   />
