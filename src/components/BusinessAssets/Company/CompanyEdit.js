@@ -70,12 +70,6 @@ const EditFormHealth = () => {
   const user = JSON.parse(getitem);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
 
-  console.log(lifeInsuranceEditId);
-  useEffect(() => {
-    if (lifeInsuranceEditId) {
-      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
-    }
-  }, [lifeInsuranceEditId]);
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
@@ -84,7 +78,7 @@ const EditFormHealth = () => {
   const [FamilyMembersCovered, setFamilyMembersCovered] = useState([]);
   const [showOtherFamilyMembersCovered, setShowOtherFamilyMembersCovered] =
     useState(false);
-  const [defaultValues, setDefaultValues] = useState(null);
+  const [defaultValues, setDefaultValues] = useState({});
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
@@ -100,7 +94,7 @@ const EditFormHealth = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || {},
+    defaultValues: {},
   });
 
   const getPersonalData = async () => {
@@ -113,18 +107,26 @@ const EditFormHealth = () => {
         },
       }
     );
-    if (response.data.data.BusinessAsset?.documentAvailability === "broker") {
+    const data = response.data.data.BusinessAsset;
+
+    if (data.documentAvailability === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
     }
-    if (
-      response.data.data.BusinessAsset?.documentAvailability === "e-insurance"
-    ) {
+    if (data.documentAvailability === "e-insurance") {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    console.log(typeof response.data.data.BusinessAsset?.typeOfInvestment);
-    return response.data.data.BusinessAsset;
+
+    setDefaultValues(data);
+    reset(data);
+    setShowOtherInsuranceCompany(data.companyName === "other");
+    setShowOtherCompanyRegistration(
+      !["CIN", "PAN", "FIRM NO"].includes(data.companyRegistration)
+    );
+    setJointHolderName(data.holdingType === "jointName");
+
+    return data;
   };
 
   const {
@@ -134,60 +136,12 @@ const EditFormHealth = () => {
   } = useQuery({
     queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
-
     onSuccess: (data) => {
-      if (data.documentAvailability === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.documentAvailability === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
-      setDefaultValues(data);
-      reset(data);
-      setValue(data);
-      setValue("specificVehicalType", data.specificVehicalType);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicymobile", data.previousPolicymobile);
-      setValue("companyRegistration", data.companyRegistration);
-      setValue("myStatus", data.myStatus);
-      setValue("typeOfInvestment", data.typeOfInvestment);
-      setValue("holdingType", data.holdingType);
-      setValue("jointHolderName", data.jointHolderName);
-      setValue("documentAvailability", data.documentAvailability);
-      setValue("contactmobile", data.contactmobile);
-      setValue("email", data.email);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicymobile", data.previousPolicymobile);
-      setValue("brokerName", data.brokerName);
-      setValue("additionalInformation", data.additionalInformation);
-      setValue("contactmobile", data.contactmobile);
-      setValue("companyRegistrationNumber", data.companyRegistrationNumber);
-
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
-      }
-
-      setShowOtherInsuranceCompany(data.companyName === "other");
-      if (
-        data.companyRegistration !== "CIN" &&
-        data.companyRegistration !== "PAN" &&
-        data.companyRegistration !== "FIRM NO"
-      ) {
-        setShowOtherCompanyRegistration(true);
-      }
-
-      console.log(data);
+      setDisplaynominie(data.nominees || []);
     },
     onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch data");
     },
   });
 
@@ -206,10 +160,10 @@ const EditFormHealth = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
-        "healthInsuranceDataUpdate",
+        "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Health Insurance added successfully!");
+      toast.success("Health Insurance updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -217,20 +171,11 @@ const EditFormHealth = () => {
       toast.error("Failed to submit profile");
     },
   });
-  useEffect(() => {
-    console.log("Form values:", control._formValues);
-  }, [control._formValues]);
 
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
-    }
-  }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-
     if (data.FamilyMembersCovered === "other") {
       data.FamilyMembersCovered = data.specifyFamilyMembersCovered;
     }
@@ -240,11 +185,9 @@ const EditFormHealth = () => {
     lifeInsuranceMutate.mutate(data);
   };
 
-  useEffect(() => {
-    console.log(Benifyciary);
-  }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading insurance data</div>;
+
   return (
     <div className="w-full">
       <Card>
@@ -271,18 +214,16 @@ const EditFormHealth = () => {
                 <Controller
                   name="companyName"
                   control={control}
-                  defaultValue={Benifyciary?.companyName}
+                  defaultValue={defaultValues.companyName}
                   render={({ field }) => (
                     <Select
                       id="insurance-company"
                       value={field.value}
-                      {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherInsuranceCompany(value === "other");
                       }}
                       className={errors.companyName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.companyName || ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select insurance company" />
@@ -300,13 +241,12 @@ const EditFormHealth = () => {
                   <Controller
                     name="otherInsuranceCompany"
                     control={control}
-                    defaultValue={Benifyciary?.otherInsuranceCompany || ""}
+                    defaultValue={defaultValues.otherInsuranceCompany}
                     render={({ field }) => (
                       <Input
                         {...field}
                         placeholder="Specify Insurance Company"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherInsuranceCompany || ""}
                       />
                     )}
                   />
@@ -317,24 +257,19 @@ const EditFormHealth = () => {
                   </span>
                 )}
               </div>
-              {console.log(Benifyciary)}
               <div className="space-y-2">
                 <Label htmlFor="companyAddress">Insurance Type</Label>
                 <Controller
                   name="companyAddress"
                   control={control}
+                  defaultValue={defaultValues.companyAddress}
                   render={({ field }) => (
-                    <div className="flex items-center gap-2 mt-2">
-                      <Input
-                        id="companyAddress"
-                        placeholder="Enter company address"
-                        {...field}
-                        className={
-                          errors.companyAddress ? "border-red-500" : ""
-                        }
-                        defaultValue={Benifyciary?.companyAddress || ""}
-                      />
-                    </div>
+                    <Input
+                      id="companyAddress"
+                      placeholder="Enter company address"
+                      {...field}
+                      className={errors.companyAddress ? "border-red-500" : ""}
+                    />
                   )}
                 />
                 {showOthercompanyAddress && (
@@ -344,11 +279,16 @@ const EditFormHealth = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Vehical Type"
+                        placeholder="Specify company address"
                         className="mt-2"
                       />
                     )}
                   />
+                )}
+                {errors.companyAddress && (
+                  <span className="text-red-500">
+                    {errors.companyAddress.message}
+                  </span>
                 )}
               </div>
             </div>
@@ -358,14 +298,16 @@ const EditFormHealth = () => {
                 <Controller
                   name="companyRegistration"
                   control={control}
-                  defaultValue={Benifyciary?.companyRegistration || ""}
+                  defaultValue={defaultValues.companyRegistration}
                   render={({ field }) => (
                     <Select
                       id="companyRegistration"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherCompanyRegistration(true);
+                        setShowOtherCompanyRegistration(
+                          !["CIN", "PAN", "FIRM NO"].includes(value)
+                        );
                       }}
                       className={
                         errors.companyRegistration ? "border-red-500" : ""
@@ -388,14 +330,12 @@ const EditFormHealth = () => {
                   <Controller
                     name="otherCompanyRegistration"
                     control={control}
-                    defaultValue={Benifyciary?.otherCompanyRegistration || ""}
+                    defaultValue={defaultValues.otherCompanyRegistration}
                     render={({ field }) => (
                       <Input
                         {...field}
                         placeholder="Specify Company Registration"
                         className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
                       />
                     )}
                   />
@@ -407,26 +347,21 @@ const EditFormHealth = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label htmlFor="myStatus">Maturity Date</Label>
                 <Controller
                   name="myStatus"
-                  defaultValue={new Date(Benifyciary?.myStatus) || ""}
                   control={control}
+                  defaultValue={defaultValues.myStatus}
                   render={({ field }) => (
                     <Select
-                      id="documentAvailability"
+                      id="myStatus"
                       value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOthertypeOfInvestment(value === "other");
-                      }}
-                      className={
-                        errors.documentAvailability ? "border-red-500" : ""
-                      }
+                      onValueChange={field.onChange}
+                      className={errors.myStatus ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Type Of Investment">
-                          {field.value || "Select Type Of Investment"}
+                        <SelectValue placeholder="Select Maturity Date">
+                          {field.value || "Select Maturity Date"}
                         </SelectValue>
                       </FocusableSelectTrigger>
                       <SelectContent>
@@ -451,7 +386,7 @@ const EditFormHealth = () => {
                 <Controller
                   name="typeOfInvestment"
                   control={control}
-                  defaultValue={Benifyciary?.typeOfInvestment || ""}
+                  defaultValue={defaultValues.typeOfInvestment}
                   render={({ field }) => (
                     <Select
                       id="typeOfInvestment"
@@ -489,13 +424,13 @@ const EditFormHealth = () => {
                 <Controller
                   name="holdingType"
                   control={control}
-                  defaultValue={Benifyciary?.holdingType || ""}
+                  defaultValue={defaultValues.holdingType}
                   render={({ field }) => (
                     <RadioGroup
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setJointHolderName(value === "other");
+                        setJointHolderName(value === "jointName");
                       }}
                       className="flex items-center gap-2"
                     >
@@ -520,20 +455,19 @@ const EditFormHealth = () => {
             {jointHolderName && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="policy-holder">Joint Holder Name</Label>
+                  <Label htmlFor="jointHolderName">Joint Holder Name</Label>
                   <Controller
                     name="jointHolderName"
                     control={control}
-                    defaultValue={Benifyciary?.jointHolderName || ""}
+                    defaultValue={defaultValues.jointHolderName}
                     render={({ field }) => (
                       <Input
-                        id="policy-holder"
-                        placeholder="Enter policy holder name"
+                        id="jointHolderName"
+                        placeholder="Enter joint holder name"
                         {...field}
                         className={
                           errors.jointHolderName ? "border-red-500" : ""
                         }
-                        defaultValue={Benifyciary?.jointHolderName || ""}
                       />
                     )}
                   />
@@ -545,129 +479,126 @@ const EditFormHealth = () => {
                 </div>
               </div>
             )}
-
-            {displaynominie && displaynominie.length > 0 && (
+            {displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
                   <Label className="text-lg font-bold">Selected Nominees</Label>
-                  {displaynominie &&
-                    displaynominie.length > 0 &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
+                  {displaynominie.map((nominee) => (
+                    <div
+                      key={nominee.id}
+                      className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                    >
+                      <Label htmlFor={`nominee-${nominee?.id}`}>
+                        {nominee?.fullLegalName || nominee?.charityName}
+                      </Label>
+                      <img
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={() => {
+                          setDisplaynominie(
+                            displaynominie.filter(
+                              (item) => item.id !== nominee.id
+                            )
+                          );
+                          setSelectedNommie(
+                            selectedNommie.filter(
+                              (item) => item.id !== nominee.id
+                            )
+                          );
+                        }}
+                        src={cross}
+                        alt=""
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
               <Addnominee
                 setSelectedNommie={setSelectedNommie}
                 AllNominees={Benifyciary?.nominees}
                 selectedNommie={selectedNommie}
                 displaynominie={displaynominie}
                 setDisplaynominie={setDisplaynominie}
-              />{" "}
+              />
             </div>
-            {/* <div className="space-y-2">
-              <Label>Document Availability</Label>
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
               <Controller
-                name="documentAvailability"
-                defaultValue={Benifyciary?.documentAvailability || ""}
+                name="additionalInformation"
                 control={control}
+                defaultValue={defaultValues.additionalInformation}
                 render={({ field }) => (
-                  <Checkbox
-                    id="documentAvailability"
-                    checked={field.value === "e-insurance"}
-                    onCheckedChange={() => {
-                      field.onChange("e-insurance");
-                      setHideRegisteredFields(true);
-                      setBrokerSelected(false);
-                    }}
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter additional information"
+                    {...field}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
-            </div> */}
-
-            <div>
-              <div className="space-y-2">
-                <Label>additional information</Label>
-                <Controller
-                  name="additionalInformation"
-                  control={control}
-                  defaultValue={Benifyciary?.additionalInformation || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="additionalInformation"
-                      placeholder="Enter registered mobile"
-                      {...field}
-                      defaultValue={Benifyciary?.additionalInformation || ""}
-                    />
-                  )}
-                />
-              </div>
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
             </div>
-
             {hideRegisteredFields && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="registered-mobile">Registered Mobile</Label>
+                  <Label htmlFor="registeredMobile">Registered Mobile</Label>
                   <Controller
                     name="registeredMobile"
                     control={control}
-                    defaultValue={Benifyciary?.registeredMobile || ""}
+                    defaultValue={defaultValues.registeredMobile}
                     render={({ field }) => (
                       <Input
-                        id="registered-mobile"
+                        id="registeredMobile"
                         placeholder="Enter registered mobile"
                         {...field}
-                        defaultValue={Benifyciary?.registeredMobile || ""}
+                        className={
+                          errors.registeredMobile ? "border-red-500" : ""
+                        }
                       />
                     )}
                   />
+                  {errors.registeredMobile && (
+                    <span className="text-red-500">
+                      {errors.registeredMobile.message}
+                    </span>
+                  )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="registered-email">Registered Email ID</Label>
+                  <Label htmlFor="registeredEmail">Registered Email</Label>
                   <Controller
                     name="registeredEmail"
-                    defaultValue={Benifyciary?.registeredEmail || ""}
                     control={control}
+                    defaultValue={defaultValues.registeredEmail}
                     render={({ field }) => (
                       <Input
-                        id="registered-email"
+                        id="registeredEmail"
                         placeholder="Enter registered email"
                         type="email"
                         {...field}
-                        defaultValue={Benifyciary?.registeredEmail || ""}
+                        className={
+                          errors.registeredEmail ? "border-red-500" : ""
+                        }
                       />
                     )}
                   />
+                  {errors.registeredEmail && (
+                    <span className="text-red-500">
+                      {errors.registeredEmail.message}
+                    </span>
+                  )}
                 </div>
               </div>
             )}
-
             {brokerSelected && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -676,14 +607,13 @@ const EditFormHealth = () => {
                     <Controller
                       name="name"
                       control={control}
-                      defaultValue={Benifyciary?.name || ""}
+                      defaultValue={defaultValues.name}
                       render={({ field }) => (
                         <Input
-                          id="contact-person"
+                          id="name"
                           placeholder="Enter name"
                           {...field}
                           className={errors.name ? "border-red-500" : ""}
-                          defaultValue={Benifyciary?.name || ""}
                         />
                       )}
                     />
@@ -694,15 +624,14 @@ const EditFormHealth = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="mobile">mobile</Label>
+                    <Label htmlFor="mobile">Mobile</Label>
                     <Controller
                       name="mobile"
-                      defaultValue={Benifyciary?.mobile || ""}
                       control={control}
+                      defaultValue={defaultValues.mobile}
                       render={({ field }) => (
                         <PhoneInput
-                          defaultValue={Benifyciary?.mobile || ""}
-                          id="guardian-mobile"
+                          id="mobile"
                           type="tel"
                           placeholder="Enter mobile"
                           defaultCountry="in"
@@ -726,7 +655,7 @@ const EditFormHealth = () => {
                     <Controller
                       name="email"
                       control={control}
-                      defaultValue={Benifyciary?.email || ""}
+                      defaultValue={defaultValues.email}
                       render={({ field }) => (
                         <Input
                           id="email"
@@ -734,7 +663,6 @@ const EditFormHealth = () => {
                           placeholder="Enter email"
                           {...field}
                           className={errors.email ? "border-red-500" : ""}
-                          defaultValue={Benifyciary?.email || ""}
                         />
                       )}
                     />
