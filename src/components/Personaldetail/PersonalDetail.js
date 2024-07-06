@@ -204,11 +204,12 @@ const Personaldetail = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log("Initial Data:", data);
+
     if (data.maritalStatus === "Bachelor") {
       data.marriedUnderSpecialAct = false;
     }
-    if (data.dob) {
+    if (data.dob !== null) {
       data.dob = ConverDate(data.dob);
     }
     if (data.passportExpiryDate !== null) {
