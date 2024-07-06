@@ -87,10 +87,10 @@ const beneficiarySchema = z
     }
   );
 
-const BenificiaryForm = ({
-  updateBenificiaryOpen,
-  setUpdateBenificiaryOpen,
-  benificiaryId,
+const BeneficiaryForm = ({
+  updateBeneficiaryOpen,
+  setUpdateBeneficiaryOpen,
+  beneficiaryId,
 }) => {
   const [defaultData, setDefaultData] = useState({});
   const queryClient = useQueryClient();
@@ -104,7 +104,7 @@ const BenificiaryForm = ({
     formState: { errors },
   } = useForm({
     resolver: zodResolver(beneficiarySchema),
-    defaultValues: defaultData || {},
+    defaultValues: {},
   });
 
   const [selectedDocument, setSelectedDocument] = useState("");
@@ -133,36 +133,32 @@ const BenificiaryForm = ({
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
+    const response = await axios.get(`/api/beneficiaries/${beneficiaryId}`, {
       headers: {
         Authorization: `Bearer ${user?.data?.token}`,
       },
     });
-    console.log("MEsage", response.data.data.Beneficiary);
-    setDefaultData(response.data.data.Beneficiary);
-    if (response.data.data.Beneficiary?.relationship === "other") {
-      setRelationship(response.data.data.Beneficiary?.specificRelationship);
+    const beneficiaryData = response.data.data.Beneficiary;
+    setDefaultData(beneficiaryData);
+    reset(beneficiaryData);
+    if (beneficiaryData?.relationship === "other") {
+      setRelationship(beneficiaryData?.specificRelationship);
     }
-    if (calculateAge(response.data.data.Beneficiary?.dob) < 18) {
-      setMarriedUnderAct(true);
+    if (calculateAge(beneficiaryData?.dob) < 18) {
+      setIsMinor(true);
     }
 
     if (
       ["child", "spouse", "self", "parent", "sibling"].includes(
-        response.data.data.Beneficiary?.relationship
+        beneficiaryData?.relationship
       )
     ) {
-      setValue("relationship", response.data.data.Beneficiary?.relationship);
+      setValue("relationship", beneficiaryData?.relationship);
       return;
     } else {
       setRelationship("other");
-      setValue("relationship", response.data.data.Beneficiary?.relationship);
+      setValue("relationship", beneficiaryData?.relationship);
     }
-    if (calculateAge(response.data.data.Beneficiary?.dob) < 18) {
-      setIsMinor(true);
-    }
-
-    return response?.data?.data?.Beneficiary;
   };
 
   const {
@@ -170,36 +166,12 @@ const BenificiaryForm = ({
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["benificiaryData", benificiaryId],
+    queryKey: ["beneficiaryData", beneficiaryId],
     queryFn: getPersonalData,
-    enabled: !!benificiaryId,
+    enabled: !!beneficiaryId,
 
     onSuccess: (data) => {
       reset(data);
-      setValue("relationship", data.relationship);
-      setValue("specificRelationship", data.specificRelationship);
-      setValue("gender", data.gender);
-      setValue("dob", data.dob);
-      setValue("guardianName", data.guardianName);
-      setValue("guardianMobile", data.guardianMobile);
-      setValue("guardianEmail", data.guardianEmail);
-      setValue("guardianCity", data.guardianCity);
-      setValue("guardianState", data.guardianState);
-      setValue("document", data.document);
-      setValue("documentData", data.documentData);
-      setValue("guardianReligion", data.guardianReligion);
-      setValue("guardianNationality", data.guardianNationality);
-      setValue("houseNo", data.houseNo);
-      setValue("addressLine1", data.addressLine1);
-      setValue("addressLine2", data.addressLine2);
-      setValue("pincode", data.pincode);
-      setValue("country", data.country);
-      setValue("mobile", data.mobile);
-      setValue("email", data.email);
-      setValue("city", data.city);
-      setValue("state", data.state);
-      setValue("religion", data.religion);
-      setValue("nationality", data.nationality);
     },
 
     onError: (error) => {
@@ -281,8 +253,8 @@ const BenificiaryForm = ({
     <div>
       <Sheet
         className="w-[800px]"
-        open={updateBenificiaryOpen}
-        onOpenChange={setUpdateBenificiaryOpen}
+        open={updateBeneficiaryOpen}
+        onOpenChange={setUpdateBeneficiaryOpen}
       >
         <SheetContent>
           <SheetHeader>
@@ -768,7 +740,7 @@ const BenificiaryForm = ({
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setUpdateBenificiaryOpen(false)}
+                        onClick={() => setUpdateBeneficiaryOpen(false)}
                       >
                         Cancel
                       </Button>
@@ -784,4 +756,4 @@ const BenificiaryForm = ({
   );
 };
 
-export default BenificiaryForm;
+export default BeneficiaryForm;
