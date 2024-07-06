@@ -213,7 +213,6 @@ const Personaldetail = () => {
     data.passportExpiryDate = ConverDate(data.passportExpiryDate);
     data.drivingLicenceExpiryDate = ConverDate(data.drivingLicenceExpiryDate);
 
-    data.pan;
     console.log(data.dob);
 
     if (data.maritalStatus === "Bachelor") {
