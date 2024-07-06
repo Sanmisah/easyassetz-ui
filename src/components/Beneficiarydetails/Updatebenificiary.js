@@ -88,9 +88,9 @@ const beneficiarySchema = z
   );
 
 const BeneficiaryForm = ({
-  updateBeneficiaryOpen,
-  setUpdateBeneficiaryOpen,
-  beneficiaryId,
+  updateBenificiaryOpen,
+  setUpdateBenificiaryOpen,
+  benificiaryId,
 }) => {
   const [defaultData, setDefaultData] = useState({});
   const queryClient = useQueryClient();
@@ -133,7 +133,7 @@ const BeneficiaryForm = ({
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/beneficiaries/${beneficiaryId}`, {
+    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
       headers: {
         Authorization: `Bearer ${user?.data?.token}`,
       },
@@ -166,9 +166,9 @@ const BeneficiaryForm = ({
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["beneficiaryData", beneficiaryId],
+    queryKey: ["beneficiaryData", benificiaryId],
     queryFn: getPersonalData,
-    enabled: !!beneficiaryId,
+    enabled: !!benificiaryId,
 
     onSuccess: (data) => {
       reset(data);
@@ -253,8 +253,8 @@ const BeneficiaryForm = ({
     <div>
       <Sheet
         className="w-[800px]"
-        open={updateBeneficiaryOpen}
-        onOpenChange={setUpdateBeneficiaryOpen}
+        open={updateBenificiaryOpen}
+        onOpenChange={setUpdateBenificiaryOpen}
       >
         <SheetContent>
           <SheetHeader>
@@ -740,7 +740,7 @@ const BeneficiaryForm = ({
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setUpdateBeneficiaryOpen(false)}
+                        onClick={() => setUpdateBenificiaryOpen(false)}
                       >
                         Cancel
                       </Button>
