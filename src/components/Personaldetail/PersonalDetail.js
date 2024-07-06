@@ -208,10 +208,10 @@ const Personaldetail = () => {
       data.marriedUnderSpecialAct = false;
     }
     data.dob = ConverDate(data.dob);
-    data.drivingLicenceExpiryDateDate = ConverDate(
-      data.drivingLicenceExpiryDateDate
-    );
+
     data.passportExpiryDate = ConverDate(data.passportExpiryDate);
+    data.drivingLicenceExpiryDate = ConverDate(data.drivingLicenceExpiryDate);
+
     data.pan;
     console.log(data.dob);
 
