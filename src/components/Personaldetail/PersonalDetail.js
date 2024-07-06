@@ -216,7 +216,7 @@ const Personaldetail = () => {
     console.log(data.dob);
 
     if (data.maritalStatus === "Bachelor") {
-      data.marriedUnderSpecialAct = "false";
+      data.marriedUnderSpecialAct = false;
     }
 
     if (isForeign && data.specificNationality) {
@@ -1226,7 +1226,7 @@ const Personaldetail = () => {
                 </>
               )}
             </div>
-          <div className="col-span-full space-y-4 min-w-[300px]">
+            <div className="col-span-full space-y-4 min-w-[300px]">
               <h2 className="text-2xl font-medium">Driving License</h2>
               <div className="space-y-2">
                 <Label htmlFor="driving-license">
@@ -1385,7 +1385,9 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="drivingFile">Upload Your Driving File</Label>
+                    <Label htmlFor="drivingFile">
+                      Upload Your Driving File
+                    </Label>
                     <Controller
                       name="drivingFile"
                       control={control}
@@ -1422,7 +1424,7 @@ const Personaldetail = () => {
                   )}
                 </>
               )}
-             </div>  
+            </div>
 
             <div className="col-span-full space-y-4 min-w-[300px]">
               <h2 className="text-2xl font-medium">Passport</h2>
@@ -1568,7 +1570,9 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="passportFile">Upload Your Passport File</Label>
+                    <Label htmlFor="passportFile">
+                      Upload Your Passport File
+                    </Label>
                     <Controller
                       name="passportFile"
                       control={control}
@@ -1582,7 +1586,9 @@ const Personaldetail = () => {
                             );
                             console.log("sadsA", event.target.files);
                           }}
-                          className={errors.passportFile ? "border-red-500" : ""}
+                          className={
+                            errors.passportFile ? "border-red-500" : ""
+                          }
                         />
                       )}
                     />
