@@ -275,13 +275,15 @@ const Personaldetail = () => {
     window.open(`/storage/profiles/aadharFile/${defaultData?.aadharFile}`);
   };
   const handleFileUploadPan = () => {
-    window.open(`/storage/profiles/panFile/${defaultData?.panFile}`);
+    window.open(`/storage/profiles/panFiles/${defaultData?.panFile}`);
   };
   const handleFileUploadDriving = () => {
-    window.open(`/storage/profiles/drivingFile/${defaultData?.drivingFile}`);
+    window.open(
+      `/storage/profiles/drivingLicenseFiles/${defaultData?.drivingFile}`
+    );
   };
   const handleFileUploadPassport = () => {
-    window.open(`/storage/profiles/passportFile/${defaultData?.passportFile}`);
+    window.open(`/storage/profiles/passportFiles/${defaultData?.passportFile}`);
   };
   return (
     <Suspense fallback={<Skletonpersonal />}>
