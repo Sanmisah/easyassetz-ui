@@ -276,6 +276,12 @@ const Personaldetail = () => {
   const handleFileUploadPan = () => {
     window.open(`/storage/profiles/panFile/${defaultData?.panFile}`);
   };
+  const handleFileUploadDriving = () => {
+    window.open(`/storage/profiles/drivingFile/${defaultData?.drivingFile}`);
+  };
+  const handleFileUploadPassport = () => {
+    window.open(`/storage/profiles/passportFile/${defaultData?.passportFile}`);
+  };
   return (
     <Suspense fallback={<Skletonpersonal />}>
       {isLoading ? (
@@ -1212,14 +1218,14 @@ const Personaldetail = () => {
                         onClick={handleFileUploadPan}
                         className="color-green-500"
                       >
-                        View Uploaded Aadhar File
+                        View Uploaded Pan File
                       </Button>
                     </div>
                   )}
                 </>
               )}
             </div>
-            <div className="col-span-full space-y-4 min-w-[300px]">
+          <div className="col-span-full space-y-4 min-w-[300px]">
               <h2 className="text-2xl font-medium">Driving License</h2>
               <div className="space-y-2">
                 <Label htmlFor="driving-license">
@@ -1377,9 +1383,46 @@ const Personaldetail = () => {
                       </span>
                     )}
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="drivingFile">Upload Your Driving File</Label>
+                    <Controller
+                      name="drivingFile"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="drivingFile"
+                          type="file"
+                          onChange={(event) => {
+                            field.onChange(
+                              event.target.files && event.target.files[0]
+                            );
+                            console.log("sadsA", event.target.files);
+                          }}
+                          className={errors.drivingFile ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.drivingFile && (
+                      <span className="text-red-500">
+                        {errors.drivingFile.message}
+                      </span>
+                    )}
+                  </div>
+                  {defaultData?.drivingFile && (
+                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                      <Button
+                        variant="ghost"
+                        onClick={handleFileUploadDriving}
+                        className="color-green-500"
+                      >
+                        View Uploaded Driving File
+                      </Button>
+                    </div>
+                  )}
                 </>
               )}
-            </div>
+             </div>  
+
             <div className="col-span-full space-y-4 min-w-[300px]">
               <h2 className="text-2xl font-medium">Passport</h2>
               <div className="space-y-2">
@@ -1523,6 +1566,42 @@ const Personaldetail = () => {
                       </span>
                     )}
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="passportFile">Upload Your Passport File</Label>
+                    <Controller
+                      name="passportFile"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="passportFile"
+                          type="file"
+                          onChange={(event) => {
+                            field.onChange(
+                              event.target.files && event.target.files[0]
+                            );
+                            console.log("sadsA", event.target.files);
+                          }}
+                          className={errors.passportFile ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.passportFile && (
+                      <span className="text-red-500">
+                        {errors.passportFile.message}
+                      </span>
+                    )}
+                  </div>
+                  {defaultData?.passportFile && (
+                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                      <Button
+                        variant="ghost"
+                        onClick={handleFileUploadPassport}
+                        className="color-green-500"
+                      >
+                        View Uploaded Passport File
+                      </Button>
+                    </div>
+                  )}
                 </>
               )}
             </div>
