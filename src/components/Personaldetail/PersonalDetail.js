@@ -199,6 +199,7 @@ const Personaldetail = () => {
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
     const year = d.getFullYear();
+    console.log("Date Conversion:", `${month}/${day}/${year}`);
     return `${month}/${day}/${year}`;
   };
 
