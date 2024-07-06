@@ -62,8 +62,8 @@ import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
 import JewelleryMainForm from "@/components/OtherAssets/Jewellery/JewelleryMainForm";
 import JewelleryOtherForm from "@/components/OtherAssets/Jewellery/JewelleryOtherForm";
 import JewelleryEdit from "@/components/OtherAssets/Jewellery/JewelleryEdit";
-import DigitalAssetMainForm from "@/components/OtherAssets/DigitalAssets/DigitalAssetMainForm";
-import DigitalAssetOtherForm from "@/components/OtherAssets/DigitalAssets/DigitalAssetOtherForm";
+import DigitalAssetMainForm from "@/components/DigitalAssets/DigitalAssets/DigitalAssetMainForm";
+import DigitalAssetOtherForm from "@/components/DigitalAssets/DigitalAssets/DigitalAssetOtherForm";
 import WatchMainForm from "@/components/OtherAssets/Watch/WatchMainForm";
 import WatchOtherForm from "@/components/OtherAssets/Watch/WatchOtherForm";
 import WatchEdit from "@/components/OtherAssets/Watch/WatchEdit";
@@ -103,7 +103,7 @@ import OtherLoanEdit from "@/components/Liabilities/OtherLoans/OtherLoanMainForm
 import RetirementFundMainForm from "@/components/RetirementFund/RetirementFundsMainForm";
 import BankContentForm from "@/components/Bank&Post/contents";
 import BankAccountMainForm from "@/components/Bank&Post/Bank Accounts/MainForm";
-import BankAccountForm from "@/components/Bank&Post/Bank Accounts/BankAccountAdd";
+import BankAccountOtherForm from "@/components/Bank&Post/BankAccounts/BankAccountsOtherForm";
 import BankEditForm from "@/components/Bank&Post/Bank Accounts/BankAccountEdit";
 import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
 import RecoverableForm from "@/components/OtherAssets/Recoverable/RecoverableForm";
@@ -211,13 +211,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Retirement Fund
           </NavLink> */}
-          {/* <NavLink
+          <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/bank"
           >
             <UserIcon className="h-5 w-5" />
             Bank & Post
-          </NavLink> */}
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -340,6 +340,7 @@ const Layout = () => {
       {location.pathname === "/jewellery/edit" && <JewelleryEdit />}
       {location.pathname === "/digital-assets" && <DigitalAssetMainForm />}
       {location.pathname === "/digital-assets/add" && <DigitalAssetOtherForm />}
+      {location.pathname === "/digital-assets/edit" && <DigitalAssetEditForm />}
       {location.pathname === "/watch" && <WatchMainForm />}
       {location.pathname === "/watch/add" && <WatchOtherForm />}
       {location.pathname === "/watch/edit" && <WatchEdit />}
@@ -383,7 +384,7 @@ const Layout = () => {
       {location.pathname === "/nps/edit" && <NPSEditForm />}
       {location.pathname === "/bank" && <BankContentForm />}
       {location.pathname === "/bankaccount" && <BankAccountMainForm />}
-      {location.pathname === "/bankaccount/add" && <BankAccountForm />}
+      {location.pathname === "/bankaccount/add" && <BankAccountOtherForm />}
       {location.pathname === "/bankaccount/edit" && <BankEditForm />}
       {location.pathname === "/fix-deposit" && <FixDepositsMainForm />}
       {location.pathname === "/fix-deposit/add" && <FixDepositsForm />}

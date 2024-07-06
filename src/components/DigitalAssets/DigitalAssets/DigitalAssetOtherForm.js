@@ -29,15 +29,11 @@ import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   digitalAssets: z.string().nonempty({ message: "Digital Assets is required" }),
-  account: z
-    .string()
-    .nonempty({ message: "Account is required" }),
+  account: z.string().nonempty({ message: "Account is required" }),
   linkedMobileNumber: z
     .string()
     .min(2, { message: "Mobile Number is required" }),
-  description: z
-    .string()
-    .nonempty({ message: "Description is required" }),
+  description: z.string().nonempty({ message: "Description is required" }),
   additionalInformation: z
     .string()
     .min(3, { message: "Additional Information is required" })
@@ -136,58 +132,54 @@ const DigitalAssetOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="digitalAssets">Digital Assets</Label>
+            <div className="space-y-2">
+              <Label htmlFor="digitalAssets">Digital Assets</Label>
+              <Controller
+                name="digitalAssets"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="digitalAssets"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherdigitalAssets(value === "other");
+                    }}
+                    className={errors.digitalAssets ? "border-red-500" : ""}
+                  >
+                    <FocusableSelectTrigger>
+                      <SelectValue placeholder="Select Digital Assets" />
+                    </FocusableSelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="socialMedia">Social Media</SelectItem>
+                      <SelectItem value="website">Website</SelectItem>
+                      <SelectItem value="email">Email</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {showOtherdigitalAssets && (
                 <Controller
-                  name="digitalAssets"
+                  name="otherdigitalAssets"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="digitalAssets"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherdigitalAssets(value === "other");
-                      }}
-                      className={errors.digitalAssets ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Digital Assets" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="socialMedia">Social Media</SelectItem>
-                        <SelectItem value="website">Website</SelectItem>
-                        <SelectItem value="email">Email</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      {...field}
+                      placeholder="Specify Digital Assets"
+                      className="mt-2"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
                   )}
                 />
-                {showOtherdigitalAssets && (
-                  <Controller
-                    name="otherdigitalAssets"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Digital Assets"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                )}
-                {errors.digitalAssets && (
-                  <span className="text-red-500">
-                    {errors.digitalAssets.message}
-                  </span>
-                )}
-              </div>
+              )}
+              {errors.digitalAssets && (
+                <span className="text-red-500">
+                  {errors.digitalAssets.message}
+                </span>
+              )}
             </div>
-
-    
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -202,16 +194,12 @@ const DigitalAssetOtherForm = () => {
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
-                      className={
-                        errors.account ? "border-red-500" : ""
-                      }
+                      className={errors.account ? "border-red-500" : ""}
                     />
                   )}
                 />
                 {errors.account && (
-                  <span className="text-red-500">
-                    {errors.account.message}
-                  </span>
+                  <span className="text-red-500">{errors.account.message}</span>
                 )}
               </div>
               <div className="space-y-2">
@@ -240,30 +228,28 @@ const DigitalAssetOtherForm = () => {
               </div>
             </div>
             <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="description"
-                      placeholder="Enter Description"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.description ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.description && (
-                  <span className="text-red-500">
-                    {errors.description.message}
-                  </span>
+              <Label htmlFor="description">Description</Label>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="description"
+                    placeholder="Enter Description"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.description ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
-            
+              />
+              {errors.description && (
+                <span className="text-red-500">
+                  {errors.description.message}
+                </span>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">

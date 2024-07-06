@@ -29,25 +29,26 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  metalType: z.string().nonempty({ message: "Metal Name is required" }),
-  articleDetails: z
+  digitalAssets: z.string().nonempty({ message: "Digital Asset is required" }),
+  account: z.string().nonempty({ message: "Account is required" }),
+  linkedMobileNumber: z
     .string()
-    .nonempty({ message: "Article Detail is required" }),
-  numberOfArticles: z.string().optional(),
-  weightPerArticle: z
-    .string()
-    .min(1, { message: " Weight Per Article is Required" }),
+    .min(2, { message: "Mobile Number is required" }),
+  description: z.string().nonempty({ message: "Description is required" }),
   additionalInformation: z
     .string()
-    .min(1, { message: "Additional Information is Required" }),
+    .min(3, { message: "Additional Information is required" })
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .transform((value) => (value === null ? null : Number(value))),
 });
 
-const BullionEdit = () => {
+const DigitalAssetEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
+  const [showOtherdigitalAssets, setShowOtherdigitalAssets] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
@@ -168,7 +169,7 @@ const BullionEdit = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Bullion added successfully!");
+      toast.success("Digital Asset added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -198,7 +199,7 @@ const BullionEdit = () => {
       data.mobile = mobile;
     }
     console.log(
-      "bullion:",
+      // "bullion:",
       data.mobile,
       data.name,
       data.email,
@@ -217,7 +218,7 @@ const BullionEdit = () => {
     console.log(Benifyciary);
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading bullion data</div>;
+  if (isError) return <div>Error loading Digital Asset data</div>;
   return (
     <div className="w-full">
       <Card>
@@ -225,11 +226,8 @@ const BullionEdit = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Bullion Details
+                Digital Asset Details
               </CardTitle>
-              <CardDescription>
-                Edit the form to update the bullion details.
-              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -238,164 +236,129 @@ const BullionEdit = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="metalType">Metal Type</Label>
+            <div className="space-y-2">
+              <Label htmlFor="digitalAssets">Digital Assets</Label>
+              <Controller
+                name="digitalAssets"
+                control={control}
+                defaultValue={Benifyciary?.digitalAssets}
+                render={({ field }) => (
+                  <Select
+                    id="digitalAssets"
+                    value={field.value}
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherdigitalAssets(value === "other");
+                    }}
+                    className={errors.digitalAssets ? "border-red-500" : ""}
+                    defaultValue={Benifyciary?.digitalAssets || ""}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Digital Assets" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="socialMedia">Social Media</SelectItem>
+                      <SelectItem value="website">Website</SelectItem>
+                      <SelectItem value="email">Email</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {showOtherdigitalAssets && (
                 <Controller
-                  name="metalType"
+                  name="otherdigitalAssets"
                   control={control}
-                  defaultValue={Benifyciary?.metalType}
+                  defaultValue={Benifyciary?.otherdigitalAssets || ""}
                   render={({ field }) => (
-                    <Select
-                      id="metalType"
-                      value={field.value}
+                    <Input
                       {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherMetalType(value === "other");
-                      }}
-                      className={errors.metalType ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.metalType || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      placeholder="Specify Digital Assets"
+                      className="mt-2"
+                      defaultValue={Benifyciary?.otherdigitalAssets || ""}
+                    />
                   )}
                 />
-                {showOtherMetalType && (
-                  <Controller
-                    name="otherMetalType"
-                    control={control}
-                    defaultValue={Benifyciary?.otherMetalType || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Metal Type"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherMetalType || ""}
-                      />
-                    )}
-                  />
-                )}
-                {errors.metalType && (
-                  <span className="text-red-500">
-                    {errors.metalType.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="articleDetails">Ariticle Details </Label>
-                <Controller
-                  name="articleDetails"
-                  control={control}
-                  defaultValue={Benifyciary?.articleDetails || ""}
-                  render={({ field }) => (
-                    <Select
-                      id="articleDetails"
-                      value={field.value}
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherArticleDetails(value === "other");
-                      }}
-                      className={errors.articleDetails ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.articleDetails || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Article Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="plates">Plates</SelectItem>
-                        <SelectItem value="glass">Glass</SelectItem>
-                        <SelectItem value="bowl">Bowl</SelectItem>
-                        <SelectItem value="bar">Bar</SelectItem>
-                        <SelectItem value="utensils">Utensils</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherArticleDetails && (
-                  <Controller
-                    name="otherArticleDetails"
-                    control={control}
-                    defaultValue={Benifyciary?.otherArticleDetails || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Article Type"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherArticleDetails || ""}
-                      />
-                    )}
-                  />
-                )}
-
-                {errors.articleDetails && (
-                  <span className="text-red-500">
-                    {errors.articleDetails.message}
-                  </span>
-                )}
-              </div>
+              )}
+              {errors.digitalAssets && (
+                <span className="text-red-500">
+                  {errors.digitalAssets.message}
+                </span>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="weightPerArticle">Weight Per Article</Label>
+              <Label htmlFor="account">Account/ID</Label>
               <Controller
-                name="weightPerArticle"
-                defaultValue={Benifyciary?.weightPerArticle || ""}
+                name="account"
+                defaultValue={Benifyciary?.account || ""}
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="weightPerArticle"
-                    placeholder="Weight Per Aricle"
+                    id="account"
+                    placeholder="Enter Account/ID"
                     {...field}
-                    className={errors.weightPerArticle ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.weightPerArticle || ""}
+                    className={errors.account ? "border-red-500" : ""}
+                    defaultValue={Benifyciary?.account || ""}
                   />
                 )}
               />
-              {errors.weightPerArticle && (
+              {errors.account && (
+                <span className="text-red-500">{errors.account.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="linkedMobileNumber">Mobile Number</Label>
+              <Controller
+                name="linkedMobileNumber"
+                defaultValue={Benifyciary?.linkedMobileNumber || ""}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="linkedMobileNumber"
+                    placeholder="Weight Per Aricle"
+                    {...field}
+                    className={
+                      errors.linkedMobileNumber ? "border-red-500" : ""
+                    }
+                    defaultValue={Benifyciary?.linkedMobileNumber || ""}
+                  />
+                )}
+              />
+              {errors.linkedMobileNumber && (
                 <span className="text-red-500">
-                  {errors.weightPerArticle.message}
+                  {errors.linkedMobileNumber.message}
                 </span>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="numberOfArticles">Number Of Article</Label>
+                <Label htmlFor="description">Description</Label>
                 <Controller
-                  name="numberOfArticles"
+                  name="description"
                   control={control}
-                  defaultValue={Benifyciary?.numberOfArticles || ""}
+                  defaultValue={Benifyciary?.description || ""}
                   render={({ field }) => (
                     <Input
-                      id="numberOfArticles"
+                      id="description"
                       type="number"
                       {...field}
-                      placeholder="Enter Number Of Article"
+                      placeholder="Enter Description"
                       value={parseInt(field.value)}
-                      className={
-                        errors.numberOfArticles ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.numberOfArticles || ""}
+                      className={errors.description ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.description || ""}
                     />
                   )}
                 />
-                {errors.numberOfArticles && (
+                {errors.description && (
                   <span className="text-red-500">
-                    {errors.numberOfArticles.message}
+                    {errors.description.message}
                   </span>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">
                   {" "}
@@ -496,4 +459,4 @@ const BullionEdit = () => {
   );
 };
 
-export default BullionEdit;
+export default DigitalAssetEditForm;
