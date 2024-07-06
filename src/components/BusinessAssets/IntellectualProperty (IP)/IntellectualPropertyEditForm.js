@@ -27,17 +27,20 @@ import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  firmName: z.string().nonempty({ message: "Metal Name is required" }),
-  registrationAddress: z
+  typeOfIp: z
     .string()
-    .nonempty({ message: "Article Detail is required" }),
-  firmRegistrationNumber: z.string().optional(),
-
-  additionalInformation: z
+    .min(3, { message: "Intellectual Property Type is required" }),
+  firmsRegistrationNumber: z
     .string()
-    .min(1, { message: "Additional Information is Required" }),
+    .min(3, { message: "Registration Number is required" }),
+  whetherAssigned: z.enum(["yes", "no"]),
+  nameOfAssignee: z
+    .string()
+    .nonempty({ message: "Name of assignee is required" }),
 });
 
 const IntellectualPropertyOtherForm = () => {
@@ -74,42 +77,15 @@ const IntellectualPropertyOtherForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/propriterships/${lifeInsuranceEditId}`,
+      `/api/business-assets/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    let othertype = response.data.data.Propritership?.firmName;
-    let otherarticle = response.data.data.Propritership?.registrationAddress;
-    if (
-      othertype === "gold" ||
-      othertype === "silver" ||
-      othertype === "copper"
-    ) {
-      setShowOtherMetalType(false);
-      setValue("firmName", othertype);
-    } else {
-      setShowOtherMetalType(true);
-      setValue("otherMetalType", othertype);
-    }
 
-    if (
-      otherarticle === "plates" ||
-      otherarticle === "glass" ||
-      otherarticle === "bowl" ||
-      otherarticle === "bar" ||
-      otherarticle === "utensils"
-    ) {
-      setShowOtherArticleDetails(false);
-      setValue("registrationAddress", otherarticle);
-    } else {
-      setShowOtherArticleDetails(true);
-      setValue("otherArticleDetails", otherarticle);
-    }
-    console.log(typeof response.data.data.Propritership?.premium);
-    return response.data.data.Propritership;
+    return response.data.data.BusinessAsset;
   };
 
   const {
@@ -134,8 +110,8 @@ const IntellectualPropertyOtherForm = () => {
       setValue(data);
       setValue("metaltype", data.metaltype);
       setValue("otherInsuranceCompany", data.otherInsuranceCompany);
-      setValue("firmRegistrationNumber", data.firmRegistrationNumber);
-      setValue("additionalInformation", data.additionalInformation);
+      setValue("expiryDate", data.expiryDate);
+      setValue("nameOfAssignee", data.nameOfAssignee);
       setValue("pointOfContact", data.pointOfContact);
 
       // Set fetched values to the form
@@ -180,14 +156,9 @@ const IntellectualPropertyOtherForm = () => {
     console.log("Form values:", control._formValues);
   }, [control._formValues]);
 
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
-    }
-  }, [Benifyciary?.nominees]);
-
   const onSubmit = (data) => {
     console.log(data);
+    data.type = "intellectualProperty";
     data.name = name;
     data.email = email;
     data.phone = phone;
@@ -226,17 +197,14 @@ const IntellectualPropertyOtherForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="IntellectualProperty">
-                  {" "}
-                  Intellectual Property Type
-                </Label>
+                <Label htmlFor="typeOfIp"> Intellectual Property Type</Label>
                 <Controller
-                  name="IntellectualProperty"
+                  name="typeOfIp"
                   control={control}
-                  defaultValue={Benifyciary?.intellectualProperty}
+                  defaultValue={Benifyciary?.typeOfIp}
                   render={({ field }) => (
                     <Select
-                      id="IntellectualProperty"
+                      id="typeOfIp"
                       value={field.value}
                       {...field}
                       onValueChange={(value) => {
@@ -246,95 +214,52 @@ const IntellectualPropertyOtherForm = () => {
                       className={
                         errors.intellectualProperty ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.intellectualProperty || ""}
+                      defaultValue={Benifyciary?.typeOfIp || ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
+                        <SelectValue placeholder="Select Intellectual Property Type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="tradeMark"> Trade Mark</SelectItem>
-                        <SelectItem value=" copyright">Copyright</SelectItem>
-                        <SelectItem value=" patent">Patent</SelectItem>
+                        <SelectItem value="copyright">Copyright</SelectItem>
+                        <SelectItem value="patent">Patent</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showIntellectualProperty && (
-                  <Controller
-                    name="otherIntellectualProperty"
-                    control={control}
-                    defaultValue={Benifyciary?.otherIntellectualProperty || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify  Intellectual Property Type"
-                        className="mt-2"
-                        defaultValue={
-                          Benifyciary?.otherIntellectualProperty || ""
-                        }
-                      />
-                    )}
-                  />
-                )}
-                {errors.intellectualProperty && (
+
+                {errors.typeOfIp && (
                   <span className="text-red-500">
-                    {errors.intellectualProperty.message}
+                    {errors.typeOfIp.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="registrationAddress">Ariticle Details </Label>
+                <Label htmlFor="firmsRegistrationNumber">
+                  Registration Number
+                </Label>
                 <Controller
-                  name="registrationAddress"
+                  name="firmsRegistrationNumber"
                   control={control}
-                  defaultValue={Benifyciary?.registrationAddress || ""}
+                  defaultValue={Benifyciary?.firmsRegistrationNumber || ""}
                   render={({ field }) => (
-                    <Select
-                      id="registrationAddress"
-                      value={field.value}
+                    <Input
+                      id="firmsRegistrationNumber"
+                      defaultValue={Benifyciary?.firmsRegistrationNumber || ""}
+                      placeholder="Enter Registration Number"
                       {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherArticleDetails(value === "other");
-                      }}
+                      value={field.value || ""}
+                      onChange={field.onChange}
                       className={
-                        errors.registrationAddress ? "border-red-500" : ""
+                        errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.registrationAddress || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Article Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="plates">Plates</SelectItem>
-                        <SelectItem value="glass">Glass</SelectItem>
-                        <SelectItem value="bowl">Bowl</SelectItem>
-                        <SelectItem value="bar">Bar</SelectItem>
-                        <SelectItem value="utensils">Utensils</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherArticleDetails && (
-                  <Controller
-                    name="otherArticleDetails"
-                    control={control}
-                    defaultValue={Benifyciary?.otherArticleDetails || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Article Type"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherArticleDetails || ""}
-                      />
-                    )}
-                  />
-                )}
 
-                {errors.registrationAddress && (
+                {errors.firmsRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.registrationAddress.message}
+                    {errors.firmsRegistrationNumber.message}
                   </span>
                 )}
               </div>
@@ -342,126 +267,120 @@ const IntellectualPropertyOtherForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firmRegistrationNumber">
-                  Firm Registration Number
-                </Label>
+                <Label htmlFor="expiryDate">Expiry Date</Label>
                 <Controller
-                  name="firmRegistrationNumber"
+                  name="expiryDate"
                   control={control}
-                  defaultValue={Benifyciary?.firmRegistrationNumber || ""}
+                  defaultValue={Benifyciary?.expiryDate || ""}
                   render={({ field }) => (
-                    <Input
-                      id="firmRegistrationNumber"
-                      type="number"
+                    <Datepicker
                       {...field}
-                      placeholder="Enter Number Of Article"
-                      value={parseInt(field.value)}
-                      className={
-                        errors.firmRegistrationNumber ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.firmRegistrationNumber || ""}
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value}
+                      defaultValue={new Date(Benifyciary?.expiryDate) || ""}
+                      value={field.value || Benifyciary?.expiryDate || ""}
                     />
                   )}
                 />
-                {errors.firmRegistrationNumber && (
+                {errors.expiryDate && (
                   <span className="text-red-500">
-                    {errors.firmRegistrationNumber.message}
+                    {errors.expiryDate.message}
                   </span>
                 )}
               </div>
+              <div>
+                <div className="space-y-2 col-span-full">
+                  <Label>Whether Assigned </Label>
+                  <Controller
+                    name="whetherAssigned"
+                    control={control}
+                    defaultValue={Benifyciary?.whetherAssigned || ""}
+                    render={({ field }) => (
+                      <RadioGroup
+                        {...field}
+                        defaultValue={Benifyciary?.whetherAssigned || ""}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setShowOtherArticleDetails(value === "other");
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <div className="flex items-center gap-2 text-center">
+                          <RadioGroupItem
+                            defaultChecked={
+                              Benifyciary?.whetherAssigned === "yes"
+                            }
+                            id="yes"
+                            value="yes"
+                          />
+                          <Label htmlFor="yes">Yes</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <RadioGroupItem
+                            defaultChecked={
+                              Benifyciary?.whetherAssigned === "no"
+                            }
+                            id="no"
+                            value="no"
+                          />
+                          <Label htmlFor="no">No</Label>
+                        </div>
+                      </RadioGroup>
+                    )}
+                  />
+                  {errors.whetherAssigned && (
+                    <span className="text-red-500">
+                      {errors.whetherAssigned.message}
+                    </span>
+                  )}
+                </div>
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  {" "}
-                  Additional Information
-                </Label>
+                <Label htmlFor="nameOfAssignee">Name of Assignee</Label>
                 <Controller
-                  name="additionalInformation"
+                  name="nameOfAssignee"
                   control={control}
-                  defaultValue={Benifyciary?.additionalInformation || ""}
+                  defaultValue={Benifyciary?.nameOfAssignee || ""}
                   render={({ field }) => (
                     <Input
-                      id="additionalInformation"
-                      placeholder="Enter Addtional Information"
+                      id="nameOfAssignee"
+                      placeholder="Enter Name of Assignee"
                       {...field}
-                      className={
-                        errors.additionalInformation ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.additionalInformation || ""}
+                      className={errors.nameOfAssignee ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.nameOfAssignee || ""}
                     />
                   )}
                 />
-                {errors.additionalInformation && (
+                {errors.nameOfAssignee && (
                   <span className="text-red-500">
-                    {errors.additionalInformation.message}
+                    {errors.nameOfAssignee.message}
                   </span>
                 )}
               </div>
             </div>
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="dateOfAssignment">Date of Assignment</Label>
                 <Controller
-                  name="name"
+                  name="dateOfAssignment"
                   control={control}
-                  defaultValue={Benifyciary?.name || ""}
+                  defaultValue={Benifyciary?.dateOfAssignment || ""}
                   render={({ field }) => (
-                    <Input
-                      id="name"
-                      placeholder="Enter Name"
-                      value={field.value}
-                      onChange={(e) => setName(e.target.value)}
+                    <Datepicker
                       {...field}
-                      className={errors.name ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.name || ""}
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value}
+                      defaultValue={
+                        new Date(Benifyciary?.dateOfAssignment) || ""
+                      }
+                      value={field.value || Benifyciary?.dateOfAssignment || ""}
                     />
                   )}
                 />
-                {errors.name && (
-                  <span className="text-red-500">{errors.name.message}</span>
-                )}
-              </div>
-              <div className="w-[40%] space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Controller
-                  name="email"
-                  control={control}
-                  defaultValue={Benifyciary?.email || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="email"
-                      placeholder="Enter Email"
-                      {...field}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className={errors.email ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.email || ""}
-                    />
-                  )}
-                />
-                {errors.email && (
-                  <span className="text-red-500">{errors.email.message}</span>
-                )}
-              </div>
-              <div className="w-[40%] space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Controller
-                  name="phone"
-                  control={control}
-                  defaultValue={Benifyciary?.phone || ""}
-                  render={({ field }) => (
-                    <PhoneInput
-                      id="phone"
-                      type="tel"
-                      placeholder="Enter mobile number"
-                      defaultCountry="in"
-                      inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setPhone(e.target)}
-                      defaultValue={Benifyciary?.phone || ""}
-                    />
-                  )}
-                />
-                {errors.phone && (
-                  <span className="text-red-500">{errors.phone.message}</span>
+                {errors.dateOfAssignment && (
+                  <span className="text-red-500">
+                    {errors.dateOfAssignment.message}
+                  </span>
                 )}
               </div>
             </div>

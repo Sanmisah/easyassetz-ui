@@ -30,18 +30,16 @@ import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import { useDispatch, useSelector } from "react-redux";
 const schema = z.object({
-  typeOfIntellectualProperty: z
+  typeOfIp: z
     .string()
     .min(3, { message: "Intellectual Property Type is required" }),
-  registrationNumber: z
+  firmsRegistrationNumber: z
     .string()
     .min(3, { message: "Registration Number is required" }),
-  expiryDate: z.date().optional(),
 
   nameOfAssignee: z
     .string()
     .nonempty({ message: "Name of assignee is required" }),
-  dateOfAssignment: z.date().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -76,8 +74,8 @@ const IntellectualPropertyOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      typeOfIntellectualProperty: "",
-      registrationNumber: "",
+      typeOfIp: "",
+      firmsRegistrationNumber: "",
       expiryDate: "",
       whetherAssigned: "",
       nameOfAssignee: "",
@@ -122,6 +120,7 @@ const IntellectualPropertyOtherForm = () => {
     console.log(data);
     data.expiryDate = ConverDate(data.expiryDate);
     data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+    data.type = "intellectualProperty";
     // data.name = name;
     // data.email = email;
     // data.mobile = phone;
@@ -134,7 +133,7 @@ const IntellectualPropertyOtherForm = () => {
     //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
     // }
 
-    // lifeInsuranceMutate.mutate(data);
+    lifeInsuranceMutate.mutate(data);
   };
   return (
     <div className="w-full">
@@ -158,25 +157,21 @@ const IntellectualPropertyOtherForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor=" typeOfIntellectualProperty">
+                <Label htmlFor=" typeOfIp">
                   Type Of Intellectual Property{" "}
                 </Label>
                 <Controller
-                  name="typeOfIntellectualProperty"
+                  name="typeOfIp"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="typeOfIntellectualProperty"
+                      id="typeOfIp"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowIntellectualProperty(value === "other");
                       }}
-                      className={
-                        errors.typeOfIntellectualProperty
-                          ? "border-red-500"
-                          : ""
-                      }
+                      className={errors.typeOfIp ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
                         <SelectValue placeholder="Select Intellectual Property Type" />
@@ -204,9 +199,9 @@ const IntellectualPropertyOtherForm = () => {
                     )}
                   />
                 )}
-                {errors.typeOfIntellectualProperty && (
+                {errors.typeOfIp && (
                   <span className="text-red-500">
-                    {errors.typeOfIntellectualProperty.message}
+                    {errors.typeOfIp.message}
                   </span>
                 )}
               </div>
@@ -214,26 +209,28 @@ const IntellectualPropertyOtherForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor=" registrationNumber">Registration Number</Label>
+                <Label htmlFor=" firmsRegistrationNumber">
+                  Registration Number
+                </Label>
                 <Controller
-                  name="registrationNumber"
+                  name="firmsRegistrationNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="registrationNumber"
+                      id="firmsRegistrationNumber"
                       placeholder="Enter Registration Number"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
-                        errors.registrationNumber ? "border-red-500" : ""
+                        errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
                     />
                   )}
                 />
-                {errors.registrationNumber && (
+                {errors.firmsRegistrationNumber && (
                   <span className="text-red-500">
-                    {errors.registrationNumber.message}
+                    {errors.firmsRegistrationNumber.message}
                   </span>
                 )}
               </div>
@@ -273,15 +270,16 @@ const IntellectualPropertyOtherForm = () => {
                     className="flex items-center gap-2"
                   >
                     <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem id="broker" value="broker" />
+                      <RadioGroupItem
+                        defaultChecked="yes"
+                        id="yes"
+                        value="yes"
+                      />
                       <Label htmlFor="broker">Yes</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <RadioGroupItem
-                        id="whetherAssigned"
-                        value="whetherAssigned"
-                      />
-                      <Label htmlFor="whetherAssigned">No</Label>
+                      <RadioGroupItem id="no" value="no" />
+                      <Label htmlFor="no">No</Label>
                     </div>
                   </RadioGroup>
                 )}
@@ -316,7 +314,7 @@ const IntellectualPropertyOtherForm = () => {
             <div className="space-y-2">
               <Label htmlFor="maturity-date">Date of Assignment</Label>
               <Controller
-                name="DateofAssignment"
+                name="dateOfAssignment"
                 control={control}
                 render={({ field }) => (
                   <Datepicker
@@ -326,9 +324,9 @@ const IntellectualPropertyOtherForm = () => {
                   />
                 )}
               />
-              {errors.DateofAssignment && (
+              {errors.dateOfAssignment && (
                 <span className="text-red-500 mt-5">
-                  {errors.DateofAssignment.message}
+                  {errors.dateOfAssignment.message}
                 </span>
               )}
             </div>

@@ -14,7 +14,6 @@ import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranc
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
 import OtherAssetMainForm from "@/components/OtherAssets/OtherAsset/OtherAssetMainForm";
 
-
 import {
   Sheet,
   SheetContent,
@@ -111,6 +110,7 @@ import RecoverableForm from "@/components/OtherAssets/Recoverable/RecoverableFor
 import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEdit";
 import OtherAssetForm from "@/components/OtherAssets/OtherAsset/OtherAssetForm";
 import OtherAssetEditForm from "@/components/OtherAssets/OtherAsset/OtherAssetEdit";
+import IntellectualPropertyEditForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyEditForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -245,7 +245,6 @@ const Layout = () => {
                     className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
                     to="/nomination"
                   >
-                   
                     <HomeIcon className="h-5 w-5" />
                     Insurance
                   </NavLink>
@@ -311,10 +310,21 @@ const Layout = () => {
       {location.pathname === "/propritership/add" && <PropritershipForm />}
       {location.pathname === "/propritership/edit" && <PropritershipEditForm />}
       {location.pathname === "/partnershipfirm" && <PartnershipFirmMainForm />}
-      {location.pathname === "/partnershipfirm/add" && (<PartnershipFirmOtherForm />)}
-      {location.pathname === "/partnershipfirm/edit" && (<PartnershipFirmEditForm />)}
-      {location.pathname === "/intellectualproperty" && (<IntellectualPropertyMainForm />)}
-      {location.pathname === "/intellectualproperty/add" && (<IntellectualPropertyOtherForm />)}
+      {location.pathname === "/partnershipfirm/add" && (
+        <PartnershipFirmOtherForm />
+      )}
+      {location.pathname === "/partnershipfirm/edit" && (
+        <PartnershipFirmEditForm />
+      )}
+      {location.pathname === "/intellectualproperty" && (
+        <IntellectualPropertyMainForm />
+      )}
+      {location.pathname === "/intellectualproperty/add" && (
+        <IntellectualPropertyOtherForm />
+      )}
+      {location.pathname === "/intellectualproperty/edit" && (
+        <IntellectualPropertyEditForm />
+      )}
       {location.pathname === "/dashboard" && <Dashboard />}
       {location.pathname === "/company" && <CompanyMainForm />}
       {location.pathname === "/company/add" && <CompanyOtherForm />}
@@ -361,8 +371,12 @@ const Layout = () => {
       {location.pathname === "/gratuity/add" && <GratuityOtherForm />}
       {location.pathname === "/gratuity/edit" && <GratuityEditForm />}
       {location.pathname === "/superannuation" && <SuperAnnuationMainForm />}
-      {location.pathname === "/superannuation/add" && <SuperAnnuationOtherForm />}
-      {location.pathname === "/superannuation/edit" && <SuperAnnuationEditForm />}
+      {location.pathname === "/superannuation/add" && (
+        <SuperAnnuationOtherForm />
+      )}
+      {location.pathname === "/superannuation/edit" && (
+        <SuperAnnuationEditForm />
+      )}
       {location.pathname === "/retirementfund" && <RetirementFundMainForm />}
       {location.pathname === "/nps" && <NPSMainForm />}
       {location.pathname === "/nps/add" && <NPSOtherForm />}
@@ -380,7 +394,6 @@ const Layout = () => {
       {location.pathname === "/other-asset" && <OtherAssetMainForm />}
       {location.pathname === "/other-asset/add" && <OtherAssetForm />}
       {location.pathname === "/other-asset/edit" && <OtherAssetEditForm />}
-
     </div>
   );
 };

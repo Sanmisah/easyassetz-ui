@@ -135,13 +135,16 @@ const CompanyForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    data.firmsRegistrationNumberType = showOtherRegistrationNumber;
+    data.firmsRegistrationNumberType = showOtherCompanyRegistration;
 
     // if (selectedNommie.length < 1) {
     //   toast.error("Please select atleast one nominee");
     //   setNomineeError(true);
     //   return;
     // }
+    if(data.typeOfInvestment === "other"){
+      data.typeOfInvestment = data.specifyInvestment;
+    }
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
@@ -244,11 +247,11 @@ const CompanyForm = () => {
                   Company Registration
                 </Label>
                 <Controller
-                  name="firmsRegistrationNumber"
+                  name="firmsRegistrationNumberType"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmsRegistrationNumber"
+                      id="firmsRegistrationNumberType"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -271,12 +274,11 @@ const CompanyForm = () => {
                 />
                 {showOtherCompanyRegistration && (
                   <Controller
-                    name="otherCompanyRegistration"
+                    name="firmsRegistrationNumber"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify  Company Registration"
                         className="mt-2"
                         value={field.value || ""}
                         onChange={field.onChange}
@@ -397,10 +399,12 @@ const CompanyForm = () => {
               <Label className="text-lg font-bold">Holding Type</Label>
               <Controller
                 name="holdingType"
+                defaultValues="single"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
+                    defaultValue="single"
                     onValueChange={(value) => {
                       field.onChange(value);
                       setShowOtherJointName(value === "joint");
@@ -418,9 +422,9 @@ const CompanyForm = () => {
                   </RadioGroup>
                 )}
               />
-              {errors.typeOfInvestment && (
+              {errors.holdingType && (
                 <span className="text-red-500">
-                  {errors.typeOfInvestment.message}
+                  {errors.holdingType.message}
                 </span>
               )}
             </div>

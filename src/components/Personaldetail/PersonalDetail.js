@@ -203,11 +203,9 @@ const Personaldetail = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    const formData = new FormData();
-    for (const [key, value] of Object.entries(data)) {
-      formData.append(key, value);
+    if (data.maritalStatus === "Bachelor") {
+      data.marriedUnderSpecialAct = "false";
     }
-    console.log(formData);
     data.dob = ConverDate(data.dob);
     data.drivingLicenceExpiryDateDate = ConverDate(
       data.drivingLicenceExpiryDateDate
@@ -571,7 +569,7 @@ const Personaldetail = () => {
               )}
             </div>
             {marriedUnderAct && defaultData?.maritalStatus !== "Bachelor" && (
-              <div className="space-y-2 mt-6 gap-2 flex  flex-col ">
+              <div className="space-y-2 mt-6 gap-2 flex  flex-col col-span-full">
                 <div div className="flex justify-start item-center  gap-2">
                   <Checkbox
                     className="mt-2"
