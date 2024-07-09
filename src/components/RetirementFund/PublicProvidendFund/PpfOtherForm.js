@@ -81,21 +81,21 @@ const PpfForm = () => {
 
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/ppf`, data, {
+      const response = await axios.post(`/api/public-provident-funds`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.PPF;
+      return response.data.data.PublicProvidentFund;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("PpfData");
-      toast.success("PPF details added successfully!");
+      toast.success("Public Provident Fund details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error submitting PPF details:", error);
-      toast.error("Failed to submit PPF details");
+      console.error("Error submitting Public Provident Fund details:", error);
+      toast.error("Failed to submit Public Provident Fund details");
     },
   });
 
@@ -111,7 +111,9 @@ const PpfForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Public Providend Fund</CardTitle>
+              <CardTitle className="text-2xl font-bold">
+                Public Providend Fund
+              </CardTitle>
               <CardDescription>
                 Fill out the form to add new Public Providend Fund details.
               </CardDescription>

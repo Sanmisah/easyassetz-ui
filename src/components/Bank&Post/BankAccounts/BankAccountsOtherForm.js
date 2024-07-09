@@ -26,28 +26,18 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
-import Datepicker from "../Beneficiarydetails/Datepicker";
 import Addnominee from "./addNominee";
 import cross from "@/components/image/close.png";
 
+
 const schema = z.object({
-  bankName: z.string().nonempty({ message: "Organization Name is required" }),
-  accountType: z.string().nonempty({ message: "Membership id is required" }),
-  accountNumber: z.string().optional(),
-  branchName: z.date().optional(),
-  city: z.string().optional(),
-  holdingType: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  pointOfContactName: z
+  organizationName: z
     .string()
-    .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
-    .string()
-    .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Point of Contact Email is required" }),
+    .nonempty({ message: "Organization Name is required" }),
+  membershipId: z.string().nonempty({ message: "Membership id is required" }),
+  membershipType: z.string().optional(),
+  membershipPaymentDate: z.date().optional(),
+  email: z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -107,15 +97,11 @@ const MembershipForm = () => {
     },
   });
 
-  useEffect(
-    () => {
-      if (selectedNommie.length > 0) {
-        setnomineeerror(false);
-      }
-    },
-    [selectedNommie],
-    [nomineeerror]
-  );
+  useEffect(() => {
+    if (selectedNommie.length > 0) {
+      setnomineeerror(false);
+    }
+  }, [selectedNommie], [nomineeerror]);
 
   const onSubmit = (data) => {
     data.name = name;
@@ -137,7 +123,7 @@ const MembershipForm = () => {
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
-
+   
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -255,77 +241,61 @@ const MembershipForm = () => {
                   </span>
                 )}
               </div>
+              </div>
+
+              {displaynominie && displaynominie.length > 0 && (
+                <div className="space-y-2">
+                  <div className="grid gap-4 py-4">
+                    {console.log(displaynominie)}
+                    <Label className="text-lg font-bold">
+                      Selected Nominees
+                    </Label>
+                    {displaynominie &&
+                      displaynominie.map((nominee) => (
+                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                          <Label htmlFor={`nominee-${nominee?.id}`}>
+                            {nominee?.fullLegalName || nominee?.charityName}
+                          </Label>
+                          <img
+                            className="w-4 h-4 cursor-pointer"
+                            onClick={() => {
+                              setDisplaynominie(
+                                displaynominie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                              setSelectedNommie(
+                                selectedNommie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                            }}
+                            src={cross}
+                            alt=""
+                          />
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
               <div className="space-y-2">
-                <Label htmlFor="membershipPaymentDate">
-                  Membership Payment Date
+                <Label
+                  htmlFor="registered-mobile"
+                  className="text-lg font-bold"
+                >
+                  Add nominee
                 </Label>
-                <Controller
-                  name="membershipPaymentDate"
-                  control={control}
-                  render={({ field }) => (
-                    <Datepicker
-                      {...field}
-                      onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                    />
-                  )}
+                <Addnominee
+                  setDisplaynominie={setDisplaynominie}
+                  setSelectedNommie={setSelectedNommie}
+                  displaynominie={displaynominie}
                 />
-                {errors.membershipPaymentDate && (
-                  <span className="text-red-500 mt-5">
-                    {errors.membershipPaymentDate.message}
+                {nomineeerror && (
+                  <span className="text-red-500">
+                    Please select atleast one nominee
                   </span>
                 )}
               </div>
-            </div>
-
-            {displaynominie && displaynominie.length > 0 && (
-              <div className="space-y-2">
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  <Label className="text-lg font-bold">Selected Nominees</Label>
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="registered-mobile" className="text-lg font-bold">
-                Add nominee
-              </Label>
-              <Addnominee
-                setDisplaynominie={setDisplaynominie}
-                setSelectedNommie={setSelectedNommie}
-                displaynominie={displaynominie}
-              />
-              {nomineeerror && (
-                <span className="text-red-500">
-                  Please select atleast one nominee
-                </span>
-              )}
-            </div>
             <div className="w-full grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">Point Of Contact</Label>

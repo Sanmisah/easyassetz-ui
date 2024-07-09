@@ -86,12 +86,12 @@ const PpfEditForm = () => {
   } = useQuery(
     ["ppfData", id],
     async () => {
-      const response = await axios.get(`/api/ppf/${id}`, {
+      const response = await axios.get(`/api/public-provident-funds/${id}`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.PPF;
+      return response.data.data.PublicProvidentFund;
     },
     {
       onSuccess: (data) => {
@@ -115,21 +115,26 @@ const PpfEditForm = () => {
 
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/ppf/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.PPF;
+      const response = await axios.put(
+        `/api/public-provident-funds/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.PublicProvidentFund;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("ppfData");
-      toast.success("PPF details updated successfully!");
+
+      queryClient.invalidateQueries("PublicProvidentFundData");
+      toast.success("Public Providend Fund details updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error updating PPF details:", error);
-      toast.error("Failed to update PPF details");
+      console.error("Error updating Public Providend Fund details:", error);
+      toast.error("Failed to update Public Providend Fund details");
     },
   });
 
@@ -152,7 +157,7 @@ const PpfEditForm = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading PPF data</div>;
+  if (isError) return <div>Error loading Public Providend Fund data</div>;
 
   return (
     <div className="w-full">
@@ -161,10 +166,10 @@ const PpfEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit PPF Details
+                Edit Public Providend Fund Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the PPF details.
+                Update the form to edit the Public Providend Fund details.
               </CardDescription>
             </div>
           </div>
@@ -194,14 +199,16 @@ const PpfEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ppfAccountNumber">PPF Account Number</Label>
+              <Label htmlFor="ppfAccountNumber">
+                Public Providend Fund Account Number
+              </Label>
               <Controller
                 name="ppfAccountNumber"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="ppfAccountNumber"
-                    placeholder="Enter PPF Account Number"
+                    placeholder="Enter Public Providend Fund Account Number"
                     {...field}
                     className={errors.ppfAccountNumber ? "border-red-500" : ""}
                   />

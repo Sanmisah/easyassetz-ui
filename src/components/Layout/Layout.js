@@ -82,7 +82,7 @@ import LitigationEdit from "@/components/Liabilities/Litigation/LitigationEdit";
 import PpfMainForm from "@/components/RetirementFund/PublicProvidendFund/PpfMainForm";
 import PpfOtherForm from "@/components/RetirementFund/PublicProvidendFund/PpfOtherForm";
 import PpfEditForm from "@/components/RetirementFund/PublicProvidendFund/PpfEdit";
-import ProvidentRecoverableMainFormFund from "@/components/RetirementFund/ProvidentFund/ProvidentFundMainForm";
+import ProvidentFund from "@/components/RetirementFund/ProvidentFund/ProvidentFundMainForm";
 import ProvidentFundOtherForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundOtherForm";
 import ProvidentFundEditForm from "@/components/RetirementFund/ProvidentFund/ProvidentFundEdit";
 import NPSMainForm from "@/components/RetirementFund/NPS/NpsMainForm";
@@ -102,9 +102,9 @@ import OtherLoanOtherForm from "@/components/Liabilities/OtherLoans/OtherLoanOth
 import OtherLoanEdit from "@/components/Liabilities/OtherLoans/OtherLoanMainForm";
 import RetirementFundMainForm from "@/components/RetirementFund/RetirementFundsMainForm";
 import BankContentForm from "@/components/Bank&Post/contents";
-import BankAccountMainForm from "@/components/Bank&Post/Bank Accounts/MainForm";
+import BankAccountMainForm from "@/components/Bank&Post/BankAccounts/BankAccountMainForm";
 import BankAccountOtherForm from "@/components/Bank&Post/BankAccounts/BankAccountsOtherForm";
-import BankEditForm from "@/components/Bank&Post/Bank Accounts/BankAccountEdit";
+import BankEditForm from "@/components/Bank&Post/BankAccounts/BankAccountsEdit";
 import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
 import RecoverableForm from "@/components/OtherAssets/Recoverable/RecoverableForm";
 import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEdit";
@@ -204,20 +204,28 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Liabilities
           </NavLink> */}
-          {/* <NavLink
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/retirementfund"
-          >
-            <UserIcon className="h-5 w-5" />
-            Retirement Fund
-          </NavLink> */}
-          <NavLink
+           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/bank"
           >
             <UserIcon className="h-5 w-5" />
             Bank & Post
           </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/retirementfund"
+          >
+            <UserIcon className="h-5 w-5" />
+            Retirement Fund
+          </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/immovableassets"
+          >
+            <UserIcon className="h-5 w-5" />
+            Immovable Assets
+          </NavLink>
+         
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>

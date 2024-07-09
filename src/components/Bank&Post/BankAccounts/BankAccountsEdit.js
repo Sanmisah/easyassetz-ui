@@ -27,7 +27,6 @@ import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
-import Datepicker from "../Beneficiarydetails/Datepicker";
 import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
 

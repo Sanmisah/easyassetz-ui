@@ -31,13 +31,13 @@ const ppfMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/ppf`, {
+    const response = await axios.get(`/api/public-provident-funds`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.ppf;
+    return response.data.data.PublicProvidentFund;
   };
 
   const {
@@ -58,7 +58,7 @@ const ppfMainForm = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(`/api/ppf/${lifeInsuranceDeleteId}`, {
+    const response = await axios.delete(`/api/public-provident-funds/${lifeInsuranceDeleteId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
@@ -90,8 +90,8 @@ const ppfMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.metalType}</h1>
-                  <p className="text-sm">{data.articleDetails}</p>
+                  <h1 className="font-bold">{data.bankName}</h1>
+                  <p className="text-sm">{data.ppfAccountNumber}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
