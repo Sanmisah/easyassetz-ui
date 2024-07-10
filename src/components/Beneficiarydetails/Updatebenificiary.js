@@ -235,7 +235,7 @@ const BeneficiaryForm = ({
       >
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Add Beneficiary</SheetTitle>
+            <SheetTitle>Edit Beneficiary</SheetTitle>
             <SheetDescription className="flex flex-col justify-center">
               <ScrollArea className="w-full h-[85vh] rounded-md">
                 <form onSubmit={handleSubmit(onSubmit)} className="scrollable">

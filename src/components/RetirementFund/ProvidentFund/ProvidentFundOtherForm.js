@@ -67,12 +67,12 @@ const EmployeeDetailsForm = () => {
 
   const employeeMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/employee`, data, {
+      const response = await axios.post(`/api/provident-funds`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Employee;
+      return response.data.data.ProvidentFund;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("employeeData");

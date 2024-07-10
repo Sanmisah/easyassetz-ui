@@ -31,13 +31,13 @@ const ppfMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/ppf`, {
+    const response = await axios.get(`/api/provident-funds`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.ppf;
+    return response.data.data.ProvidentFund;
   };
 
   const {
@@ -58,7 +58,7 @@ const ppfMainForm = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(`/api/ppf/${lifeInsuranceDeleteId}`, {
+    const response = await axios.delete(`/api/provident-funds/${lifeInsuranceDeleteId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
