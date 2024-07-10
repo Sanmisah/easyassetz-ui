@@ -36,56 +36,33 @@ import Datepicker from "./Datepicker";
 import { PhoneInput } from "react-international-phone";
 import { toast } from "sonner";
 
-const beneficiarySchema = z
-  .object({
-    fullLegalName: z.string().nonempty("Full Legal Name is required"),
-    relationship: z.string().nonempty("Relationship is required"),
-    specificRelationship: z.string().optional(),
-    gender: z.string().nonempty("Gender is required"),
-    dob: z.any().optional(),
-    guardianName: z.string().optional(),
-    guardianMobile: z.string().optional(),
-    guardianEmail: z.string().optional(),
-    guardianCity: z.string().optional(),
-    guardianState: z.string().optional(),
-    document: z.string().optional(),
-    documentData: z.string().optional(),
-    guardianReligion: z.string().optional(),
-    guardianNationality: z.string().optional(),
-    addressLine1: z.string().nonempty("Address Line 1 is required"),
-    addressLine2: z.string().nonempty("Address Line 2 is required"),
-    pincode: z.string().nonempty("Pincode is required"),
-    country: z.string().nonempty("Country is required"),
-    mobile: z.string().nonempty("Mobile is required"),
-    email: z.string().email("Invalid email").nonempty("Email is required"),
-    city: z.string().nonempty("City is required"),
-    state: z.string().nonempty("State is required"),
-    houseNo: z.string().nonempty("House No is required"),
-    religion: z.string().nonempty("Religion is required"),
-    nationality: z.string().nonempty("Nationality is required"),
-  })
-  .refine(
-    (data) => {
-      if (data.dob) {
-        const age = Math.abs(
-          new Date(Date.now() - new Date(data.dob).getTime()).getUTCFullYear() -
-            1970
-        );
-        if (age < 18) {
-          return !!(
-            data.guardianName &&
-            data.guardianMobile &&
-            data.guardianEmail
-          );
-        }
-      }
-      return true;
-    },
-    {
-      message: "Guardian fields are required for minors.",
-      path: ["guardianName"], // this will highlight the guardianName field in case of error
-    }
-  );
+const beneficiarySchema = z.object({
+  fullLegalName: z.string().nonempty("Full Legal Name is required"),
+  relationship: z.string().nonempty("Relationship is required"),
+  specificRelationship: z.string().optional(),
+  gender: z.string().nonempty("Gender is required"),
+  dob: z.any().optional(),
+  guardianName: z.string().optional(),
+  guardianMobile: z.string().optional(),
+  guardianEmail: z.string().optional(),
+  guardianCity: z.string().optional(),
+  guardianState: z.string().optional(),
+  document: z.string().nonempty("Document is required"),
+  documentData: z.string().optional(),
+  guardianReligion: z.string().optional(),
+  guardianNationality: z.string().optional(),
+  addressLine1: z.string().nonempty("Address Line 1 is required"),
+  addressLine2: z.string().nonempty("Address Line 2 is required"),
+  pincode: z.string().nonempty("Pincode is required"),
+  country: z.string().nonempty("Country is required"),
+  mobile: z.string().nonempty("Mobile is required"),
+  email: z.string().email("Invalid email").nonempty("Email is required"),
+  city: z.string().nonempty("City is required"),
+  state: z.string().nonempty("State is required"),
+  houseNo: z.string().nonempty("House No is required"),
+  religion: z.string().nonempty("Religion is required"),
+  nationality: z.string().nonempty("Nationality is required"),
+});
 
 const BeneficiaryForm = ({
   updateBenificiaryOpen,
@@ -147,6 +124,7 @@ const BeneficiaryForm = ({
     if (calculateAge(beneficiaryData?.dob) < 18) {
       setIsMinor(true);
     }
+    // setSelectedDocument(data.documentData);
 
     if (
       ["child", "spouse", "self", "parent", "sibling"].includes(
@@ -599,11 +577,6 @@ const BeneficiaryForm = ({
                             defaultValue={defaultData?.documentData}
                             {...register("documentData")}
                           />
-                          {errors.documentData && (
-                            <p className="text-red-500">
-                              {errors.documentData.message}
-                            </p>
-                          )}
                         </div>
                       )}
                       <div className="space-y-2">

@@ -99,7 +99,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     handleSubmit,
     control,
     watch,
-    setValue,put
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(beneficiarySchema),
@@ -148,6 +148,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
+
       return response.data.data.profile;
     },
     onSuccess: () => {
@@ -476,9 +477,11 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Controller
                           name="document"
                           control={control}
+                          defaultValue={Benifyciary?.document}
                           render={({ field }) => (
                             <Select
                               value={field.value}
+                              defaultValue={Benifyciary?.document}
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
                                 field.onChange(value);
