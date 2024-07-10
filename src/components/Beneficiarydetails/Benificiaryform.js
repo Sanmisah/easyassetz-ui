@@ -393,7 +393,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               </Label>
                               <Input
                                 id="guardian-name"
-                                placeholder="Enter guardian's full legal name"
+                                placeholder="Enter Full Legal Name"
                                 {...register("guardianName")}
                               />
                               {errors.guardianName && (
@@ -413,7 +413,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                   <PhoneInput
                                     id="guardian-mobile"
                                     type="tel"
-                                    placeholder="Enter guardian's mobile number"
+                                    placeholder="Enter Mobile Number"
                                     defaultCountry="in"
                                     value={field.value}
                                     inputStyle={{ minWidth: "15.5rem" }}
@@ -432,7 +432,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Input
                                 id="guardian-email"
                                 type="email"
-                                placeholder="Enter guardian's email"
+                                placeholder="Enter Email"
                                 {...register("guardianEmail")}
                               />
                               {errors.guardianEmail && (
@@ -445,7 +445,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Label htmlFor="guardian-city">City</Label>
                               <Input
                                 id="guardian-city"
-                                placeholder="Enter guardian's city"
+                                placeholder="Enter City"
                                 {...register("guardianCity")}
                               />
                               {errors.guardianCity && (
@@ -458,7 +458,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Label htmlFor="guardian-state">State</Label>
                               <Input
                                 id="guardian-state"
-                                placeholder="Enter guardian's state"
+                                placeholder="Enter State"
                                 {...register("guardianState")}
                               />
                               {errors.guardianState && (
@@ -477,11 +477,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Controller
                           name="document"
                           control={control}
-                          defaultValue={Benifyciary?.document}
                           render={({ field }) => (
                             <Select
                               value={field.value}
-                              defaultValue={Benifyciary?.document}
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
                                 field.onChange(value);
@@ -521,7 +519,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </Label>
                           <Input
                             id="guardian-document-data"
-                            placeholder={`Enter guardian's ${selectedDocument} number`}
+                            placeholder={`Enter ${selectedDocument} number`}
                             {...register("documentData")}
                           />
                           {errors.documentData && (
@@ -535,7 +533,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-religion">Religion</Label>
                         <Input
                           id="guardian-religion"
-                          placeholder="Enter guardian's religion"
+                          placeholder="Enter Religion"
                           {...register("religion")}
                         />
                         {errors.guardianReligion && (
@@ -550,7 +548,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </Label>
                         <Input
                           id="guardian-nationality"
-                          placeholder="Enter guardian's nationality"
+                          placeholder="Enter Nationality"
                           {...register("nationality")}
                         />
                         {errors.guardianNationality && (
@@ -565,7 +563,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </Label>
                         <Input
                           id="guardian-house-no"
-                          placeholder="Enter house/flat number"
+                          placeholder="Enter House/Flat Number"
                           {...register("houseNo")}
                         />
                         {errors.houseNo && (
@@ -580,7 +578,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </Label>
                         <Input
                           id="guardian-address1"
-                          placeholder="Enter address line 1"
+                          placeholder="Enter Address line 1"
                           {...register("addressLine1")}
                         />
                         {errors.addressLine1 && (
@@ -595,7 +593,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </Label>
                         <Input
                           id="guardian-address2"
-                          placeholder="Enter address line 2"
+                          placeholder="Enter Address line 2"
                           {...register("addressLine2")}
                         />
                         {errors.addressLine2 && (
@@ -608,7 +606,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-pincode">Pincode</Label>
                         <Input
                           id="guardian-pincode"
-                          placeholder="Enter pincode"
+                          placeholder="Enter Pincode"
                           {...register("pincode")}
                         />
                         {errors.pincode && (
@@ -621,7 +619,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-country">Country</Label>
                         <Input
                           id="guardian-country"
-                          placeholder="Enter country"
+                          placeholder="Enter Country"
                           {...register("country")}
                         />
                         {errors.country && (
@@ -635,7 +633,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-city">City</Label>
                         <Input
                           id="guardian-city"
-                          placeholder="Enter guardian's city"
+                          placeholder="Enter City"
                           {...register("city", { required: true })}
                         />
                         {errors.city && (
@@ -646,7 +644,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-state">State</Label>
                         <Input
                           id="guardian-state"
-                          placeholder="Enter guardian's state"
+                          placeholder="Enter State"
                           {...register("state", { required: true })}
                         />
                         {errors.state && (

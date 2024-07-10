@@ -1411,7 +1411,7 @@ const Personaldetail = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="drivingFile">
-                      Upload Your Driving File
+                      Upload Your Driving Licence File
                     </Label>
                     <Controller
                       name="drivingFile"
@@ -1443,7 +1443,7 @@ const Personaldetail = () => {
                         onClick={handleFileUploadDriving}
                         className="color-green-500"
                       >
-                        View Uploaded Driving File
+                        View Uploaded Driving Licence File
                       </Button>
                     </div>
                   )}
