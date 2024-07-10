@@ -42,7 +42,7 @@ const beneficiarySchema = z
     relationship: z.string().nonempty("Relationship is required"),
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
-    dob: z.date().optional(),
+    dob: z.any().optional(),
     guardianName: z.string().optional(),
     guardianMobile: z.string().optional(),
     guardianEmail: z.string().optional(),
@@ -99,7 +99,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     handleSubmit,
     control,
     watch,
-    setValue,
+    setValue,put
     formState: { errors },
   } = useForm({
     resolver: zodResolver(beneficiarySchema),

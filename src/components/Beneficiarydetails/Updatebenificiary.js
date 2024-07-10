@@ -42,7 +42,7 @@ const beneficiarySchema = z
     relationship: z.string().nonempty("Relationship is required"),
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
-    dob: z.date().optional(),
+    dob: z.any().optional(),
     guardianName: z.string().optional(),
     guardianMobile: z.string().optional(),
     guardianEmail: z.string().optional(),
@@ -192,11 +192,15 @@ const BeneficiaryForm = ({
 
   const beneficiaryMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/beneficiaries`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.put(
+        `/api/beneficiaries/${benificiaryId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.profile;
     },
     onSuccess: () => {
@@ -229,11 +233,6 @@ const BeneficiaryForm = ({
       delete data.documentData;
       delete data.guardianReligion;
       delete data.guardianNationality;
-      delete data.houseNo;
-      delete data.addressLine1;
-      delete data.addressLine2;
-      delete data.pincode;
-      delete data.country;
     }
     try {
       beneficiaryMutate.mutate(data);
