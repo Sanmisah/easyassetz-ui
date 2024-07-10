@@ -33,35 +33,53 @@ import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z.object({
-  companyName: z
-    .string()
-    .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z.string().min(1, { message: "Policy Number is required" }),
-  maturityDate: z.date().optional(),
-  premium: z.string().min(3, { message: "Premium is required" }),
-  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
-  policyHolderName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
-  contactPerson: z.string().optional(),
-  contactNumber: z.string().optional(),
-  email: z
-    .string()
-    .email({ message: "Invalid email" })
-    .nonempty({ message: "Email is required" }),
-  registeredMobile: z.string().optional(),
-  registeredEmail: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  brokerName: z.string().optional(),
-});
+const schema = z
+  .object({
+    companyName: z
+      .string()
+      .nonempty({ message: "Insurance Company is required" }),
+    otherInsuranceCompany: z.string().optional(),
+    insuranceType: z
+      .string()
+      .nonempty({ message: "Insurance Sub Type is required" }),
+    policyNumber: z.string().min(1, { message: "Policy Number is required" }),
+    maturityDate: z.date().optional(),
+    premium: z.string().min(3, { message: "Premium is required" }),
+    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+    policyHolderName: z
+      .string()
+      .nonempty({ message: "Policy Holder Name is required" }),
+    modeOfPurchase: z
+      .string()
+      .nonempty({ message: "Mode of Purchase is required" }),
+    contactPerson: z.string().optional(),
+    contactNumber: z.string().optional(),
+    email: z.string().email({ message: "Invalid email address" }).optional(),
+    registeredMobile: z.string().optional(),
+    registeredEmail: z.string().optional(),
+    additionalDetails: z.string().optional(),
+    brokerName: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.modeOfPurchase === "broker") {
+        return (
+          !!data.brokerName &&
+          !!data.contactPerson &&
+          !!data.contactNumber &&
+          !!data.email
+        );
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        return !!data.registeredMobile && !!data.registeredEmail;
+      }
+      return true;
+    },
+    {
+      message: "Required fields are missing",
+      path: ["modeOfPurchase"],
+    }
+  );
 
 const EditFormGeneral = () => {
   const navigate = useNavigate();
@@ -141,45 +159,33 @@ const EditFormGeneral = () => {
       if (data.modeOfPurchase === "broker") {
         setBrokerSelected(true);
         setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
+      } else if (data.modeOfPurchase === "e-insurance") {
         setBrokerSelected(false);
         setHideRegisteredFields(true);
       }
+
+      // Ensure correct format of maturity date for Datepicker
+      if (data.maturityDate) {
+        data.maturityDate = new Date(data.maturityDate);
+      }
+
+      // Handling insurance company
+      const companyname = data.companyName;
+      if (["company1", "company2", "company3"].includes(companyname)) {
+        setShowOtherInsuranceCompany(false);
+      } else {
+        setShowOtherInsuranceCompany(true);
+        setValue("companyName", "other");
+        setValue("otherInsuranceCompany", companyname);
+      }
+
       setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("specificVehicalType", data.specificVehicalType);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("policyNumber", data.policyNumber);
-      setValue("maturityDate", data.maturityDate);
-      setValue("premium", data.premium);
-      setValue("sumInsured", data.sumInsured);
-      setValue("policyHolderName", data.policyHolderName);
-      setValue("modeOfPurchase", data.modeOfPurchase);
-      setValue("contactPerson", data.contactPerson);
-      setValue("contactNumber", data.contactNumber);
-      setValue("email", data.email);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("brokerName", data.brokerName);
-      setValue("contactPerson", data.contactPerson);
-      setValue("contactNumber", data.contactNumber);
 
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
-      }
-
-      setShowOtherInsuranceCompany(data.companyName === "other");
-
-      console.log("SucessFully fetched data", data);
+      console.log("Successfully fetched data:", data);
     },
+
     onError: (error) => {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile", error.message);
@@ -225,38 +231,37 @@ const EditFormGeneral = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
-    if (
-      data.companyName === "other" ||
-      data.companyName !== "company1" ||
-      data.companyName !== "company2" ||
-      data.companyName !== "company3"
-    ) {
+    // Handling company name
+    if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }
+
+    // Handling mode of purchase specific fields
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
       data.registeredEmail = null;
-    }
-    if (data.modeOfPurchase === "e-insurance") {
+    } else if (data.modeOfPurchase === "e-insurance") {
       data.brokerName = null;
       data.contactPerson = null;
       data.contactNumber = null;
       data.email = null;
     }
-    console.log("I am in here", data);
-    console.log("brokerName:", data.brokerName);
 
-    const date = new Date(data.maturityDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
+    // Formatting maturity date
+    if (data.maturityDate) {
+      const date = new Date(data.maturityDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      data.maturityDate = `${month}/${day}/${year}`;
+    }
 
+    // Adding nominees
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
 
+    console.log("Prepared data for submission:", data);
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -391,17 +396,16 @@ const EditFormGeneral = () => {
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
                   name="maturityDate"
-                  defaultValues={new Date(Benifyciary?.maturityDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
+                      selected={field.value ? new Date(field.value) : null}
                       onChange={(date) => field.onChange(date)}
-                      value={field.value}
-                      defaultValues={new Date(Benifyciary?.maturityDate) || ""}
                     />
                   )}
                 />
+
                 {errors.maturityDate && (
                   <span className="text-red-500">
                     {errors.maturityDate.message}
@@ -589,6 +593,15 @@ const EditFormGeneral = () => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                       setBrokerSelected(value === "broker");
+                      if (value === "e-insurance") {
+                        setValue("brokerName", "");
+                        setValue("contactPerson", "");
+                        setValue("contactNumber", "");
+                        setValue("email", "");
+                      } else if (value === "broker") {
+                        setValue("registeredMobile", "");
+                        setValue("registeredEmail", "");
+                      }
                     }}
                   >
                     <div className="flex items-center gap-2">

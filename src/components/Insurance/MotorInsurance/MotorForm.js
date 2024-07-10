@@ -31,38 +31,57 @@ import Addnominee from "./addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z.object({
-  companyName: z
-    .string()
-    .nonempty({ message: "Insurance Company is required" }),
-  othercompanyName: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z.string().min(2, { message: "Policy Number is required" }),
-
-  expiryDate: z.date().optional(),
-  premium: z.string().min(3, { message: "Premium is required" }),
-
-  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
-  insurerName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
-  specificVehicalType: z.string().optional(),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
-  contactPerson: z.string().optional(),
-  contactNumber: z.string().optional(),
-  email: z.string().optional(),
-  registeredMobile: z.string().optional(),
-  registeredEmail: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  previousPolicyNumber: z.string().optional(),
-  brokerName: z.string().optional(),
-  image: z.any().optional(),
-});
+const schema = z
+  .object({
+    companyName: z
+      .string()
+      .nonempty({ message: "Insurance Company is required" }),
+    othercompanyName: z.string().optional(),
+    insuranceType: z
+      .string()
+      .nonempty({ message: "Insurance Sub Type is required" }),
+    policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+    expiryDate: z.date().optional(),
+    premium: z.string().min(3, { message: "Premium is required" }),
+    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+    insurerName: z
+      .string()
+      .nonempty({ message: "Policy Holder Name is required" }),
+    vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
+    specificVehicalType: z.string().optional(),
+    modeOfPurchase: z
+      .string()
+      .nonempty({ message: "Mode of Purchase is required" }),
+    contactPerson: z.string().optional(),
+    contactNumber: z.string().optional(),
+    email: z.string().email({ message: "Invalid email address" }).optional(),
+    registeredMobile: z.string().optional(),
+    registeredEmail: z.string().optional(),
+    additionalDetails: z.string().optional(),
+    previousPolicyNumber: z.string().optional(),
+    brokerName: z.string().optional(),
+    image: z.any().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.modeOfPurchase === "broker") {
+        return (
+          !!data.brokerName &&
+          !!data.contactPerson &&
+          !!data.contactNumber &&
+          !!data.email
+        );
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        return !!data.registeredMobile && !!data.registeredEmail;
+      }
+      return true;
+    },
+    {
+      message: "Required fields are missing",
+      path: ["modeOfPurchase"],
+    }
+  );
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -157,29 +176,26 @@ const MotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    console.log(data);
     const date = new Date(data.expiryDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
     data.expiryDate = newdate;
-    console.log("Nomiee:", selectedNommie.length > 0);
+    if (data.vehicleType === "other") {
+      data.vehicleType = data.specificVehicalType;
+    }
     if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
-
       setnomineeerror(true);
       return;
     }
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.specificVehicalType;
-    }
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
+
   useEffect(() => {
     console.log("displaynominie:", displaynominie);
   }, [displaynominie]);
@@ -530,6 +546,15 @@ const MotorForm = () => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                       setBrokerSelected(value === "broker");
+                      if (value === "e-insurance") {
+                        setValue("brokerName", "");
+                        setValue("contactPerson", "");
+                        setValue("contactNumber", "");
+                        setValue("email", "");
+                      } else if (value === "broker") {
+                        setValue("registeredMobile", "");
+                        setValue("registeredEmail", "");
+                      }
                     }}
                     className="flex items-center gap-2"
                   >

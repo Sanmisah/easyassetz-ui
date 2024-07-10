@@ -74,7 +74,17 @@ const Personaldetail = () => {
     if (response.data.data.profile?.dob) {
       setdefaultDate(new Date(response.data.data.profile.dob));
     }
+    if (response.data.data.profile?.drivingLicenceExpiryDate) {
+      setValue(
+        "drivingLicenceExpiryDate",
 
+        new Date(profile.drivingLicenceExpiryDate)
+      );
+    }
+
+    if (response.data.data.profile?.passportExpiryDate) {
+      setValue("passportExpiryDate", new Date(profile.passportExpiryDate));
+    }
     if (response.data.data.profile?.drivingLicenceNumber) {
       setShowDLFields(true);
     }
@@ -194,12 +204,12 @@ const Personaldetail = () => {
       toast.error("Failed to submit profile");
     },
   });
-  const ConverDate = (date) => {
+  const convertDate = (date) => {
+    if (!date) return null;
     const d = new Date(date);
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
     const year = d.getFullYear();
-    console.log("Date Conversion:", `${month}/${day}/${year}`);
     return `${month}/${day}/${year}`;
   };
 
@@ -210,13 +220,15 @@ const Personaldetail = () => {
       data.marriedUnderSpecialAct = false;
     }
     if (data.dob !== null) {
-      data.dob = ConverDate(data.dob);
+      data.dob = convertDate(data.dob);
     }
     if (data.passportExpiryDate !== null) {
-      data.passportExpiryDate = ConverDate(data.passportExpiryDate);
+      data.passportExpiryDate = convertDate(data.passportExpiryDate);
     }
     if (data.drivingLicenceExpiryDate !== null) {
-      data.drivingLicenceExpiryDate = ConverDate(data.drivingLicenceExpiryDate);
+      data.drivingLicenceExpiryDate = convertDate(
+        data.drivingLicenceExpiryDate
+      );
     }
 
     console.log(data.dob);
@@ -230,7 +242,7 @@ const Personaldetail = () => {
     }
     if (marriedUnderAct && data.maritalStatus === "Bachelor") {
       data.maritalStatus = "Bachelor";
-      data.marriedUnderSpecialAct = "false";
+      data.marriedUnderSpecialAct = false;
     }
     delete data.specificNationality;
     data.marriedUnderSpecialAct = specialactundermarriange;
@@ -379,7 +391,7 @@ const Personaldetail = () => {
                 <Controller
                   name="nationality"
                   defaultValue={
-                    defaultData?.nationality !== "Inidan" ? "Foreign" : "Indian"
+                    defaultData?.nationality !== "Indian" ? "Foreign" : "Indian"
                   }
                   control={control}
                   rules={{
@@ -591,12 +603,14 @@ const Personaldetail = () => {
                     defaultChecked={defaultData?.marriedUnderSpecialAct}
                     {...register("marriedUnderSpecialAct")}
                   />
+
                   <Label
                     className="flex items-center gap-2 mt-2 mb-2"
                     htmlFor="married-under-act"
                   >
                     Married under Special Marriage Act
                   </Label>
+
                   <button
                     type="button"
                     className="text-blue-500 hover:text-blue-700 focus:text-blue-700 self-center  px-4 rounded-md"
@@ -605,6 +619,7 @@ const Personaldetail = () => {
                     {showMoreInfo ? "Read Less" : "Read More"}
                   </button>
                 </div>
+
                 {showMoreInfo && (
                   <div className="min-w-[60vw] max-md:min-w-[90%] mt-2 bg-gray-100 p-4 rounded-md">
                     <p>

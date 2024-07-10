@@ -32,40 +32,53 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
-
-const schema = z.object({
-  companyName: z
-    .string()
-    .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  maturityDate: z.date().optional(),
-  premium: z.string().min(3, { message: "Premium is required" }),
-  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
-  policyHolderName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
-  contactPerson: z.string().optional(),
-  contactNumber: z.string().optional(),
-  email: z.string().optional(),
-  registeredMobile: z.string().optional(),
-  registeredEmail: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  brokerName: z.string().optional(),
-});
+const schema = z
+  .object({
+    companyName: z
+      .string()
+      .nonempty({ message: "Insurance Company is required" }),
+    otherInsuranceCompany: z.string().optional(),
+    insuranceType: z
+      .string()
+      .nonempty({ message: "Insurance Sub Type is required" }),
+    policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+    maturityDate: z.date().optional(),
+    premium: z.string().min(3, { message: "Premium is required" }),
+    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+    policyHolderName: z
+      .string()
+      .nonempty({ message: "Policy Holder Name is required" }),
+    additionalDetails: z.string().optional(),
+    modeOfPurchase: z
+      .string()
+      .nonempty({ message: "Mode of Purchase is required" }),
+    contactPerson: z.string().optional(),
+    contactNumber: z.string().optional(),
+    email: z.string().email({ message: "Invalid email address" }).optional(),
+    registeredMobile: z.string().optional(),
+    registeredEmail: z.string().optional(),
+    brokerName: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.modeOfPurchase === "broker") {
+        return (
+          !!data.brokerName &&
+          !!data.contactPerson &&
+          !!data.contactNumber &&
+          !!data.email
+        );
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        return !!data.registeredMobile && !!data.registeredEmail;
+      }
+      return true;
+    },
+    {
+      message: "Required fields are missing",
+      path: ["modeOfPurchase"],
+    }
+  );
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -118,6 +131,25 @@ const EditFormHealth = () => {
         },
       }
     );
+    let data = response.data.data.HealthInsurance;
+    if (
+      data.companyName !== "company1" &&
+      data.companyName !== "company2" &&
+      data.companyName !== "company3"
+    ) {
+      setShowOtherInsuranceCompany(true);
+      setValue("companyName", "other");
+      setValue("otherInsuranceCompany", data.companyName);
+    }
+    if (
+      data.insuranceType !== "mediclaim" &&
+      data.insuranceType !== "criticalIllness" &&
+      data.insuranceType !== "familyHealthPlan"
+    ) {
+      setShowOtherInsuranceType(true);
+      setValue("insuranceType", "other");
+      setValue("specifyInsuranceType", data.insuranceType);
+    }
     if (response.data.data.HealthInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
@@ -148,15 +180,20 @@ const EditFormHealth = () => {
         setHideRegisteredFields(true);
       }
       setDefaultValues(data);
-      reset(data);
-      setValue(data);
+      reset({
+        ...data,
+        maturityDate: data.maturityDate ? new Date(data.maturityDate) : null,
+      });
       setValue("specificVehicalType", data.specificVehicalType);
       setValue("registeredMobile", data.registeredMobile);
       setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("policyNumber", data.policyNumber);
-      setValue("maturityDate", data.maturityDate);
+      setValue(
+        "maturityDate",
+        data.maturityDate ? new Date(data.maturityDate) : null
+      );
       setValue("premium", data.premium);
       setValue("sumInsured", data.sumInsured);
       setValue("policyHolderName", data.policyHolderName);
@@ -181,6 +218,7 @@ const EditFormHealth = () => {
 
       console.log(data);
     },
+
     onError: (error) => {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile", error.message);
@@ -236,14 +274,15 @@ const EditFormHealth = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    console.log(data);
-    const date = new Date(data.maturityDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
-    console.log("brokerName:", data.brokerName);
+    if (data.maturityDate !== null) {
+      const date = new Date(data.maturityDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.maturityDate = newdate;
+    }
+
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
@@ -254,6 +293,7 @@ const EditFormHealth = () => {
     if (data.insuranceType === "other") {
       data.insuranceType = data.specifyInsuranceType;
     }
+
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -412,17 +452,16 @@ const EditFormHealth = () => {
                 <Label htmlFor="maturity-date">Maturity Date</Label>
                 <Controller
                   name="maturityDate"
-                  defaultValue={new Date(Benifyciary?.maturityDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
-                      onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
+                      onChange={(date) => field.onChange(date)}
                     />
                   )}
                 />
+
                 {errors.maturityDate && (
                   <span className="text-red-500">
                     {errors.maturityDate.message}
@@ -559,51 +598,19 @@ const EditFormHealth = () => {
               </div>
             </div>
 
-            {displaynominie && displaynominie.length > 0 && (
-              <div className="space-y-2">
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
             <div>
               <div className="space-y-2">
                 <Label>additional details</Label>
                 <Controller
-                  name="registeredMobile"
+                  name="additionalDetails"
                   control={control}
-                  defaultValue={Benifyciary?.registeredMobile || ""}
+                  defaultValue={Benifyciary?.additionalDetails || ""}
                   render={({ field }) => (
                     <Input
-                      id="registered-mobile"
+                      id="additionalDetails"
                       placeholder="Enter registered mobile"
                       {...field}
-                      defaultValue={Benifyciary?.registeredMobile || ""}
+                      defaultValue={Benifyciary?.additionalDetails || ""}
                     />
                   )}
                 />
@@ -668,6 +675,15 @@ const EditFormHealth = () => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                       setBrokerSelected(value === "broker");
+                      if (value === "e-insurance") {
+                        setValue("brokerName", "");
+                        setValue("contactPerson", "");
+                        setValue("contactNumber", "");
+                        setValue("email", "");
+                      } else if (value === "broker") {
+                        setValue("registeredMobile", "");
+                        setValue("registeredEmail", "");
+                      }
                     }}
                   >
                     <div className="flex items-center gap-2">

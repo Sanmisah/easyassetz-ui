@@ -33,63 +33,84 @@ import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z.object({
-  companyName: z
-    .string()
-    .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  maturityDate: z.date().optional(),
-  premium: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  policyHolderName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  relationship: z.string().nonempty({ message: "Relationship is required" }),
-  otherRelationship: z.string().optional(),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
-  contactPerson: z.string().nonempty({ message: "Contact Person is required" }),
-  contactNumber: z.string().min(7, { message: "Contact Number is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  registeredMobile: z.string().optional(),
-  registeredEmail: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  brokerName: z.string().nonempty({ message: "Broker Name is required" }),
-  previousPolicyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-});
+const schema = z
+  .object({
+    companyName: z
+      .string()
+      .nonempty({ message: "Insurance Company is required" }),
+    otherInsuranceCompany: z.string().optional(),
+    insuranceType: z
+      .string()
+      .nonempty({ message: "Insurance Sub Type is required" }),
+    policyNumber: z
+      .string()
+      .transform((value) => (value === "" ? null : value))
+      .nullable()
+      .refine((value) => value === null || !isNaN(Number(value)), {
+        message: "Policy Number must be a number",
+      })
+      .transform((value) => (value === null ? null : Number(value))),
+    maturityDate: z.date().optional(),
+    premium: z
+      .string()
+      .transform((value) => (value === "" ? null : value))
+      .nullable()
+      .refine((value) => value === null || !isNaN(Number(value)), {
+        message: "Premium must be a number",
+      })
+      .transform((value) => (value === null ? null : Number(value))),
+    sumInsured: z
+      .string()
+      .transform((value) => (value === "" ? null : value))
+      .nullable()
+      .refine((value) => value === null || !isNaN(Number(value)), {
+        message: "Sum Insured must be a number",
+      })
+      .transform((value) => (value === null ? null : Number(value))),
+    policyHolderName: z
+      .string()
+      .nonempty({ message: "Policy Holder Name is required" }),
+    relationship: z.string().nonempty({ message: "Relationship is required" }),
+    otherRelationship: z.string().optional(),
+    modeOfPurchase: z
+      .string()
+      .nonempty({ message: "Mode of Purchase is required" }),
+    contactPerson: z.string().optional(),
+    contactNumber: z.string().optional(),
+    email: z.string().email({ message: "Invalid email address" }).optional(),
+    registeredMobile: z.string().optional(),
+    registeredEmail: z.string().optional(),
+    additionalDetails: z.string().optional(),
+    brokerName: z.string().optional(),
+    previousPolicyNumber: z
+      .string()
+      .transform((value) => (value === "" ? null : value))
+      .nullable()
+      .refine((value) => value === null || !isNaN(Number(value)), {
+        message: "Previous Policy Number must be a number",
+      })
+      .transform((value) => (value === null ? null : Number(value))),
+  })
+  .refine(
+    (data) => {
+      if (data.modeOfPurchase === "broker") {
+        return (
+          !!data.brokerName &&
+          !!data.contactPerson &&
+          !!data.contactNumber &&
+          !!data.email
+        );
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        return !!data.registeredMobile && !!data.registeredEmail;
+      }
+      return true;
+    },
+    {
+      message: "Required fields are missing",
+      path: ["modeOfPurchase"],
+    }
+  );
 
 const EditMotorForm = () => {
   const navigate = useNavigate();
@@ -287,14 +308,12 @@ const EditMotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    console.log(data);
     const date = new Date(data.maturityDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
     data.maturityDate = newdate;
-    console.log("brokerName:", data.brokerName);
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -650,19 +669,27 @@ const EditMotorForm = () => {
               <Label>Mode of Purchase</Label>
               <Controller
                 name="modeOfPurchase"
-                defaultValue={Benifyciary?.modeOfPurchase || ""}
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
-                    defaultValue={Benifyciary?.modeOfPurchase || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
                       setBrokerSelected(value === "broker");
+                      if (value === "e-insurance") {
+                        setValue("brokerName", "");
+                        setValue("contactPerson", "");
+                        setValue("contactNumber", "");
+                        setValue("email", "");
+                      } else if (value === "broker") {
+                        setValue("registeredMobile", "");
+                        setValue("registeredEmail", "");
+                      }
                     }}
+                    className="flex items-center gap-2"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-center">
                       <RadioGroupItem id="broker" value="broker" />
                       <Label htmlFor="broker">Broker</Label>
                     </div>
