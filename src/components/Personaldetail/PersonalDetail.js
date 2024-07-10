@@ -1375,10 +1375,10 @@ const Personaldetail = () => {
                         <Datepicker
                           value={field.value}
                           onChange={(date) => field.onChange(date)}
-                          defaultValue={
-                            new Date(defaultData?.drivingLicenceExpiryDate) ||
-                            ""
-                          }
+                          // defaultValue={
+                          //   new Date(defaultData?.drivingLicenceExpiryDate) ||
+                          //   ""
+                          // }
                         />
                       )}
                     />
