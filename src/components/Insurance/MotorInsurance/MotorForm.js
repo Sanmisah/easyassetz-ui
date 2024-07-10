@@ -43,7 +43,7 @@ const schema = z
     policyNumber: z.string().min(2, { message: "Policy Number is required" }),
     expiryDate: z.date().optional(),
     premium: z.string().min(3, { message: "Premium is required" }),
-    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+    // sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
     insurerName: z
       .string()
       .nonempty({ message: "Policy Holder Name is required" }),
@@ -115,7 +115,7 @@ const MotorForm = () => {
       policyNumber: "",
       expiryDate: "",
       premium: "",
-      sumInsured: "",
+      // sumInsured: "",
       insurerName: "",
       vehicleType: "",
       otherRelationship: "",
@@ -361,7 +361,7 @@ const MotorForm = () => {
                   <span className="text-red-500">{errors.premium.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="sum-insured">Sum Insured</Label>
                 <Controller
                   name="sumInsured"
@@ -402,7 +402,7 @@ const MotorForm = () => {
                     {errors.insurerName.message}
                   </span>
                 )}
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="vehicleType">Vehical Type</Label>
                 <Controller

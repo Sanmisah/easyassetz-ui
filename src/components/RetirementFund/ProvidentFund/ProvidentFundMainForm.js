@@ -64,7 +64,7 @@ const ppfMainForm = () => {
       },
     });
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Provident Fund deleted successfully!");
   };
 
   return (

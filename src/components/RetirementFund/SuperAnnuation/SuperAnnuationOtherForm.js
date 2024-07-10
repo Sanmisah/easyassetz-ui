@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -8,8 +8,16 @@ import {
   CardFooter,
 } from "@com/ui/card";
 import { Label } from "@com/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
+import { Textarea } from "@com/ui/textarea";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -18,39 +26,47 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import Addnominee from "./addNominee";
+import cross from "@/components/image/close.png";
+
 
 const schema = z.object({
-  companyName: z.string().nonempty({ message: "Company Name is required" }),
-  masterPolicyNumber: z
+  companyName: z
     .string()
-    .nonempty({ message: "Master Policy Number is required" }),
-  empNo: z.string().nonempty({ message: "Emp No/LIC ID No is required" }),
-  address: z.string().optional(),
-  annuityAmount: z.string().optional(),
+    .nonempty({ message: "Company Name is required" }),
+    masterPolicyNumber: z.string().nonempty({ message: "Employee id is required" }),
+    empNo: z.string().optional(),
+    address: z.string().optional(),
+    annuityAmount: z.string().optional(),
   additionalDetails: z.string().optional(),
-  pointOfContactName: z
-    .string()
-    .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
-    .string()
-    .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Point of Contact Email is required" }),
+  // image: z.string().optional(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
 });
+
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
 const SuperAnnuationOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [nomineeDetails, setNomineeDetails] = useState([]);
-  const [nomineeError, setNomineeError] = useState(false);
-
+  const [showOtherMembershipType, setShowOtherMembershipType] = useState(false);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [nomineeerror, setnomineeerror] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const {
     handleSubmit,
     control,
+    register,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -61,44 +77,62 @@ const SuperAnnuationOtherForm = () => {
       address: "",
       annuityAmount: "",
       additionalDetails: "",
-      pointOfContactName: "",
-      pointOfContactMobile: "",
-      pointOfContactEmail: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
-  const companyMutate = useMutation({
+  const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/company`, data, {
+      const response = await axios.post(`/api/super-annuations`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Company;
+
+      return response.data.data.SuperAnnuation;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("companyData");
-      toast.success("Company details added successfully!");
+      queryClient.invalidateQueries("LifeInsuranceData");
+      toast.success("Super Annuation Details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error submitting company details:", error);
-      toast.error("Failed to submit company details");
+      console.error("Error submitting Super Annuation Details:", error);
+      toast.error("Failed to submit Super Annuation Details");
     },
   });
 
+  useEffect(() => {
+    if (selectedNommie.length > 0) {
+      setnomineeerror(false);
+    }
+  }, [selectedNommie], [nomineeerror]);
+
   const onSubmit = (data) => {
-    if (nomineeDetails.length === 0) {
-      setNomineeError(true);
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = phone;
+    // const date = new Date(data.membershipPaymentDate);
+    // const month = String(date.getMonth() + 1).padStart(2, "0");
+    // const day = String(date.getDate()).padStart(2, "0");
+    // const year = date.getFullYear();
+    // const newdate = `${month}/${day}/${year}`;
+    // data.membershipPaymentDate = newdate;
+    console.log("Nomiee:", selectedNommie.length < 1);
+    if (selectedNommie.length < 1) {
+      console.log("Nomiee:", selectedNommie.length < 1);
+
+      setnomineeerror(true);
       return;
     }
-
-    companyMutate.mutate(data);
-  };
-
-  const addNominee = () => {
-    const newNominee = { name: "", relation: "" }; // Replace with actual nominee fields
-    setNomineeDetails([...nomineeDetails, newNominee]);
+    if (selectedNommie.length > 1) {
+      setnomineeerror(false);
+    }
+   
+    data.nominees = selectedNommie;
+    lifeInsuranceMutate.mutate(data);
   };
 
   return (
@@ -110,9 +144,6 @@ const SuperAnnuationOtherForm = () => {
               <CardTitle className="text-2xl font-bold">
                 Super Annuation Details
               </CardTitle>
-              <CardDescription>
-                Fill out the form to add new Super Annuation details.
-              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -121,27 +152,32 @@ const SuperAnnuationOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Controller
-                name="companyName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="companyName"
-                    placeholder="Enter Company Name"
-                    {...field}
-                    className={errors.companyName ? "border-red-500" : ""}
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="companyName">Company Name</Label>
+                <Controller
+                  name="companyName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="companyName"
+                      placeholder="Enter Company Name"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={
+                        errors.companyName ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.companyName && (
+                  <span className="text-red-500">
+                    {errors.companyName.message}
+                  </span>
                 )}
-              />
-              {errors.companyName && (
-                <span className="text-red-500">
-                  {errors.companyName.message}
-                </span>
-              )}
+              </div>
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
               <Controller
@@ -152,9 +188,9 @@ const SuperAnnuationOtherForm = () => {
                     id="masterPolicyNumber"
                     placeholder="Enter Master Policy Number"
                     {...field}
-                    className={
-                      errors.masterPolicyNumber ? "border-red-500" : ""
-                    }
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.masterPolicyNumber ? "border-red-500" : ""}
                   />
                 )}
               />
@@ -164,26 +200,28 @@ const SuperAnnuationOtherForm = () => {
                 </span>
               )}
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="empNo">Emp No/LIC ID No</Label>
+              <Label htmlFor="empNo">LIC Id/Emp Number</Label>
               <Controller
                 name="empNo"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="empNo"
-                    placeholder="Enter Emp No/LIC ID No"
+                    placeholder="Enter LIC Id/Emp Number"
                     {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     className={errors.empNo ? "border-red-500" : ""}
                   />
                 )}
               />
               {errors.empNo && (
-                <span className="text-red-500">{errors.empNo.message}</span>
+                <span className="text-red-500">
+                  {errors.empNo.message}
+                </span>
               )}
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
               <Controller
@@ -194,15 +232,18 @@ const SuperAnnuationOtherForm = () => {
                     id="address"
                     placeholder="Enter Address"
                     {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     className={errors.address ? "border-red-500" : ""}
                   />
                 )}
               />
               {errors.address && (
-                <span className="text-red-500">{errors.address.message}</span>
+                <span className="text-red-500">
+                  {errors.address.message}
+                </span>
               )}
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="annuityAmount">Annuity Amount</Label>
               <Controller
@@ -213,6 +254,8 @@ const SuperAnnuationOtherForm = () => {
                     id="annuityAmount"
                     placeholder="Enter Annuity Amount"
                     {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     className={errors.annuityAmount ? "border-red-500" : ""}
                   />
                 )}
@@ -223,160 +266,161 @@ const SuperAnnuationOtherForm = () => {
                 </span>
               )}
             </div>
-
+             
             <div className="space-y-2">
-              <Label htmlFor="additionalDetails">Additional Details</Label>
+              <Label htmlFor="additionalInformation">Additional Information</Label>
               <Controller
-                name="additionalDetails"
+                name="additionalInformation"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="additionalDetails"
-                    placeholder="Enter Additional Details"
+                    id="additionalInformation"
+                    placeholder="Enter Additional Information"
                     {...field}
-                    className={errors.additionalDetails ? "border-red-500" : ""}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.additionalInformation ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.additionalDetails && (
+              {errors.additionalInformation && (
                 <span className="text-red-500">
-                  {errors.additionalDetails.message}
+                  {errors.additionalInformation.message}
                 </span>
               )}
             </div>
+             
 
-            <div className="space-y-2">
-              <Label htmlFor="nomineeDetails">Nominee Details</Label>
-              <Button type="button" onClick={addNominee}>
-                Add (+) Nominee
-              </Button>
-              {nomineeError && (
-                <span className="text-red-500">
-                  Please add nominee details.
-                </span>
-              )}
-              {nomineeDetails.map((nominee, index) => (
-                <div key={index} className="mt-2">
-                  <Input
-                    placeholder="Nominee Name"
-                    value={nominee.name}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].name = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                  />
-                  <Input
-                    placeholder="Nominee Relation"
-                    value={nominee.relation}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].relation = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                    className="mt-2"
-                  />
+              {displaynominie && displaynominie.length > 0 && (
+                <div className="space-y-2">
+                  <div className="grid gap-4 py-4">
+                    {console.log(displaynominie)}
+                    <Label className="text-lg font-bold">
+                      Selected Nominees
+                    </Label>
+                    {displaynominie &&
+                      displaynominie.map((nominee) => (
+                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                          <Label htmlFor={`nominee-${nominee?.id}`}>
+                            {nominee?.fullLegalName || nominee?.charityName}
+                          </Label>
+                          <img
+                            className="w-4 h-4 cursor-pointer"
+                            onClick={() => {
+                              setDisplaynominie(
+                                displaynominie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                              setSelectedNommie(
+                                selectedNommie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                            }}
+                            src={cross}
+                            alt=""
+                          />
+                        </div>
+                      ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
               )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
-              <Controller
-                name="pointOfContactName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="pointOfContactName"
-                    placeholder="Enter Point of Contact Name"
-                    {...field}
-                    className={
-                      errors.pointOfContactName ? "border-red-500" : ""
-                    }
-                  />
+              <div className="space-y-2">
+                <Label
+                  htmlFor="registered-mobile"
+                  className="text-lg font-bold"
+                >
+                  Add nominee
+                </Label>
+                <Addnominee
+                  setDisplaynominie={setDisplaynominie}
+                  setSelectedNommie={setSelectedNommie}
+                  displaynominie={displaynominie}
+                />
+                {nomineeerror && (
+                  <span className="text-red-500">
+                    Please select atleast one nominee
+                  </span>
                 )}
-              />
-              {errors.pointOfContactName && (
-                <span className="text-red-500">
-                  {errors.pointOfContactName.message}
-                </span>
-              )}
+              </div>
+            <div className="w-full grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="additionalInformation">Point Of Contact</Label>
+                <div className="mt-2  flex item-center  gap-2 justify-between">
+                  <div className="w-[40%] space-y-2 item-center">
+                    <Label htmlFor="name">Name</Label>
+                    <Controller
+                      name="name"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="name"
+                          placeholder="Enter Name"
+                          {...field}
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className={errors.name ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.name && (
+                      <span className="text-red-500">
+                        {errors.name.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="w-[40%] space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="email"
+                          placeholder="Enter Email"
+                          {...field}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className={errors.email ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.email && (
+                      <span className="text-red-500">
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="w-[40%] space-y-2">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Controller
+                      name="mobile"
+                      control={control}
+                      render={({ field }) => (
+                        <PhoneInput
+                          id="mobile"
+                          type="tel"
+                          placeholder="Enter mobile number"
+                          defaultCountry="in"
+                          inputStyle={{ minWidth: "15.5rem" }}
+                          value={field.value}
+                          onChange={(value) => {
+                            console.log(value);
+                            setPhone(value);
+                          }}
+                        />
+                      )}
+                    />
+                    {errors.phone && (
+                      <span className="text-red-500">
+                        {errors.phone.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactMobile">
-                Point of Contact Mobile
-              </Label>
-              <Controller
-                name="pointOfContactMobile"
-                control={control}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="pointOfContactMobile"
-                    type="tel"
-                    placeholder="Enter Point of Contact Mobile"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
-                    className={
-                      errors.pointOfContactMobile ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactMobile && (
-                <span className="text-red-500">
-                  {errors.pointOfContactMobile.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactEmail">
-                Point of Contact Email
-              </Label>
-              <Controller
-                name="pointOfContactEmail"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="pointOfContactEmail"
-                    placeholder="Enter Point of Contact Email"
-                    {...field}
-                    className={
-                      errors.pointOfContactEmail ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactEmail && (
-                <span className="text-red-500">
-                  {errors.pointOfContactEmail.message}
-                </span>
-              )}
-            </div>
-
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

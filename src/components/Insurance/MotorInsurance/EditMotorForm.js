@@ -45,7 +45,7 @@ const schema = z
     policyNumber: z.string().min(2, { message: "Policy Number is required" }),
     expiryDate: z.date().optional(),
     premium: z.string().min(3, { message: "Premium is required" }),
-    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+    // sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
     insurerName: z
       .string()
       .nonempty({ message: "Policy Holder Name is required" }),
@@ -206,7 +206,7 @@ const EditMotorForm = () => {
       setValue("policyNumber", data.policyNumber);
       setValue("expiryDate", new Date(data.expiryDate));
       setValue("premium", data.premium);
-      setValue("sumInsured", data.sumInsured);
+      // setValue("sumInsured", data.sumInsured);
       setValue("insurerName", data.insurerName);
       setValue("modeOfPurchase", data.modeOfPurchase);
       setValue("contactPerson", data.contactPerson);
@@ -499,7 +499,7 @@ const EditMotorForm = () => {
                   <span className="text-red-500">{errors.premium.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="sum-insured">Sum Insured</Label>
                 <Controller
                   name="sumInsured"
@@ -520,7 +520,7 @@ const EditMotorForm = () => {
                     {errors.sumInsured.message}
                   </span>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">

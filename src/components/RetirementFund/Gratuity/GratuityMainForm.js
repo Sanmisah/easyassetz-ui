@@ -18,8 +18,9 @@ import {
 } from "@/Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
+import cross from "@/components/image/close.png";
 
-const ppfMainForm = () => {
+const GratuityMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -31,13 +32,13 @@ const ppfMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/ppf`, {
+    const response = await axios.get(`/api/gratuities/${lifeInsuranceDeleteId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.ppf;
+    return response.data.data.Gratuity;
   };
 
   const {
@@ -58,11 +59,14 @@ const ppfMainForm = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(`/api/ppf/${lifeInsuranceDeleteId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
+    const response = await axios.delete(
+      `/api/gratuities/${lifeInsuranceDeleteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
     queryClient.invalidateQueries("LifeInsuranceData");
     toast.success("Other Insurance deleted successfully!");
   };
@@ -72,7 +76,7 @@ const ppfMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Gratuity</h1>
-          <Button onMouseDown={() => navigate("/gratuity/add")}>
+        <Button onMouseDown={() => navigate("/gratuity/add")}>
             Add Gratuity
           </Button>
           {alertDialog && (
@@ -92,8 +96,8 @@ const ppfMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.metalType}</h1>
-                  <p className="text-sm">{data.articleDetails}</p>
+                  <h1 className="font-bold">{data.employerName}</h1>
+                  <p className="text-sm">{data.employerId}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -133,4 +137,4 @@ const ppfMainForm = () => {
   );
 };
 
-export default ppfMainForm;
+export default GratuityMainForm;

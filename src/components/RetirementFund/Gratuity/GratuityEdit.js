@@ -8,132 +8,211 @@ import {
   CardFooter,
 } from "@com/ui/card";
 import { Label } from "@com/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
+
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import Addnominee from "./EditNominee";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  companyName: z.string().nonempty({ message: "Company Name is required" }),
-  masterPolicyNumber: z
+  employerName: z
     .string()
-    .nonempty({ message: "Master Policy Number is required" }),
-  empNo: z.string().nonempty({ message: "Emp No/LIC ID No is required" }),
-  address: z.string().optional(),
-  annuityAmount: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  pointOfContactName: z
-    .string()
-    .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
-    .string()
-    .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Point of Contact Email is required" }),
+    .nonempty({ message: "Organization Name is required" }),
+    employerId: z.string().nonempty({ message: "Membership id is required" }),
+    additionalDetails: z.string().optional(),
+    name: z.string().optional(),
+    phone: z.string().optional(),
+    email: z.string().optional(),
 });
 
-const CompanyEditForm = () => {
+const GratuityEditForm = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const queryClient = useQueryClient();
+  const [showOtherMembershipType, setShowOtherMembershipType] = useState(false);
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  console.log(lifeInsuranceEditId);
+  useEffect(() => {
+    if (lifeInsuranceEditId) {
+      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
+    }
+  }, [lifeInsuranceEditId]);
+  const [showOtherMembership, setShowOtherMembership] = useState(false);
+  const [defaultValues, setDefaultValues] = useState(null);
+  const [selectedNommie, setSelectedNommie] = useState([]);
 
   const {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: {
-      companyName: "",
-      masterPolicyNumber: "",
-      empNo: "",
-      address: "",
-      annuityAmount: "",
-      additionalDetails: "",
-      pointOfContactName: "",
-      pointOfContactMobile: "",
-      pointOfContactEmail: "",
+    defaultValues: defaultValues || {},
+  });
+
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/gratuities/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    let othertype = response.data.data.Membership?.membershipType;
+    if (othertype === "annual" || othertype === "life") {
+      setShowOtherMembershipType(false);
+      setValue("membershipType", othertype);
+    } else {
+      setShowOtherMembershipType(true);
+      setValue("otherMembersipType", othertype);
+    }
+
+    console.log(typeof response.data.data.Membership?.premium);
+    return response.data.data.Membership;
+  };
+
+  const {
+    data: Benifyciary,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["membershipDataUpdate", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+
+    onSuccess: (data) => {
+      if (data.modeOfPurchase === "broker") {
+        setBrokerSelected(true);
+        setHideRegisteredFields(false);
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        setBrokerSelected(false);
+        setHideRegisteredFields(true);
+      }
+      setDefaultValues(data);
+      reset(data);
+      setValue(data);
+      setValue("organizationName", data.organizationName);
+      setValue("membershipId", data.membershipId);
+      setValue("membershiptype", data.metaltype);
+      setValue("membershipPaymentDate", data.membershipPaymentDate);
+      setValue("numberOfArticles", data.numberOfArticles);
+      setValue("additionalInformation", data.additionalInformation);
+      setValue("pointOfContact", data.pointOfContact);
+
+      // Set fetched values to the form
+      for (const key in data) {
+        setValue(key, data[key]);
+      }
+
+      setShowOtherMembership(data.Membership === "other");
+
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
     },
   });
 
-  const {
-    data: companyData,
-    isLoading,
-    isError,
-  } = useQuery(
-    ["companyData", id],
-    async () => {
-      const response = await axios.get(`/api/company/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.Company;
-    },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching company data:", error);
-        toast.error("Failed to fetch company data");
-      },
-    }
-  );
-
-  const companyMutate = useMutation({
+  const membershipMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/company/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.Company;
+      const response = await axios.put(
+        `/api/gratuities/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.Gratuity;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("companyData");
-      toast.success("Company details updated successfully!");
+      queryClient.invalidateQueries(
+        "MembershipDataUpdate",
+        lifeInsuranceEditId
+      );
+      toast.success("Gratuity added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error updating company details:", error);
-      toast.error("Failed to update company details");
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
     },
   });
+  useEffect(() => {
+    console.log("Form values:", control._formValues);
+  }, [control._formValues]);
+
+  useEffect(() => {
+    if (Benifyciary?.nominees) {
+      setDisplaynominie(Benifyciary?.nominees);
+    }
+  }, [Benifyciary?.nominees]);
 
   const onSubmit = (data) => {
-    companyMutate.mutate(data);
+    console.log(data);
+    data.name = name;
+    data.email = email;
+    data.mobile = mobile;
+    console.log("membership:", data.membership);
+    if (data.membershipType === "other") {
+      data.membersipType = data.otherMembershipType;
+    }
+    console.log(data);
+    // const date = new Date(data.membershipPaymentDate);
+    // const month = String(date.getMonth() + 1).padStart(2, "0");
+    // const day = String(date.getDate()).padStart(2, "0");
+    // const year = date.getFullYear();
+    // const newdate = `${month}/${day}/${year}`;
+    // data.membershipPaymentDate = newdate;
+    console.log("brokerName:", data.brokerName);
+    data.nominees = selectedNommie;
+
+    membershipMutate.mutate(data);
   };
 
+  useEffect(() => {
+    console.log(Benifyciary);
+  }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading company data</div>;
-
+  if (isError) return <div>Error loading Gratuity data</div>;
   return (
     <div className="w-full">
-      <Card className="w-full">
+      <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Company Details
+                Gratuity Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the company details.
+                Edit the form to update the Gratuity details.
               </CardDescription>
             </div>
           </div>
@@ -143,227 +222,189 @@ const CompanyEditForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Controller
-                name="companyName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="companyName"
-                    placeholder="Enter Company Name"
-                    {...field}
-                    className={errors.companyName ? "border-red-500" : ""}
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="employerName">Employer Name</Label>
+                <Controller
+                  name="employerName"
+                  defaultValue={Benifyciary?.employerName || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="employerName"
+                      placeholder="Employer Name"
+                      {...field}
+                      className={
+                        errors.employerName ? "border-red-500" : ""
+                      }
+                      defaultValue={Benifyciary?.employerName || ""}
+                    />
+                  )}
+                />
+                {errors.employerName && (
+                  <span className="text-red-500">
+                    {errors.employerName.message}
+                  </span>
                 )}
-              />
-              {errors.companyName && (
-                <span className="text-red-500">
-                  {errors.companyName.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
-              <Controller
-                name="masterPolicyNumber"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="masterPolicyNumber"
-                    placeholder="Enter Master Policy Number"
-                    {...field}
-                    className={
-                      errors.masterPolicyNumber ? "border-red-500" : ""
-                    }
-                  />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="employerId">Employee ID </Label>
+                <Controller
+                  name="employerId"
+                  defaultValue={Benifyciary?.employerId || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="employerId"
+                      placeholder="Employee Id"
+                      {...field}
+                      className={errors.employerId ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.employerId || ""}
+                    />
+                  )}
+                />
+                {errors.employerId && (
+                  <span className="text-red-500">
+                    {errors.employerId.message}
+                  </span>
                 )}
-              />
-              {errors.masterPolicyNumber && (
-                <span className="text-red-500">
-                  {errors.masterPolicyNumber.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="empNo">Emp No/LIC ID No</Label>
-              <Controller
-                name="empNo"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="empNo"
-                    placeholder="Enter Emp No/LIC ID No"
-                    {...field}
-                    className={errors.empNo ? "border-red-500" : ""}
-                  />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="additionalDetails">Additional Details</Label>
+                <Controller
+                  name="additionalDetails"
+                  defaultValue={Benifyciary?.additionalDetails || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="additionalDetails"
+                      placeholder="Enter Additional Details"
+                      {...field}
+                      className={errors.additionalDetails ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.additionalDetails || ""}
+                    />
+                  )}
+                />
+                {errors.additionalDetails && (
+                  <span className="text-red-500">
+                    {errors.additionalDetails.message}
+                  </span>
                 )}
-              />
-              {errors.empNo && (
-                <span className="text-red-500">{errors.empNo.message}</span>
-              )}
+              </div>
             </div>
-
+           
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
             <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Controller
-                name="address"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="address"
-                    placeholder="Enter Address"
-                    {...field}
-                    className={errors.address ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.address && (
-                <span className="text-red-500">{errors.address.message}</span>
-              )}
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              {console.log(Benifyciary?.nominees)}
+              <Addnominee
+                setSelectedNommie={setSelectedNommie}
+                AllNominees={Benifyciary?.nominees}
+                selectedNommie={selectedNommie}
+                displaynominie={displaynominie}
+                setDisplaynominie={setDisplaynominie}
+              />{" "}
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="annuityAmount">Annuity Amount</Label>
-              <Controller
-                name="annuityAmount"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="annuityAmount"
-                    placeholder="Enter Annuity Amount"
-                    {...field}
-                    className={errors.annuityAmount ? "border-red-500" : ""}
-                  />
+            <div className="w-full grid grid-cols-1 gap-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  defaultValue={Benifyciary?.name || ""}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      value={field.value}
+                      onChange={(e) => setName(e.target.value)}
+                      {...field}
+                      className={errors.name ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.name || ""}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <span className="text-red-500">{errors.name.message}</span>
                 )}
-              />
-              {errors.annuityAmount && (
-                <span className="text-red-500">
-                  {errors.annuityAmount.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="additionalDetails">Additional Details</Label>
-              <Controller
-                name="additionalDetails"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="additionalDetails"
-                    placeholder="Enter Additional Details"
-                    {...field}
-                    className={errors.additionalDetails ? "border-red-500" : ""}
-                  />
+              </div>
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue={Benifyciary?.email || ""}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      placeholder="Enter Email"
+                      {...field}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={errors.email ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.email || ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
                 )}
-              />
-              {errors.additionalDetails && (
-                <span className="text-red-500">
-                  {errors.additionalDetails.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
+              </div>
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="mobile">Phone</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  defaultValue={Benifyciary?.mobile || ""}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      value={field.value}
+                      onChange={(e) => setMobile(e.target)}
+                      defaultValue={Benifyciary?.mobile || ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
                 )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
-              <Controller
-                name="pointOfContactName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="pointOfContactName"
-                    placeholder="Enter Point of Contact Name"
-                    {...field}
-                    className={
-                      errors.pointOfContactName ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactName && (
-                <span className="text-red-500">
-                  {errors.pointOfContactName.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactMobile">
-                Point of Contact Mobile
-              </Label>
-              <Controller
-                name="pointOfContactMobile"
-                control={control}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="pointOfContactMobile"
-                    type="tel"
-                    placeholder="Enter Point of Contact Mobile"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
-                    className={
-                      errors.pointOfContactMobile ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactMobile && (
-                <span className="text-red-500">
-                  {errors.pointOfContactMobile.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactEmail">
-                Point of Contact Email
-              </Label>
-              <Controller
-                name="pointOfContactEmail"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="pointOfContactEmail"
-                    placeholder="Enter Point of Contact Email"
-                    {...field}
-                    className={
-                      errors.pointOfContactEmail ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactEmail && (
-                <span className="text-red-500">
-                  {errors.pointOfContactEmail.message}
-                </span>
-              )}
-            </div>
-
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
@@ -374,4 +415,4 @@ const CompanyEditForm = () => {
   );
 };
 
-export default CompanyEditForm;
+export default GratuityEditForm;

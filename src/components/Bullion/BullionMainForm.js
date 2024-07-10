@@ -67,7 +67,7 @@ const BullionMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Bullion deleted successfully!");
   };
 
   return (

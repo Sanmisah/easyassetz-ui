@@ -68,12 +68,12 @@ const PranEditForm = () => {
   } = useQuery(
     ["pranData", id],
     async () => {
-      const response = await axios.get(`/api/pran/${id}`, {
+      const response = await axios.get(`/api/nps/${id}`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Pran;
+      return response.data.data.NPS;
     },
     {
       onSuccess: (data) => {
@@ -92,12 +92,12 @@ const PranEditForm = () => {
 
   const pranMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/pran/${id}`, data, {
+      const response = await axios.put(`/api/nps/${id}`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Pran;
+      return response.data.data.NPS;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("pranData");

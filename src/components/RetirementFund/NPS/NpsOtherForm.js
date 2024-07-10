@@ -20,18 +20,18 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  pranNumber: z.string().nonempty({ message: "PRAN is required" }),
-  holdingNature: z
+  PRAN: z.string().nonempty({ message: "PRAN is required" }),
+  natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
   additionalDetails: z.string().optional(),
-  pointOfContactName: z
+  name: z
     .string()
     .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
+  mobile: z
     .string()
     .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
+  email: z
     .string()
     .email({ message: "Invalid Email" })
     .nonempty({ message: "Point of Contact Email is required" }),
@@ -52,23 +52,23 @@ const NPSOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      pranNumber: "",
-      holdingNature: "",
+      PRAN: "",
+      natureOfHolding: "",
       additionalDetails: "",
-      pointOfContactName: "",
-      pointOfContactMobile: "",
-      pointOfContactEmail: "",
+      name: "",
+      mobile: "",
+      email: "",
     },
   });
 
   const pranMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/pran`, data, {
+      const response = await axios.post(`/api/nps`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Pran;
+      return response.data.data.NPS;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("pranData");
@@ -114,45 +114,45 @@ const NPSOtherForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="pranNumber">
+              <Label htmlFor="PRAN">
                 Permanent Retirement Account Number (PRAN)
               </Label>
               <Controller
-                name="pranNumber"
+                name="PRAN"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pranNumber"
+                    id="PRAN"
                     placeholder="Enter PRAN"
                     {...field}
-                    className={errors.pranNumber ? "border-red-500" : ""}
+                    className={errors.PRAN ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.pranNumber && (
+              {errors.PRAN && (
                 <span className="text-red-500">
-                  {errors.pranNumber.message}
+                  {errors.PRAN.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="holdingNature">Nature of Holding</Label>
+              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
               <Controller
-                name="holdingNature"
+                name="natureOfHolding"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="holdingNature"
+                    id="natureOfHolding"
                     placeholder="Enter Nature of Holding"
                     {...field}
-                    className={errors.holdingNature ? "border-red-500" : ""}
+                    className={errors.natureOfHolding ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.holdingNature && (
+              {errors.natureOfHolding && (
                 <span className="text-red-500">
-                  {errors.holdingNature.message}
+                  {errors.natureOfHolding.message}
                 </span>
               )}
             </div>
@@ -235,77 +235,77 @@ const NPSOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Controller
-                name="pointOfContactName"
+                name="name"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactName"
-                    placeholder="Enter Point of Contact Name"
+                    id="name"
+                    placeholder="Enter Name"
                     {...field}
                     className={
-                      errors.pointOfContactName ? "border-red-500" : ""
+                      errors.name ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactName && (
+              {errors.name && (
                 <span className="text-red-500">
-                  {errors.pointOfContactName.message}
+                  {errors.name.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactMobile">
-                Point of Contact Mobile
+              <Label htmlFor="mobile">
+              Mobile
               </Label>
               <Controller
-                name="pointOfContactMobile"
+                name="mobile"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
-                    id="pointOfContactMobile"
+                    id="mobile"
                     type="tel"
-                    placeholder="Enter Point of Contact Mobile"
+                    placeholder="Enter Mobile"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
                     {...field}
                     className={
-                      errors.pointOfContactMobile ? "border-red-500" : ""
+                      errors.mobile ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactMobile && (
+              {errors.mobile && (
                 <span className="text-red-500">
-                  {errors.pointOfContactMobile.message}
+                  {errors.mobile.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactEmail">
-                Point of Contact Email
+              <Label htmlFor="email">
+                Email
               </Label>
               <Controller
-                name="pointOfContactEmail"
+                name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactEmail"
-                    placeholder="Enter Point of Contact Email"
+                    id="email"
+                    placeholder="Enter  Email"
                     {...field}
                     className={
-                      errors.pointOfContactEmail ? "border-red-500" : ""
+                      errors.email ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactEmail && (
+              {errors.email && (
                 <span className="text-red-500">
-                  {errors.pointOfContactEmail.message}
+                  {errors.email.message}
                 </span>
               )}
             </div>
