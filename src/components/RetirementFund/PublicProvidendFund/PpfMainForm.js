@@ -58,12 +58,15 @@ const ppfMainForm = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(`/api/public-provident-funds/${lifeInsuranceDeleteId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
-    queryClient.invalidateQueries("LifeInsuranceData");
+    const response = await axios.delete(
+      `/api/public-provident-funds/${lifeInsuranceDeleteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    queryClient.invalidateQueries("LifeInsuraQuerynceData");
     toast.success("Other Insurance deleted successfully!");
   };
 
@@ -72,7 +75,9 @@ const ppfMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Public Providend Fund</h1>
-          <Button onMouseDown={() => navigate("/ppf/add")}>Add Public Providend Fund</Button>
+          <Button onMouseDown={() => navigate("/ppf/add")}>
+            Add Public Providend Fund
+          </Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}

@@ -25,31 +25,31 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { useSelector } from "react-redux";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
-  bankName: z.string().nonempty({ message: "Bank/Post Name is required" }),
-  ppfAccountNumber: z
-    .string()
-    .nonempty({ message: "PPF Account Number is required" }),
+  bankName: z.string().optional(),
+  ppfAccountNo: z.string().optional(),
   branch: z.string().optional(),
-  holdingNature: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
+  natureOfHolding: z.string().optional(),
   additionalDetails: z.string().optional(),
-  pointOfContactName: z
+  name: z.string().optional(),
+  // mobile: z.string().optional(),
+  email: z
     .string()
-    .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
-    .string()
-    .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Point of Contact Email is required" }),
+    // .email({ message: "Invalid Email" })
+    .optional(),
 });
+// .refine((data) => {
+//   if (data.natureOfHolding === "joint") {
+//     return !!data.jointHolderName;
+//   }
 
-const PpfEditForm = () => {
+//   return true;
+// });
+
+const PpfEditForm = ({}) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const getitem = localStorage.getItem("user");
@@ -58,6 +58,7 @@ const PpfEditForm = () => {
   const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [nomineeDetails, setNomineeDetails] = useState([]);
   const [nomineeError, setNomineeError] = useState(false);
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
 
   const {
     handleSubmit,
@@ -68,55 +69,77 @@ const PpfEditForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      ppfAccountNumber: "",
+      ppfAccountNo: "",
       branch: "",
-      holdingNature: "",
+      natureOfHolding: "",
       jointHolderName: "",
       additionalDetails: "",
-      pointOfContactName: "",
-      pointOfContactMobile: "",
-      pointOfContactEmail: "",
+      name: "",
+      mobile: "",
+      email: "",
     },
   });
 
-  const {
-    data: ppfData,
-    isLoading,
-    isError,
-  } = useQuery(
-    ["ppfData", id],
-    async () => {
-      const response = await axios.get(`/api/public-provident-funds/${id}`, {
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/public-provident-funds/${lifeInsuranceEditId}`,
+      {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
-      });
-      return response.data.data.PublicProvidentFund;
-    },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-        if (data.holdingNature === "joint") {
-          setShowJointHolderName(true);
-        }
-        // Assume nomineeDetails is an array of nominee objects
-        setNomineeDetails(data.nomineeDetails || []);
-      },
-      onError: (error) => {
-        console.error("Error fetching PPF data:", error);
-        toast.error("Failed to fetch PPF data");
-      },
+      }
+    );
+    let data = response.data.data.PublicProvidentFund;
+    console.log("Fetching Data:", data);
+    setValue("bankName", data.bankName);
+    setValue("ppfAccountNo", data.ppfAccountNo);
+    setValue("branch", data.branch);
+    setValue("natureOfHolding", data.natureOfHolding);
+    setValue("jointHolderName", data.jointHolderName);
+    setValue("additionalDetails", data.additionalDetails);
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
+    if (data.natureOfHolding === "joint") {
+      setShowJointHolderName(true);
     }
-  );
+    // Assume nomineeDetails is an array of nominee objects
+    setNomineeDetails(data.nomineeDetails || []);
+    return response.data.data.PublicProvidentFund;
+  };
+
+  const {
+    data: Benifyciary,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      Object.keys(data).forEach((key) => {
+        if (schema.shape[key]) {
+          setValue(key, data[key]);
+          console.error("Error fetching data:", error);
+          toast.error("Failed to fetch data");
+        } // .email({ message: "Invalid Email" })
+      });
+      if (data.natureOfHolding === "joint") {
+        setShowJointHolderName(true);
+      }
+      // Assume nomineeDetails is an array of nominee objects
+      setNomineeDetails(data.nomineeDetails || []);
+    },
+    onError: (error) => {
+      console.error("Error fetching PPF data:", error);
+      toast.error("Failed to fetch PPF data");
+    },
+  });
 
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/public-provident-funds/${id}`,
+        `/api/public-provident-funds/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -127,8 +150,7 @@ const PpfEditForm = () => {
       return response.data.data.PublicProvidentFund;
     },
     onSuccess: () => {
-
-      queryClient.invalidateQueries("PublicProvidentFundData");
+      queryClient.invalidateQueries("PublicProvidentFund");
       toast.success("Public Providend Fund details updated successfully!");
       navigate("/dashboard");
     },
@@ -139,21 +161,8 @@ const PpfEditForm = () => {
   });
 
   const onSubmit = (data) => {
-    if (data.holdingNature === "joint" && !data.jointHolderName) {
-      setNomineeError(true);
-      return;
-    }
-    if (nomineeDetails.length === 0) {
-      setNomineeError(true);
-      return;
-    }
-
+    console.log(data);
     ppfMutate.mutate(data);
-  };
-
-  const addNominee = () => {
-    const newNominee = { name: "", relation: "" }; // Replace with actual nominee fields
-    setNomineeDetails([...nomineeDetails, newNominee]);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -199,24 +208,24 @@ const PpfEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ppfAccountNumber">
+              <Label htmlFor="ppfAccountNo">
                 Public Providend Fund Account Number
               </Label>
               <Controller
-                name="ppfAccountNumber"
+                name="ppfAccountNo"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="ppfAccountNumber"
+                    id="ppfAccountNo"
                     placeholder="Enter Public Providend Fund Account Number"
                     {...field}
-                    className={errors.ppfAccountNumber ? "border-red-500" : ""}
+                    className={errors.ppfAccountNo ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.ppfAccountNumber && (
+              {errors.ppfAccountNo && (
                 <span className="text-red-500">
-                  {errors.ppfAccountNumber.message}
+                  {errors.ppfAccountNo.message}
                 </span>
               )}
             </div>
@@ -241,9 +250,9 @@ const PpfEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="holdingNature">Nature of Holding</Label>
+              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
               <Controller
-                name="holdingNature"
+                name="natureOfHolding"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
@@ -265,9 +274,9 @@ const PpfEditForm = () => {
                   </RadioGroup>
                 )}
               />
-              {errors.holdingNature && (
+              {errors.natureOfHolding && (
                 <span className="text-red-500">
-                  {errors.holdingNature.message}
+                  {errors.natureOfHolding.message}
                 </span>
               )}
             </div>
@@ -336,41 +345,6 @@ const PpfEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nomineeDetails">Nominee Details</Label>
-              <Button type="button" onClick={addNominee}>
-                Add (+) Nominee
-              </Button>
-              {nomineeError && (
-                <span className="text-red-500">
-                  Please add nominee details.
-                </span>
-              )}
-              {nomineeDetails.map((nominee, index) => (
-                <div key={index} className="mt-2">
-                  <Input
-                    placeholder="Nominee Name"
-                    value={nominee.name}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].name = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                  />
-                  <Input
-                    placeholder="Nominee Relation"
-                    value={nominee.relation}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].relation = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                    className="mt-2"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="imageUpload">Image Upload</Label>
               <Controller
                 name="imageUpload"
@@ -392,78 +366,68 @@ const PpfEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
+              <Label htmlFor="name">Point of Contact Name</Label>
               <Controller
-                name="pointOfContactName"
+                name="name"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactName"
+                    id="name"
                     placeholder="Enter Point of Contact Name"
                     {...field}
-                    className={
-                      errors.pointOfContactName ? "border-red-500" : ""
-                    }
+                    className={errors.name ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.pointOfContactName && (
-                <span className="text-red-500">
-                  {errors.pointOfContactName.message}
-                </span>
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
               )}
             </div>
-
+            {/* 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactMobile">
+              <Label htmlFor="mobile">
                 Point of Contact Mobile
               </Label>
               <Controller
-                name="pointOfContactMobile"
+                name="mobile"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
-                    id="pointOfContactMobile"
+                    id="mobile"
                     type="tel"
                     placeholder="Enter Point of Contact Mobile"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
                     {...field}
                     className={
-                      errors.pointOfContactMobile ? "border-red-500" : ""
+                      errors.mobile ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactMobile && (
+              {errors.mobile && (
                 <span className="text-red-500">
-                  {errors.pointOfContactMobile.message}
+                  {errors.mobile.message}
                 </span>
               )}
-            </div>
+            </div> */}
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactEmail">
-                Point of Contact Email
-              </Label>
+              <Label htmlFor="email">Point of Contact Email</Label>
               <Controller
-                name="pointOfContactEmail"
+                name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactEmail"
+                    id="email"
                     placeholder="Enter Point of Contact Email"
                     {...field}
-                    className={
-                      errors.pointOfContactEmail ? "border-red-500" : ""
-                    }
+                    className={errors.email ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.pointOfContactEmail && (
-                <span className="text-red-500">
-                  {errors.pointOfContactEmail.message}
-                </span>
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
               )}
             </div>
 

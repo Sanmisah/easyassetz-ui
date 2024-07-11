@@ -29,7 +29,7 @@ import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Bank/Post Name is required" }),
-  ppfAccountNumber: z
+  accountNumber: z
     .string()
     .nonempty({ message: "PPF Account Number is required" }),
   branch: z.string().optional(),
@@ -48,6 +48,7 @@ const schema = z.object({
     .string()
     .email({ message: "Invalid Email" })
     .nonempty({ message: "Point of Contact Email is required" }),
+  ppfFile: z.any().optional(),
 });
 
 const PpfForm = () => {
@@ -56,8 +57,10 @@ const PpfForm = () => {
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
   const [showJointHolderName, setShowJointHolderName] = useState(false);
-  const [nomineeDetails, setNomineeDetails] = useState([]);
-  const [nomineeError, setNomineeError] = useState(false);
+  const [defaultData, setDefaultData] = useState({});
+  const [defaultDate, setdefaultDate] = useState(null);
+  // const [nomineeDetails, setNomineeDetails] = useState([]);
+  // const [nomineeError, setNomineeError] = useState(false);
 
   const {
     handleSubmit,
@@ -68,7 +71,7 @@ const PpfForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      ppfAccountNumber: "",
+      accountNumber: "",
       branch: "",
       holdingNature: "",
       jointHolderName: "",
@@ -76,11 +79,19 @@ const PpfForm = () => {
       pointOfContactName: "",
       pointOfContactMobile: "",
       pointOfContactEmail: "",
+      ppfFile: "",
     },
   });
 
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
+      const Formdata = new FormData();
+      Formdata.append("ppfFile", data.ppfFile);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+
       const response = await axios.post(`/api/public-provident-funds`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -103,6 +114,10 @@ const PpfForm = () => {
     console.log(data);
 
     ppfMutate.mutate(data);
+  };
+
+  const handleFileUpload = () => {
+    window.open(`/storage/profiles/ppfFile/${defaultData?.ppfFile}`);
   };
 
   return (
@@ -145,22 +160,22 @@ const PpfForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ppfAccountNumber">PPF Account Number</Label>
+              <Label htmlFor="accountNumber">PPF Account Number</Label>
               <Controller
-                name="ppfAccountNumber"
+                name="accountNumber"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="ppfAccountNumber"
+                    id="accountNumber"
                     placeholder="Enter PPF Account Number"
                     {...field}
-                    className={errors.ppfAccountNumber ? "border-red-500" : ""}
+                    className={errors.accountNumber ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.ppfAccountNumber && (
+              {errors.accountNumber && (
                 <span className="text-red-500">
-                  {errors.ppfAccountNumber.message}
+                  {errors.accountNumber.message}
                 </span>
               )}
             </div>
@@ -354,26 +369,44 @@ const PpfForm = () => {
                 </span>
               )}
             </div>
+            
             <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
-            </div>
+                    <Label htmlFor="ppfFile">Upload Your Public Providend Fund File</Label>
+                    <Controller
+                      name="ppfFile"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="ppfFile"
+                          placeholder="Public Providend Fund File"
+                          type="file"
+                          onChange={(event) => {
+                            field.onChange(
+                              event.target.files && event.target.files[0]
+                            );
+                            console.log("sadsA", event.target.files);
+                          }}
+                          className={errors.ppfFile ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.ppfFile && (
+                      <span className="text-red-500">
+                        {errors.ppfFile.message}
+                      </span>
+                    )}
+                  </div>
+                  {defaultData?.ppfFile && (
+                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                      <Button
+                        variant="ghost"
+                        onClick={handleFileUpload}
+                        className="color-green-500"
+                      >
+                        View Uploaded Public Providend Fund File
+                      </Button>
+                    </div>
+                  )}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

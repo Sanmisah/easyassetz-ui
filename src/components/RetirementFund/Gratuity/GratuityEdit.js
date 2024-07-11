@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -17,50 +17,56 @@ import {
 } from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
-
+import { Textarea } from "@com/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { PhoneInput } from "react-international-phone";
 import Addnominee from "./EditNominee";
 import cross from "@/components/image/close.png";
+import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  employerName: z
-    .string()
-    .nonempty({ message: "Organization Name is required" }),
-    employerId: z.string().nonempty({ message: "Membership id is required" }),
-    additionalDetails: z.string().optional(),
-    name: z.string().optional(),
-    phone: z.string().optional(),
-    email: z.string().optional(),
+  employerName: z.string().nonempty({ message: "Employer Name is required" }),
+  employerId: z.string().nonempty({ message: "Employee id is required" }),
+  additionalDetails: z.string().optional(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
 });
+
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
 
 const GratuityEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const [showOtherMembershipType, setShowOtherMembershipType] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
-  const [displaynominie, setDisplaynominie] = useState([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
-  console.log(lifeInsuranceEditId);
-  useEffect(() => {
-    if (lifeInsuranceEditId) {
-      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
-    }
-  }, [lifeInsuranceEditId]);
-  const [showOtherMembership, setShowOtherMembership] = useState(false);
-  const [defaultValues, setDefaultValues] = useState(null);
+
+  const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
+    useState(false);
+  const [showOtherRelationship, setShowOtherRelationship] = useState(false);
+  const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
+  const [showOthercompanyAddress, setShowOthercompanyAddress] = useState(false);
+  const [FamilyMembersCovered, setFamilyMembersCovered] = useState([]);
+  const [showOtherFamilyMembersCovered, setShowOtherFamilyMembersCovered] =
+    useState(false);
+  const [defaultValues, setDefaultValues] = useState({});
+  const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [jointHolderName, setJointHolderName] = useState(false);
+  const [showOtherCompanyRegistration, setShowOtherCompanyRegistration] =
+    useState(false);
 
   const {
     handleSubmit,
@@ -70,30 +76,36 @@ const GratuityEditForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || {},
+    defaultValues: {},
   });
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `/api/gratuities/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
-    let othertype = response.data.data.Membership?.membershipType;
-    if (othertype === "annual" || othertype === "life") {
-      setShowOtherMembershipType(false);
-      setValue("membershipType", othertype);
-    } else {
-      setShowOtherMembershipType(true);
-      setValue("otherMembersipType", othertype);
+    const response = await axios.get(`/api/gratuities/${lifeInsuranceEditId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
+    const data = response.data.data.Gratuity;
+
+    if (data.documentAvailability === "broker") {
+      setBrokerSelected(true);
+      setHideRegisteredFields(false);
+    }
+    if (data.documentAvailability === "e-insurance") {
+      setBrokerSelected(false);
+      setHideRegisteredFields(true);
     }
 
-    console.log(typeof response.data.data.Membership?.premium);
-    return response.data.data.Membership;
+    setDefaultValues(data);
+    reset(data);
+    setShowOtherInsuranceCompany(data.companyName === "other");
+    setShowOtherCompanyRegistration(
+      !["CIN", "PAN", "FIRM NO"].includes(data.companyRegistration)
+    );
+    setJointHolderName(data.holdingType === "jointName");
+
+    return data;
   };
 
   const {
@@ -101,45 +113,18 @@ const GratuityEditForm = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["membershipDataUpdate", lifeInsuranceEditId],
+    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
-
     onSuccess: (data) => {
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
-      setDefaultValues(data);
-      reset(data);
-      setValue(data);
-      setValue("organizationName", data.organizationName);
-      setValue("membershipId", data.membershipId);
-      setValue("membershiptype", data.metaltype);
-      setValue("membershipPaymentDate", data.membershipPaymentDate);
-      setValue("numberOfArticles", data.numberOfArticles);
-      setValue("additionalInformation", data.additionalInformation);
-      setValue("pointOfContact", data.pointOfContact);
-
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
-      }
-
-      setShowOtherMembership(data.Membership === "other");
-
-      console.log(data);
+      setDisplaynominie(data.nominees || []);
     },
     onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch data");
     },
   });
 
-  const membershipMutate = useMutation({
+  const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
         `/api/gratuities/${lifeInsuranceEditId}`,
@@ -154,7 +139,7 @@ const GratuityEditForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
-        "MembershipDataUpdate",
+        "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
       toast.success("Gratuity added successfully!");
@@ -165,43 +150,17 @@ const GratuityEditForm = () => {
       toast.error("Failed to submit profile");
     },
   });
-  useEffect(() => {
-    console.log("Form values:", control._formValues);
-  }, [control._formValues]);
-
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
-    }
-  }, [Benifyciary?.nominees]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    data.name = name;
-    data.email = email;
-    data.mobile = mobile;
-    console.log("membership:", data.membership);
-    if (data.membershipType === "other") {
-      data.membersipType = data.otherMembershipType;
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
     }
-    console.log(data);
-    // const date = new Date(data.membershipPaymentDate);
-    // const month = String(date.getMonth() + 1).padStart(2, "0");
-    // const day = String(date.getDate()).padStart(2, "0");
-    // const year = date.getFullYear();
-    // const newdate = `${month}/${day}/${year}`;
-    // data.membershipPaymentDate = newdate;
-    console.log("brokerName:", data.brokerName);
-    data.nominees = selectedNommie;
-
-    membershipMutate.mutate(data);
+    lifeInsuranceMutate.mutate(data);
   };
 
-  useEffect(() => {
-    console.log(Benifyciary);
-  }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading Gratuity data</div>;
+
   return (
     <div className="w-full">
       <Card>
@@ -222,189 +181,246 @@ const GratuityEditForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="employerName">Employer Name</Label>
-                <Controller
-                  name="employerName"
-                  defaultValue={Benifyciary?.employerName || ""}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="employerName"
-                      placeholder="Employer Name"
-                      {...field}
-                      className={
-                        errors.employerName ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.employerName || ""}
-                    />
-                  )}
-                />
-                {errors.employerName && (
-                  <span className="text-red-500">
-                    {errors.employerName.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="employerName">Employer Name</Label>
+              <Controller
+                name="employerName"
+                control={control}
+                defaultValue={defaultValues.employerName}
+                render={({ field }) => (
+                  <Input
+                    id="employerName"
+                    placeholder="Enter Employer Name"
+                    {...field}
+                    className={errors.employerName ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="employerId">Employee ID </Label>
-                <Controller
-                  name="employerId"
-                  defaultValue={Benifyciary?.employerId || ""}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="employerId"
-                      placeholder="Employee Id"
-                      {...field}
-                      className={errors.employerId ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.employerId || ""}
-                    />
-                  )}
-                />
-                {errors.employerId && (
-                  <span className="text-red-500">
-                    {errors.employerId.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="additionalDetails">Additional Details</Label>
-                <Controller
-                  name="additionalDetails"
-                  defaultValue={Benifyciary?.additionalDetails || ""}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="additionalDetails"
-                      placeholder="Enter Additional Details"
-                      {...field}
-                      className={errors.additionalDetails ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.additionalDetails || ""}
-                    />
-                  )}
-                />
-                {errors.additionalDetails && (
-                  <span className="text-red-500">
-                    {errors.additionalDetails.message}
-                  </span>
-                )}
-              </div>
+              />
+              {errors.employerName && (
+                <span className="text-red-500">
+                  {errors.employerName.message}
+                </span>
+              )}
             </div>
-           
-            {displaynominie && displaynominie.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="employerId">Employer Id</Label>
+              <Controller
+                name="employerId"
+                control={control}
+                defaultValue={defaultValues.employerId}
+                render={({ field }) => (
+                  <Input
+                    id="employerId"
+                    placeholder="Enter Employer Id"
+                    {...field}
+                    className={errors.employerId ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.employerId && (
+                <span className="text-red-500">
+                  {errors.employerId.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                defaultValue={defaultValues.additionalInformation}
+                render={({ field }) => (
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter additional information"
+                    {...field}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
+            </div>
+
+            {displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
                   <Label className="text-lg font-bold">Selected Nominees</Label>
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
+                  {displaynominie.map((nominee) => (
+                    <div
+                      key={nominee.id}
+                      className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                    >
+                      <Label htmlFor={`nominee-${nominee?.id}`}>
+                        {nominee?.fullLegalName || nominee?.charityName}
+                      </Label>
+                      <img
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={() => {
+                          setDisplaynominie(
+                            displaynominie.filter(
+                              (item) => item.id !== nominee.id
+                            )
+                          );
+                          setSelectedNommie(
+                            selectedNommie.filter(
+                              (item) => item.id !== nominee.id
+                            )
+                          );
+                        }}
+                        src={cross}
+                        alt=""
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
               <Addnominee
                 setSelectedNommie={setSelectedNommie}
                 AllNominees={Benifyciary?.nominees}
                 selectedNommie={selectedNommie}
                 displaynominie={displaynominie}
                 setDisplaynominie={setDisplaynominie}
-              />{" "}
+              />
             </div>
-            <div className="w-full grid grid-cols-1 gap-4 mt-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  defaultValue={Benifyciary?.name || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="name"
-                      placeholder="Enter Name"
-                      value={field.value}
-                      onChange={(e) => setName(e.target.value)}
-                      {...field}
-                      className={errors.name ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.name || ""}
-                    />
+
+            {hideRegisteredFields && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="registeredMobile">Registered Mobile</Label>
+                  <Controller
+                    name="registeredMobile"
+                    control={control}
+                    defaultValue={defaultValues.registeredMobile}
+                    render={({ field }) => (
+                      <Input
+                        id="registeredMobile"
+                        placeholder="Enter registered mobile"
+                        {...field}
+                        className={
+                          errors.registeredMobile ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.registeredMobile && (
+                    <span className="text-red-500">
+                      {errors.registeredMobile.message}
+                    </span>
                   )}
-                />
-                {errors.name && (
-                  <span className="text-red-500">{errors.name.message}</span>
-                )}
-              </div>
-              <div className="w-[40%] space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Controller
-                  name="email"
-                  control={control}
-                  defaultValue={Benifyciary?.email || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="email"
-                      placeholder="Enter Email"
-                      {...field}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className={errors.email ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.email || ""}
-                    />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="registeredEmail">Registered Email</Label>
+                  <Controller
+                    name="registeredEmail"
+                    control={control}
+                    defaultValue={defaultValues.registeredEmail}
+                    render={({ field }) => (
+                      <Input
+                        id="registeredEmail"
+                        placeholder="Enter registered email"
+                        type="email"
+                        {...field}
+                        className={
+                          errors.registeredEmail ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.registeredEmail && (
+                    <span className="text-red-500">
+                      {errors.registeredEmail.message}
+                    </span>
                   )}
-                />
-                {errors.email && (
-                  <span className="text-red-500">{errors.email.message}</span>
-                )}
+                </div>
               </div>
-              <div className="w-[40%] space-y-2">
-                <Label htmlFor="mobile">Phone</Label>
-                <Controller
-                  name="mobile"
-                  control={control}
-                  defaultValue={Benifyciary?.mobile || ""}
-                  render={({ field }) => (
-                    <PhoneInput
-                      id="mobile"
-                      type="tel"
-                      placeholder="Enter mobile number"
-                      defaultCountry="in"
-                      inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setMobile(e.target)}
-                      defaultValue={Benifyciary?.mobile || ""}
+            )}
+            {brokerSelected && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Controller
+                      name="name"
+                      control={control}
+                      defaultValue={defaultValues.name}
+                      render={({ field }) => (
+                        <Input
+                          id="name"
+                          placeholder="Enter name"
+                          {...field}
+                          className={errors.name ? "border-red-500" : ""}
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors.mobile && (
-                  <span className="text-red-500">{errors.mobile.message}</span>
-                )}
-              </div>
-            </div>
+                    {errors.name && (
+                      <span className="text-red-500">
+                        {errors.name.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="mobile">Mobile</Label>
+                    <Controller
+                      name="mobile"
+                      control={control}
+                      defaultValue={defaultValues.mobile}
+                      render={({ field }) => (
+                        <PhoneInput
+                          id="mobile"
+                          type="tel"
+                          placeholder="Enter mobile"
+                          defaultCountry="in"
+                          value={field.value}
+                          inputStyle={{ minWidth: "30.5rem" }}
+                          onChange={field.onChange}
+                          className={errors.mobile ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.mobile && (
+                      <span className="text-red-500">
+                        {errors.mobile.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Controller
+                      name="email"
+                      control={control}
+                      defaultValue={defaultValues.email}
+                      render={({ field }) => (
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="Enter email"
+                          {...field}
+                          className={errors.email ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.email && (
+                      <span className="text-red-500">
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
