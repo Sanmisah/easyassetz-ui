@@ -51,9 +51,7 @@ const schema = z
       .nonempty({ message: "Policy Holder Name is required" }),
     vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
     specificVehicalType: z.string().optional(),
-    modeOfPurchase: z
-      .string()
-      .nonempty({ message: "Mode of Purchase is required" }),
+    modeOfPurchase: z.string().optional(),
     contactPerson: z.string().optional(),
     contactNumber: z.string().optional(),
     email: z.string().email({ message: "Invalid email address" }).optional(),
@@ -128,6 +126,12 @@ const EditMotorForm = () => {
       }
     );
     let data = response.data.data.MotorInsurance;
+    if (data.modeOfPurchase === "e-insurance") {
+      setValue("modeOfPurchase", data.e - insurance);
+    }
+    if (data.modeOfPurchase === "broker") {
+      setValue("modeOfPurchase", data.broker);
+    }
     if (
       data.companyName !== "company1" &&
       data.companyName !== "company2" &&

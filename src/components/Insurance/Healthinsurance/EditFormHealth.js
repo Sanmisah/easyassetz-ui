@@ -41,10 +41,10 @@ const schema = z
     insuranceType: z
       .string()
       .nonempty({ message: "Insurance Sub Type is required" }),
-    policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+    policyNumber: z.string().min(1, { message: "Policy Number is required" }),
     maturityDate: z.date().optional(),
-    premium: z.string().min(3, { message: "Premium is required" }),
-    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+    premium: z.string().min(1, { message: "Premium is required" }),
+    sumInsured: z.string().min(1, { message: "Sum Insured is required" }),
     policyHolderName: z
       .string()
       .nonempty({ message: "Policy Holder Name is required" }),
@@ -309,10 +309,10 @@ const EditFormHealth = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Insurance Policy Details
+                Health Insurance Policy Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the insurance policy details.
+                Edit the form to update the Health Insurance Policy Details.
               </CardDescription>
             </div>
           </div>
@@ -582,11 +582,7 @@ const EditFormHealth = () => {
                     name="specifyFamilyMembersCovered"
                     control={control}
                     render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Vehical Type"
-                        className="mt-2"
-                      />
+                      <Input {...field} placeholder="" className="mt-2" />
                     )}
                   />
                 )}

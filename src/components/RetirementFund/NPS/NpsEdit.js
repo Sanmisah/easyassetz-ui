@@ -8,6 +8,13 @@ import {
   CardFooter,
 } from "@com/ui/card";
 import { Label } from "@com/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { useForm, Controller } from "react-hook-form";
@@ -18,31 +25,40 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { useSelector } from "react-redux";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
-  pranNumber: z.string().nonempty({ message: "PRAN is required" }),
-  holdingNature: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
+  bankName: z.string().optional(),
+  ppfAccountNo: z.string().optional(),
+  branch: z.string().optional(),
+  natureOfHolding: z.string().optional(),
   additionalDetails: z.string().optional(),
-  pointOfContactName: z
+  name: z.string().optional(),
+  // mobile: z.string().optional(),
+  email: z
     .string()
-    .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
-    .string()
-    .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Point of Contact Email is required" }),
+    // .email({ message: "Invalid Email" })
+    .optional(),
 });
+// .refine((data) => {
+//   if (data.natureOfHolding === "joint") {
+//     return !!data.jointHolderName;
+//   }
 
-const PranEditForm = () => {
+//   return true;
+// });
+
+const PpfEditForm = ({}) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
+  const [showJointHolderName, setShowJointHolderName] = useState(false);
+  const [nomineeDetails, setNomineeDetails] = useState([]);
+  const [nomineeError, setNomineeError] = useState(false);
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
 
   const {
     handleSubmit,
@@ -52,70 +68,105 @@ const PranEditForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      pranNumber: "",
-      holdingNature: "",
+      bankName: "",
+      ppfAccountNo: "",
+      branch: "",
+      natureOfHolding: "",
+      jointHolderName: "",
       additionalDetails: "",
-      pointOfContactName: "",
-      pointOfContactMobile: "",
-      pointOfContactEmail: "",
+      name: "",
+      mobile: "",
+      email: "",
     },
   });
 
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/public-provident-funds/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    let data = response.data.data.PublicProvidentFund;
+    console.log("Fetching Data:", data);
+    setValue("bankName", data.bankName);
+    setValue("ppfAccountNo", data.ppfAccountNo);
+    setValue("branch", data.branch);
+    setValue("natureOfHolding", data.natureOfHolding);
+    setValue("jointHolderName", data.jointHolderName);
+    setValue("additionalDetails", data.additionalDetails);
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
+    if (data.natureOfHolding === "joint") {
+      setShowJointHolderName(true);
+    }
+    // Assume nomineeDetails is an array of nominee objects
+    setNomineeDetails(data.nomineeDetails || []);
+    return response.data.data.PublicProvidentFund;
+  };
+
   const {
-    data: pranData,
+    data: Benifyciary,
     isLoading,
     isError,
-  } = useQuery(
-    ["pranData", id],
-    async () => {
-      const response = await axios.get(`/api/nps/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
+  } = useQuery({
+    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      Object.keys(data).forEach((key) => {
+        if (schema.shape[key]) {
+          setValue(key, data[key]);
+          console.error("Error fetching data:", error);
+          toast.error("Failed to fetch data");
+        } // .email({ message: "Invalid Email" })
       });
-      return response.data.data.NPS;
+      if (data.natureOfHolding === "joint") {
+        setShowJointHolderName(true);
+      }
+      // Assume nomineeDetails is an array of nominee objects
+      setNomineeDetails(data.nomineeDetails || []);
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching PRAN data:", error);
-        toast.error("Failed to fetch PRAN data");
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error fetching PPF data:", error);
+      toast.error("Failed to fetch PPF data");
+    },
+  });
 
-  const pranMutate = useMutation({
+  const ppfMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/nps/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.NPS;
+      const response = await axios.put(
+        `/api/public-provident-funds/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.PublicProvidentFund;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("pranData");
-      toast.success("PRAN details updated successfully!");
+      queryClient.invalidateQueries("PublicProvidentFund");
+      toast.success("Public Providend Fund details updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error updating PRAN details:", error);
-      toast.error("Failed to update PRAN details");
+      console.error("Error updating Public Providend Fund details:", error);
+      toast.error("Failed to update Public Providend Fund details");
     },
   });
 
   const onSubmit = (data) => {
-    pranMutate.mutate(data);
+    console.log(data);
+    ppfMutate.mutate(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading PRAN data</div>;
+  if (isError) return <div>Error loading Public Providend Fund data</div>;
 
   return (
     <div className="w-full">
@@ -124,10 +175,10 @@ const PranEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit PRAN Details
+                Edit Public Providend Fund Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the PRAN details.
+                Update the form to edit the Public Providend Fund details.
               </CardDescription>
             </div>
           </div>
@@ -138,48 +189,139 @@ const PranEditForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="pranNumber">
-                Permanent Retirement Account Number (PRAN)
-              </Label>
+              <Label htmlFor="bankName">Post/Bank Name</Label>
               <Controller
-                name="pranNumber"
+                name="bankName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pranNumber"
-                    placeholder="Enter PRAN"
+                    id="bankName"
+                    placeholder="Enter Post/Bank Name"
                     {...field}
-                    className={errors.pranNumber ? "border-red-500" : ""}
+                    className={errors.bankName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.pranNumber && (
+              {errors.bankName && (
+                <span className="text-red-500">{errors.bankName.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ppfAccountNo">
+                Public Providend Fund Account Number
+              </Label>
+              <Controller
+                name="ppfAccountNo"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="ppfAccountNo"
+                    placeholder="Enter Public Providend Fund Account Number"
+                    {...field}
+                    className={errors.ppfAccountNo ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.ppfAccountNo && (
                 <span className="text-red-500">
-                  {errors.pranNumber.message}
+                  {errors.ppfAccountNo.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="holdingNature">Nature of Holding</Label>
+              <Label htmlFor="branch">Branch</Label>
               <Controller
-                name="holdingNature"
+                name="branch"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="holdingNature"
-                    placeholder="Enter Nature of Holding"
+                    id="branch"
+                    placeholder="Enter Branch"
                     {...field}
-                    className={errors.holdingNature ? "border-red-500" : ""}
+                    className={errors.branch ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.holdingNature && (
+              {errors.branch && (
+                <span className="text-red-500">{errors.branch.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Controller
+                name="natureOfHolding"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowJointHolderName(value === "joint");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="single" value="single" />
+                      <Label htmlFor="single">Single</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="joint" value="joint" />
+                      <Label htmlFor="joint">Joint</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+              {errors.natureOfHolding && (
                 <span className="text-red-500">
-                  {errors.holdingNature.message}
+                  {errors.natureOfHolding.message}
                 </span>
               )}
             </div>
+
+            {showJointHolderName && (
+              <div className="space-y-2">
+                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                <Controller
+                  name="jointHolderName"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="jointHolderName"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className={errors.jointHolderName ? "border-red-500" : ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Joint Holder Name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="family_member_1">
+                          Family Member 1
+                        </SelectItem>
+                        <SelectItem value="family_member_2">
+                          Family Member 2
+                        </SelectItem>
+                        <SelectItem value="other_contact_1">
+                          Other Contact 1
+                        </SelectItem>
+                        <SelectItem value="other_contact_2">
+                          Other Contact 2
+                        </SelectItem>
+                        {/* Add more options as needed */}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.jointHolderName && (
+                  <span className="text-red-500">
+                    {errors.jointHolderName.message}
+                  </span>
+                )}
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="additionalDetails">Additional Details</Label>
@@ -224,78 +366,68 @@ const PranEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
+              <Label htmlFor="name">Point of Contact Name</Label>
               <Controller
-                name="pointOfContactName"
+                name="name"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactName"
+                    id="name"
                     placeholder="Enter Point of Contact Name"
                     {...field}
-                    className={
-                      errors.pointOfContactName ? "border-red-500" : ""
-                    }
+                    className={errors.name ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.pointOfContactName && (
-                <span className="text-red-500">
-                  {errors.pointOfContactName.message}
-                </span>
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
               )}
             </div>
-
+            {/* 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactMobile">
+              <Label htmlFor="mobile">
                 Point of Contact Mobile
               </Label>
               <Controller
-                name="pointOfContactMobile"
+                name="mobile"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
-                    id="pointOfContactMobile"
+                    id="mobile"
                     type="tel"
                     placeholder="Enter Point of Contact Mobile"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
                     {...field}
                     className={
-                      errors.pointOfContactMobile ? "border-red-500" : ""
+                      errors.mobile ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactMobile && (
+              {errors.mobile && (
                 <span className="text-red-500">
-                  {errors.pointOfContactMobile.message}
+                  {errors.mobile.message}
                 </span>
               )}
-            </div>
+            </div> */}
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactEmail">
-                Point of Contact Email
-              </Label>
+              <Label htmlFor="email">Point of Contact Email</Label>
               <Controller
-                name="pointOfContactEmail"
+                name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactEmail"
+                    id="email"
                     placeholder="Enter Point of Contact Email"
                     {...field}
-                    className={
-                      errors.pointOfContactEmail ? "border-red-500" : ""
-                    }
+                    className={errors.email ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.pointOfContactEmail && (
-                <span className="text-red-500">
-                  {errors.pointOfContactEmail.message}
-                </span>
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
               )}
             </div>
 
@@ -309,4 +441,4 @@ const PranEditForm = () => {
   );
 };
 
-export default PranEditForm;
+export default PpfEditForm;

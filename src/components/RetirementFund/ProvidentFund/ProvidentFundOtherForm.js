@@ -47,7 +47,6 @@ const schema = z.object({
     .string()
     .email({ message: "Invalid Email" })
     .nonempty({ message: "Point of Contact Email is required" }),
-  image: z.any().optional(),
 });
 
 const ProvidentFundOtherForm = () => {
@@ -78,7 +77,6 @@ const ProvidentFundOtherForm = () => {
       pointOfContactName: "",
       pointOfContactMobile: "",
       pointOfContactEmail: "",
-      image: "",
     },
   });
 
@@ -115,10 +113,7 @@ const ProvidentFundOtherForm = () => {
     ppfMutate.mutate(data);
   };
 
-  const handleFileUpload = () => {
-    window.open(`/storage/profiles/ppfFile/${defaultData?.ppfFile}`);
-  };
-
+  
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -315,43 +310,6 @@ const ProvidentFundOtherForm = () => {
               )}
             </div>
             
-            <div className="space-y-2">
-                    <Label htmlFor="ppfFile">Upload Your Providend Fund File</Label>
-                    <Controller
-                      name="ppfFile"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="ppfFile"
-                          placeholder="Providend Fund File"
-                          type="file"
-                          onChange={(event) => {
-                            field.onChange(
-                              event.target.files && event.target.files[0]
-                            );
-                            console.log("sadsA", event.target.files);
-                          }}
-                          className={errors.ppfFile ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.ppfFile && (
-                      <span className="text-red-500">
-                        {errors.ppfFile.message}
-                      </span>
-                    )}
-                  </div>
-                  {defaultData?.ppfFile && (
-                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
-                      <Button
-                        variant="ghost"
-                        onClick={handleFileUpload}
-                        className="color-green-500"
-                      >
-                        View Uploaded Public Providend Fund File
-                      </Button>
-                    </div>
-                  )}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
