@@ -92,8 +92,8 @@ const ppfMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.metalType}</h1>
-                  <p className="text-sm">{data.articleDetails}</p>
+                  <h1 className="font-bold">{data.employerName}</h1>
+                  <p className="text-sm">{data.uanNumber}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
