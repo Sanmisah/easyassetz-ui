@@ -50,7 +50,7 @@ const schema = z
         message: "Policy Number must be a number",
       })
       .transform((value) => (value === null ? null : Number(value))),
-    maturityDate: z.date().optional(),
+    maturityDate: z.any().optional(),
     premium: z
       .string()
       .transform((value) => (value === "" ? null : value))
