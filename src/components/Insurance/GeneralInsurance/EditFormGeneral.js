@@ -277,10 +277,10 @@ const EditFormGeneral = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Insurance Policy Details
+                General Insurance Policy Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the insurance policy details.
+                Edit the form to update the General Insurance Policy Details.
               </CardDescription>
             </div>
           </div>

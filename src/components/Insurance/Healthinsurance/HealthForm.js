@@ -178,6 +178,12 @@ const HealthForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    // if (selectedNommie.length < 1) {
+    //   console.log("Nomiee:", selectedNommie.length < 1);
+
+    //   setnomineeerror(true);
+    //   return;
+    // }
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }
@@ -193,12 +199,7 @@ const HealthForm = () => {
     }
     console.log(data);
     console.log("Nomiee:", data.companyName, data.otherInsuranceCompany);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
 
-      setnomineeerror(true);
-      return;
-    }
     if (data.insuranceType === "other") {
       data.insuranceType = data.specifyInsuranceType;
     }
@@ -236,10 +237,10 @@ const HealthForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Insurance Policy Details
+                Health Insurance Policy Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new insurance policy.
+                Fill out the form to add a new Health Insurance Policy.
               </CardDescription>
             </div>
           </div>
@@ -335,11 +336,7 @@ const HealthForm = () => {
                     name="specifyInsuranceType"
                     control={control}
                     render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Vehical Type"
-                        className="mt-2"
-                      />
+                      <Input {...field} placeholder="" className="mt-2" />
                     )}
                   />
                 )}
@@ -498,11 +495,7 @@ const HealthForm = () => {
                       name="specifyFamilyMembersCovered"
                       control={control}
                       render={({ field }) => (
-                        <Input
-                          {...field}
-                          placeholder="Specify Vehical Type"
-                          className="mt-2"
-                        />
+                        <Input {...field} placeholder="" className="mt-2" />
                       )}
                     />
                   )}

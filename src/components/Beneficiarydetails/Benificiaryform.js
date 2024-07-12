@@ -173,6 +173,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     if (relationship === "other") {
       data.relationship = data.specificRelationship;
     }
+    data.document = selectedDocument;
+
     delete data.specificRelationship;
 
     if (data.dob > new Date() === 18) {
@@ -471,7 +473,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </div>
                       )}
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-document">
+                        <Label htmlFor="document">
                           Identification Document
                         </Label>
                         <Controller
