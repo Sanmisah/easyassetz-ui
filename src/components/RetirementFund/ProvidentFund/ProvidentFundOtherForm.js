@@ -8,6 +8,13 @@ import {
   CardFooter,
 } from "@com/ui/card";
 import { Label } from "@com/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { useForm, Controller } from "react-hook-form";
@@ -18,15 +25,17 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
   employerName: z.string().nonempty({ message: "Employer Name is required" }),
-  uanNumber: z.string().nonempty({ message: "UAN Number is required" }),
-  bankName: z.string().nonempty({ message: "Bank Name is required" }),
-  branch: z.string().optional(),
-  bankAccountNumber: z
+  uanNumber: z
     .string()
-    .nonempty({ message: "Bank Account Number is required" }),
+    .nonempty({ message: "UAN Number is required" }),
+    bankName: z.string().nonempty({ message: "Bank Name is required" }),
+    branch: z
+    .string().optional(),
+  bankAccountNumber: z.string().nonempty({ message: "Bank Account Number is required" }),
   additionalDetails: z.string().optional(),
   pointOfContactName: z
     .string()
@@ -38,17 +47,24 @@ const schema = z.object({
     .string()
     .email({ message: "Invalid Email" })
     .nonempty({ message: "Point of Contact Email is required" }),
+  image: z.any().optional(),
 });
 
-const EmployeeDetailsForm = () => {
+const ProvidentFundOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
+  const [showJointHolderName, setShowJointHolderName] = useState(false);
+  const [defaultData, setDefaultData] = useState({});
+  const [defaultDate, setdefaultDate] = useState(null);
+  // const [nomineeDetails, setNomineeDetails] = useState([]);
+  // const [nomineeError, setNomineeError] = useState(false);
 
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -62,11 +78,19 @@ const EmployeeDetailsForm = () => {
       pointOfContactName: "",
       pointOfContactMobile: "",
       pointOfContactEmail: "",
+      image: "",
     },
   });
 
-  const employeeMutate = useMutation({
+  const ppfMutate = useMutation({
     mutationFn: async (data) => {
+      const Formdata = new FormData();
+      Formdata.append("image", data.image);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+
       const response = await axios.post(`/api/provident-funds`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -75,19 +99,24 @@ const EmployeeDetailsForm = () => {
       return response.data.data.ProvidentFund;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("employeeData");
-      toast.success("Employee details added successfully!");
+      queryClient.invalidateQueries("PpfData");
+      toast.success("Public Provident Fund details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error submitting employee details:", error);
-      toast.error("Failed to submit employee details");
+      console.error("Error submitting Public Provident Fund details:", error);
+      toast.error("Failed to submit Public Provident Fund details");
     },
   });
 
   const onSubmit = (data) => {
     console.log(data);
-    employeeMutate.mutate(data);
+
+    ppfMutate.mutate(data);
+  };
+
+  const handleFileUpload = () => {
+    window.open(`/storage/profiles/ppfFile/${defaultData?.ppfFile}`);
   };
 
   return (
@@ -97,10 +126,10 @@ const EmployeeDetailsForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Providend Fund Details
+                Providend Fund
               </CardTitle>
               <CardDescription>
-                Fill out the form to add new Providend Fund.
+                Fill out the form to add new Providend Fund details.
               </CardDescription>
             </div>
           </div>
@@ -125,9 +154,7 @@ const EmployeeDetailsForm = () => {
                 )}
               />
               {errors.employerName && (
-                <span className="text-red-500">
-                  {errors.employerName.message}
-                </span>
+                <span className="text-red-500">{errors.employerName.message}</span>
               )}
             </div>
 
@@ -146,7 +173,9 @@ const EmployeeDetailsForm = () => {
                 )}
               />
               {errors.uanNumber && (
-                <span className="text-red-500">{errors.uanNumber.message}</span>
+                <span className="text-red-500">
+                  {errors.uanNumber.message}
+                </span>
               )}
             </div>
 
@@ -168,7 +197,6 @@ const EmployeeDetailsForm = () => {
                 <span className="text-red-500">{errors.bankName.message}</span>
               )}
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="branch">Branch</Label>
               <Controller
@@ -188,26 +216,7 @@ const EmployeeDetailsForm = () => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="bankAccountNumber">Bank Account Number</Label>
-              <Controller
-                name="bankAccountNumber"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="bankAccountNumber"
-                    placeholder="Enter Bank Account Number"
-                    {...field}
-                    className={errors.bankAccountNumber ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.bankAccountNumber && (
-                <span className="text-red-500">
-                  {errors.bankAccountNumber.message}
-                </span>
-              )}
-            </div>
+ 
 
             <div className="space-y-2">
               <Label htmlFor="additionalDetails">Additional Details</Label>
@@ -226,27 +235,6 @@ const EmployeeDetailsForm = () => {
               {errors.additionalDetails && (
                 <span className="text-red-500">
                   {errors.additionalDetails.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
                 </span>
               )}
             </div>
@@ -326,6 +314,44 @@ const EmployeeDetailsForm = () => {
                 </span>
               )}
             </div>
+            
+            <div className="space-y-2">
+                    <Label htmlFor="ppfFile">Upload Your Providend Fund File</Label>
+                    <Controller
+                      name="ppfFile"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="ppfFile"
+                          placeholder="Providend Fund File"
+                          type="file"
+                          onChange={(event) => {
+                            field.onChange(
+                              event.target.files && event.target.files[0]
+                            );
+                            console.log("sadsA", event.target.files);
+                          }}
+                          className={errors.ppfFile ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.ppfFile && (
+                      <span className="text-red-500">
+                        {errors.ppfFile.message}
+                      </span>
+                    )}
+                  </div>
+                  {defaultData?.ppfFile && (
+                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                      <Button
+                        variant="ghost"
+                        onClick={handleFileUpload}
+                        className="color-green-500"
+                      >
+                        View Uploaded Public Providend Fund File
+                      </Button>
+                    </div>
+                  )}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
@@ -337,4 +363,4 @@ const EmployeeDetailsForm = () => {
   );
 };
 
-export default EmployeeDetailsForm;
+export default ProvidentFundOtherForm;

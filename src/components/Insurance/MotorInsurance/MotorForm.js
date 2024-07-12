@@ -207,10 +207,10 @@ const MotorForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Insurance Policy Details
+                Motor Insurance Policy Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new insurance policy.
+                Fill out the form to add a new Motor Insurance Policy.
               </CardDescription>
             </div>
           </div>
