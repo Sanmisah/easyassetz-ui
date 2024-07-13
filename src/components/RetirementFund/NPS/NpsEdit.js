@@ -29,9 +29,7 @@ import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
-  bankName: z.string().optional(),
-  ppfAccountNo: z.string().optional(),
-  branch: z.string().optional(),
+  PRAN: z.string().optional(), 
   natureOfHolding: z.string().optional(),
   additionalDetails: z.string().optional(),
   name: z.string().optional(),
@@ -49,7 +47,7 @@ const schema = z.object({
 //   return true;
 // });
 
-const PpfEditForm = ({}) => {
+const NPSEditForm = ({}) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const getitem = localStorage.getItem("user");
@@ -68,9 +66,7 @@ const PpfEditForm = ({}) => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      bankName: "",
-      ppfAccountNo: "",
-      branch: "",
+      PRAN: "",
       natureOfHolding: "",
       jointHolderName: "",
       additionalDetails: "",
@@ -83,7 +79,7 @@ const PpfEditForm = ({}) => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/public-provident-funds/${lifeInsuranceEditId}`,
+      `/api/nps/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -139,7 +135,7 @@ const PpfEditForm = ({}) => {
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/public-provident-funds/${lifeInsuranceEditId}`,
+        `/api/nps/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -147,16 +143,16 @@ const PpfEditForm = ({}) => {
           },
         }
       );
-      return response.data.data.PublicProvidentFund;
+      return response.data.data.NPS;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("PublicProvidentFund");
-      toast.success("Public Providend Fund details updated successfully!");
+      toast.success("NPS details updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error updating Public Providend Fund details:", error);
-      toast.error("Failed to update Public Providend Fund details");
+      console.error("Error updating NPS details:", error);
+      toast.error("Failed to update NPS details");
     },
   });
 
@@ -166,7 +162,7 @@ const PpfEditForm = ({}) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading Public Providend Fund data</div>;
+  if (isError) return <div>Error loading NPS data</div>;
 
   return (
     <div className="w-full">
@@ -175,10 +171,10 @@ const PpfEditForm = ({}) => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Public Providend Fund Details
+                Edit NPS Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the Public Providend Fund details.
+                Update the form to edit the NPS details.
               </CardDescription>
             </div>
           </div>
@@ -189,63 +185,21 @@ const PpfEditForm = ({}) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="bankName">Post/Bank Name</Label>
+              <Label htmlFor="PRAN">Permanent Retirement Account Number (PRAN)</Label>
               <Controller
-                name="bankName"
+                name="PRAN"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="bankName"
-                    placeholder="Enter Post/Bank Name"
+                    id="PRAN"
+                    placeholder="Enter PRAN"
                     {...field}
-                    className={errors.bankName ? "border-red-500" : ""}
+                    className={errors.PRAN ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.bankName && (
-                <span className="text-red-500">{errors.bankName.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="ppfAccountNo">
-                Public Providend Fund Account Number
-              </Label>
-              <Controller
-                name="ppfAccountNo"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="ppfAccountNo"
-                    placeholder="Enter Public Providend Fund Account Number"
-                    {...field}
-                    className={errors.ppfAccountNo ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.ppfAccountNo && (
-                <span className="text-red-500">
-                  {errors.ppfAccountNo.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="branch">Branch</Label>
-              <Controller
-                name="branch"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="branch"
-                    placeholder="Enter Branch"
-                    {...field}
-                    className={errors.branch ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.branch && (
-                <span className="text-red-500">{errors.branch.message}</span>
+              {errors.PRAN && (
+                <span className="text-red-500">{errors.PRAN.message}</span>
               )}
             </div>
 
@@ -441,4 +395,4 @@ const PpfEditForm = ({}) => {
   );
 };
 
-export default PpfEditForm;
+export default NPSEditForm;

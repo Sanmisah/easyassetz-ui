@@ -8,6 +8,13 @@ import {
   CardFooter,
 } from "@com/ui/card";
 import { Label } from "@com/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { useForm, Controller } from "react-hook-form";
@@ -18,23 +25,26 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
   PRAN: z.string().nonempty({ message: "PRAN is required" }),
   natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
-  additionalDetails: z.string().optional(),
-  name: z
+    jointHolderName: z.string().optional(),
+    additionalDetails: z.string().optional(),
+  pointOfContactName: z
     .string()
     .nonempty({ message: "Point of Contact Name is required" }),
-  mobile: z
+  pointOfContactMobile: z
     .string()
     .nonempty({ message: "Point of Contact Mobile is required" }),
-  email: z
+  pointOfContactEmail: z
     .string()
     .email({ message: "Invalid Email" })
     .nonempty({ message: "Point of Contact Email is required" }),
+  ppfFile: z.any().optional(),
 });
 
 const NPSOtherForm = () => {
@@ -42,27 +52,40 @@ const NPSOtherForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [nomineeDetails, setNomineeDetails] = useState([]);
-  const [nomineeError, setNomineeError] = useState(false);
+  const [showJointHolderName, setShowJointHolderName] = useState(false);
+  const [defaultData, setDefaultData] = useState({});
+  const [defaultDate, setdefaultDate] = useState(null);
+  // const [nomineeDetails, setNomineeDetails] = useState([]);
+  // const [nomineeError, setNomineeError] = useState(false);
 
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       PRAN: "",
       natureOfHolding: "",
+      jointHolderName: "",
       additionalDetails: "",
-      name: "",
-      mobile: "",
-      email: "",
+      pointOfContactName: "",
+      pointOfContactMobile: "",
+      pointOfContactEmail: "",
+      ppfFile: "",
     },
   });
 
-  const pranMutate = useMutation({
+  const ppfMutate = useMutation({
     mutationFn: async (data) => {
+      const Formdata = new FormData();
+      Formdata.append("ppfFile", data.ppfFile);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+
       const response = await axios.post(`/api/nps`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -71,28 +94,24 @@ const NPSOtherForm = () => {
       return response.data.data.NPS;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("pranData");
-      toast.success("PRAN details added successfully!");
+      queryClient.invalidateQueries("PpfData");
+      toast.success("NPS details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error submitting PRAN details:", error);
-      toast.error("Failed to submit PRAN details");
+      console.error("Error submitting NPS details:", error);
+      toast.error("Failed to submit NPS details");
     },
   });
 
   const onSubmit = (data) => {
-    if (nomineeDetails.length === 0) {
-      setNomineeError(true);
-      return;
-    }
+    console.log(data);
 
-    pranMutate.mutate(data);
+    ppfMutate.mutate(data);
   };
 
-  const addNominee = () => {
-    const newNominee = { name: "", relation: "" }; // Replace with actual nominee fields
-    setNomineeDetails([...nomineeDetails, newNominee]);
+  const handleFileUpload = () => {
+    window.open(`/storage/profiles/ppfFile/${defaultData?.ppfFile}`);
   };
 
   return (
@@ -101,9 +120,11 @@ const NPSOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">NPS Details</CardTitle>
+              <CardTitle className="text-2xl font-bold">
+                NPS Details
+              </CardTitle>
               <CardDescription>
-                Fill out the form to add new NPS details.
+                Fill out the form to add new NPS Details.
               </CardDescription>
             </div>
           </div>
@@ -114,9 +135,7 @@ const NPSOtherForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="PRAN">
-                Permanent Retirement Account Number (PRAN)
-              </Label>
+              <Label htmlFor="PRAN">Permanent Retirement Account Number (PRAN)</Label>
               <Controller
                 name="PRAN"
                 control={control}
@@ -130,9 +149,7 @@ const NPSOtherForm = () => {
                 )}
               />
               {errors.PRAN && (
-                <span className="text-red-500">
-                  {errors.PRAN.message}
-                </span>
+                <span className="text-red-500">{errors.PRAN.message}</span>
               )}
             </div>
 
@@ -142,12 +159,23 @@ const NPSOtherForm = () => {
                 name="natureOfHolding"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    id="natureOfHolding"
-                    placeholder="Enter Nature of Holding"
+                  <RadioGroup
                     {...field}
-                    className={errors.natureOfHolding ? "border-red-500" : ""}
-                  />
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowJointHolderName(value === "joint");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="single" value="single" />
+                      <Label htmlFor="single">Single</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="joint" value="joint" />
+                      <Label htmlFor="joint">Joint</Label>
+                    </div>
+                  </RadioGroup>
                 )}
               />
               {errors.natureOfHolding && (
@@ -156,6 +184,48 @@ const NPSOtherForm = () => {
                 </span>
               )}
             </div>
+
+            {showJointHolderName && (
+              <div className="space-y-2">
+                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                <Controller
+                  name="jointHolderName"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="jointHolderName"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className={errors.jointHolderName ? "border-red-500" : ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Joint Holder Name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="family_member_1">
+                          Family Member 1
+                        </SelectItem>
+                        <SelectItem value="family_member_2">
+                          Family Member 2
+                        </SelectItem>
+                        <SelectItem value="other_contact_1">
+                          Other Contact 1
+                        </SelectItem>
+                        <SelectItem value="other_contact_2">
+                          Other Contact 2
+                        </SelectItem>
+                        {/* Add more options as needed */}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.jointHolderName && (
+                  <span className="text-red-500">
+                    {errors.jointHolderName.message}
+                  </span>
+                )}
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="additionalDetails">Additional Details</Label>
@@ -179,136 +249,118 @@ const NPSOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nomineeDetails">Nominee Details</Label>
-              <Button type="button" onClick={addNominee}>
-                Add (+) Nominee
-              </Button>
-              {nomineeError && (
-                <span className="text-red-500">
-                  Please add nominee details.
-                </span>
-              )}
-              {nomineeDetails.map((nominee, index) => (
-                <div key={index} className="mt-2">
-                  <Input
-                    placeholder="Nominee Name"
-                    value={nominee.name}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].name = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                  />
-                  <Input
-                    placeholder="Nominee Relation"
-                    value={nominee.relation}
-                    onChange={(e) => {
-                      const updatedNominees = [...nomineeDetails];
-                      updatedNominees[index].relation = e.target.value;
-                      setNomineeDetails(updatedNominees);
-                    }}
-                    className="mt-2"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
+              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
               <Controller
-                name="imageUpload"
+                name="pointOfContactName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Controller
-                name="name"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="name"
-                    placeholder="Enter Name"
+                    id="pointOfContactName"
+                    placeholder="Enter Point of Contact Name"
                     {...field}
                     className={
-                      errors.name ? "border-red-500" : ""
+                      errors.pointOfContactName ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.name && (
+              {errors.pointOfContactName && (
                 <span className="text-red-500">
-                  {errors.name.message}
+                  {errors.pointOfContactName.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="mobile">
-              Mobile
+              <Label htmlFor="pointOfContactMobile">
+                Point of Contact Mobile
               </Label>
               <Controller
-                name="mobile"
+                name="pointOfContactMobile"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
-                    id="mobile"
+                    id="pointOfContactMobile"
                     type="tel"
-                    placeholder="Enter Mobile"
+                    placeholder="Enter Point of Contact Mobile"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
                     {...field}
                     className={
-                      errors.mobile ? "border-red-500" : ""
+                      errors.pointOfContactMobile ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.mobile && (
+              {errors.pointOfContactMobile && (
                 <span className="text-red-500">
-                  {errors.mobile.message}
+                  {errors.pointOfContactMobile.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">
-                Email
+              <Label htmlFor="pointOfContactEmail">
+                Point of Contact Email
               </Label>
               <Controller
-                name="email"
+                name="pointOfContactEmail"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="email"
-                    placeholder="Enter  Email"
+                    id="pointOfContactEmail"
+                    placeholder="Enter Point of Contact Email"
                     {...field}
                     className={
-                      errors.email ? "border-red-500" : ""
+                      errors.pointOfContactEmail ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.email && (
+              {errors.pointOfContactEmail && (
                 <span className="text-red-500">
-                  {errors.email.message}
+                  {errors.pointOfContactEmail.message}
                 </span>
               )}
             </div>
+            
+            <div className="space-y-2">
+                    <Label htmlFor="ppfFile">Upload Your Public Providend Fund File</Label>
+                    <Controller
+                      name="ppfFile"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="ppfFile"
+                          placeholder="Public Providend Fund File"
+                          type="file"
+                          onChange={(event) => {
+                            field.onChange(
+                              event.target.files && event.target.files[0]
+                            );
+                            console.log("sadsA", event.target.files);
+                          }}
+                          className={errors.ppfFile ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.ppfFile && (
+                      <span className="text-red-500">
+                        {errors.ppfFile.message}
+                      </span>
+                    )}
+                  </div>
+                  {defaultData?.ppfFile && (
+                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                      <Button
+                        variant="ghost"
+                        onClick={handleFileUpload}
+                        className="color-green-500"
+                      >
+                        View Uploaded Public Providend Fund File
+                      </Button>
+                    </div>
+                  )}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

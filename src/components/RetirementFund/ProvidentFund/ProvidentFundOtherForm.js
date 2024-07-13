@@ -25,8 +25,6 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
-import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
-
 const schema = z.object({
   employerName: z.string().nonempty({ message: "Employer Name is required" }),
   uanNumber: z
