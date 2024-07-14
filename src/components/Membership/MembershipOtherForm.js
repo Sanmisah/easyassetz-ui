@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../Beneficiarydetails/Datepicker";
-import Addnominee from "./addNominee";
+import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 
 
