@@ -46,7 +46,7 @@ const SuperAnnuationMainForm = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["HeathinsuranceData"],
+    queryKey: ["SuperAnnuationData"],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
@@ -67,8 +67,8 @@ const SuperAnnuationMainForm = () => {
         },
       }
     );
-    queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Super Annuation deleted successfully!");
+      window.location.reload( true );
+       toast.success("Super Annuation deleted successfully!");
   };
 
   return (
