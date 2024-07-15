@@ -34,7 +34,7 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Company Name is required" }),
-    masterPolicyNumber: z.string().nonempty({ message: "Employee id is required" }),
+    masterPolicyNumber: z.string().nonempty({ message: "Master Policy Number is required" }),
     empNo: z.string().optional(),
     address: z.string().optional(),
     annuityAmount: z.string().optional(),
@@ -179,6 +179,28 @@ const SuperAnnuationOtherForm = () => {
               </div>
             </div>
             <div className="space-y-2">
+              <Label htmlFor="companyName">Company Name</Label>
+              <Controller
+                name="companyName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="companyName"
+                    placeholder="Enter Company Name"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.companyName ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.companyName && (
+                <span className="text-red-500">
+                  {errors.companyName.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
               <Controller
                 name="masterPolicyNumber"
@@ -201,14 +223,14 @@ const SuperAnnuationOtherForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="empNo">LIC Id/Emp Number</Label>
+              <Label htmlFor="empNo">Employee ID</Label>
               <Controller
                 name="empNo"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="empNo"
-                    placeholder="Enter LIC Id/Emp Number"
+                    placeholder="Enter Employee ID"
                     {...field}
                     value={field.value || ""}
                     onChange={field.onChange}
@@ -266,6 +288,7 @@ const SuperAnnuationOtherForm = () => {
                 </span>
               )}
             </div>
+           
              
             <div className="space-y-2">
               <Label htmlFor="additionalInformation">Additional Information</Label>

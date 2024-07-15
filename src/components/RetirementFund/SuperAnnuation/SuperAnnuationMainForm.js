@@ -18,7 +18,6 @@ import {
 } from "@/Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
-import cross from "@/components/image/close.png";
 
 const SuperAnnuationMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
@@ -32,14 +31,11 @@ const SuperAnnuationMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `/api/super-annuations/${lifeInsuranceDeleteId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/super-annuations`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
 
     return response.data.data.SuperAnnuation;
   };
@@ -63,14 +59,14 @@ const SuperAnnuationMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/gratuities/${lifeInsuranceDeleteId}`,
+      `/api/super-annuations/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    queryClient.invalidateQueries("LifeInsuranceData");
+    queryClient.invalidateQueries("LifeInsuraQuerynceData");
     toast.success("Super Annuation deleted successfully!");
   };
 
@@ -99,8 +95,7 @@ const SuperAnnuationMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.compamnyName}</h1>
-                  <p className="text-sm">{data.masterPolicyNumber}</p>
+                  <h1 className="font-bold">{data.companyName}</h1>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>

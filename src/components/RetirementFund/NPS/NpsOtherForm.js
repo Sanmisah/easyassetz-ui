@@ -34,17 +34,16 @@ const schema = z.object({
     .nonempty({ message: "Nature of Holding is required" }),
     jointHolderName: z.string().optional(),
     additionalDetails: z.string().optional(),
-  pointOfContactName: z
+  name: z
     .string()
     .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
+  mobile: z
     .string()
     .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
+  email: z
     .string()
     .email({ message: "Invalid Email" })
     .nonempty({ message: "Point of Contact Email is required" }),
-  ppfFile: z.any().optional(),
 });
 
 const NPSOtherForm = () => {
@@ -70,22 +69,14 @@ const NPSOtherForm = () => {
       natureOfHolding: "",
       jointHolderName: "",
       additionalDetails: "",
-      pointOfContactName: "",
-      pointOfContactMobile: "",
-      pointOfContactEmail: "",
-      ppfFile: "",
+      name: "",
+      mobile: "",
+      email: "",
     },
   });
 
-  const ppfMutate = useMutation({
+  const npsMutate = useMutation({
     mutationFn: async (data) => {
-      const Formdata = new FormData();
-      Formdata.append("ppfFile", data.ppfFile);
-
-      for (const [key, value] of Object.entries(data)) {
-        Formdata.append(key, value);
-      }
-
       const response = await axios.post(`/api/nps`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -94,7 +85,7 @@ const NPSOtherForm = () => {
       return response.data.data.NPS;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("PpfData");
+      queryClient.invalidateQueries("NPSData");
       toast.success("NPS details added successfully!");
       navigate("/dashboard");
     },
@@ -107,13 +98,9 @@ const NPSOtherForm = () => {
   const onSubmit = (data) => {
     console.log(data);
 
-    ppfMutate.mutate(data);
+    npsMutate.mutate(data);
   };
-
-  const handleFileUpload = () => {
-    window.open(`/storage/profiles/ppfFile/${defaultData?.ppfFile}`);
-  };
-
+  
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -249,118 +236,80 @@ const NPSOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Controller
-                name="pointOfContactName"
+                name="name"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactName"
+                    id="name"
                     placeholder="Enter Point of Contact Name"
                     {...field}
                     className={
-                      errors.pointOfContactName ? "border-red-500" : ""
+                      errors.name ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactName && (
+              {errors.name && (
                 <span className="text-red-500">
-                  {errors.pointOfContactName.message}
+                  {errors.name.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactMobile">
-                Point of Contact Mobile
+              <Label htmlFor="mobile">
+                Mobile
               </Label>
               <Controller
-                name="pointOfContactMobile"
+                name="mobile"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
-                    id="pointOfContactMobile"
+                    id="mobile"
                     type="tel"
-                    placeholder="Enter Point of Contact Mobile"
+                    placeholder="Enter Mobile"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
                     {...field}
                     className={
-                      errors.pointOfContactMobile ? "border-red-500" : ""
+                      errors.mobile ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactMobile && (
+              {errors.mobile && (
                 <span className="text-red-500">
-                  {errors.pointOfContactMobile.message}
+                  {errors.mobile.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pointOfContactEmail">
-                Point of Contact Email
+              <Label htmlFor="email">
+                Email
               </Label>
               <Controller
-                name="pointOfContactEmail"
+                name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="pointOfContactEmail"
-                    placeholder="Enter Point of Contact Email"
+                    id="email"
+                    placeholder="Enter Email"
                     {...field}
                     className={
-                      errors.pointOfContactEmail ? "border-red-500" : ""
+                      errors.email ? "border-red-500" : ""
                     }
                   />
                 )}
               />
-              {errors.pointOfContactEmail && (
+              {errors.email && (
                 <span className="text-red-500">
-                  {errors.pointOfContactEmail.message}
+                  {errors.email.message}
                 </span>
               )}
             </div>
-            
-            <div className="space-y-2">
-                    <Label htmlFor="ppfFile">Upload Your Public Providend Fund File</Label>
-                    <Controller
-                      name="ppfFile"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="ppfFile"
-                          placeholder="Public Providend Fund File"
-                          type="file"
-                          onChange={(event) => {
-                            field.onChange(
-                              event.target.files && event.target.files[0]
-                            );
-                            console.log("sadsA", event.target.files);
-                          }}
-                          className={errors.ppfFile ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.ppfFile && (
-                      <span className="text-red-500">
-                        {errors.ppfFile.message}
-                      </span>
-                    )}
-                  </div>
-                  {defaultData?.ppfFile && (
-                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
-                      <Button
-                        variant="ghost"
-                        onClick={handleFileUpload}
-                        className="color-green-500"
-                      >
-                        View Uploaded Public Providend Fund File
-                      </Button>
-                    </div>
-                  )}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

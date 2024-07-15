@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const ppfMainForm = () => {
+const ProvidentFundMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -58,13 +58,16 @@ const ppfMainForm = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(`/api/provident-funds/${lifeInsuranceDeleteId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
-    queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Provident Fund deleted successfully!");
+    const response = await axios.delete(
+      `/api/provident-funds/${lifeInsuranceDeleteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    queryClient.invalidateQueries("LifeInsuraQuerynceData");
+    toast.success("Providend Fund deleted successfully!");
   };
 
   return (
@@ -93,7 +96,6 @@ const ppfMainForm = () => {
               >
                 <div className="flex flex-col  ml-8">
                   <h1 className="font-bold">{data.employerName}</h1>
-                  <p className="text-sm">{data.uanNumber}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -133,4 +135,4 @@ const ppfMainForm = () => {
   );
 };
 
-export default ppfMainForm;
+export default ProvidentFundMainForm;

@@ -41,7 +41,7 @@ const schema = z.object({
     email: z.string().optional(),
 });
 
-const GratuityEditForm = () => {
+const SuperAnnuationEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -76,7 +76,7 @@ const GratuityEditForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/gratuities/${lifeInsuranceEditId}`,
+      `/api/super-annuations/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -142,7 +142,7 @@ const GratuityEditForm = () => {
   const membershipMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/gratuities/${lifeInsuranceEditId}`,
+        `/api/super-annuations/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -150,7 +150,7 @@ const GratuityEditForm = () => {
           },
         }
       );
-      return response.data.data.Gratuity;
+      return response.data.data.SuperAnnuation;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
@@ -201,7 +201,7 @@ const GratuityEditForm = () => {
     console.log(Benifyciary);
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading Gratuity data</div>;
+  if (isError) return <div>Error loading Super Annuation data</div>;
   return (
     <div className="w-full">
       <Card>
@@ -209,10 +209,10 @@ const GratuityEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Gratuity Details
+                Super Annuation Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the Gratuity details.
+                Edit the form to update the Super Annuation Details.
               </CardDescription>
             </div>
           </div>
@@ -224,48 +224,114 @@ const GratuityEditForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="employerName">Employer Name</Label>
+                <Label htmlFor="companyName">Company Name</Label>
                 <Controller
-                  name="employerName"
-                  defaultValue={Benifyciary?.employerName || ""}
+                  name="companyName"
+                  defaultValue={Benifyciary?.companyName || ""}
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="employerName"
+                      id="companyName"
                       placeholder="Employer Name"
                       {...field}
                       className={
-                        errors.employerName ? "border-red-500" : ""
+                        errors.companyName ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.employerName || ""}
+                      defaultValue={Benifyciary?.companyName || ""}
                     />
                   )}
                 />
-                {errors.employerName && (
+                {errors.companyName && (
                   <span className="text-red-500">
-                    {errors.employerName.message}
+                    {errors.companyName.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="employerId">Employee ID </Label>
+                <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
                 <Controller
-                  name="employerId"
-                  defaultValue={Benifyciary?.employerId || ""}
+                  name="masterPolicyNumber"
+                  defaultValue={Benifyciary?.masterPolicyNumber || ""}
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="employerId"
+                      id="masterPolicyNumber"
                       placeholder="Employee Id"
                       {...field}
-                      className={errors.employerId ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.employerId || ""}
+                      className={errors.masterPolicyNumber ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.masterPolicyNumber || ""}
                     />
                   )}
                 />
-                {errors.employerId && (
+                {errors.masterPolicyNumber && (
                   <span className="text-red-500">
-                    {errors.employerId.message}
+                    {errors.masterPolicyNumber.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="empNo">Employee ID</Label>
+                <Controller
+                  name="empNo"
+                  defaultValue={Benifyciary?.empNo || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="empNo"
+                      placeholder="Employee Id"
+                      {...field}
+                      className={errors.empNo ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.empNo || ""}
+                    />
+                  )}
+                />
+                {errors.empNo && (
+                  <span className="text-red-500">
+                    {errors.empNo.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Controller
+                  name="address"
+                  defaultValue={Benifyciary?.address || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="address"
+                      placeholder="Enter Address"
+                      {...field}
+                      className={errors.address ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.address || ""}
+                    />
+                  )}
+                />
+                {errors.address && (
+                  <span className="text-red-500">
+                    {errors.address.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="annuityAmount">Annuity Amount</Label>
+                <Controller
+                  name="annuityAmount"
+                  defaultValue={Benifyciary?.annuityAmount || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="annuityAmount"
+                      placeholder="Enter Annuity Amount"
+                      {...field}
+                      className={errors.annuityAmount ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.annuityAmount || ""}
+                    />
+                  )}
+                />
+                {errors.annuityAmount && (
+                  <span className="text-red-500">
+                    {errors.annuityAmount.message}
                   </span>
                 )}
               </div>
@@ -415,4 +481,4 @@ const GratuityEditForm = () => {
   );
 };
 
-export default GratuityEditForm;
+export default SuperAnnuationEditForm;

@@ -38,6 +38,7 @@ const schema = z.object({
     .string()
     // .email({ message: "Invalid Email" })
     .optional(),
+
 });
 // .refine((data) => {
 //   if (data.natureOfHolding === "joint") {
@@ -73,6 +74,7 @@ const NPSEditForm = ({}) => {
       name: "",
       mobile: "",
       email: "",
+
     },
   });
 
@@ -86,11 +88,9 @@ const NPSEditForm = ({}) => {
         },
       }
     );
-    let data = response.data.data.PublicProvidentFund;
+    let data = response.data.data.NPS;
     console.log("Fetching Data:", data);
-    setValue("bankName", data.bankName);
-    setValue("ppfAccountNo", data.ppfAccountNo);
-    setValue("branch", data.branch);
+    setValue("PRAN", data.PRAN);
     setValue("natureOfHolding", data.natureOfHolding);
     setValue("jointHolderName", data.jointHolderName);
     setValue("additionalDetails", data.additionalDetails);
@@ -100,7 +100,7 @@ const NPSEditForm = ({}) => {
     if (data.natureOfHolding === "joint") {
       setShowJointHolderName(true);
     }
-    // Assume nomineeDetails is an array of nominee objects
+  //   Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
     return response.data.data.PublicProvidentFund;
   };
@@ -132,7 +132,7 @@ const NPSEditForm = ({}) => {
     },
   });
 
-  const ppfMutate = useMutation({
+  const npsMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
         `/api/nps/${lifeInsuranceEditId}`,
@@ -158,7 +158,7 @@ const NPSEditForm = ({}) => {
 
   const onSubmit = (data) => {
     console.log(data);
-    ppfMutate.mutate(data);
+    npsMutate.mutate(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -297,37 +297,15 @@ const NPSEditForm = ({}) => {
                 </span>
               )}
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="name">Point of Contact Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Controller
                 name="name"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="name"
-                    placeholder="Enter Point of Contact Name"
+                    placeholder="Enter Name"
                     {...field}
                     className={errors.name ? "border-red-500" : ""}
                   />
@@ -336,11 +314,10 @@ const NPSEditForm = ({}) => {
               {errors.name && (
                 <span className="text-red-500">{errors.name.message}</span>
               )}
-            </div>
-            {/* 
+            </div>           
             <div className="space-y-2">
               <Label htmlFor="mobile">
-                Point of Contact Mobile
+                Mobile
               </Label>
               <Controller
                 name="mobile"
@@ -349,7 +326,7 @@ const NPSEditForm = ({}) => {
                   <PhoneInput
                     id="mobile"
                     type="tel"
-                    placeholder="Enter Point of Contact Mobile"
+                    placeholder="Enter Mobile"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
                     {...field}
@@ -364,17 +341,16 @@ const NPSEditForm = ({}) => {
                   {errors.mobile.message}
                 </span>
               )}
-            </div> */}
-
+            </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Point of Contact Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Controller
                 name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="email"
-                    placeholder="Enter Point of Contact Email"
+                    placeholder="Enter Email"
                     {...field}
                     className={errors.email ? "border-red-500" : ""}
                   />
@@ -383,8 +359,7 @@ const NPSEditForm = ({}) => {
               {errors.email && (
                 <span className="text-red-500">{errors.email.message}</span>
               )}
-            </div>
-
+            </div>        
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
