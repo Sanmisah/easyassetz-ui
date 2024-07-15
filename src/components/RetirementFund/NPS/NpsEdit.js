@@ -33,7 +33,7 @@ const schema = z.object({
   natureOfHolding: z.string().optional(),
   additionalDetails: z.string().optional(),
   name: z.string().optional(),
-  // mobile: z.string().optional(),
+  mobile: z.string().optional(),
   email: z
     .string()
     // .email({ message: "Invalid Email" })
@@ -102,7 +102,7 @@ const NPSEditForm = ({}) => {
     }
   //   Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
-    return response.data.data.PublicProvidentFund;
+    return response.data.data.NPS;
   };
 
   const {
@@ -127,8 +127,8 @@ const NPSEditForm = ({}) => {
       setNomineeDetails(data.nomineeDetails || []);
     },
     onError: (error) => {
-      console.error("Error fetching PPF data:", error);
-      toast.error("Failed to fetch PPF data");
+      console.error("Error fetching NPS data:", error);
+      toast.error("Failed to fetch NPS data");
     },
   });
 
@@ -146,7 +146,7 @@ const NPSEditForm = ({}) => {
       return response.data.data.NPS;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("PublicProvidentFund");
+      queryClient.invalidateQueries("NPS");
       toast.success("NPS details updated successfully!");
       navigate("/dashboard");
     },
@@ -329,7 +329,8 @@ const NPSEditForm = ({}) => {
                     placeholder="Enter Mobile"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     className={
                       errors.mobile ? "border-red-500" : ""
                     }

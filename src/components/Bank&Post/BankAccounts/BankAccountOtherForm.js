@@ -31,13 +31,14 @@ import cross from "@/components/image/close.png";
 
 
 const schema = z.object({
-  organizationName: z
-    .string()
-    .nonempty({ message: "Organization Name is required" }),
-  membershipId: z.string().nonempty({ message: "Membership id is required" }),
-  membershipType: z.string().optional(),
-  membershipPaymentDate: z.date().optional(),
-  email: z.string().optional(),
+  bankName: z.string().nonempty({ message: "Bank/Institution Name is required" }),
+  accountType: z.string().nonempty({ message: "Account Type is required" }),
+  accountNumber: z.string().nonempty({ message: "Account Number is required" }),
+  branchName: z.date().optional(),
+  city: z.string().optional(),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName : z.string().optional(),
+  jointHolderPan : z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -46,7 +47,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const MembershipForm = () => {
+const BankAccountForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -84,7 +85,7 @@ const MembershipForm = () => {
         },
       });
 
-      return response.data.data.Membership;
+      return response.data.data.BankAccount;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -241,6 +242,27 @@ const MembershipForm = () => {
                   </span>
                 )}
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="membershipPaymentDate">
+                  Membership Payment Date
+                </Label>
+                <Controller
+                  name="membershipPaymentDate"
+                  control={control}
+                  render={({ field }) => (
+                    <Datepicker
+                      {...field}
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value}
+                    />
+                  )}
+                />
+                {errors.membershipPaymentDate && (
+                  <span className="text-red-500 mt-5">
+                    {errors.membershipPaymentDate.message}
+                  </span>
+                )}
+              </div>
               </div>
 
               {displaynominie && displaynominie.length > 0 && (
@@ -383,4 +405,4 @@ const MembershipForm = () => {
   );
 };
 
-export default MembershipForm;
+export default BankAccountForm;

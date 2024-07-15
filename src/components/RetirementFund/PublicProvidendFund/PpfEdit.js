@@ -29,15 +29,15 @@ import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
-  bankName: z.string().optional(),
-  ppfAccountNo: z.string().optional(),
-  branch: z.string().optional(),
-  natureOfHolding: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  name: z.string().optional(),
-  // mobile: z.string().optional(),
+  bankName: z.any().optional(),
+  ppfAccountNo: z.any().optional(),
+  branch: z.any().optional(),
+  natureOfHolding: z.any().optional(),
+  additionalDetails: z.any().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
   email: z
-    .string()
+    .any()
     // .email({ message: "Invalid Email" })
     .optional(),
 });

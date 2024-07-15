@@ -31,10 +31,13 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  employerName: z
+  companyName: z
     .string()
     .nonempty({ message: "Organization Name is required" }),
-    employerId: z.string().nonempty({ message: "Membership id is required" }),
+    masterPolicyNumber: z.string().optional(),
+    empNo: z.string().optional(),
+    address: z.string().optional(),
+    annuityAmount: z.string().optional(),
     additionalDetails: z.string().optional(),
     name: z.string().optional(),
     phone: z.string().optional(),
@@ -46,7 +49,6 @@ const SuperAnnuationEditForm = () => {
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const [showOtherMembershipType, setShowOtherMembershipType] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [name, setName] = useState("");
@@ -83,17 +85,9 @@ const SuperAnnuationEditForm = () => {
         },
       }
     );
-    let othertype = response.data.data.Membership?.membershipType;
-    if (othertype === "annual" || othertype === "life") {
-      setShowOtherMembershipType(false);
-      setValue("membershipType", othertype);
-    } else {
-      setShowOtherMembershipType(true);
-      setValue("otherMembersipType", othertype);
-    }
-
-    console.log(typeof response.data.data.Membership?.premium);
-    return response.data.data.Membership;
+  
+    console.log(typeof response.data.data.SuperAnnuation?.annuityAmount);
+    return response.data.data.SuperAnnuation;
   };
 
   const {
@@ -105,24 +99,26 @@ const SuperAnnuationEditForm = () => {
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
+      // if (data.modeOfPurchase === "broker") {
+      //   setBrokerSelected(true);
+      //   setHideRegisteredFields(false);
+      // }
+      // if (data.modeOfPurchase === "e-insurance") {
+      //   setBrokerSelected(false);
+      //   setHideRegisteredFields(true);
+      // }
       setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("organizationName", data.organizationName);
-      setValue("membershipId", data.membershipId);
-      setValue("membershiptype", data.metaltype);
-      setValue("membershipPaymentDate", data.membershipPaymentDate);
-      setValue("numberOfArticles", data.numberOfArticles);
-      setValue("additionalInformation", data.additionalInformation);
-      setValue("pointOfContact", data.pointOfContact);
+      setValue("companyName", data.companyName);
+      setValue("masterPolicyNumber", data.masterPolicyNumber);
+      setValue("empNo", data.empNo);
+      setValue("address", data.address);
+      setValue("annuityAmount", data.annuityAmount);
+      setValue("additionalDetails", data.additionalDetails);
+      setValue("name", data.name);
+      setValue("phone", data.phone);
+      setValue("email", data.email);
 
       // Set fetched values to the form
       for (const key in data) {
@@ -139,7 +135,7 @@ const SuperAnnuationEditForm = () => {
     },
   });
 
-  const membershipMutate = useMutation({
+  const superannuationMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
         `/api/super-annuations/${lifeInsuranceEditId}`,
@@ -157,7 +153,7 @@ const SuperAnnuationEditForm = () => {
         "MembershipDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Gratuity added successfully!");
+      toast.success("Super Annuations added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -180,10 +176,7 @@ const SuperAnnuationEditForm = () => {
     data.name = name;
     data.email = email;
     data.mobile = mobile;
-    console.log("membership:", data.membership);
-    if (data.membershipType === "other") {
-      data.membersipType = data.otherMembershipType;
-    }
+   
     console.log(data);
     // const date = new Date(data.membershipPaymentDate);
     // const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -194,7 +187,7 @@ const SuperAnnuationEditForm = () => {
     console.log("brokerName:", data.brokerName);
     data.nominees = selectedNommie;
 
-    membershipMutate.mutate(data);
+    superannuationMutate.mutate(data);
   };
 
   useEffect(() => {

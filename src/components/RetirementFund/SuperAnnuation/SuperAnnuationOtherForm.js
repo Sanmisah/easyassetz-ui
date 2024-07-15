@@ -152,32 +152,7 @@ const SuperAnnuationOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="companyName">Company Name</Label>
-                <Controller
-                  name="companyName"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="companyName"
-                      placeholder="Enter Company Name"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.companyName ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.companyName && (
-                  <span className="text-red-500">
-                    {errors.companyName.message}
-                  </span>
-                )}
-              </div>
-            </div>
+           
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
               <Controller

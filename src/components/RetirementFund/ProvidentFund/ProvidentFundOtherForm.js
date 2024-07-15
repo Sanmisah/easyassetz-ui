@@ -85,13 +85,13 @@ const ProvidentFundOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/super-annuations`, data, {
+      const response = await axios.post(`/api/provident-funds`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.SuperAnnuation;
+      return response.data.data.ProvidentFund;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");

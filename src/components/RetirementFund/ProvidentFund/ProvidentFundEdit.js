@@ -29,15 +29,17 @@ import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const schema = z.object({
-  bankName: z.string().optional(),
-  ppfAccountNo: z.string().optional(),
+  employerName: z.string().optional(),
+  uanNumber: z.string().optional(),
   branch: z.string().optional(),
-  natureOfHolding: z.string().optional(),
+  bankName: z.string().optional(),
+  branch: z.string().optional(),
+  bankAccountNumber: z.string().optional(),
   additionalDetails: z.string().optional(),
-  name: z.string().optional(),
-  // mobile: z.string().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
   email: z
-    .string()
+    .any()
     // .email({ message: "Invalid Email" })
     .optional(),
 });
@@ -68,15 +70,15 @@ const ProvidentFundEditForm = ({}) => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
+      employerName: "",
+      uanNumber: "",
       bankName: "",
-      ppfAccountNo: "",
       branch: "",
-      natureOfHolding: "",
-      jointHolderName: "",
+      bankAccountNumber: "",
       additionalDetails: "",
       name: "",
-      mobile: "",
       email: "",
+      phone: "",
     },
   });
 
@@ -92,11 +94,11 @@ const ProvidentFundEditForm = ({}) => {
     );
     let data = response.data.data.ProvidentFund;
     console.log("Fetching Data:", data);
-    setValue("bankName", data.bankName);
-    setValue("ppfAccountNo", data.ppfAccountNo);
+    setValue("employerName", data.bankName);
+    setValue("uanNumber", data.ppfAccountNo);
     setValue("branch", data.branch);
-    setValue("natureOfHolding", data.natureOfHolding);
-    setValue("jointHolderName", data.jointHolderName);
+    setValue("bankName", data.natureOfHolding);
+    setValue("bankAccountNumber", data.jointHolderName);
     setValue("additionalDetails", data.additionalDetails);
     setValue("name", data.name);
     setValue("mobile", data.mobile);
@@ -106,7 +108,7 @@ const ProvidentFundEditForm = ({}) => {
     }
     // Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
-    return response.data.data.PublicProvidentFund;
+    return response.data.data.ProvidentFund;
   };
 
   const {
@@ -131,12 +133,12 @@ const ProvidentFundEditForm = ({}) => {
       setNomineeDetails(data.nomineeDetails || []);
     },
     onError: (error) => {
-      console.error("Error fetching PPF data:", error);
-      toast.error("Failed to fetch PPF data");
+      console.error("Error fetching Providend data:", error);
+      toast.error("Failed to fetch Providend data data");
     },
   });
 
-  const ppfMutate = useMutation({
+  const pfMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
         `/api/provident-funds/${lifeInsuranceEditId}`,
@@ -150,23 +152,23 @@ const ProvidentFundEditForm = ({}) => {
       return response.data.data.ProvidentFund;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("PublicProvidentFund");
-      toast.success("Public Providend Fund details updated successfully!");
+      queryClient.invalidateQueries("ProvidentFund");
+      toast.success("Providend Fund details updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error updating Public Providend Fund details:", error);
-      toast.error("Failed to update Public Providend Fund details");
+      console.error("Error updating  Providend Fund details:", error);
+      toast.error("Failed to update  Providend Fund details");
     },
   });
 
   const onSubmit = (data) => {
     console.log(data);
-    ppfMutate.mutate(data);
+    pfMutate.mutate(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading Public Providend Fund data</div>;
+  if (isError) return <div>Error loading  Providend Fund data</div>;
 
   return (
     <div className="w-full">
@@ -175,10 +177,10 @@ const ProvidentFundEditForm = ({}) => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Public Providend Fund Details
+                Edit  Providend Fund Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the Public Providend Fund details.
+                Update the form to edit the  Providend Fund details.
               </CardDescription>
             </div>
           </div>
@@ -189,43 +191,65 @@ const ProvidentFundEditForm = ({}) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="bankName">Post/Bank Name</Label>
+              <Label htmlFor="employerName">Employer Name</Label>
+              <Controller
+                name="employerName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="employerName"
+                    placeholder="Enter Employer Name"
+                    {...field}
+                    className={errors.employerName ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.employerName && (
+                <span className="text-red-500">{errors.employerName.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="uanNumber">
+              UAN Number
+              </Label>
+              <Controller
+                name="uanNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="uanNumber"
+                    placeholder="Enter UAN Number"
+                    {...field}
+                    className={errors.uanNumber ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.uanNumber && (
+                <span className="text-red-500">
+                  {errors.uanNumber.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bankName">
+              Bank Name
+              </Label>
               <Controller
                 name="bankName"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="bankName"
-                    placeholder="Enter Post/Bank Name"
+                    placeholder="Enter Bank Name"
                     {...field}
                     className={errors.bankName ? "border-red-500" : ""}
                   />
                 )}
               />
               {errors.bankName && (
-                <span className="text-red-500">{errors.bankName.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="ppfAccountNo">
-                Public Providend Fund Account Number
-              </Label>
-              <Controller
-                name="ppfAccountNo"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="ppfAccountNo"
-                    placeholder="Enter Public Providend Fund Account Number"
-                    {...field}
-                    className={errors.ppfAccountNo ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.ppfAccountNo && (
                 <span className="text-red-500">
-                  {errors.ppfAccountNo.message}
+                  {errors.bankName.message}
                 </span>
               )}
             </div>
@@ -248,80 +272,24 @@ const ProvidentFundEditForm = ({}) => {
                 <span className="text-red-500">{errors.branch.message}</span>
               )}
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Label htmlFor="bankAccountNumber">Bank Account Number</Label>
               <Controller
-                name="natureOfHolding"
+                name="bankAccountNumber"
                 control={control}
                 render={({ field }) => (
-                  <RadioGroup
+                  <Input
+                    id="bankAccountNumber"
+                    placeholder="Enter Bank Account Number"
                     {...field}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setShowJointHolderName(value === "joint");
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem id="single" value="single" />
-                      <Label htmlFor="single">Single</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="joint" value="joint" />
-                      <Label htmlFor="joint">Joint</Label>
-                    </div>
-                  </RadioGroup>
+                    className={errors.bankAccountNumber ? "border-red-500" : ""}
+                  />
                 )}
               />
-              {errors.natureOfHolding && (
-                <span className="text-red-500">
-                  {errors.natureOfHolding.message}
-                </span>
+              {errors.bankAccountNumber && (
+                <span className="text-red-500">{errors.bankAccountNumber.message}</span>
               )}
             </div>
-
-            {showJointHolderName && (
-              <div className="space-y-2">
-                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                <Controller
-                  name="jointHolderName"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="jointHolderName"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className={errors.jointHolderName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Joint Holder Name" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="family_member_1">
-                          Family Member 1
-                        </SelectItem>
-                        <SelectItem value="family_member_2">
-                          Family Member 2
-                        </SelectItem>
-                        <SelectItem value="other_contact_1">
-                          Other Contact 1
-                        </SelectItem>
-                        <SelectItem value="other_contact_2">
-                          Other Contact 2
-                        </SelectItem>
-                        {/* Add more options as needed */}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.jointHolderName && (
-                  <span className="text-red-500">
-                    {errors.jointHolderName.message}
-                  </span>
-                )}
-              </div>
-            )}
 
             <div className="space-y-2">
               <Label htmlFor="additionalDetails">Additional Details</Label>
@@ -345,35 +313,14 @@ const ProvidentFundEditForm = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="name">Point of Contact Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Controller
                 name="name"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="name"
-                    placeholder="Enter Point of Contact Name"
+                    placeholder="Enter Name"
                     {...field}
                     className={errors.name ? "border-red-500" : ""}
                   />
@@ -383,10 +330,10 @@ const ProvidentFundEditForm = ({}) => {
                 <span className="text-red-500">{errors.name.message}</span>
               )}
             </div>
-            {/* 
+            
             <div className="space-y-2">
               <Label htmlFor="mobile">
-                Point of Contact Mobile
+              Mobile
               </Label>
               <Controller
                 name="mobile"
@@ -395,10 +342,10 @@ const ProvidentFundEditForm = ({}) => {
                   <PhoneInput
                     id="mobile"
                     type="tel"
-                    placeholder="Enter Point of Contact Mobile"
+                    placeholder="Enter Mobile"
                     defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
+                    inputStyle={{ minWidth: "30.5rem" }}
+                    value={field.value || ""}
                     className={
                       errors.mobile ? "border-red-500" : ""
                     }
@@ -410,17 +357,17 @@ const ProvidentFundEditForm = ({}) => {
                   {errors.mobile.message}
                 </span>
               )}
-            </div> */}
+            </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Point of Contact Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Controller
                 name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="email"
-                    placeholder="Enter Point of Contact Email"
+                    placeholder="Enter Email"
                     {...field}
                     className={errors.email ? "border-red-500" : ""}
                   />

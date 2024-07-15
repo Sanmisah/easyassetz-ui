@@ -14,6 +14,7 @@ import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const AddNominee = ({
   setSelectedNommie,
@@ -24,6 +25,7 @@ const AddNominee = ({
   const user = JSON.parse(getitem);
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -44,6 +46,10 @@ const AddNominee = ({
         });
       });
   }, []);
+
+  const addNominee = () => {
+    navigate("/benificiary");
+  };
 
   useEffect(() => {
     // Sync state with displaynominie when it changes
@@ -137,6 +143,7 @@ const AddNominee = ({
             ))}
           </div>
           <SheetFooter>
+            <Button onClick={addNominee} >Add Nominee</Button>
             <SheetClose asChild>
               <Button onClick={handleSubmit} type="submit">
                 Save changes

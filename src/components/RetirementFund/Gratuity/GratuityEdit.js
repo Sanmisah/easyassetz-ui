@@ -35,7 +35,7 @@ import { PhoneInput } from "react-international-phone";
 const schema = z.object({
   employerName: z.string().nonempty({ message: "Employer Name is required" }),
   employerId: z.string().nonempty({ message: "Employee id is required" }),
-  additionalDetails: z.string().optional(),
+  additionalInformation: z.string().optional(),
   name: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().optional(),
@@ -293,59 +293,6 @@ const GratuityEditForm = () => {
                 setDisplaynominie={setDisplaynominie}
               />
             </div>
-
-            {hideRegisteredFields && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registeredMobile">Registered Mobile</Label>
-                  <Controller
-                    name="registeredMobile"
-                    control={control}
-                    defaultValue={defaultValues.registeredMobile}
-                    render={({ field }) => (
-                      <Input
-                        id="registeredMobile"
-                        placeholder="Enter registered mobile"
-                        {...field}
-                        className={
-                          errors.registeredMobile ? "border-red-500" : ""
-                        }
-                      />
-                    )}
-                  />
-                  {errors.registeredMobile && (
-                    <span className="text-red-500">
-                      {errors.registeredMobile.message}
-                    </span>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="registeredEmail">Registered Email</Label>
-                  <Controller
-                    name="registeredEmail"
-                    control={control}
-                    defaultValue={defaultValues.registeredEmail}
-                    render={({ field }) => (
-                      <Input
-                        id="registeredEmail"
-                        placeholder="Enter registered email"
-                        type="email"
-                        {...field}
-                        className={
-                          errors.registeredEmail ? "border-red-500" : ""
-                        }
-                      />
-                    )}
-                  />
-                  {errors.registeredEmail && (
-                    <span className="text-red-500">
-                      {errors.registeredEmail.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-            {brokerSelected && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -381,9 +328,9 @@ const GratuityEditForm = () => {
                           type="tel"
                           placeholder="Enter mobile"
                           defaultCountry="in"
-                          value={field.value}
                           inputStyle={{ minWidth: "30.5rem" }}
-                          onChange={field.onChange}
+                          value={field.value || ""}
+                           onChange={field.onChange}
                           className={errors.mobile ? "border-red-500" : ""}
                         />
                       )}
@@ -420,7 +367,6 @@ const GratuityEditForm = () => {
                   </div>
                 </div>
               </>
-            )}
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

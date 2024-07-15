@@ -18,6 +18,7 @@ import {
 } from "@/Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
+import cross from "@/components/image/close.png";
 
 const SuperAnnuationMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
@@ -31,7 +32,7 @@ const SuperAnnuationMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/super-annuations`, {
+    const response = await axios.get(`/api/super-annuations/${lifeInsuranceDeleteId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
@@ -66,7 +67,7 @@ const SuperAnnuationMainForm = () => {
         },
       }
     );
-    queryClient.invalidateQueries("LifeInsuraQuerynceData");
+    queryClient.invalidateQueries("LifeInsuranceData");
     toast.success("Super Annuation deleted successfully!");
   };
 
@@ -75,7 +76,7 @@ const SuperAnnuationMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Super Annuation</h1>
-          <Button onMouseDown={() => navigate("/superannuation/add")}>
+        <Button onMouseDown={() => navigate("/superannuation/add")}>
             Add Super Annuation
           </Button>
           {alertDialog && (

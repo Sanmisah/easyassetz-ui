@@ -32,13 +32,13 @@ const BankAccountMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/memberships`, {
+    const response = await axios.get(`/api/bank-accounts`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Membership;
+    return response.data.data.BankAccount;
   };
 
   const {
@@ -60,7 +60,7 @@ const BankAccountMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/memberships/${lifeInsuranceDeleteId}`,
+      `/api/bank-accounts/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -68,7 +68,7 @@ const BankAccountMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Bank Account deleted successfully!");
   };
 
   return (
