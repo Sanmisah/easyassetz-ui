@@ -31,57 +31,54 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z
-  .object({
-    companyName: z
-      .string()
-      .nonempty({ message: "Insurance Company is required" }),
-    othercompanyName: z.string().optional(),
-    insuranceType: z
-      .string()
-      .nonempty({ message: "Insurance Sub Type is required" }),
-    policyNumber: z.string().min(2, { message: "Policy Number is required" }),
-    expiryDate: z.date().optional(),
-    premium: z.string().min(3, { message: "Premium is required" }),
-    // sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
-    insurerName: z
-      .string()
-      .nonempty({ message: "Policy Holder Name is required" }),
-    vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
-    specificVehicalType: z.string().optional(),
-    modeOfPurchase: z
-      .string()
-      .nonempty({ message: "Mode of Purchase is required" }),
-    contactPerson: z.string().optional(),
-    contactNumber: z.string().optional(),
-    email: z.string().email({ message: "Invalid email address" }).optional(),
-    registeredMobile: z.string().optional(),
-    registeredEmail: z.string().optional(),
-    additionalDetails: z.string().optional(),
-    previousPolicyNumber: z.string().optional(),
-    brokerName: z.string().optional(),
-    image: z.any().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.modeOfPurchase === "broker") {
-        return (
-          !!data.brokerName &&
-          !!data.contactPerson &&
-          !!data.contactNumber &&
-          !!data.email
-        );
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        return !!data.registeredMobile && !!data.registeredEmail;
-      }
-      return true;
-    },
-    {
-      message: "Required fields are missing",
-      path: ["modeOfPurchase"],
-    }
-  );
+const schema = z.object({
+  companyName: z
+    .string()
+    .nonempty({ message: "Insurance Company is required" }),
+  othercompanyName: z.string().optional(),
+  insuranceType: z
+    .string()
+    .nonempty({ message: "Insurance Sub Type is required" }),
+  policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+  expiryDate: z.any().optional(),
+  premium: z.string().min(3, { message: "Premium is required" }),
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  insurerName: z
+    .string()
+    .nonempty({ message: "Policy Holder Name is required" }),
+  vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
+  specificVehicalType: z.string().optional(),
+  modeOfPurchase: z.string().optional(),
+  contactPerson: z.string().optional(),
+  contactNumber: z.string().optional(),
+  email: z.string().email({ message: "Invalid email address" }).optional(),
+  registeredMobile: z.string().optional(),
+  registeredEmail: z.string().optional(),
+  additionalDetails: z.string().optional(),
+  previousPolicyNumber: z.string().optional(),
+  brokerName: z.string().optional(),
+  image: z.any().optional(),
+});
+// .refine(
+//   (data) => {
+//     if (data.modeOfPurchase === "broker") {
+//       return (
+//         !!data.brokerName &&
+//         !!data.contactPerson &&
+//         !!data.contactNumber &&
+//         !!data.email
+//       );
+//     }
+//     if (data.modeOfPurchase === "e-insurance") {
+//       return !!data.registeredMobile && !!data.registeredEmail;
+//     }
+//     return true;
+//   },
+//   {
+//     message: "Required fields are missing",
+//     path: ["modeOfPurchase"],
+//   }
+// );
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -105,6 +102,7 @@ const MotorForm = () => {
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -163,6 +161,7 @@ const MotorForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    console.log(data);
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }
@@ -185,13 +184,13 @@ const MotorForm = () => {
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
-    if (selectedNommie.length < 1) {
-      setnomineeerror(true);
-      return;
-    }
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
-    }
+    // if (selectedNommie.length < 1) {
+    //   setnomineeerror(true);
+    //   return;
+    // }
+    // if (selectedNommie.length > 1) {
+    //   setnomineeerror(false);
+    // }
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };

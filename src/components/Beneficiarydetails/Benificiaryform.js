@@ -54,14 +54,13 @@ const beneficiarySchema = z
     guardianNationality: z.string().optional(),
     addressLine1: z.string().optional(),
     addressLine2: z.string().optional(),
-    pincode: z.string().nonempty("Pincode is required"),
+    pincode: z.string().optional(),
     country: z.string().optional(),
     mobile: z.string().nonempty("Mobile is required"),
     email: z.any().optional(),
     city: z.string().nonempty("City is required"),
     state: z.string().optional(),
     houseNo: z.string().nonempty("House No is required"),
-    religion: z.string().optional(),
     nationality: z.string().optional(),
     addressLine1: z.string().nonempty("Address Line 1 is required"),
     addressLine2: z.string().optional(),
@@ -103,7 +102,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   });
 
   const [selectedDocument, setSelectedDocument] = useState("");
-  const [dateCountryCode, setDateCountryCode] = useState("+91");
+  // const [dateCountryCode, setDateCountryCode] = useState("+91");
   const [relationship, setRelationship] = useState("");
   const [guardianReligion, setGuardianReligion] = useState("");
 
@@ -139,20 +138,20 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianNationality", "");
   };
 
-  const handlePincodeChange = async (pincode) => {
-    try {
-      setValue("pincode", pincode);
-      const response = await axios.get(
-        `https://api.postalpincode.in/pincode/${pincode}`
-      );
-      const { Block, State, Country } = response.data[0].PostOffice[0];
-      setValue("permanentCity", Block);
-      setValue("permanentState", State);
-      setValue("permanentCountry", Country);
-    } catch (error) {
-      console.error("Failed to fetch pincode details:", error);
-    }
-  };
+  // const handlePincodeChange = async (pincode) => {
+  //   try {
+  //     setValue("pincode", pincode);
+  //     const response = await axios.get(
+  //       `https://api.postalpincode.in/pincode/${pincode}`
+  //     );
+  //     const { Block, State, Country } = response.data[0].PostOffice[0];
+  //     setValue("permanentCity", Block);
+  //     setValue("permanentState", State);
+  //     setValue("permanentCountry", Country);
+  //   } catch (error) {
+  //     console.error("Failed to fetch pincode details:", error);
+  //   }
+  // };
 
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
@@ -592,9 +591,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       </div>
                       {guardianReligion === "other" && (
                         <div className="space-y-2">
-                          <Label htmlFor="">
-                            Religion
-                          </Label>
+                          <Label htmlFor="">Religion</Label>
                           <Input
                             id="specificGuardianReligion"
                             placeholder="Enter Religion"
@@ -674,10 +671,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-pincode"
                           placeholder="Enter Pincode"
-                          // {...register("pincode")}
-                          onChange={(e) => {
-                            handlePincodeChange(e.target.value);
-                          }}
+                          {...register("pincode")}
                         />
                         {errors.pincode && (
                           <p className="text-red-500">
