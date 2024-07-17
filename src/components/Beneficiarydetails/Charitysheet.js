@@ -59,15 +59,15 @@ const States = [
   "Uttarakhand",
 ];
 const charitySchema = z.object({
-  charityName: z.string().nonempty("Organization name is required"),
-  charityAddress1: z.string().nonempty("Address 1 is required"),
+  charityName: z.any().optional(),
+  charityAddress1: z.any().optional(),
   charityAddress2: z.string().optional(),
   charityCity: z.string().nonempty("City is required"),
   charityState: z.string().nonempty("State is required"),
   charityNumber: z.string().optional(),
   charityEmail: z.string().email("Invalid charityEmail address"),
   contactName: z.string().nonempty("Contact person name is required"),
-  charityWebsite: z.string().url("Invalid URL").optional(),
+  charityWebsite: z.any().optional(),
   charitySpecificInstruction: z.string().optional(),
 });
 

@@ -44,11 +44,10 @@ const beneficiarySchema = z
     gender: z.string().nonempty("Gender is required"),
     dob: z.any().optional(),
     guardianName: z.string().optional(),
-    guardianMobile: z.string().optional(),
+    guardianMobile: z.string().nonempty("Mobile is required"),
     guardianEmail: z.string().optional(),
-    guardianCity: z.string().optional(),
-
-    guardianState: z.string().optional(),
+    guardianCity: z.string().nonempty("City is required"),
+    guardianState: z.string().nonempty("State is required"),
     document: z.string().optional(),
     documentData: z.string().optional(),
     guardianReligion: z.string().optional(),
@@ -56,18 +55,16 @@ const beneficiarySchema = z
     addressLine1: z.string().optional(),
     addressLine2: z.string().optional(),
     pincode: z.string().nonempty("Pincode is required"),
-    country: z.string().nonempty("Country is required"),
+    country: z.string().optional(),
     mobile: z.string().nonempty("Mobile is required"),
-    email: z.string().email("Invalid email").nonempty("Email is required"),
-
+    email: z.any().optional(),
     city: z.string().nonempty("City is required"),
-    state: z.string().nonempty("State is required"),
+    state: z.string().optional(),
     houseNo: z.string().nonempty("House No is required"),
-
-    religion: z.string().nonempty("Religion is required"),
-    nationality: z.string().nonempty("Nationality is required"),
+    religion: z.string().optional(),
+    nationality: z.string().optional(),
     addressLine1: z.string().nonempty("Address Line 1 is required"),
-    addressLine2: z.string().nonempty("Address Line 2 is required"),
+    addressLine2: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -108,6 +105,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   const [selectedDocument, setSelectedDocument] = useState("");
   const [dateCountryCode, setDateCountryCode] = useState("+91");
   const [relationship, setRelationship] = useState("");
+  const [guardianReligion, setGuardianReligion] = useState("");
 
   const watchDOB = watch("dob", null);
   const getitem = localStorage.getItem("user");
@@ -141,6 +139,21 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianNationality", "");
   };
 
+  const handlePincodeChange = async (pincode) => {
+    try {
+      setValue("pincode", pincode);
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      const { Block, State, Country } = response.data[0].PostOffice[0];
+      setValue("permanentCity", Block);
+      setValue("permanentState", State);
+      setValue("permanentCountry", Country);
+    } catch (error) {
+      console.error("Failed to fetch pincode details:", error);
+    }
+  };
+
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(`/api/beneficiaries`, data, {
@@ -154,6 +167,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     onSuccess: () => {
       queryClient.invalidateQueries("benificiaryData");
       toast.success("Beneficiary added successfully!");
+      setbenficiaryopen(false);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -173,9 +187,13 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     if (relationship === "other") {
       data.relationship = data.specificRelationship;
     }
+    if (guardianReligion === "other") {
+      data.guardianReligion = data.specificGuardianReligion;
+    }
     data.document = selectedDocument;
 
     delete data.specificRelationship;
+    delete data.specificGuardianReligion;
 
     if (data.dob > new Date() === 18) {
       delete data.guardianCity;
@@ -494,14 +512,14 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                 <SelectValue placeholder="Select document" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="adhar">Aadhaar</SelectItem>
-                                <SelectItem value="passport">
+                                <SelectItem value="Aadhaar">Aadhaar</SelectItem>
+                                <SelectItem value="Passport">
                                   Passport
                                 </SelectItem>
-                                <SelectItem value="driving-license">
+                                <SelectItem value="Driving License">
                                   Driving License
                                 </SelectItem>
-                                <SelectItem value="voter-id">
+                                <SelectItem value="Voter ID">
                                   Voter ID
                                 </SelectItem>
                               </SelectContent>
@@ -532,11 +550,39 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </div>
                       )}
                       <div className="space-y-2">
-                        <Label htmlFor="guardian-religion">Religion</Label>
-                        <Input
-                          id="guardian-religion"
-                          placeholder="Enter Religion"
-                          {...register("religion")}
+                        <Label htmlFor="guardianReligion">Religion</Label>
+                        <Controller
+                          name="guardianReligion"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                setGuardianReligion(value);
+                              }}
+                            >
+                              <SelectTrigger
+                                id="guardianReligion"
+                                aria-label="guardianReligion"
+                              >
+                                <SelectValue placeholder="Select Religion" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Christian">
+                                  Christian
+                                </SelectItem>
+                                <SelectItem value="Muslim">Muslim</SelectItem>
+                                <SelectItem value="Hindu">Hindu</SelectItem>
+                                <SelectItem value="Sikh">Sikh</SelectItem>
+                                <SelectItem value="Buddhist">
+                                  Buddhist
+                                </SelectItem>
+                                <SelectItem value="Jain">Jain</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
                         />
                         {errors.guardianReligion && (
                           <p className="text-red-500">
@@ -544,6 +590,25 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </p>
                         )}
                       </div>
+                      {guardianReligion === "other" && (
+                        <div className="space-y-2">
+                          <Label htmlFor="">
+                            Religion
+                          </Label>
+                          <Input
+                            id="specificGuardianReligion"
+                            placeholder="Enter Religion"
+                            {...register("specificGuardianReligion", {
+                              required: guardianReligion === "other",
+                            })}
+                          />
+                          {errors.specificGuardianReligion && (
+                            <p className="text-red-500">
+                              {errors.specificGuardianReligion.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
                       <div className="space-y-2">
                         <Label htmlFor="guardian-nationality">
                           Nationality
@@ -609,7 +674,10 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-pincode"
                           placeholder="Enter Pincode"
-                          {...register("pincode")}
+                          // {...register("pincode")}
+                          onChange={(e) => {
+                            handlePincodeChange(e.target.value);
+                          }}
                         />
                         {errors.pincode && (
                           <p className="text-red-500">

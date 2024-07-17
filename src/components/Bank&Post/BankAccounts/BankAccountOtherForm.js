@@ -19,7 +19,7 @@ import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { Textarea } from "@com/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
-import Datepicker from "../../Beneficiarydetails/Datepicker";
+// import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -41,33 +41,30 @@ const schema = z
       .string()
       .nonempty({ message: "Insurance Sub Type is required" }),
       branchName: z.string().min(2, { message: "Policy Number is required" }),
-      city: z.date().optional(),
-      holdingType: z.string().min(3, { message: "Premium is required" }),
-      jointHolderName: z
-      .string()
-      .nonempty({ message: "Policy Holder Name is required" }),
-      jointHolderPan: z.string().nonempty({ message: "Vehical Type is required" }),
+      city: z.any().optional(),
+      holdingType: z.any().optional(),
+      jointHolderName: z.any().optional(),
   })
-  .refine(
-    (data) => {
-      if (data.modeOfPurchase === "single") {
-        return (
-          !!data.brokerName &&
-          !!data.contactPerson &&
-          !!data.contactNumber &&
-          !!data.email
-        );
-      }
-      if (data.modeOfPurchase === "joint") {
-        return !!data.jointHolderName && !!data.jointHolderPan;
-      }
-      return true;
-    },
-    {
-      message: "Required fields are missing",
-      path: ["holdingType"],
-    }
-  );
+  // .refine(
+  //   (data) => {
+  //     if (data.modeOfPurchase === "single") {
+  //       return (
+  //         !!data.brokerName &&
+  //         !!data.contactPerson &&
+  //         !!data.contactNumber &&
+  //         !!data.email
+  //       );
+  //     }
+  //     if (data.modeOfPurchase === "joint") {
+  //       return !!data.jointHolderName && !!data.jointHolderPan;
+  //     }
+  //     return true;
+  //   },
+  //   {
+  //     message: "Required fields are missing",
+  //     path: ["holdingType"],
+  //   }
+  // );
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -82,9 +79,12 @@ const BankAccountForm = () => {
   const queryClient = useQueryClient();
   const [showOtherBankName, setShowOtherBankName] =
     useState(false);
+  const [showOtherAccountType, setShowOtherAccountType] =
+    useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
+  const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
   const [nomineeerror, setnomineeerror] = useState(false);
@@ -102,7 +102,6 @@ const BankAccountForm = () => {
       city: "",
       holdingType: "",
       jointHolderName: "",
-      jointHolderPan: "",
     },
   });
 
@@ -138,27 +137,27 @@ const BankAccountForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
-    if (data.companyName === "other") {
-      data.companyName = data.otherInsuranceCompany;
+    if (data.bankName === "other") {
+      data.bankName = data.otherBankName;
     }
-    if (data.modeOfPurchase === "single") {
-      data.jointHolderName = null;
-      data.jointHolderPan = null;
-    }
-    if (data.modeOfPurchase === "joint") {
-      data.brokerName = null;
-      data.contactPerson = null;
-      data.contactNumber = null;
-      data.email = null;
-    }
-    const date = new Date(data.expiryDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.expiryDate = newdate;
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.specificVehicalType;
+    // if (data.modeOfPurchase === "single") {
+    //   data.jointHolderName = null;
+    //   data.jointHolderPan = null;
+    // }
+    // if (data.modeOfPurchase === "joint") {
+    //   data.brokerName = null;
+    //   data.contactPerson = null;
+    //   data.contactNumber = null;
+    //   data.email = null;
+    // }
+    // const date = new Date(data.expiryDate);
+    // const month = String(date.getMonth() + 1).padStart(2, "0");
+    // const day = String(date.getDate()).padStart(2, "0");
+    // const year = date.getFullYear();
+    // const newdate = `${month}/${day}/${year}`;
+    // data.expiryDate = newdate;
+    if (data.accountType === "other") {
+      data.accountType = data.otherAccountType;
     }
     if (selectedNommie.length < 1) {
       setnomineeerror(true);
@@ -242,41 +241,150 @@ const BankAccountForm = () => {
                   </span>
                 )}
               </div>
+            
               <div className="space-y-2">
-                <Label htmlFor="insurance-subtype">Insurance Type</Label>
+                <Label htmlFor="accountType">Account Type</Label>
                 <Controller
-                  name="insuranceType"
+                  name="accountType"
                   control={control}
                   render={({ field }) => (
-                    <div className="flex items-center gap-2">
-                      <RadioGroup
-                        {...field}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                        }}
-                        defaultValue="thirdparty"
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="thirdparty" value="thirdparty" />
-                          <Label htmlFor="thirdparty">Third Party</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="" value="comprehensive" />
-                          <Label htmlFor="comprehensive">Comprehensive</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
+                    <Select
+                      id="accountType"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherAccountType(value === "other");
+                      }}
+                      className={errors.accountType ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Account Type" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="saving">Saving</SelectItem>
+                        <SelectItem value="current">Current</SelectItem>
+                        <SelectItem value="recurring">Recurring</SelectItem>
+                        <SelectItem value="nri">NRI</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-                {errors.insuranceType && (
+                {showOtherAccountType && (
+                  <Controller
+                    name="otherAccountType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Account Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
+                {errors.bankName && (
                   <span className="text-red-500">
-                    {errors.insuranceType.message}
+                    {errors.bankName.message}
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="accountNumber">Account Number</Label>
+                <Controller
+                  name="accountNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="accountNumber"
+                      placeholder="Enter Account Number"
+                      {...field}
+                      className={errors.accountNumber ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.accountNumber && (
+                  <span className="text-red-500">
+                    {errors.accountNumber.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="branchName">Branch Name</Label>
+                <Controller
+                  name="branchName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="branchName"
+                      placeholder="Enter Branch Name"
+                      {...field}
+                      className={errors.branchName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.branchName && (
+                  <span className="text-red-500">
+                    {errors.branchName.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="city">City</Label>
+                <Controller
+                  name="city"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="city"
+                      placeholder="Enter Branch Name"
+                      {...field}
+                      className={errors.city ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.city && (
+                  <span className="text-red-500">
+                    {errors.city.message}
                   </span>
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Controller
+                name="natureOfHolding"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowJointHolderName(value === "joint");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="single" value="single" />
+                      <Label htmlFor="single">Single</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="joint" value="joint" />
+                      <Label htmlFor="joint">Joint</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+              {errors.natureOfHolding && (
+                <span className="text-red-500">
+                  {errors.natureOfHolding.message}
+                </span>
+              )}
+            </div>
+
+            </div>
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
                 <Controller
@@ -297,27 +405,8 @@ const BankAccountForm = () => {
                   </span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
-                <Controller
-                  name="expiryDate"
-                  control={control}
-                  render={({ field }) => (
-                    <Datepicker
-                      {...field}
-                      onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                    />
-                  )}
-                />
-                {errors.expiryDate && (
-                  <span className="text-red-500 mt-5">
-                    {errors.expiryDate.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            </div> */}
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="premium">Premium</Label>
                 <Controller
@@ -335,7 +424,7 @@ const BankAccountForm = () => {
                 {errors.premium && (
                   <span className="text-red-500">{errors.premium.message}</span>
                 )}
-              </div>
+              </div> */}
               {/* <div className="space-y-2">
                 <Label htmlFor="sum-insured">Sum Insured</Label>
                 <Controller
@@ -378,7 +467,7 @@ const BankAccountForm = () => {
                   </span>
                 )}
               </div> */}
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="vehicleType">Vehical Type</Label>
                 <Controller
                   name="vehicleType"
@@ -443,8 +532,8 @@ const BankAccountForm = () => {
                     />
                   )}
                 />
-              </div>
-              <div className="space-y-2">
+              </div> */}
+              {/* <div className="space-y-2">
                 <Label htmlFor="additional-details">Additional Details</Label>
                 <Controller
                   name="additionalDetails"
@@ -459,7 +548,7 @@ const BankAccountForm = () => {
                   )}
                 />
               </div>
-            </div>
+            </div> */}
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
@@ -509,7 +598,7 @@ const BankAccountForm = () => {
               )}
             </div>
 
-            <div className="space-y-4 flex flex-col">
+            {/* <div className="space-y-4 flex flex-col">
               <Label className="text-lg font-bold">Mode of Purchase</Label>
               <Controller
                 name="modeOfPurchase"
@@ -697,7 +786,7 @@ const BankAccountForm = () => {
               {errors.image && (
                 <span className="text-red-500">{errors.image.message}</span>
               )}
-            </div>
+            </div> */}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

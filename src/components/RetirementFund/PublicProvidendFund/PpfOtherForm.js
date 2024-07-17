@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -17,6 +17,7 @@ import {
 } from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
+import { Textarea } from "@com/ui/textarea";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -25,99 +26,136 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import Addnominee from "@/components/Nominee/addNominee";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  bankName: z.string().nonempty({ message: "Bank/Post Name is required" }),
-  accountNumber: z
-    .string()
-    .nonempty({ message: "PPF Account Number is required" }),
-  branch: z.string().optional(),
-  holdingNature: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
+  bankName: z.string().nonempty({ message: "Bank Name is required" }),
+  ppfAccountNo: z.string().nonempty({ message: "Company Address is required" }),
+  branch: z.any().optional(),
+  // myStatus: z.string().nonempty({ message: "My Status is required" }),
+  // holdingType: z.string().nonempty({ message: "Holding Type is required" }),
   jointHolderName: z.string().optional(),
+  jointHolderPan: z.string().optional(),
+  // documentAvailability: z
+  //   .string()
+  //   .nonempty({ message: "Document Availability is required" }),
   additionalDetails: z.string().optional(),
-  pointOfContactName: z
-    .string()
-    .nonempty({ message: "Point of Contact Name is required" }),
-  pointOfContactMobile: z
-    .string()
-    .nonempty({ message: "Point of Contact Mobile is required" }),
-  pointOfContactEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Point of Contact Email is required" }),
-  ppfFile: z.any().optional(),
+  // typeOfInvestment: z
+  //   .string()
+  //   .nonempty({ message: "Type of Investment is required" }),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
 });
 
-const PpfForm = () => {
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+
+const ppfForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-  const [showJointHolderName, setShowJointHolderName] = useState(false);
-  const [defaultData, setDefaultData] = useState({});
-  const [defaultDate, setdefaultDate] = useState(null);
-  // const [nomineeDetails, setNomineeDetails] = useState([]);
-  // const [nomineeError, setNomineeError] = useState(false);
+  const [showOtherCompanyRegistration, setShowOtherCompanyRegistration] =
+    useState(true);
+  const [showOtherMyStatus, setShowOthermyStatus] = useState(false);
+  const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
+  const [showOthertypeOfInvestment, setShowOthertypeOfInvestment] =
+    useState(false);
+  const [showOtherPPFAccountNo, setShowOtherPPFAccountNo] = useState(false);
+  const [showOtherCompanyName, setshowOtherCompanyName] = useState(false);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [nomineeerror, setNomineeError] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(null);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] =
+    useState(false);
+  const [otherFirmRegistrationNumber, setOtherFirmRegistrationNumber] =
+    useState("");
+  const [otherFirmName, setOtherFirmName] = useState("");
+  const [showOtherJointHolderName, setShowOtherJointHolderName] =
+    useState(false);
 
+  const [showOtherJointName, setShowOtherJointName] = useState(false);
   const {
     handleSubmit,
     control,
-    setValue,
+    register,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      accountNumber: "",
+      ppfAccountNo: "",
       branch: "",
-      holdingNature: "",
+      holdingType: "",
       jointHolderName: "",
+      jointHolderPan: "",
       additionalDetails: "",
-      pointOfContactName: "",
-      pointOfContactMobile: "",
-      pointOfContactEmail: "",
-      ppfFile: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
-  const ppfMutate = useMutation({
+  const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const Formdata = new FormData();
-      Formdata.append("ppfFile", data.ppfFile);
-
-      for (const [key, value] of Object.entries(data)) {
-        Formdata.append(key, value);
-      }
-
       const response = await axios.post(`/api/public-provident-funds`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
+
       return response.data.data.PublicProvidentFund;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("PpfData");
-      toast.success("Public Provident Fund details added successfully!");
+      queryClient.invalidateQueries("LifeInsuranceData");
+      toast.success("Public Providend Fund details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error submitting Public Provident Fund details:", error);
-      toast.error("Failed to submit Public Provident Fund details");
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
     },
   });
 
+  useEffect(() => {
+    if (selectedNommie.length > 0) {
+      setNomineeError(false);
+    }
+  }, [selectedNommie]);
+
   const onSubmit = (data) => {
     console.log(data);
+    // data.firmsRegistrationNumberType = showOtherCompanyRegistration;
 
-    ppfMutate.mutate(data);
-  };
+    // if (selectedNommie.length < 1) {
+    //   toast.error("Please select atleast one nominee");
+    //   setNomineeError(true);
+    //   return;
+    // }
+    // if (data.typeOfInvestment === "other") {
+    //   data.typeOfInvestment = data.specifyInvestment;
+    // }
+    // if (selectedNommie.length > 0) {
+    //   data.nominees = selectedNommie;
+    // }
+    data.type = "company";
+    data.name = name;
+    data.email = email;
+    data.mobile = phone;
+    // if (data) {
+    //   data.firmName = data.otherFirmName;
+    // }
 
-  const handleFileUpload = () => {
-    window.open(`/storage/profiles/ppfFile/${defaultData?.ppfFile}`);
+    lifeInsuranceMutate.mutate(data);
   };
 
   return (
@@ -130,7 +168,7 @@ const PpfForm = () => {
                 Public Providend Fund
               </CardTitle>
               <CardDescription>
-                Fill out the form to add new Public Providend Fund details.
+                Fill out the form to add a new Public Providend Fund.
               </CardDescription>
             </div>
           </div>
@@ -141,41 +179,61 @@ const PpfForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="bankName">Post/Bank Name</Label>
+              <Label htmlFor="bankName">Post/Bank name</Label>
               <Controller
                 name="bankName"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="bankName"
-                    placeholder="Enter Post/Bank Name"
+                    placeholder="Enter Post/Bank name"
                     {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className={errors.bankName ? "border-red-500" : ""}
                   />
                 )}
               />
+
               {errors.bankName && (
                 <span className="text-red-500">{errors.bankName.message}</span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="accountNumber">PPF Account Number</Label>
+              <Label htmlFor="ppfAccountNo">PPF Account Number</Label>
               <Controller
-                name="accountNumber"
+                name="ppfAccountNo"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="accountNumber"
-                    placeholder="Enter PPF Account Number"
+                    id="ppfAccountNo"
+                    placeholder="Enter Company Address"
                     {...field}
-                    className={errors.accountNumber ? "border-red-500" : ""}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={errors.ppfAccountNo ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.accountNumber && (
+              {showOtherPPFAccountNo && (
+                <Controller
+                  name="otherPPFAccountNo"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Specify PPF Account Number"
+                      className="mt-2"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              )}
+              {errors.ppfAccountNo && (
                 <span className="text-red-500">
-                  {errors.accountNumber.message}
+                  {errors.ppfAccountNo.message}
                 </span>
               )}
             </div>
@@ -190,6 +248,8 @@ const PpfForm = () => {
                     id="branch"
                     placeholder="Enter Branch"
                     {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className={errors.branch ? "border-red-500" : ""}
                   />
                 )}
@@ -199,17 +259,19 @@ const PpfForm = () => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="holdingNature">Nature of Holding</Label>
+            <div className="space-y-4 flex flex-col">
+              <Label className="text-lg font-bold">Holding Type</Label>
               <Controller
-                name="holdingNature"
+                name="holdingType"
+                defaultValues="single"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
+                    defaultValue="single"
                     onValueChange={(value) => {
                       field.onChange(value);
-                      setShowJointHolderName(value === "joint");
+                      setShowOtherJointName(value === "joint");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -219,70 +281,105 @@ const PpfForm = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem id="joint" value="joint" />
-                      <Label htmlFor="joint">Joint</Label>
+                      <Label htmlFor="joint">Joint Name</Label>
                     </div>
                   </RadioGroup>
                 )}
               />
-              {errors.holdingNature && (
+              {errors.holdingType && (
                 <span className="text-red-500">
-                  {errors.holdingNature.message}
+                  {errors.holdingType.message}
                 </span>
               )}
             </div>
 
-            {showJointHolderName && (
-              <div className="space-y-2">
-                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                <Controller
-                  name="jointHolderName"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="jointHolderName"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className={errors.jointHolderName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Joint Holder Name" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="family_member_1">
-                          Family Member 1
-                        </SelectItem>
-                        <SelectItem value="family_member_2">
-                          Family Member 2
-                        </SelectItem>
-                        <SelectItem value="other_contact_1">
-                          Other Contact 1
-                        </SelectItem>
-                        <SelectItem value="other_contact_2">
-                          Other Contact 2
-                        </SelectItem>
-                        {/* Add more options as needed */}
-                      </SelectContent>
-                    </Select>
+            {showOtherJointName && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                  <Input
+                    id="jointHolderName"
+                    placeholder="Enter Joint Holder Name"
+                    {...register("jointHolderName")}
+                    className={errors.jointHolderName ? "border-red-500" : ""}
+                  />
+                  {errors.jointHolderName && (
+                    <span className="text-red-500">
+                      {errors.jointHolderName.message}
+                    </span>
                   )}
-                />
-                {errors.jointHolderName && (
-                  <span className="text-red-500">
-                    {errors.jointHolderName.message}
-                  </span>
-                )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
+                  <Input
+                    id="jointHolderPan"
+                    placeholder="Enter Joint Holder PAN"
+                    {...register("jointHolderPan")}
+                    className={errors.jointHolderPan ? "border-red-500" : ""}
+                  />
+                  {errors.jointHolderPan && (
+                    <span className="text-red-500">
+                      {errors.jointHolderPan.message}
+                    </span>
+                  )}
+                </div>
               </div>
             )}
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="registered-phone">Add nominee</Label>
+              <Addnominee
+                setSelectedNommie={setSelectedNommie}
+                selectedNommie={selectedNommie}
+                displaynominie={displaynominie}
+                setDisplaynominie={setDisplaynominie}
+              />{" "}
+            </div>
 
             <div className="space-y-2">
-              <Label htmlFor="additionalDetails">Additional Details</Label>
+              <Label htmlFor="additionalDetails">Additional Information</Label>
               <Controller
                 name="additionalDetails"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="additionalDetails"
-                    placeholder="Enter Additional Details"
+                    placeholder="Enter Additional Information"
                     {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     className={errors.additionalDetails ? "border-red-500" : ""}
                   />
                 )}
@@ -293,121 +390,83 @@ const PpfForm = () => {
                 </span>
               )}
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactName">Point of Contact Name</Label>
-              <Controller
-                name="pointOfContactName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="pointOfContactName"
-                    placeholder="Enter Point of Contact Name"
-                    {...field}
-                    className={
-                      errors.pointOfContactName ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactName && (
-                <span className="text-red-500">
-                  {errors.pointOfContactName.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactMobile">
-                Point of Contact Mobile
-              </Label>
-              <Controller
-                name="pointOfContactMobile"
-                control={control}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="pointOfContactMobile"
-                    type="tel"
-                    placeholder="Enter Point of Contact Mobile"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
-                    className={
-                      errors.pointOfContactMobile ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactMobile && (
-                <span className="text-red-500">
-                  {errors.pointOfContactMobile.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pointOfContactEmail">
-                Point of Contact Email
-              </Label>
-              <Controller
-                name="pointOfContactEmail"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="pointOfContactEmail"
-                    placeholder="Enter Point of Contact Email"
-                    {...field}
-                    className={
-                      errors.pointOfContactEmail ? "border-red-500" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.pointOfContactEmail && (
-                <span className="text-red-500">
-                  {errors.pointOfContactEmail.message}
-                </span>
-              )}
-            </div>
-            
-            <div className="space-y-2">
-                    <Label htmlFor="ppfFile">Upload Your Public Providend Fund File</Label>
+            <div className="w-full grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="additionalDetails">Point Of Contact</Label>
+                <div className="mt-2  flex item-center  gap-2 justify-between">
+                  <div className="w-[40%] space-y-2 item-center">
+                    <Label htmlFor="name">Name</Label>
                     <Controller
-                      name="ppfFile"
+                      name="name"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="ppfFile"
-                          placeholder="Public Providend Fund File"
-                          type="file"
-                          onChange={(event) => {
-                            field.onChange(
-                              event.target.files && event.target.files[0]
-                            );
-                            console.log("sadsA", event.target.files);
-                          }}
-                          className={errors.ppfFile ? "border-red-500" : ""}
+                          id="name"
+                          placeholder="Enter Name"
+                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          className={errors.name ? "border-red-500" : ""}
                         />
                       )}
                     />
-                    {errors.ppfFile && (
+                    {errors.name && (
                       <span className="text-red-500">
-                        {errors.ppfFile.message}
+                        {errors.name.message}
                       </span>
                     )}
                   </div>
-                  {defaultData?.ppfFile && (
-                    <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
-                      <Button
-                        variant="ghost"
-                        onClick={handleFileUpload}
-                        className="color-green-500"
-                      >
-                        View Uploaded Public Providend Fund File
-                      </Button>
-                    </div>
-                  )}
-
+                  <div className="w-[40%] space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="email"
+                          placeholder="Enter Email"
+                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          className={errors.email ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.email && (
+                      <span className="text-red-500">
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="w-[40%] space-y-2">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Controller
+                      name="mobile"
+                      control={control}
+                      render={({ field }) => (
+                        <PhoneInput
+                          id="mobile"
+                          type="tel"
+                          placeholder="Enter mobile number"
+                          defaultCountry="in"
+                          inputStyle={{ minWidth: "15.5rem" }}
+                          value={field.value}
+                          onChange={(value) => {
+                            console.log(value);
+                            setPhone(value);
+                          }}
+                        />
+                      )}
+                    />
+                    {errors.phone && (
+                      <span className="text-red-500">
+                        {errors.phone.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
@@ -418,4 +477,4 @@ const PpfForm = () => {
   );
 };
 
-export default PpfForm;
+export default ppfForm;

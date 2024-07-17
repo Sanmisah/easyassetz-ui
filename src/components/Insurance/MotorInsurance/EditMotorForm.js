@@ -418,7 +418,11 @@ const EditMotorForm = () => {
                         className="flex items-center gap-2"
                       >
                         <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="company1" value="thirdparty" />
+                          <RadioGroupItem
+                            defaultValue="thirdparty"
+                            id="company1"
+                            value="thirdparty"
+                          />
                           <Label htmlFor="company1">Third Party</Label>
                         </div>
                         <div className="flex items-center gap-2">

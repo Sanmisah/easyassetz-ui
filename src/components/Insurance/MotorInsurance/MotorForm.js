@@ -90,7 +90,6 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
 const MotorForm = () => {
-  
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -273,6 +272,7 @@ const MotorForm = () => {
                 <Controller
                   name="insuranceType"
                   control={control}
+                  defaultValue="thirdparty"
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
                       <RadioGroup
@@ -284,7 +284,11 @@ const MotorForm = () => {
                         className="flex items-center gap-2"
                       >
                         <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="thirdparty" value="thirdparty" />
+                          <RadioGroupItem
+                            defaultValue="thirdparty"
+                            id="thirdparty"
+                          />
+
                           <Label htmlFor="thirdparty">Third Party</Label>
                         </div>
                         <div className="flex items-center gap-2">

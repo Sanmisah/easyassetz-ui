@@ -31,12 +31,12 @@ const AddNominee = ({
     axios
       .get(`/api/beneficiaries`, {
         headers: {
-          Authorization: `Bearer ${user.data.token}`,
+          Authorization: `Bearer ${user?.data?.token}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
-        if (res.data.data.Beneficiaries?.length < 1) {
+        console.log(res?.data);
+        if (res?.data?.data?.Beneficiaries?.length < 1) {
           toast.warning("please add beneficiary first");
           return;
         }
@@ -143,7 +143,7 @@ const AddNominee = ({
             ))}
           </div>
           <SheetFooter>
-            <Button onClick={addNominee} >Add Nominee</Button>
+            <Button onClick={addNominee}>Add Nominee</Button>
             <SheetClose asChild>
               <Button onClick={handleSubmit} type="submit">
                 Save changes

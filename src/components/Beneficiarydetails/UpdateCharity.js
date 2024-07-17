@@ -307,12 +307,12 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="contact-name"
                 placeholder="Enter full legal name"
-                defaultValue={Charitydata?.charityName}
-                {...register("charityName")}
+                defaultValue={Charitydata?.contactName}
+                {...register("contactName")}
                 className="w-full"
               />
-              {errors.charityName && (
-                <p className="text-red-500">{errors.charityName.message}</p>
+              {errors.contactName && (
+                <p className="text-red-500">{errors.contactName.message}</p>
               )}
             </div>
             <div className="space-y-2 p-2">

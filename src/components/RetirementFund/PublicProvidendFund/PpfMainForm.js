@@ -67,7 +67,7 @@ const ppfMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuraQuerynceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Public Providend Fund deleted successfully!");
   };
 
   return (

@@ -1043,12 +1043,10 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="adhar-name">
-                      Full Name - Name as per Adhar
-                    </Label>
+                    <Label htmlFor="adhar-name">Name as per Adhar</Label>
                     <Input
                       id="adhar-name"
-                      placeholder="Full Name - Name as per Adhar"
+                      placeholder="Name as per Adhar"
                       type="text"
                       defaultValue={defaultData?.adharName}
                       {...register("aadharName", {
@@ -1191,11 +1189,11 @@ const Personaldetail = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="pan-name">Full Name as per PAN</Label>
+                    <Label htmlFor="pan-name">Name as per PAN</Label>
                     <Input
                       id="pan-name"
                       defaultValue={defaultData?.panName}
-                      placeholder="Full Name as per PAN"
+                      placeholder="Name as per PAN"
                       type="text"
                       {...register("panName", {
                         required:

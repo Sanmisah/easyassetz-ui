@@ -47,7 +47,7 @@ const beneficiarySchema = z.object({
   guardianEmail: z.string().optional(),
   guardianCity: z.string().optional(),
   guardianState: z.string().optional(),
-  document: z.string().nonempty("Document is required"),
+  document: z.string().optional(),
   documentData: z.string().optional(),
   guardianReligion: z.string().optional(),
   guardianNationality: z.string().optional(),
@@ -106,6 +106,21 @@ const BeneficiaryForm = ({
     const ageDiff = Date.now() - birthDate.getTime();
     const ageDate = new Date(ageDiff);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
+  };
+
+  const handlePincodeChange = async (pincode) => {
+    try {
+      setValue("pincode", pincode);
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      const { Block, State, Country } = response.data[0].PostOffice[0];
+      setValue("permanentCity", Block);
+      setValue("permanentState", State);
+      setValue("permanentCountry", Country);
+    } catch (error) {
+      console.error("Failed to fetch pincode details:", error);
+    }
   };
 
   const getPersonalData = async () => {
@@ -184,6 +199,7 @@ const BeneficiaryForm = ({
     onSuccess: () => {
       queryClient.invalidateQueries("beneficiaryData");
       toast.success("Beneficiary added successfully!");
+      setUpdateBenificiaryOpen(false);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -659,7 +675,10 @@ const BeneficiaryForm = ({
                           id="pincode"
                           placeholder="Enter pincode"
                           defaultValue={defaultData?.pincode}
-                          {...register("pincode")}
+                          // {...register("pincode")}
+                          onChange={(e) => {
+                            handlePincodeChange(e.target.value);
+                          }}
                         />
                         {errors.pincode && (
                           <p className="text-red-500">
