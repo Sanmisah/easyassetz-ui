@@ -5,95 +5,96 @@ import { Button } from "@com/ui/button";
 import axios from "axios";
 
 const RetirementFundMainForm = () => {
-  const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
-  const [motorInsuranceData, setMotorInsuranceData] = useState([]);
-  const [otherInsuranceData, setOtherInsuranceData] = useState([]);
-  const [GeneralInsurance, setGeneralInsuranceData] = useState([]);
-  const [HealthInsurance, setHealthInsuranceData] = useState([]);
+  const [publicProvidendFundData, setPublicProvidendFundData] = useState([]);
+  const [providendFundData, setProvidendFundData] = useState([]);
+  const [NPSData, setNPSData] = useState([]);
+  const [GratuityData, setGratuityData] = useState([]);
+  const [superAnnuation, setSuperAnnuation] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDataLifeinsurance = async () => {
+    const fetchDataPublicProvidendFund = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/life-insurances`, {
+        const response = await axios.get(`/api/public-provident-funds`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setLifeInsuranceData(response?.data?.data?.LifeInsurances);
+        setPublicProvidendFundData(response?.data?.data?.PublicProvidentFund);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching Public Providend Fund data", error);
       }
     };
-    const fetchDataMotorinsurance = async () => {
+    const fetchDataProvidendFund = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/motor-insurances`, {
+        const response = await axios.get(`/api/provident-funds`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setProvidendFundData(response?.data?.data?.ProvidentFund);
+      } catch (error) {
+        console.error("Error fetching Providend Fund data", error);
+      }
+    };
+    const fetchDataNPS = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/nps`, {
           headers: {
             Authorization: `Bearer ${user?.data?.token}`,
           },
         });
-        setMotorInsuranceData(response?.data?.data?.OtherInsurance);
+        setNPSData(response?.data?.data?.NPS);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching NPS data", error);
       }
     };
-    const fetchDataOtherinsurance = async () => {
+    const fetchDataGratuity = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/other-insurances`, {
+        const response = await axios.get(`/api/gratuities`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setGratuityData(response?.data?.data?.Gratuity);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching Gratuity data", error);
       }
     };
-    const fetchDataGeneralinsurance = async () => {
+
+    const fetchDataSuperAnnuation = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/general-insurances`, {
+        const response = await axios.get(`/api/super-annuations`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setSuperAnnuation(response?.data?.data?.SuperAnnuation);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching Super Annuation data", error);
       }
     };
-    const fetchDataHealthinsurance = async () => {
-      const getitem = localStorage.getItem("user");
-      const user = JSON.parse(getitem);
-
-      try {
-        const response = await axios.get(`/api/health-insurances`, {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        });
-        setHealthInsuranceData(response?.data?.data?.HealthInsurances);
-      } catch (error) {
-        console.error("Error fetching life insurance data", error);
-      }
-    };
-    fetchDataGeneralinsurance();
-    fetchDataHealthinsurance();
-    fetchDataOtherinsurance();
-    fetchDataLifeinsurance();
-    fetchDataMotorinsurance();
+    fetchDataPublicProvidendFund();
+    fetchDataProvidendFund();
+    fetchDataNPS();
+    fetchDataGratuity();
+    fetchDataSuperAnnuation();
   }, []);
 
   return (
@@ -112,10 +113,12 @@ const RetirementFundMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Public Providend Fund</h1>
-            {HealthInsurance?.length > 0 && (
+            {publicProvidendFundData && publicProvidendFundData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Funds
+                  {publicProvidendFundData?.length &&
+                    publicProvidendFundData?.length}{" "}
+                  Public Providend Funds
                 </p>
               </div>
             )}
@@ -128,10 +131,11 @@ const RetirementFundMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Providend Fund</h1>
-            {HealthInsurance?.length > 0 && (
+            {providendFundData && providendFundData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Funds
+                  {providendFundData?.length && providendFundData?.length}{" "}
+                  Providend Funds
                 </p>
               </div>
             )}
@@ -144,10 +148,10 @@ const RetirementFundMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">NPS</h1>
-            {lifeInsuranceData && lifeInsuranceData?.length > 0 && (
+            {NPSData && NPSData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {lifeInsuranceData?.length} NPS
+                  {NPSData?.length && NPSData?.length} NPS
                 </p>
               </div>
             )}
@@ -160,10 +164,10 @@ const RetirementFundMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Gratuity</h1>
-            {GeneralInsurance && GeneralInsurance?.length > 0 && (
+            {GratuityData && GratuityData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {GeneralInsurance && GeneralInsurance?.length} Gratuity
+                  {GratuityData && GratuityData?.length} Gratuity
                 </p>
               </div>
             )}
@@ -176,10 +180,10 @@ const RetirementFundMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Super Annuation</h1>
-            {otherInsuranceData && otherInsuranceData?.length > 0 && (
+            {superAnnuation && superAnnuation?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherInsuranceData && otherInsuranceData?.length} Super Annuation
+                  {superAnnuation && superAnnuation?.length} Super Annuation
                 </p>
               </div>
             )}
