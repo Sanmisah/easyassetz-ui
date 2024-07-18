@@ -64,5 +64,5 @@
     "tailwindcss": "^3.4.3",
     "vite": "^5.2.0"
   },
-  "proxy": "https://demo12.sanmishatech.com"
+  "proxy": "http://localhost:8000"
 }

@@ -43,9 +43,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://demo12.sanmishatech.com",
+        target: "http://localhost:8000",
+
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
