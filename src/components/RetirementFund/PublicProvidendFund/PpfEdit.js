@@ -26,7 +26,9 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import { useSelector } from "react-redux";
+import Editnominee from "@/components/Nominee/EditNominee";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
   bankName: z.any().optional(),
@@ -57,6 +59,8 @@ const PpfEditForm = ({}) => {
   const queryClient = useQueryClient();
   const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [nomineeDetails, setNomineeDetails] = useState([]);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeError, setNomineeError] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
 
@@ -106,6 +110,7 @@ const PpfEditForm = ({}) => {
     }
     // Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
+    setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
     return response.data.data.PublicProvidentFund;
   };
 
@@ -162,6 +167,9 @@ const PpfEditForm = ({}) => {
 
   const onSubmit = (data) => {
     console.log(data);
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
     ppfMutate.mutate(data);
   };
 
@@ -247,6 +255,51 @@ const PpfEditForm = ({}) => {
               {errors.branch && (
                 <span className="text-red-500">{errors.branch.message}</span>
               )}
+            </div>
+
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              {console.log(Benifyciary?.nominees)}
+              <Editnominee
+                setSelectedNommie={setSelectedNommie}
+                AllNominees={Benifyciary?.nominees}
+                selectedNommie={selectedNommie}
+                displaynominie={displaynominie}
+                setDisplaynominie={setDisplaynominie}
+              />{" "}
             </div>
 
             <div className="space-y-2">

@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import Addnominee from "@/components/Nominee/EditNominee";
+import Editnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
@@ -645,7 +645,7 @@ const EditMotorForm = () => {
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
               {console.log(Benifyciary?.nominees)}
-              <Addnominee
+              <Editnominee
                 setSelectedNommie={setSelectedNommie}
                 AllNominees={Benifyciary?.nominees}
                 selectedNommie={selectedNommie}
