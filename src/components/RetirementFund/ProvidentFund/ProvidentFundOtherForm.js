@@ -40,7 +40,7 @@ const schema = z.object({
   additionalDetails: z.string().optional(),
   // image: z.string().optional(),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  mobile: z.string().optional(),
   email: z.string().optional(),
 });
 
@@ -374,7 +374,7 @@ const ProvidentFundOtherForm = () => {
                     )}
                   </div>
                   <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="mobile">Phone</Label>
                     <Controller
                       name="mobile"
                       control={control}
@@ -394,9 +394,9 @@ const ProvidentFundOtherForm = () => {
                         />
                       )}
                     />
-                    {errors.phone && (
+                    {errors.mobile && (
                       <span className="text-red-500">
-                        {errors.phone.message}
+                        {errors.mobile.message}
                       </span>
                     )}
                   </div>

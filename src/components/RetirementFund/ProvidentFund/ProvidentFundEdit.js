@@ -82,7 +82,7 @@ const ProvidentFundEditForm = ({}) => {
       additionalDetails: "",
       name: "",
       email: "",
-      phone: "",
+      mobile: "",
     },
   });
 

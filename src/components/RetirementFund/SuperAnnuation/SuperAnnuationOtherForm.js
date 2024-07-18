@@ -40,7 +40,7 @@ const schema = z.object({
   additionalDetails: z.string().optional(),
   // image: z.string().optional(),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  mobile: z.string().optional(),
   email: z.string().optional(),
 });
 
@@ -376,7 +376,7 @@ const SuperAnnuationOtherForm = () => {
                     )}
                   </div>
                   <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="mobile">mobile</Label>
                     <Controller
                       name="mobile"
                       control={control}
@@ -390,15 +390,15 @@ const SuperAnnuationOtherForm = () => {
                           value={field.value}
                           onChange={(value) => {
                             console.log(value);
-                            setValue("phone", value);
+                            setValue("mobile", value);
                             setPhone(value);
                           }}
                         />
                       )}
                     />
-                    {errors.phone && (
+                    {errors.mobile && (
                       <span className="text-red-500">
-                        {errors.phone.message}
+                        {errors.mobile.message}
                       </span>
                     )}
                   </div>
