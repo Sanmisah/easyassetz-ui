@@ -50,7 +50,7 @@ const beneficiarySchema = z
     guardianState: z.string().optional(),
     document: z.string().optional(),
     documentData: z.string().optional(),
-    guardianReligion: z.string().optional(),
+    religion: z.string().optional(),
     guardianNationality: z.string().optional(),
     addressLine1: z.string().optional(),
     addressLine2: z.string().optional(),
@@ -104,7 +104,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   const [selectedDocument, setSelectedDocument] = useState("");
   // const [dateCountryCode, setDateCountryCode] = useState("+91");
   const [relationship, setRelationship] = useState("");
-  const [guardianReligion, setGuardianReligion] = useState("");
+  const [religion, setGuardianReligion] = useState("");
 
   const watchDOB = watch("dob", null);
   const getitem = localStorage.getItem("user");
@@ -134,7 +134,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianState", "");
     setValue("document", "");
     setValue("documentData", "");
-    setValue("guardianReligion", "");
+    setValue("religion", "");
     setValue("guardianNationality", "");
   };
 
@@ -186,8 +186,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     if (relationship === "other") {
       data.relationship = data.specificRelationship;
     }
-    if (guardianReligion === "other") {
-      data.guardianReligion = data.specificGuardianReligion;
+    if (religion === "other") {
+      data.religion = data.specificGuardianReligion;
     }
     data.document = selectedDocument;
 
@@ -197,9 +197,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     if (data.dob > new Date() === 18) {
       delete data.guardianCity;
       delete data.guardianState;
-      delete data.document;
-      delete data.documentData;
-      delete data.guardianReligion;
+      delete data.religion;
       delete data.guardianNationality;
     }
     try {
@@ -511,14 +509,14 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                 <SelectValue placeholder="Select document" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="Aadhaar">Aadhaar</SelectItem>
-                                <SelectItem value="Passport">
+                                <SelectItem value="aadhar">Aadhaar</SelectItem>
+                                <SelectItem value="passport">
                                   Passport
                                 </SelectItem>
-                                <SelectItem value="Driving License">
+                                <SelectItem value="driving-license">
                                   Driving License
                                 </SelectItem>
-                                <SelectItem value="Voter ID">
+                                <SelectItem value="voter-id">
                                   Voter ID
                                 </SelectItem>
                               </SelectContent>
@@ -549,21 +547,20 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </div>
                       )}
                       <div className="space-y-2">
-                        <Label htmlFor="guardianReligion">Religion</Label>
+                        <Label htmlFor="religion">Religion</Label>
                         <Controller
-                          name="guardianReligion"
+                          name="religion"
                           control={control}
                           render={({ field }) => (
                             <Select
                               value={field.value}
                               onValueChange={(value) => {
                                 field.onChange(value);
-                                setGuardianReligion(value);
                               }}
                             >
                               <SelectTrigger
-                                id="guardianReligion"
-                                aria-label="guardianReligion"
+                                id="religion"
+                                aria-label="religion"
                               >
                                 <SelectValue placeholder="Select Religion" />
                               </SelectTrigger>
@@ -583,20 +580,20 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             </Select>
                           )}
                         />
-                        {errors.guardianReligion && (
+                        {errors.religion && (
                           <p className="text-red-500">
-                            {errors.guardianReligion.message}
+                            {errors.religion.message}
                           </p>
                         )}
                       </div>
-                      {guardianReligion === "other" && (
+                      {religion === "other" && (
                         <div className="space-y-2">
                           <Label htmlFor="">Religion</Label>
                           <Input
                             id="specificGuardianReligion"
                             placeholder="Enter Religion"
                             {...register("specificGuardianReligion", {
-                              required: guardianReligion === "other",
+                              required: religion === "other",
                             })}
                           />
                           {errors.specificGuardianReligion && (

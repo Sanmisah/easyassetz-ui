@@ -34,14 +34,14 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Organization Name is required" }),
-    masterPolicyNumber: z.string().optional(),
-    empNo: z.string().optional(),
-    address: z.string().optional(),
-    annuityAmount: z.string().optional(),
-    additionalDetails: z.string().optional(),
-    name: z.string().optional(),
-    phone: z.string().optional(),
-    email: z.string().optional(),
+  masterPolicyNumber: z.string().optional(),
+  empNo: z.string().optional(),
+  address: z.string().optional(),
+  annuityAmount: z.string().optional(),
+  additionalDetails: z.string().optional(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
 });
 
 const SuperAnnuationEditForm = () => {
@@ -85,7 +85,7 @@ const SuperAnnuationEditForm = () => {
         },
       }
     );
-  
+
     console.log(typeof response.data.data.SuperAnnuation?.annuityAmount);
     return response.data.data.SuperAnnuation;
   };
@@ -176,7 +176,7 @@ const SuperAnnuationEditForm = () => {
     data.name = name;
     data.email = email;
     data.mobile = mobile;
-   
+
     console.log(data);
     // const date = new Date(data.membershipPaymentDate);
     // const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -227,9 +227,7 @@ const SuperAnnuationEditForm = () => {
                       id="companyName"
                       placeholder="Employer Name"
                       {...field}
-                      className={
-                        errors.companyName ? "border-red-500" : ""
-                      }
+                      className={errors.companyName ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.companyName || ""}
                     />
                   )}
@@ -251,7 +249,9 @@ const SuperAnnuationEditForm = () => {
                       id="masterPolicyNumber"
                       placeholder="Employee Id"
                       {...field}
-                      className={errors.masterPolicyNumber ? "border-red-500" : ""}
+                      className={
+                        errors.masterPolicyNumber ? "border-red-500" : ""
+                      }
                       defaultValue={Benifyciary?.masterPolicyNumber || ""}
                     />
                   )}
@@ -279,9 +279,7 @@ const SuperAnnuationEditForm = () => {
                   )}
                 />
                 {errors.empNo && (
-                  <span className="text-red-500">
-                    {errors.empNo.message}
-                  </span>
+                  <span className="text-red-500">{errors.empNo.message}</span>
                 )}
               </div>
               <div className="space-y-2">
@@ -301,9 +299,7 @@ const SuperAnnuationEditForm = () => {
                   )}
                 />
                 {errors.address && (
-                  <span className="text-red-500">
-                    {errors.address.message}
-                  </span>
+                  <span className="text-red-500">{errors.address.message}</span>
                 )}
               </div>
               <div className="space-y-2">
@@ -339,7 +335,9 @@ const SuperAnnuationEditForm = () => {
                       id="additionalDetails"
                       placeholder="Enter Additional Details"
                       {...field}
-                      className={errors.additionalDetails ? "border-red-500" : ""}
+                      className={
+                        errors.additionalDetails ? "border-red-500" : ""
+                      }
                       defaultValue={Benifyciary?.additionalDetails || ""}
                     />
                   )}
@@ -351,7 +349,7 @@ const SuperAnnuationEditForm = () => {
                 )}
               </div>
             </div>
-           
+
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
@@ -407,8 +405,6 @@ const SuperAnnuationEditForm = () => {
                     <Input
                       id="name"
                       placeholder="Enter Name"
-                      value={field.value}
-                      onChange={(e) => setName(e.target.value)}
                       {...field}
                       className={errors.name ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.name || ""}
@@ -430,7 +426,6 @@ const SuperAnnuationEditForm = () => {
                       id="email"
                       placeholder="Enter Email"
                       {...field}
-                      onChange={(e) => setEmail(e.target.value)}
                       className={errors.email ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.email || ""}
                     />
@@ -450,11 +445,10 @@ const SuperAnnuationEditForm = () => {
                     <PhoneInput
                       id="mobile"
                       type="tel"
+                      {...field}
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setMobile(e.target)}
                       defaultValue={Benifyciary?.mobile || ""}
                     />
                   )}

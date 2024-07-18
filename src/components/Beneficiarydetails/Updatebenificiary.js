@@ -165,6 +165,9 @@ const BeneficiaryForm = ({
 
     onSuccess: (data) => {
       reset(data);
+      setSelectedDocument(data?.document);
+      setValue("document", data?.document);
+      setValue("documentData", data?.documentData);
     },
 
     onError: (error) => {
@@ -173,6 +176,9 @@ const BeneficiaryForm = ({
     },
   });
 
+  useEffect(() => {
+    setSelectedDocument(Beneficiary?.document);
+  }, [Beneficiary]);
   const clearGuardianFields = () => {
     setValue("guardianName", "");
     setValue("guardianMobile", "");
@@ -223,8 +229,6 @@ const BeneficiaryForm = ({
     if (calculateAge(data.dob) >= 18) {
       delete data.guardianCity;
       delete data.guardianState;
-      delete data.document;
-      delete data.documentData;
       delete data.guardianReligion;
       delete data.guardianNationality;
     }
@@ -546,9 +550,10 @@ const BeneficiaryForm = ({
                         <Controller
                           name="document"
                           control={control}
+                          defaultValue={defaultData?.document}
                           render={({ field }) => (
                             <Select
-                              value={field.value}
+                              name="document"
                               defaultValue={defaultData?.document}
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
@@ -588,7 +593,7 @@ const BeneficiaryForm = ({
                             {selectedDocument} Number
                           </Label>
                           <Input
-                            id="document-data"
+                            id="documentData"
                             placeholder={`Enter ${selectedDocument} number`}
                             defaultValue={defaultData?.documentData}
                             {...register("documentData")}

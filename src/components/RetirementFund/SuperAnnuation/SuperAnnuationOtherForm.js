@@ -29,15 +29,14 @@ import { PhoneInput } from "react-international-phone";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 
-
 const schema = z.object({
-  companyName: z
+  companyName: z.string().nonempty({ message: "Company Name is required" }),
+  masterPolicyNumber: z
     .string()
-    .nonempty({ message: "Company Name is required" }),
-    masterPolicyNumber: z.string().nonempty({ message: "Master Policy Number is required" }),
-    empNo: z.string().optional(),
-    address: z.string().optional(),
-    annuityAmount: z.string().optional(),
+    .nonempty({ message: "Master Policy Number is required" }),
+  empNo: z.string().optional(),
+  address: z.string().optional(),
+  annuityAmount: z.string().optional(),
   additionalDetails: z.string().optional(),
   // image: z.string().optional(),
   name: z.string().optional(),
@@ -104,11 +103,15 @@ const SuperAnnuationOtherForm = () => {
     },
   });
 
-  useEffect(() => {
-    if (selectedNommie.length > 0) {
-      setnomineeerror(false);
-    }
-  }, [selectedNommie], [nomineeerror]);
+  useEffect(
+    () => {
+      if (selectedNommie.length > 0) {
+        setnomineeerror(false);
+      }
+    },
+    [selectedNommie],
+    [nomineeerror]
+  );
 
   const onSubmit = (data) => {
     // data.name = name;
@@ -121,16 +124,11 @@ const SuperAnnuationOtherForm = () => {
     // const newdate = `${month}/${day}/${year}`;
     // data.membershipPaymentDate = newdate;
     console.log("Nomiee:", selectedNommie.length < 1);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
 
-      setnomineeerror(true);
-      return;
-    }
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
-   
+
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -152,7 +150,6 @@ const SuperAnnuationOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-           
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
               <Controller
@@ -187,7 +184,9 @@ const SuperAnnuationOtherForm = () => {
                     {...field}
                     value={field.value || ""}
                     onChange={field.onChange}
-                    className={errors.masterPolicyNumber ? "border-red-500" : ""}
+                    className={
+                      errors.masterPolicyNumber ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
@@ -214,9 +213,7 @@ const SuperAnnuationOtherForm = () => {
                 )}
               />
               {errors.empNo && (
-                <span className="text-red-500">
-                  {errors.empNo.message}
-                </span>
+                <span className="text-red-500">{errors.empNo.message}</span>
               )}
             </div>
             <div className="space-y-2">
@@ -236,9 +233,7 @@ const SuperAnnuationOtherForm = () => {
                 )}
               />
               {errors.address && (
-                <span className="text-red-500">
-                  {errors.address.message}
-                </span>
+                <span className="text-red-500">{errors.address.message}</span>
               )}
             </div>
             <div className="space-y-2">
@@ -263,88 +258,81 @@ const SuperAnnuationOtherForm = () => {
                 </span>
               )}
             </div>
-           
-             
+
             <div className="space-y-2">
-              <Label htmlFor="additionalInformation">Additional Information</Label>
+              <Label htmlFor="additionalDetails">Additional Information</Label>
               <Controller
-                name="additionalInformation"
+                name="additionalDetails"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="additionalInformation"
+                    id="additionalDetails"
                     placeholder="Enter Additional Information"
                     {...field}
                     value={field.value || ""}
                     onChange={field.onChange}
-                    className={errors.additionalInformation ? "border-red-500" : ""}
+                    className={errors.additionalDetails ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.additionalInformation && (
+              {errors.additionalDetails && (
                 <span className="text-red-500">
-                  {errors.additionalInformation.message}
+                  {errors.additionalDetails.message}
                 </span>
               )}
             </div>
-             
 
-              {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2">
-                  <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
+            {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
-                <Label
-                  htmlFor="registered-mobile"
-                  className="text-lg font-bold"
-                >
-                  Add nominee
-                </Label>
-                <Addnominee
-                  setDisplaynominie={setDisplaynominie}
-                  setSelectedNommie={setSelectedNommie}
-                  displaynominie={displaynominie}
-                />
-                {nomineeerror && (
-                  <span className="text-red-500">
-                    Please select atleast one nominee
-                  </span>
-                )}
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
               </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile" className="text-lg font-bold">
+                Add nominee
+              </Label>
+              <Addnominee
+                setDisplaynominie={setDisplaynominie}
+                setSelectedNommie={setSelectedNommie}
+                displaynominie={displaynominie}
+              />
+              {nomineeerror && (
+                <span className="text-red-500">
+                  Please select atleast one nominee
+                </span>
+              )}
+            </div>
             <div className="w-full grid grid-cols-1 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="additionalInformation">Point Of Contact</Label>
+                <Label htmlFor="additionalDetails">Point Of Contact</Label>
                 <div className="mt-2  flex item-center  gap-2 justify-between">
                   <div className="w-[40%] space-y-2 item-center">
                     <Label htmlFor="name">Name</Label>

@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 import cross from "@/components/image/close.png";
 
-
 const ProvidentFundMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
@@ -33,7 +32,7 @@ const ProvidentFundMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/provident-funds/${lifeInsuranceDeleteId}`, {
+    const response = await axios.get(`/api/provident-funds`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
@@ -77,7 +76,7 @@ const ProvidentFundMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Providend Fund</h1>
-        <Button onMouseDown={() => navigate("/providentfund/add")}>
+          <Button onMouseDown={() => navigate("/providentfund/add")}>
             Add Providend Fund
           </Button>
           {alertDialog && (

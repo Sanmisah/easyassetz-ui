@@ -95,10 +95,10 @@ const ProvidentFundEditForm = ({}) => {
     let data = response.data.data.ProvidentFund;
     console.log("Fetching Data:", data);
     setValue("employerName", data.bankName);
-    setValue("uanNumber", data.ppfAccountNo);
+    setValue("uanNumber", data.uanNumber);
     setValue("branch", data.branch);
-    setValue("bankName", data.natureOfHolding);
-    setValue("bankAccountNumber", data.jointHolderName);
+    setValue("bankName", data.bankName);
+    setValue("bankAccountNumber", data.bankAccountNumber);
     setValue("additionalDetails", data.additionalDetails);
     setValue("name", data.name);
     setValue("mobile", data.mobile);
@@ -168,7 +168,7 @@ const ProvidentFundEditForm = ({}) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading  Providend Fund data</div>;
+  if (isError) return <div>Error loading Providend Fund data</div>;
 
   return (
     <div className="w-full">
@@ -177,10 +177,10 @@ const ProvidentFundEditForm = ({}) => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit  Providend Fund Details
+                Edit Providend Fund Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the  Providend Fund details.
+                Update the form to edit the Providend Fund details.
               </CardDescription>
             </div>
           </div>
@@ -205,14 +205,14 @@ const ProvidentFundEditForm = ({}) => {
                 )}
               />
               {errors.employerName && (
-                <span className="text-red-500">{errors.employerName.message}</span>
+                <span className="text-red-500">
+                  {errors.employerName.message}
+                </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="uanNumber">
-              UAN Number
-              </Label>
+              <Label htmlFor="uanNumber">UAN Number</Label>
               <Controller
                 name="uanNumber"
                 control={control}
@@ -220,27 +220,25 @@ const ProvidentFundEditForm = ({}) => {
                   <Input
                     id="uanNumber"
                     placeholder="Enter UAN Number"
+                    defaultValue={Benifyciary?.uanNumber}
                     {...field}
                     className={errors.uanNumber ? "border-red-500" : ""}
                   />
                 )}
               />
               {errors.uanNumber && (
-                <span className="text-red-500">
-                  {errors.uanNumber.message}
-                </span>
+                <span className="text-red-500">{errors.uanNumber.message}</span>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="bankName">
-              Bank Name
-              </Label>
+              <Label htmlFor="bankName">Bank Name</Label>
               <Controller
                 name="bankName"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="bankName"
+                    defaultValue={Benifyciary?.bankName}
                     placeholder="Enter Bank Name"
                     {...field}
                     className={errors.bankName ? "border-red-500" : ""}
@@ -248,9 +246,7 @@ const ProvidentFundEditForm = ({}) => {
                 )}
               />
               {errors.bankName && (
-                <span className="text-red-500">
-                  {errors.bankName.message}
-                </span>
+                <span className="text-red-500">{errors.bankName.message}</span>
               )}
             </div>
 
@@ -277,9 +273,11 @@ const ProvidentFundEditForm = ({}) => {
               <Controller
                 name="bankAccountNumber"
                 control={control}
+                defaultValue={Benifyciary?.bankAccountNumber}
                 render={({ field }) => (
                   <Input
                     id="bankAccountNumber"
+                    defaultValue={Benifyciary?.bankAccountNumber}
                     placeholder="Enter Bank Account Number"
                     {...field}
                     className={errors.bankAccountNumber ? "border-red-500" : ""}
@@ -287,7 +285,9 @@ const ProvidentFundEditForm = ({}) => {
                 )}
               />
               {errors.bankAccountNumber && (
-                <span className="text-red-500">{errors.bankAccountNumber.message}</span>
+                <span className="text-red-500">
+                  {errors.bankAccountNumber.message}
+                </span>
               )}
             </div>
 
@@ -295,10 +295,12 @@ const ProvidentFundEditForm = ({}) => {
               <Label htmlFor="additionalDetails">Additional Details</Label>
               <Controller
                 name="additionalDetails"
+                defaultValue={Benifyciary?.additionalDetails}
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="additionalDetails"
+                    defaultValue={Benifyciary?.additionalDetails}
                     placeholder="Enter Additional Details"
                     {...field}
                     className={errors.additionalDetails ? "border-red-500" : ""}
@@ -330,11 +332,9 @@ const ProvidentFundEditForm = ({}) => {
                 <span className="text-red-500">{errors.name.message}</span>
               )}
             </div>
-            
+
             <div className="space-y-2">
-              <Label htmlFor="mobile">
-              Mobile
-              </Label>
+              <Label htmlFor="mobile">Mobile</Label>
               <Controller
                 name="mobile"
                 control={control}
@@ -346,16 +346,12 @@ const ProvidentFundEditForm = ({}) => {
                     defaultCountry="in"
                     inputStyle={{ minWidth: "30.5rem" }}
                     value={field.value || ""}
-                    className={
-                      errors.mobile ? "border-red-500" : ""
-                    }
+                    className={errors.mobile ? "border-red-500" : ""}
                   />
                 )}
               />
               {errors.mobile && (
-                <span className="text-red-500">
-                  {errors.mobile.message}
-                </span>
+                <span className="text-red-500">{errors.mobile.message}</span>
               )}
             </div>
 

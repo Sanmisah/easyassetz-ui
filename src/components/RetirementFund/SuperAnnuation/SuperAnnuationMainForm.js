@@ -32,7 +32,7 @@ const SuperAnnuationMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/super-annuations/${lifeInsuranceDeleteId}`, {
+    const response = await axios.get(`/api/super-annuations`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
@@ -67,8 +67,8 @@ const SuperAnnuationMainForm = () => {
         },
       }
     );
-      window.location.reload( true );
-       toast.success("Super Annuation deleted successfully!");
+    window.location.reload(true);
+    toast.success("Super Annuation deleted successfully!");
   };
 
   return (
@@ -76,7 +76,7 @@ const SuperAnnuationMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Super Annuation</h1>
-        <Button onMouseDown={() => navigate("/superannuation/add")}>
+          <Button onMouseDown={() => navigate("/superannuation/add")}>
             Add Super Annuation
           </Button>
           {alertDialog && (

@@ -66,6 +66,7 @@ const ProvidentFundOtherForm = () => {
     handleSubmit,
     control,
     register,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -116,7 +117,7 @@ const ProvidentFundOtherForm = () => {
   const onSubmit = (data) => {
     // data.name = name;
     // data.email = email;
-    // data.mobile = phone;
+    data.mobile = phone;
     // const date = new Date(data.membershipPaymentDate);
     // const month = String(date.getMonth() + 1).padStart(2, "0");
     // const day = String(date.getDate()).padStart(2, "0");
@@ -258,28 +259,24 @@ const ProvidentFundOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="additionalInformation">
-                Additional Information
-              </Label>
+              <Label htmlFor="additionalDetails">Additional Information</Label>
               <Controller
-                name="additionalInformation"
+                name="additionalDetails"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="additionalInformation"
+                    id="additionalDetails"
                     placeholder="Enter Additional Information"
                     {...field}
                     value={field.value || ""}
                     onChange={field.onChange}
-                    className={
-                      errors.additionalInformation ? "border-red-500" : ""
-                    }
+                    className={errors.additionalDetails ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.additionalInformation && (
+              {errors.additionalDetails && (
                 <span className="text-red-500">
-                  {errors.additionalInformation.message}
+                  {errors.additionalDetails.message}
                 </span>
               )}
             </div>
