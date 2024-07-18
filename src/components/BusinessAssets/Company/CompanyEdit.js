@@ -36,26 +36,18 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  companyAddress: z
+  companyAddress: z.string().optional(),
+  firmsRegistrationNumber: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  companyRegistration: z
-    .string()
-    .min(2, { message: "Company Registration is required" }),
-
   myStatus: z.string().optional(),
-  typeOfInvestment: z.string().min(3, { message: "Premium is required" }),
-  holdingType: z.string().min(3, { message: "Sum Insured is required" }),
-  jointHolderName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  documentAvailability: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
+  // holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName: z.string().optional(),
+  jointHolderPan: z.string().optional(),
+  typeOfInvestment: z.string().optional(),
   additionalInformation: z.string().optional(),
   name: z.string().nonempty({ message: "Name is required" }),
-  mobile: z.string().nonempty({ message: "mobile is required" }),
+  // mobile: z.string().nonempty({ message: "mobile is required" }),
   email: z.string().optional(),
 });
 
@@ -79,6 +71,7 @@ const EditFormHealth = () => {
   const [showOtherFamilyMembersCovered, setShowOtherFamilyMembersCovered] =
     useState(false);
   const [defaultValues, setDefaultValues] = useState({});
+  const [showOtherCompanyName, setshowOtherCompanyName] = useState(false);
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
@@ -195,10 +188,10 @@ const EditFormHealth = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Insurance Policy Details
+                Company Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the insurance policy details.
+                Edit the form to update the Company Details.
               </CardDescription>
             </div>
           </div>
@@ -208,6 +201,41 @@ const EditFormHealth = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
+            <div className="space-y-2">
+              <Label htmlFor="companyName">Company Name</Label>
+              <Controller
+                name="companyName"
+                control={control}
+                defaultValue={defaultValues.companyName}
+                render={({ field }) => (
+                  <Input
+                    id="companyName"
+                    placeholder="Enter Company Name"
+                    {...field}
+                    className={errors.companyName ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {showOtherCompanyName && (
+                <Controller
+                  name="specifyCompanyName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Specify Company Name"
+                      className="mt-2"
+                    />
+                  )}
+                />
+              )}
+              {errors.companyName && (
+                <span className="text-red-500">
+                  {errors.companyName.message}
+                </span>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>

@@ -47,9 +47,7 @@ const schema = z.object({
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
   additionalInformation: z.string().optional(),
-  typeOfInvestment: z
-    .string()
-    .nonempty({ message: "Type of Investment is required" }),
+  typeOfInvestment: z.string().optional(),
   name: z.string().nonempty({ message: "Name is required" }),
   // mobile: z.string().nonempty({ message: "Mobile is required" }),
   email: z.string().email({ message: "Invalid email address" }),
@@ -142,7 +140,7 @@ const CompanyForm = () => {
     //   setNomineeError(true);
     //   return;
     // }
-    if(data.typeOfInvestment === "other"){
+    if (data.typeOfInvestment === "other") {
       data.typeOfInvestment = data.specifyInvestment;
     }
     if (selectedNommie.length > 0) {

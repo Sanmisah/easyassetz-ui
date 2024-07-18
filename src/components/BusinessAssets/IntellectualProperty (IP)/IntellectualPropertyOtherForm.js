@@ -40,6 +40,8 @@ const schema = z.object({
   nameOfAssignee: z
     .string()
     .nonempty({ message: "Name of assignee is required" }),
+  expiryDate: z.date().optional(),
+  dateOfAssignment: z.date().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -237,7 +239,7 @@ const IntellectualPropertyOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="maturity-date">Expiry Date</Label>
+              <Label htmlFor="expiryDate">Expiry Date</Label>
               <Controller
                 name="expiryDate"
                 control={control}
@@ -312,7 +314,7 @@ const IntellectualPropertyOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="maturity-date">Date of Assignment</Label>
+              <Label htmlFor="dateOfAssignment">Date of Assignment</Label>
               <Controller
                 name="dateOfAssignment"
                 control={control}
