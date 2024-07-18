@@ -40,7 +40,7 @@ const schema = z.object({
   annuityAmount: z.string().optional(),
   additionalDetails: z.string().optional(),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  mobile: z.string().optional(),
   email: z.string().optional(),
 });
 
@@ -117,7 +117,7 @@ const SuperAnnuationEditForm = () => {
       setValue("annuityAmount", data.annuityAmount);
       setValue("additionalDetails", data.additionalDetails);
       setValue("name", data.name);
-      setValue("phone", data.phone);
+      setValue("mobile", data.mobile);
       setValue("email", data.email);
 
       // Set fetched values to the form
