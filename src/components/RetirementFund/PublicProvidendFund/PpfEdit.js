@@ -61,6 +61,7 @@ const PpfEditForm = ({}) => {
   const [nomineeDetails, setNomineeDetails] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [selectedNommie, setSelectedNommie] = useState([]);
+  const [phone, setPhone] = useState("");
   const [nomineeError, setNomineeError] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
 
@@ -167,6 +168,7 @@ const PpfEditForm = ({}) => {
 
   const onSubmit = (data) => {
     console.log(data);
+    data.mobile = phone;
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
@@ -398,14 +400,14 @@ const PpfEditForm = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name">Point of Contact Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Controller
                 name="name"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="name"
-                    placeholder="Enter Point of Contact Name"
+                    placeholder="Enter Name"
                     {...field}
                     className={errors.name ? "border-red-500" : ""}
                   />
@@ -415,44 +417,44 @@ const PpfEditForm = ({}) => {
                 <span className="text-red-500">{errors.name.message}</span>
               )}
             </div>
-            {/* 
+
             <div className="space-y-2">
-              <Label htmlFor="mobile">
-                Point of Contact Mobile
-              </Label>
+              <Label htmlFor="mobile">Mobile</Label>
               <Controller
                 name="mobile"
                 control={control}
+                defaultValue={Benifyciary?.mobile || ""}
                 render={({ field }) => (
                   <PhoneInput
                     id="mobile"
                     type="tel"
-                    placeholder="Enter Point of Contact Mobile"
+                    placeholder="Enter Mobile"
                     defaultCountry="in"
+                    value={field.value}
                     inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
-                    className={
-                      errors.mobile ? "border-red-500" : ""
-                    }
+                    onChange={(value) => {
+                      console.log(value);
+                      setValue("mobile", value);
+                      setPhone(value);
+                    }}
+                    className={errors.mobile ? "border-red-500" : ""}
                   />
                 )}
               />
               {errors.mobile && (
-                <span className="text-red-500">
-                  {errors.mobile.message}
-                </span>
+                <span className="text-red-500">{errors.mobile.message}</span>
               )}
-            </div> */}
+            </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Point of Contact Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Controller
                 name="email"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="email"
-                    placeholder="Enter Point of Contact Email"
+                    placeholder="Enter Email"
                     {...field}
                     className={errors.email ? "border-red-500" : ""}
                   />

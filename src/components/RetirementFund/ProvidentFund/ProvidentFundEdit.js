@@ -169,6 +169,9 @@ const ProvidentFundEditForm = ({}) => {
 
   const onSubmit = (data) => {
     console.log(data);
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
     pfMutate.mutate(data);
   };
 

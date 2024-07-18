@@ -126,11 +126,9 @@ const ProvidentFundOtherForm = () => {
     // data.membershipPaymentDate = newdate;
     console.log("Nomiee:", selectedNommie.length < 1);
 
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
     }
-
-    data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
 
