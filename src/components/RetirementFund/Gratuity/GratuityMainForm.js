@@ -68,7 +68,7 @@ const GratuityMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Gratuity deleted successfully!");
   };
 
   return (
@@ -90,7 +90,7 @@ const GratuityMainForm = () => {
         </div>
         <div className="w-[100%] grid grid-cols-1 md:grid-cols-1 gap-4 mt-8 ">
           {Benifyciary &&
-            Benifyciary.map((data) => (
+            Benifyciary?.map((data) => (
               <div
                 key={data.id}
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"

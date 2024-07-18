@@ -60,6 +60,7 @@ const GratuityMainForm = () => {
     handleSubmit,
     control,
     register,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -105,22 +106,17 @@ const GratuityMainForm = () => {
   );
 
   const onSubmit = (data) => {
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
-    const date = new Date(data.membershipPaymentDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.membershipPaymentDate = newdate;
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = phone;
+    // const date = new Date(data.membershipPaymentDate);
+    // const month = String(date.getMonth() + 1).padStart(2, "0");
+    // const day = String(date.getDate()).padStart(2, "0");
+    // const year = date.getFullYear();
+    // const newdate = `${month}/${day}/${year}`;
+    // data.membershipPaymentDate = newdate;
     console.log("Nomiee:", selectedNommie.length < 1);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
 
-      setnomineeerror(true);
-      return;
-    }
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
@@ -194,28 +190,24 @@ const GratuityMainForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="additionalInformation">
-                Additional Information
-              </Label>
+              <Label htmlFor="additionalDetails">Additional Information</Label>
               <Controller
-                name="additionalInformation"
+                name="additionalDetails"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="additionalInformation"
+                    id="additionalDetails"
                     placeholder="Enter Additional Information"
                     {...field}
                     value={field.value || ""}
                     onChange={field.onChange}
-                    className={
-                      errors.additionalInformation ? "border-red-500" : ""
-                    }
+                    className={errors.additionalDetails ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.additionalInformation && (
+              {errors.additionalDetails && (
                 <span className="text-red-500">
-                  {errors.additionalInformation.message}
+                  {errors.additionalDetails.message}
                 </span>
               )}
             </div>
@@ -282,8 +274,6 @@ const GratuityMainForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -304,8 +294,6 @@ const GratuityMainForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -331,6 +319,7 @@ const GratuityMainForm = () => {
                           value={field.value}
                           onChange={(value) => {
                             console.log(value);
+                            setValue("phone", value);
                             setPhone(value);
                           }}
                         />

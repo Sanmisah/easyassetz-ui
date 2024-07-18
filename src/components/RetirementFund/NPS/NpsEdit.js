@@ -27,9 +27,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import Addnominee from "@/components/Nominee/EditNominee";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  PRAN: z.string().optional(), 
+  PRAN: z.string().optional(),
   natureOfHolding: z.string().optional(),
   additionalDetails: z.string().optional(),
   name: z.string().optional(),
@@ -38,7 +40,6 @@ const schema = z.object({
     .string()
     // .email({ message: "Invalid Email" })
     .optional(),
-
 });
 // .refine((data) => {
 //   if (data.natureOfHolding === "joint") {
@@ -58,6 +59,9 @@ const NPSEditForm = ({}) => {
   const [nomineeDetails, setNomineeDetails] = useState([]);
   const [nomineeError, setNomineeError] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [defaultValues, setDefaultValues] = useState(null);
+  const [selectedNommie, setSelectedNommie] = useState([]);
 
   const {
     handleSubmit,
@@ -74,20 +78,16 @@ const NPSEditForm = ({}) => {
       name: "",
       mobile: "",
       email: "",
-
     },
   });
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `/api/nps/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/nps/${lifeInsuranceEditId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
     let data = response.data.data.NPS;
     console.log("Fetching Data:", data);
     setValue("PRAN", data.PRAN);
@@ -100,7 +100,7 @@ const NPSEditForm = ({}) => {
     if (data.natureOfHolding === "joint") {
       setShowJointHolderName(true);
     }
-  //   Assume nomineeDetails is an array of nominee objects
+    //   Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
     return response.data.data.NPS;
   };
@@ -156,8 +156,16 @@ const NPSEditForm = ({}) => {
     },
   });
 
+  useEffect(() => {
+    if (Benifyciary?.nominees) {
+      setDisplaynominie(Benifyciary?.nominees);
+    }
+  }, [Benifyciary?.nominees]);
+
   const onSubmit = (data) => {
     console.log(data);
+    data.nominees = selectedNommie;
+
     npsMutate.mutate(data);
   };
 
@@ -185,7 +193,9 @@ const NPSEditForm = ({}) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="PRAN">Permanent Retirement Account Number (PRAN)</Label>
+              <Label htmlFor="PRAN">
+                Permanent Retirement Account Number (PRAN)
+              </Label>
               <Controller
                 name="PRAN"
                 control={control}
@@ -297,6 +307,50 @@ const NPSEditForm = ({}) => {
                 </span>
               )}
             </div>
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              {console.log(Benifyciary?.nominees)}
+              <Addnominee
+                setSelectedNommie={setSelectedNommie}
+                AllNominees={Benifyciary?.nominees}
+                selectedNommie={selectedNommie}
+                displaynominie={displaynominie}
+                setDisplaynominie={setDisplaynominie}
+              />{" "}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Controller
@@ -314,11 +368,9 @@ const NPSEditForm = ({}) => {
               {errors.name && (
                 <span className="text-red-500">{errors.name.message}</span>
               )}
-            </div>           
+            </div>
             <div className="space-y-2">
-              <Label htmlFor="mobile">
-                Mobile
-              </Label>
+              <Label htmlFor="mobile">Mobile</Label>
               <Controller
                 name="mobile"
                 control={control}
@@ -331,16 +383,12 @@ const NPSEditForm = ({}) => {
                     inputStyle={{ minWidth: "15.5rem" }}
                     value={field.value || ""}
                     onChange={field.onChange}
-                    className={
-                      errors.mobile ? "border-red-500" : ""
-                    }
+                    className={errors.mobile ? "border-red-500" : ""}
                   />
                 )}
               />
               {errors.mobile && (
-                <span className="text-red-500">
-                  {errors.mobile.message}
-                </span>
+                <span className="text-red-500">{errors.mobile.message}</span>
               )}
             </div>
             <div className="space-y-2">
@@ -360,7 +408,7 @@ const NPSEditForm = ({}) => {
               {errors.email && (
                 <span className="text-red-500">{errors.email.message}</span>
               )}
-            </div>        
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

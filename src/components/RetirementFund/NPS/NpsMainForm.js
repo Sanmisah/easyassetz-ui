@@ -58,14 +58,11 @@ const NPSMainForm = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(
-      `/api/nps/${lifeInsuranceDeleteId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.delete(`/api/nps/${lifeInsuranceDeleteId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
     queryClient.invalidateQueries("LifeInsuraQuerynceData");
     toast.success("NPS deleted successfully!");
   };

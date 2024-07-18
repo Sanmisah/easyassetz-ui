@@ -66,6 +66,7 @@ const SuperAnnuationOtherForm = () => {
     handleSubmit,
     control,
     register,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -116,7 +117,7 @@ const SuperAnnuationOtherForm = () => {
   const onSubmit = (data) => {
     // data.name = name;
     // data.email = email;
-    // data.mobile = phone;
+    data.mobile = phone;
     // const date = new Date(data.membershipPaymentDate);
     // const month = String(date.getMonth() + 1).padStart(2, "0");
     // const day = String(date.getDate()).padStart(2, "0");
@@ -344,8 +345,6 @@ const SuperAnnuationOtherForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -366,8 +365,6 @@ const SuperAnnuationOtherForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -393,6 +390,7 @@ const SuperAnnuationOtherForm = () => {
                           value={field.value}
                           onChange={(value) => {
                             console.log(value);
+                            setValue("phone", value);
                             setPhone(value);
                           }}
                         />
