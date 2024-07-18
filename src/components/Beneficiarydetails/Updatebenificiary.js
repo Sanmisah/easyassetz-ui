@@ -139,7 +139,8 @@ const BeneficiaryForm = ({
     if (calculateAge(beneficiaryData?.dob) < 18) {
       setIsMinor(true);
     }
-    // setSelectedDocument(data.documentData);
+    setValue("document", beneficiaryData.document);
+    setSelectedDocument(beneficiaryData.document);
 
     if (
       ["child", "spouse", "self", "parent", "sibling"].includes(
@@ -567,8 +568,16 @@ const BeneficiaryForm = ({
                                 <SelectValue placeholder="Select document" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="aadhar">Aadhaar</SelectItem>
-                                <SelectItem value="passport">
+                                <SelectItem
+                                  defaultValue={defaultData?.document}
+                                  value="aadhar"
+                                >
+                                  Aadhaar
+                                </SelectItem>
+                                <SelectItem
+                                  defaultValue={defaultData?.document}
+                                  value="passport"
+                                >
                                   Passport
                                 </SelectItem>
                                 <SelectItem value="driving-license">
