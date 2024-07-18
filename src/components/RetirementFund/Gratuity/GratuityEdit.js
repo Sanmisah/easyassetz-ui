@@ -35,9 +35,9 @@ import { PhoneInput } from "react-international-phone";
 const schema = z.object({
   employerName: z.string().nonempty({ message: "Employer Name is required" }),
   employerId: z.string().nonempty({ message: "Employee id is required" }),
-  additionalInformation: z.string().optional(),
+  additionalDetails: z.string().optional(),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  mobile: z.string().optional(),
   email: z.string().optional(),
 });
 
@@ -224,27 +224,23 @@ const GratuityEditForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="additionalInformation">
-                Additional Information
-              </Label>
+              <Label htmlFor="additionalDetails">Additional Information</Label>
               <Controller
-                name="additionalInformation"
+                name="additionalDetails"
                 control={control}
-                defaultValue={defaultValues.additionalInformation}
+                defaultValue={defaultValues.additionalDetails}
                 render={({ field }) => (
                   <Input
-                    id="additionalInformation"
+                    id="additionalDetails"
                     placeholder="Enter additional information"
                     {...field}
-                    className={
-                      errors.additionalInformation ? "border-red-500" : ""
-                    }
+                    className={errors.additionalDetails ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.additionalInformation && (
+              {errors.additionalDetails && (
                 <span className="text-red-500">
-                  {errors.additionalInformation.message}
+                  {errors.additionalDetails.message}
                 </span>
               )}
             </div>
@@ -293,80 +289,76 @@ const GratuityEditForm = () => {
                 setDisplaynominie={setDisplaynominie}
               />
             </div>
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Controller
-                      name="name"
-                      control={control}
-                      defaultValue={defaultValues.name}
-                      render={({ field }) => (
-                        <Input
-                          id="name"
-                          placeholder="Enter name"
-                          {...field}
-                          className={errors.name ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.name && (
-                      <span className="text-red-500">
-                        {errors.name.message}
-                      </span>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Controller
+                    name="name"
+                    control={control}
+                    defaultValue={defaultValues.name}
+                    render={({ field }) => (
+                      <Input
+                        id="name"
+                        placeholder="Enter name"
+                        {...field}
+                        className={errors.name ? "border-red-500" : ""}
+                      />
                     )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mobile">Mobile</Label>
-                    <Controller
-                      name="mobile"
-                      control={control}
-                      defaultValue={defaultValues.mobile}
-                      render={({ field }) => (
-                        <PhoneInput
-                          id="mobile"
-                          type="tel"
-                          placeholder="Enter mobile"
-                          defaultCountry="in"
-                          inputStyle={{ minWidth: "30.5rem" }}
-                          value={field.value || ""}
-                           onChange={field.onChange}
-                          className={errors.mobile ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.mobile && (
-                      <span className="text-red-500">
-                        {errors.mobile.message}
-                      </span>
-                    )}
-                  </div>
+                  />
+                  {errors.name && (
+                    <span className="text-red-500">{errors.name.message}</span>
+                  )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Controller
-                      name="email"
-                      control={control}
-                      defaultValue={defaultValues.email}
-                      render={({ field }) => (
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="Enter email"
-                          {...field}
-                          className={errors.email ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.email && (
-                      <span className="text-red-500">
-                        {errors.email.message}
-                      </span>
+                <div className="space-y-2">
+                  <Label htmlFor="mobile">Mobile</Label>
+                  <Controller
+                    name="mobile"
+                    control={control}
+                    defaultValue={defaultValues.mobile}
+                    render={({ field }) => (
+                      <PhoneInput
+                        id="mobile"
+                        type="tel"
+                        placeholder="Enter mobile"
+                        defaultCountry="in"
+                        inputStyle={{ minWidth: "30.5rem" }}
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        className={errors.mobile ? "border-red-500" : ""}
+                      />
                     )}
-                  </div>
+                  />
+                  {errors.mobile && (
+                    <span className="text-red-500">
+                      {errors.mobile.message}
+                    </span>
+                  )}
                 </div>
-              </>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Controller
+                    name="email"
+                    control={control}
+                    defaultValue={defaultValues.email}
+                    render={({ field }) => (
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter email"
+                        {...field}
+                        className={errors.email ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                  )}
+                </div>
+              </div>
+            </>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
