@@ -274,27 +274,12 @@ const MotorForm = () => {
                   defaultValue="thirdparty"
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
-                      <RadioGroup
-                        {...field}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                        }}
-                        defaultValue="thirdparty"
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem
-                            defaultValue="thirdparty"
-                            id="thirdparty"
-                          />
-
-                          <Label htmlFor="thirdparty">Third Party</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="" value="comprehensive" />
-                          <Label htmlFor="comprehensive">Comprehensive</Label>
-                        </div>
-                      </RadioGroup>
+                      <Checkbox
+                        id="thirdparty"
+                        checked={field.value === "comprehensive"}
+                        onCheckedChange={() => field.onChange("comprehensive")}
+                      />
+                      <Label htmlFor="thirdparty">Third Party</Label>
                     </div>
                   )}
                 />

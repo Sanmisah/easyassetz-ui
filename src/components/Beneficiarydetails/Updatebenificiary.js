@@ -600,7 +600,6 @@ const BeneficiaryForm = ({
                         <Input
                           id="religion"
                           placeholder="Enter religion"
-                          value={defaultData?.religion || ""}
                           {...register("religion", {
                             required:
                               !defaultData?.religion && "Religion is required",
