@@ -345,27 +345,6 @@ const PpfEditForm = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="name">Point of Contact Name</Label>
               <Controller
                 name="name"
@@ -431,6 +410,26 @@ const PpfEditForm = ({}) => {
               )}
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="imageUpload">Image Upload</Label>
+              <Controller
+                name="imageUpload"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="file"
+                    id="imageUpload"
+                    {...field}
+                    className={errors.imageUpload ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.imageUpload && (
+                <span className="text-red-500">
+                  {errors.imageUpload.message}
+                </span>
+              )}
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

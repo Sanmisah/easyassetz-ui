@@ -30,22 +30,21 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
+import { Checkbox } from "@com/ui/checkbox";
 
 const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
   othercompanyName: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
+  insuranceType: z.string().optional(),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
   expiryDate: z.any().optional(),
   premium: z.string().min(3, { message: "Premium is required" }),
-  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
-  insurerName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
+  // sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  // insurerName: z
+  //   .string()
+  //   .nonempty({ message: "Policy Holder Name is required" }),
   vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
   specificVehicalType: z.string().optional(),
   modeOfPurchase: z.string().optional(),
@@ -271,15 +270,15 @@ const MotorForm = () => {
                 <Controller
                   name="insuranceType"
                   control={control}
-                  defaultValue="thirdparty"
+                  // defaultValue="comprehensive"
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
                       <Checkbox
-                        id="thirdparty"
+                        id="comprehensive"
                         checked={field.value === "comprehensive"}
                         onCheckedChange={() => field.onChange("comprehensive")}
                       />
-                      <Label htmlFor="thirdparty">Third Party</Label>
+                      <Label htmlFor="comprehensive">Comprehensive</Label>
                     </div>
                   )}
                 />
@@ -312,7 +311,7 @@ const MotorForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label htmlFor="maturity-date">Expiry Date</Label>
                 <Controller
                   name="expiryDate"
                   control={control}
@@ -451,9 +450,12 @@ const MotorForm = () => {
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="previous-policy"
+                      id="previousPolicyNumber"
                       placeholder="Enter previous policy number"
                       {...field}
+                      className={
+                        errors.previousPolicyNumber ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />

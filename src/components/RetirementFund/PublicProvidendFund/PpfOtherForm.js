@@ -35,7 +35,7 @@ const schema = z.object({
   ppfAccountNo: z.string().nonempty({ message: "Company Address is required" }),
   branch: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
-  // holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  natureOfHolding: z.string().nonempty({ message: "Holding Type is required" }),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z
@@ -46,7 +46,7 @@ const schema = z.object({
   //   .string()
   //   .nonempty({ message: "Type of Investment is required" }),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  mobie: z.string().optional(),
   email: z.string().optional(),
 });
 
@@ -88,6 +88,7 @@ const ppfForm = () => {
     handleSubmit,
     control,
     register,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -95,7 +96,7 @@ const ppfForm = () => {
       bankName: "",
       ppfAccountNo: "",
       branch: "",
-      holdingType: "",
+      natureOfHolding: "",
       jointHolderName: "",
       jointHolderPan: "",
       additionalDetails: "",
@@ -148,8 +149,7 @@ const ppfForm = () => {
     //   data.nominees = selectedNommie;
     // }
     data.type = "company";
-    data.name = name;
-    data.email = email;
+
     data.mobile = phone;
     // if (data) {
     //   data.firmName = data.otherFirmName;
@@ -262,7 +262,7 @@ const ppfForm = () => {
             <div className="space-y-4 flex flex-col">
               <Label className="text-lg font-bold">Holding Type</Label>
               <Controller
-                name="holdingType"
+                name="natureOfHolding"
                 defaultValues="single"
                 control={control}
                 render={({ field }) => (
@@ -286,9 +286,9 @@ const ppfForm = () => {
                   </RadioGroup>
                 )}
               />
-              {errors.holdingType && (
+              {errors.natureOfHolding && (
                 <span className="text-red-500">
-                  {errors.holdingType.message}
+                  {errors.natureOfHolding.message}
                 </span>
               )}
             </div>
@@ -426,8 +426,6 @@ const ppfForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={field.value}
-                          onChange={field.onChange}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -453,6 +451,7 @@ const ppfForm = () => {
                           value={field.value}
                           onChange={(value) => {
                             console.log(value);
+                            setValue("mobile", value);
                             setPhone(value);
                           }}
                         />
