@@ -120,6 +120,12 @@ function App() {
         <Route path="/pss" element={<Personalpage />} />
         <Route path="/pss/add" element={<Personalpage />} />
         <Route path="/pss/edit" element={<Personalpage />} />
+        <Route path="/banklocker" element={<Personalpage />} />
+        <Route path="/banklocker/add" element={<Personalpage />} />
+        <Route path="/banklocker/edit" element={<Personalpage />} />
+        <Route path="/psf" element={<Personalpage />} />
+        <Route path="/psa/add" element={<Personalpage />} />
+        <Route path="/psa/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

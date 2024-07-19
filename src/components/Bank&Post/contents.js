@@ -115,7 +115,8 @@ const BankContentForm = () => {
             {HealthInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Bank Accouns
+                  {HealthInsurance?.length && HealthInsurance?.length} Bank
+                  Accouns
                 </p>
               </div>
             )}
@@ -131,14 +132,15 @@ const BankContentForm = () => {
             {HealthInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Fix Deposits
+                  {HealthInsurance?.length && HealthInsurance?.length} Fix
+                  Deposits
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/bank-locker")}
+          onMouseDown={() => navigate("/banklocker")}
           className=" cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
@@ -163,7 +165,8 @@ const BankContentForm = () => {
             {GeneralInsurance && GeneralInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {GeneralInsurance && GeneralInsurance?.length} Post Saving Schemes
+                  {GeneralInsurance && GeneralInsurance?.length} Post Saving
+                  Schemes
                 </p>
               </div>
             )}
@@ -179,7 +182,8 @@ const BankContentForm = () => {
             {otherInsuranceData && otherInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherInsuranceData && otherInsuranceData?.length} Other Deposits
+                  {otherInsuranceData && otherInsuranceData?.length} Other
+                  Deposits
                 </p>
               </div>
             )}
