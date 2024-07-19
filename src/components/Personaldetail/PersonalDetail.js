@@ -246,7 +246,7 @@ const Personaldetail = () => {
       data.marriedUnderSpecialAct = false;
     }
     delete data.specificNationality;
-    data.marriedUnderSpecialAct = specialactundermarriange;
+    // data.marriedUnderSpecialAct = specialactundermarriange;
     console.log("FIAL", data);
     Profilemutate.mutate(data);
   };
