@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const DigitalAssetsMainForm = () => {
+const PSSMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -31,13 +31,13 @@ const DigitalAssetsMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/digital-assets`, {
+    const response = await axios.get(`/api/post-saving-schemes`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.DigitalAsset;
+    return response.data.data.PostSavingScheme;
   };
 
   const {
@@ -59,24 +59,24 @@ const DigitalAssetsMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/digital-assets/${lifeInsuranceDeleteId}`,
+      `/api/post-saving-scheme/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Digital Assets deleted successfully!");
+    queryClient.invalidateQueries("LifeInsuraQuerynceData");
+    toast.success("Public Providend Fund deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Digital Assets</h1>
-          <Button onMouseDown={() => navigate("/digital-assets/add")}>
-            Add Digital Assets
+          <h1 className="text-2xl font-bold">Post Saving Scheme</h1>
+          <Button onMouseDown={() => navigate("/pss/add")}>
+            Add Post Saving Scheme
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -95,7 +95,8 @@ const DigitalAssetsMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.digitalAssets}</h1>
+                  <h1 className="font-bold">{data.certificateNumber}</h1>
+                  <p className="text-sm">{data.amount}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -111,7 +112,7 @@ const DigitalAssetsMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/digital-assets/edit");
+                          navigate("/pss/edit");
                         }}
                       >
                         Edit
@@ -135,4 +136,4 @@ const DigitalAssetsMainForm = () => {
   );
 };
 
-export default DigitalAssetsMainForm;
+export default PSSMainForm;

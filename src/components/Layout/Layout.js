@@ -111,6 +111,12 @@ import RecoverableEditForm from "@/components/OtherAssets/Recoverable/Recoverabl
 import OtherAssetForm from "@/components/OtherAssets/OtherAsset/OtherAssetForm";
 import OtherAssetEditForm from "@/components/OtherAssets/OtherAsset/OtherAssetEdit";
 import IntellectualPropertyEditForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyEditForm";
+import OtherDepositsMainForm from "@/components/Bank&Post/OtherDeposit/OtherDepositMainForm";
+import OtherDepositsForm from "@/components/Bank&Post/OtherDeposit/OtherDepositOtherForm";
+import OtherDepositsEditForm from "@/components/Bank&Post/OtherDeposit/OtherDepositEdit";
+import PSSMainForm from "@/components/Bank&Post/PostSavingScheme/PSSMainForm";
+import PSSOtherForm from "@/components/Bank&Post/PostSavingScheme/PSSOtherForm";
+import PSSEditForm from "@/components/Bank&Post/PostSavingScheme/PSSEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -204,7 +210,7 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Liabilities
           </NavLink> */}
-           <NavLink
+          <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/bank"
           >
@@ -225,7 +231,6 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Immovable Assets
           </NavLink> */}
-         
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -403,6 +408,12 @@ const Layout = () => {
       {location.pathname === "/other-asset" && <OtherAssetMainForm />}
       {location.pathname === "/other-asset/add" && <OtherAssetForm />}
       {location.pathname === "/other-asset/edit" && <OtherAssetEditForm />}
+      {location.pathname === "/other-deposits" && <OtherDepositsMainForm />}
+      {location.pathname === "/other-deposits/add" && <OtherDepositsForm />}
+      {location.pathname === "/other-deposits/edit" && <OtherDepositsEditForm />}
+      {location.pathname === "/pss" && <PSSMainForm />}
+      {location.pathname === "/pss/add" && <PSSOtherForm />}
+      {location.pathname === "/pss/edit" && <PSSEditForm />}
     </div>
   );
 };

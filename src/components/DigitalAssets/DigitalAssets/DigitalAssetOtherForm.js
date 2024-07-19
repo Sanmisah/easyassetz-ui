@@ -80,13 +80,13 @@ const DigitalAssetOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/bullions`, data, {
+      const response = await axios.post(`/api/digital-assets`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.Bullion;
+      return response.data.data.DigitalAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");

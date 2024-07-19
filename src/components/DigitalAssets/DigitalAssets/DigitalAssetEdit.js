@@ -76,11 +76,14 @@ const DigitalAssetEditForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions/${lifeInsuranceEditId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
+    const response = await axios.get(
+      `/api/digital-assets/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
     let othertype = response.data.data.Bullion?.metalType;
     let otherarticle = response.data.data.Bullion?.articleDetails;
     if (
@@ -157,7 +160,7 @@ const DigitalAssetEditForm = () => {
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/bullions/${lifeInsuranceEditId}`,
+        `/api/digital-assets/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -165,7 +168,7 @@ const DigitalAssetEditForm = () => {
           },
         }
       );
-      return response.data.data.Bullion;
+      return response.data.data.DigitalAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);

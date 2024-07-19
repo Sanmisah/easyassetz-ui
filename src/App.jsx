@@ -111,9 +111,15 @@ function App() {
         <Route path="/recoverable" element={<Personalpage />} />
         <Route path="/recoverable/add" element={<Personalpage />} />
         <Route path="/recoverable/edit" element={<Personalpage />} />
-        <Route path= "/other-asset" element={<Personalpage />} />
+        <Route path="/other-asset" element={<Personalpage />} />
         <Route path="/other-asset/add" element={<Personalpage />} />
         <Route path="/other-asset/edit" element={<Personalpage />} />
+        <Route path="/other-deposits" element={<Personalpage />} />
+        <Route path="/other-deposits/add" element={<Personalpage />} />
+        <Route path="/other-deposits/edit" element={<Personalpage />} />
+        <Route path="/pss" element={<Personalpage />} />
+        <Route path="/pss/add" element={<Personalpage />} />
+        <Route path="/pss/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
