@@ -532,7 +532,7 @@ const EditMotorForm = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label htmlFor="policy-holder">Insurer Name</Label>
                 <Controller
                   name="insurerName"
                   control={control}
@@ -658,9 +658,11 @@ const EditMotorForm = () => {
               <Controller
                 name="modeOfPurchase"
                 control={control}
+                defaultValue={Benifyciary?.modeOfPurchase || ""}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
+                    defaultValue={Benifyciary?.modeOfPurchase || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");
