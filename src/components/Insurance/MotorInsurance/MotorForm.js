@@ -330,26 +330,25 @@ const MotorForm = () => {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="premium">Premium</Label>
-                <Controller
-                  name="premium"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="premium"
-                      placeholder="Enter premium amount"
-                      {...field}
-                      className={errors.premium ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.premium && (
-                  <span className="text-red-500">{errors.premium.message}</span>
+            <div className="space-y-2">
+              <Label htmlFor="premium">Premium</Label>
+              <Controller
+                name="premium"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="premium"
+                    placeholder="Enter premium amount"
+                    {...field}
+                    className={errors.premium ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
-           
+              />
+              {errors.premium && (
+                <span className="text-red-500">{errors.premium.message}</span>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Insurer Name</Label>
