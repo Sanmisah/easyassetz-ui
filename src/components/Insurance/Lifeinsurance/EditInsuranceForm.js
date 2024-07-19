@@ -71,9 +71,7 @@ const schema = z.object({
     .nonempty({ message: "Policy Holder Name is required" }),
   relationship: z.string().nonempty({ message: "Relationship is required" }),
   otherRelationship: z.string().optional(),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
+  modeOfPurchase: z.any().optional(),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
   email: z.string().optional(),
@@ -656,9 +654,11 @@ const EditMotorForm = () => {
               <Controller
                 name="modeOfPurchase"
                 control={control}
+                defaultValue={Benifyciary?.modeOfPurchase || ""}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
+                    defaultValue={Benifyciary?.modeOfPurchase || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setHideRegisteredFields(value === "e-insurance");

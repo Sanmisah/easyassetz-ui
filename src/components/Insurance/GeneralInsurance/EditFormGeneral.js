@@ -43,15 +43,13 @@ const schema = z
       .string()
       .nonempty({ message: "Insurance Sub Type is required" }),
     policyNumber: z.string().min(1, { message: "Policy Number is required" }),
-    maturityDate: z.date().optional(),
+    maturityDate: z.any().optional(),
     premium: z.string().min(3, { message: "Premium is required" }),
     sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
     policyHolderName: z
       .string()
       .nonempty({ message: "Policy Holder Name is required" }),
-    modeOfPurchase: z
-      .string()
-      .nonempty({ message: "Mode of Purchase is required" }),
+    modeOfPurchase: z.any().optional(),
     contactPerson: z.string().optional(),
     contactNumber: z.string().optional(),
     email: z.string().email({ message: "Invalid email address" }).optional(),
