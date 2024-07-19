@@ -33,84 +33,63 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z
-  .object({
-    companyName: z
-      .string()
-      .nonempty({ message: "Insurance Company is required" }),
-    otherInsuranceCompany: z.string().optional(),
-    insuranceType: z
-      .string()
-      .nonempty({ message: "Insurance Sub Type is required" }),
-    policyNumber: z
-      .string()
-      .transform((value) => (value === "" ? null : value))
-      .nullable()
-      .refine((value) => value === null || !isNaN(Number(value)), {
-        message: "Policy Number must be a number",
-      })
-      .transform((value) => (value === null ? null : Number(value))),
-    maturityDate: z.any().optional(),
-    premium: z
-      .string()
-      .transform((value) => (value === "" ? null : value))
-      .nullable()
-      .refine((value) => value === null || !isNaN(Number(value)), {
-        message: "Premium must be a number",
-      })
-      .transform((value) => (value === null ? null : Number(value))),
-    sumInsured: z
-      .string()
-      .transform((value) => (value === "" ? null : value))
-      .nullable()
-      .refine((value) => value === null || !isNaN(Number(value)), {
-        message: "Sum Insured must be a number",
-      })
-      .transform((value) => (value === null ? null : Number(value))),
-    policyHolderName: z
-      .string()
-      .nonempty({ message: "Policy Holder Name is required" }),
-    relationship: z.string().nonempty({ message: "Relationship is required" }),
-    otherRelationship: z.string().optional(),
-    modeOfPurchase: z
-      .string()
-      .nonempty({ message: "Mode of Purchase is required" }),
-    contactPerson: z.string().optional(),
-    contactNumber: z.string().optional(),
-    email: z.string().email({ message: "Invalid email address" }).optional(),
-    registeredMobile: z.string().optional(),
-    registeredEmail: z.string().optional(),
-    additionalDetails: z.string().optional(),
-    brokerName: z.string().optional(),
-    previousPolicyNumber: z
-      .string()
-      .transform((value) => (value === "" ? null : value))
-      .nullable()
-      .refine((value) => value === null || !isNaN(Number(value)), {
-        message: "Previous Policy Number must be a number",
-      })
-      .transform((value) => (value === null ? null : Number(value))),
-  })
-  .refine(
-    (data) => {
-      if (data.modeOfPurchase === "broker") {
-        return (
-          !!data.brokerName &&
-          !!data.contactPerson &&
-          !!data.contactNumber &&
-          !!data.email
-        );
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        return !!data.registeredMobile && !!data.registeredEmail;
-      }
-      return true;
-    },
-    {
-      message: "Required fields are missing",
-      path: ["modeOfPurchase"],
-    }
-  );
+const schema = z.object({
+  companyName: z
+    .string()
+    .nonempty({ message: "Insurance Company is required" }),
+  otherInsuranceCompany: z.string().optional(),
+  insuranceType: z
+    .string()
+    .nonempty({ message: "Insurance Sub Type is required" }),
+  policyNumber: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Policy Number must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
+  maturityDate: z.any().optional(),
+  premium: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Premium must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
+  sumInsured: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Sum Insured must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
+  policyHolderName: z
+    .string()
+    .nonempty({ message: "Policy Holder Name is required" }),
+  relationship: z.string().nonempty({ message: "Relationship is required" }),
+  otherRelationship: z.string().optional(),
+  modeOfPurchase: z
+    .string()
+    .nonempty({ message: "Mode of Purchase is required" }),
+  contactPerson: z.string().optional(),
+  contactNumber: z.string().optional(),
+  email: z.string().optional(),
+  registeredMobile: z.string().optional(),
+  registeredEmail: z.any().optional(),
+  additionalDetails: z.string().optional(),
+  brokerName: z.string().optional(),
+  previousPolicyNumber: z
+    .string()
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .refine((value) => value === null || !isNaN(Number(value)), {
+      message: "Previous Policy Number must be a number",
+    })
+    .transform((value) => (value === null ? null : Number(value))),
+});
 
 const EditMotorForm = () => {
   const navigate = useNavigate();
