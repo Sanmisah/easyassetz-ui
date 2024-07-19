@@ -42,7 +42,7 @@ const schema = z
       .string()
       .nonempty({ message: "Insurance Sub Type is required" }),
     policyNumber: z.string().min(1, { message: "Policy Number is required" }),
-    maturityDate: z.date().optional(),
+    maturityDate: z.any().optional(),
     premium: z.string().min(1, { message: "Premium is required" }),
     sumInsured: z.string().min(1, { message: "Sum Insured is required" }),
     policyHolderName: z
@@ -380,10 +380,12 @@ const EditFormHealth = () => {
                 <Controller
                   name="insuranceType"
                   control={control}
+                  defaultValue={Benifyciary?.insuranceType}
                   render={({ field }) => (
                     <div className="flex items-center gap-2 mt-2">
                       <Select
                         {...field}
+                        defaultValue={Benifyciary?.insuranceType}
                         onValueChange={(value) => {
                           field.onChange(value);
                           setShowOtherInsuranceType(value === "other");
@@ -412,6 +414,7 @@ const EditFormHealth = () => {
                 {showOtherInsuranceType && (
                   <Controller
                     name="specifyInsuranceType"
+                    defaultValue={Benifyciary?.insuranceType}
                     control={control}
                     render={({ field }) => (
                       <Input

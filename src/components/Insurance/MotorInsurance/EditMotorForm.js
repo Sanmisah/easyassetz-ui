@@ -31,6 +31,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Editnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
+import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z
@@ -54,9 +55,9 @@ const schema = z
     modeOfPurchase: z.string().optional(),
     contactPerson: z.string().optional(),
     contactNumber: z.string().optional(),
-    email: z.string().email({ message: "Invalid email address" }).optional(),
+    email: z.string().optional(),
     registeredMobile: z.string().optional(),
-    registeredEmail: z.string().optional(),
+    registeredEmail: z.any().optional(),
     additionalDetails: z.string().optional(),
     brokerName: z.string().optional(),
     image: z.any().optional(),
@@ -154,8 +155,8 @@ const EditMotorForm = () => {
       response.data.data.MotorInsurance?.registeredEmail
     );
     if (
-      response.data.data.MotorInsurance?.vehicleType !== "twowheeler" ||
-      response.data.data.MotorInsurance?.vehicleType !== "threewheeler" ||
+      response.data.data.MotorInsurance?.vehicleType !== "twowheeler" &&
+      response.data.data.MotorInsurance?.vehicleType !== "threewheeler" &&
       response.data.data.MotorInsurance?.vehicleType !== "fourwheeler"
     ) {
       setShowOtherRelationship(true);
@@ -181,15 +182,15 @@ const EditMotorForm = () => {
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
-      if (
-        data.vehicleType !== "twowheeler" ||
-        data.vehicleType !== "threewheeler" ||
-        data.vehicleType !== "fourwheeler"
-      ) {
-        console.log("SP SASA");
-        setShowOtherRelationship(true);
-        setValue("vehicleType", "other");
-      }
+      // if (
+      //   data.vehicleType !== "twowheeler" ||
+      //   data.vehicleType !== "threewheeler" ||
+      //   data.vehicleType !== "fourwheeler"
+      // ) {
+      //   console.log("SP SASA");
+      //   setShowOtherRelationship(true);
+      //   setValue("vehicleType", "other");
+      // }
       if (data.modeOfPurchase === "broker") {
         setBrokerSelected(true);
         setHideRegisteredFields(false);
@@ -410,6 +411,7 @@ const EditMotorForm = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="comprehensive"
+                        defaultChecked={Benifyciary?.insuranceType}
                         // checked={field.value === "comprehensive"}
                         value="comprehensive"
                         onCheckedChange={() => field.onChange("comprehensive")}

@@ -174,10 +174,17 @@ const EditMotorForm = () => {
     } else {
       setShowOtherInsuranceCompany(true);
       setValue("relationship", "other");
-      setValue(
-        "otherInsuranceCompany",
-        response.data.data.LifeInsurance?.relationship
-      );
+      const insuranceCompany = response.data.data.LifeInsurance?.companyName;
+      if (
+        insuranceCompany !== "company1" ||
+        insuranceCompany !== "company2" ||
+        insuranceCompany !== "company3"
+      ) {
+        setValue(
+          "otherInsuranceCompany",
+          response.data.data.LifeInsurance?.companyName
+        );
+      }
     }
     if (
       ["spouse", "child", "parent", "sibling", "self"].includes(

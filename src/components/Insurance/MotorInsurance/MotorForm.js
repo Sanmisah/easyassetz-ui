@@ -54,7 +54,7 @@ const schema = z.object({
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
-   brokerName: z.string().optional(),
+  brokerName: z.string().optional(),
   image: z.any().optional(),
 });
 // .refine(
@@ -349,7 +349,8 @@ const MotorForm = () => {
                   <span className="text-red-500">{errors.premium.message}</span>
                 )}
               </div>
-           
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Insurer Name</Label>
@@ -359,7 +360,6 @@ const MotorForm = () => {
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
-                      
                       placeholder="Enter policy holder name"
                       {...field}
                       className={errors.insurerName ? "border-red-500" : ""}
@@ -371,7 +371,7 @@ const MotorForm = () => {
                     {errors.insurerName.message}
                   </span>
                 )}
-              </div>  
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="vehicleType">Vehical Type</Label>
                 <Controller
@@ -424,7 +424,6 @@ const MotorForm = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              
               <div className="space-y-2">
                 <Label htmlFor="additional-details">Additional Details</Label>
                 <Controller
