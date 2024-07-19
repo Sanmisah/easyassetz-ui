@@ -408,28 +408,13 @@ const EditMotorForm = () => {
                   defaultValue={Benifyciary?.insuranceType || ""}
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
-                      <RadioGroup
-                        {...field}
-                        defaultValue={Benifyciary?.insuranceType || ""}
-                        onValueChange={(value) => {
-                          console.log("value:", value);
-                          field.onChange(value);
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem
-                            defaultValue="thirdparty"
-                            id="company1"
-                            value="thirdparty"
-                          />
-                          <Label htmlFor="company1">Third Party</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="company2" value="comprehensive" />
-                          <Label htmlFor="company2">Comprehensive</Label>
-                        </div>
-                      </RadioGroup>
+                      <Checkbox
+                        id="comprehensive"
+                        // checked={field.value === "comprehensive"}
+                        value="comprehensive"
+                        onCheckedChange={() => field.onChange("comprehensive")}
+                      />
+                      <Label htmlFor="comprehensive">Comprehensive</Label>
                     </div>
                   )}
                 />
