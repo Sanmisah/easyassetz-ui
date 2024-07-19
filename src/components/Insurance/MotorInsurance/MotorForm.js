@@ -275,7 +275,8 @@ const MotorForm = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="comprehensive"
-                        checked={field.value === "comprehensive"}
+                        // checked={field.value === "comprehensive"}
+                        value="comprehensive"
                         onCheckedChange={() => field.onChange("comprehensive")}
                       />
                       <Label htmlFor="comprehensive">Comprehensive</Label>
