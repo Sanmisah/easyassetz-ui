@@ -33,51 +33,32 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z
-  .object({
-    companyName: z
-      .string()
-      .nonempty({ message: "Insurance Company is required" }),
-    otherInsuranceCompany: z.string().optional(),
-    insuranceType: z
-      .string()
-      .nonempty({ message: "Insurance Sub Type is required" }),
-    policyNumber: z.string().min(1, { message: "Policy Number is required" }),
-    maturityDate: z.any().optional(),
-    premium: z.string().min(3, { message: "Premium is required" }),
-    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
-    policyHolderName: z
-      .string()
-      .nonempty({ message: "Policy Holder Name is required" }),
-    modeOfPurchase: z.any().optional(),
-    contactPerson: z.string().optional(),
-    contactNumber: z.string().optional(),
-    email: z.string().email({ message: "Invalid email address" }).optional(),
-    registeredMobile: z.string().optional(),
-    registeredEmail: z.string().optional(),
-    additionalDetails: z.string().optional(),
-    brokerName: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.modeOfPurchase === "broker") {
-        return (
-          !!data.brokerName &&
-          !!data.contactPerson &&
-          !!data.contactNumber &&
-          !!data.email
-        );
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        return !!data.registeredMobile && !!data.registeredEmail;
-      }
-      return true;
-    },
-    {
-      message: "Required fields are missing",
-      path: ["modeOfPurchase"],
-    }
-  );
+const schema = z.object({
+  companyName: z
+    .string()
+    .nonempty({ message: "Insurance Company is required" }),
+  otherInsuranceCompany: z.string().optional(),
+  insuranceType: z
+    .string()
+    .nonempty({ message: "Insurance Sub Type is required" }),
+  policyNumber: z.string().min(1, { message: "Policy Number is required" }),
+  maturityDate: z.date().optional(),
+  premium: z.string().min(3, { message: "Premium is required" }),
+  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  policyHolderName: z
+    .string()
+    .nonempty({ message: "Policy Holder Name is required" }),
+  modeOfPurchase: z
+    .string()
+    .nonempty({ message: "Mode of Purchase is required" }),
+  contactPerson: z.string().optional(),
+  contactNumber: z.string().optional(),
+  email: z.string().optional(),
+  registeredMobile: z.string().optional(),
+  registeredEmail: z.any().optional(),
+  additionalDetails: z.string().optional(),
+  brokerName: z.string().optional(),
+});
 
 const EditFormGeneral = () => {
   const navigate = useNavigate();
