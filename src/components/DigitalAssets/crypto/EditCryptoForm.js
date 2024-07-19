@@ -33,11 +33,11 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  companyName: z
+  cryptoWalletType: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
+  otherCryptoWalletType: z.string().optional(),
+  cryptoWalletAddress: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z
@@ -125,14 +125,11 @@ const EditCryptoForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `/api/cryptos/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/cryptos/${lifeInsuranceEditId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
     if (response.data.data.LifeInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
@@ -240,7 +237,7 @@ const EditCryptoForm = () => {
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
     console.log(data);
-    if(data.typeOfCurrency === "other"){
+    if (data.typeOfCurrency === "other") {
       data.typeOfCurrency = data.specifyCurrencyType;
     }
     const date = new Date(data.maturityDate);
@@ -269,7 +266,6 @@ const EditCryptoForm = () => {
     console.log("displaynominie:", displaynominie);
   }, [displaynominie]);
 
-  
   useEffect(() => {
     console.log(Benifyciary);
   }, [Benifyciary]);

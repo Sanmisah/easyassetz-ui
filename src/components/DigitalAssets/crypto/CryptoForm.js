@@ -39,18 +39,15 @@ const schema = z.object({
   cryptoWalletAddress: z
     .string()
     .nonempty({ message: "Crypto Wallet Address is required" }),
-  exchange:z.string()
-  .nonempty({ message: "exchange is required required" }),
-  otherExchange:z.string().optional(),
+  exchange: z.string().nonempty({ message: "exchange is required required" }),
+  otherExchange: z.string().optional(),
   tradingAccount: z
-  .string()
-  .nonempty({ message: "Trading Account is required" }),
-  typeOfCurrency: z
     .string()
-    .optional(),
+    .nonempty({ message: "Trading Account is required" }),
+  typeOfCurrency: z.string().optional(),
   otherTypeOfCurrency: z.string().optional(),
-  holdingQty:z.string().optional(),
- // maturityDate: z.date().optional(),
+  holdingQty: z.string().optional(),
+  // maturityDate: z.date().optional(),
   // premium: z
   //   .string()
   //   .min(3, { message: "Premium is required" })
@@ -102,13 +99,9 @@ const CryptoForm = () => {
   const queryClient = useQueryClient();
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
-    const [otherCryptoWalletType, setOtherCryptoWalletType] =
-    useState(false);
-    const [otherExchange, setOtherExchange] =
-    useState(false);
-    const [otherTypeOfCurrency, setOtherTypeOfCurrency] =
-    useState(false);
-    
+  const [otherCryptoWalletType, setOtherCryptoWalletType] = useState(false);
+  const [otherExchange, setOtherExchange] = useState(false);
+  const [otherTypeOfCurrency, setOtherTypeOfCurrency] = useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
@@ -132,9 +125,9 @@ const CryptoForm = () => {
       additionalDetails: "",
       cryptoWalletAddress: "",
       cryptoWalletAddress: "",
-      otherCryptoWalletType:"",
-      otherExchange:"",
-      otherTypeOfCurrency:"",
+      otherCryptoWalletType: "",
+      otherExchange: "",
+      otherTypeOfCurrency: "",
       // otherInsuranceCompany: "",
       // insuranceType: "",
       // policyNumber: "",
@@ -186,12 +179,12 @@ const CryptoForm = () => {
     if (data.typeOfCurrency === "other") {
       data.typeOfCurrency = data.otherTypeOfCurrency;
     }
-    if(data.exchange === "other") {
+    if (data.exchange === "other") {
       data.exchange = data.otherExchange;
     }
-    if(data.cryptoWalletAddress === "other") {
+    if (data.cryptoWalletAddress === "other") {
       data.cryptoWalletAddress = data.otherCryptoWalletAddress;
-    } 
+    }
     console.log(data);
     const date = new Date(data.maturityDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -247,14 +240,20 @@ const CryptoForm = () => {
                         field.onChange(value);
                         setOtherCryptoWalletType(value === "other");
                       }}
-                      className={errors.cryptoWalletType ? "border-red-500" : ""}
+                      className={
+                        errors.cryptoWalletType ? "border-red-500" : ""
+                      }
                     >
                       <FocusableSelectTrigger>
                         <SelectValue placeholder="Select Wallet Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="cryptoExchange">Crypto Exchange</SelectItem>
-                        <SelectItem value="digitalWallet">Digital Wallet</SelectItem>
+                        <SelectItem value="cryptoExchange">
+                          Crypto Exchange
+                        </SelectItem>
+                        <SelectItem value="digitalWallet">
+                          Digital Wallet
+                        </SelectItem>
                         <SelectItem value="coldWallet">Cold Wallet</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
@@ -281,7 +280,9 @@ const CryptoForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cryptoWalletAddress">Crypto Wallet Address</Label>
+                <Label htmlFor="cryptoWalletAddress">
+                  Crypto Wallet Address
+                </Label>
                 <Controller
                   name="cryptoWalletAddress"
                   control={control}
@@ -290,7 +291,9 @@ const CryptoForm = () => {
                       id="cryptoWalletAddress"
                       placeholder="Enter Crypto Wallet Address"
                       {...field}
-                      className={errors.cryptoWalletAddress ? "border-red-500" : ""}
+                      className={
+                        errors.cryptoWalletAddress ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
@@ -302,7 +305,7 @@ const CryptoForm = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="exchange">Exchange</Label>
                 <Controller
                   name="exchange"
@@ -324,7 +327,9 @@ const CryptoForm = () => {
                         <SelectItem value="wazirX">Wazir X</SelectItem>
                         <SelectItem value="unoCoin">UnoCoin</SelectItem>
                         <SelectItem value="coinDCX">Coin DCX</SelectItem>
-                        <SelectItem value="coinSwitchKuber">Coin Switch Kuber</SelectItem>
+                        <SelectItem value="coinSwitchKuber">
+                          Coin Switch Kuber
+                        </SelectItem>
                         <SelectItem value="buyUCoin">BuyUCoin</SelectItem>
                         <SelectItem value="giottus">Giottus</SelectItem>
                         <SelectItem value="mudrax">MUDRAX</SelectItem>
@@ -374,7 +379,7 @@ const CryptoForm = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="typeOfCurrency">Type of Currency</Label>
                 <Controller
                   name="typeOfCurrency"

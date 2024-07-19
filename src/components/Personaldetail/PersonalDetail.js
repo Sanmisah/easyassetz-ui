@@ -60,6 +60,11 @@ const Personaldetail = () => {
     );
     console.log(response.data.data.profile);
     setDefaultData(response.data.data.profile);
+    setSpecialactundermarriange(false);
+    setValue(
+      "marriedUnderSpecialAct",
+      response.data.data.profile?.marriedUnderSpecialAct
+    );
     if (
       response.data.data.profile?.nationality === "" ||
       response.data.data.profile?.nationality === null
@@ -203,6 +208,7 @@ const Personaldetail = () => {
     onError: (error) => {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
+      setSpecialactundermarriange(false);
     },
   });
   const convertDate = (date) => {
@@ -246,7 +252,7 @@ const Personaldetail = () => {
       data.marriedUnderSpecialAct = false;
     }
     delete data.specificNationality;
-    // data.marriedUnderSpecialAct = specialactundermarriange;
+    data.marriedUnderSpecialAct = specialactundermarriange;
     console.log("FIAL", data);
     Profilemutate.mutate(data);
   };
@@ -600,9 +606,11 @@ const Personaldetail = () => {
                   <Checkbox
                     className="mt-2"
                     id="married-under-act"
-                    onCheckedChange={() => setSpecialactundermarriange(true)}
+                    onCheckedChange={() =>
+                      setSpecialactundermarriange(!specialactundermarriange)
+                    }
                     defaultChecked={defaultData?.marriedUnderSpecialAct}
-                    {...register("marriedUnderSpecialAct")}
+                    // {...register("marriedUnderSpecialAct")}
                   />
 
                   <Label
