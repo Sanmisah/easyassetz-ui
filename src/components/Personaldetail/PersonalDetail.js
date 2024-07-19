@@ -198,6 +198,7 @@ const Personaldetail = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("personalData");
       toast.success("Profile updated successfully");
+      setSpecialactundermarriange(false);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
