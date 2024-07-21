@@ -609,7 +609,7 @@ const Personaldetail = () => {
                     onCheckedChange={() =>
                       setSpecialactundermarriange(!specialactundermarriange)
                     }
-                    defaultChecked={defaultData?.marriedUnderSpecialAct}
+                    defaultChecked={specialactundermarriange}
                     // {...register("marriedUnderSpecialAct")}
                   />
 

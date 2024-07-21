@@ -69,7 +69,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const BankAccountForm = () => {
+const BankLockerForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -814,4 +814,4 @@ const BankAccountForm = () => {
   );
 };
 
-export default BankAccountForm;
+export default BankLockerForm;
