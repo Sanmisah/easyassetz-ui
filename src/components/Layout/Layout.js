@@ -117,6 +117,9 @@ import OtherDepositsEditForm from "@/components/Bank&Post/OtherDeposit/OtherDepo
 import PSSMainForm from "@/components/Bank&Post/PostSavingScheme/PSSMainForm";
 import PSSOtherForm from "@/components/Bank&Post/PostSavingScheme/PSSOtherForm";
 import PSSEditForm from "@/components/Bank&Post/PostSavingScheme/PSSEdit";
+import PSADMainForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADMainForm";
+import PSADOtherForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADOtherForm";
+import PSADEditForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -414,6 +417,9 @@ const Layout = () => {
       {location.pathname === "/pss" && <PSSMainForm />}
       {location.pathname === "/pss/add" && <PSSOtherForm />}
       {location.pathname === "/pss/edit" && <PSSEditForm />}
+      {location.pathname === "/psad" && <PSADMainForm />}
+      {location.pathname === "/psad/add" && <PSADOtherForm />}
+      {location.pathname === "/psad/edit" && <PSADEditForm />}
     </div>
   );
 };
