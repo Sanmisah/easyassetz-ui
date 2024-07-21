@@ -34,42 +34,21 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import AddNominee from "@/components/Nominee/EditNominee";
 
-const schema = z
-  .object({
-    bankName: z.string().nonempty({ message: "Insurance Company is required" }),
-    accountType: z.string().optional(),
-    lockerNumber: z
-      .string()
-      .nonempty({ message: "Insurance Sub Type is required" }),
+const schema = z.object({
+  bankName: z.string().nonempty({ message: "Insurance Company is required" }),
+  branch: z.string().optional(),
+  lockerNumber: z
+    .string()
+    .nonempty({ message: "Insurance Sub Type is required" }),
 
-    jointHolderName: z.any().optional(),
-    jointHolderPan: z.any().optional(),
-    rentDue: z.any().optional(),
-    annualRent: z.any().optional(),
-    additionalDetails: z.any().optional(),
-    branch: z.string().min(2, { message: "Policy Number is required" }),
-    natureOfHolding: z.any().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.modeOfPurchase === "broker") {
-        return (
-          !!data.brokerName &&
-          !!data.contactPerson &&
-          !!data.contactNumber &&
-          !!data.email
-        );
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        return !!data.registeredMobile && !!data.registeredEmail;
-      }
-      return true;
-    },
-    {
-      message: "Required fields are missing",
-      path: ["modeOfPurchase"],
-    }
-  );
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
+  rentDue: z.any().optional(),
+  annualRent: z.any().optional(),
+  additionalDetails: z.any().optional(),
+  branch: z.string().min(2, { message: "Policy Number is required" }),
+  natureOfHolding: z.any().optional(),
+});
 
 const EditMotorForm = () => {
   const navigate = useNavigate();
@@ -116,6 +95,7 @@ const EditMotorForm = () => {
       }
     );
     let data = response.data.data.BankLocker;
+    console.log("Data:", data);
     setValue("bankName", data.bankName);
     setValue("branch", data.branch);
     setValue("lockerNumber", data.lockerNumber);
@@ -197,15 +177,13 @@ const EditMotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    const date = new Date(data.expiryDate);
+    const date = new Date(data.rentDue);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
-    data.expiryDate = newdate;
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.specificVehicalType;
-    }
+    data.rentDue = newdate;
+
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
@@ -259,7 +237,7 @@ const EditMotorForm = () => {
                       className={errors.bankName ? "border-red-500" : ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select bank name" />
+                        <SelectValue placeholder="Select Bank Name" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="company1">Company 1</SelectItem>
@@ -322,8 +300,8 @@ const EditMotorForm = () => {
                   render={({ field }) => (
                     <Datepicker
                       value={field.value}
-                      onChange={field.onChange}
-                      className="min-w-[190rem]"
+                      onChange={(date) => field.onChange(date)}
+                      className={errors.rentDue ? "border-red-500" : ""}
                     />
                   )}
                 />
@@ -352,7 +330,7 @@ const EditMotorForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Additional Details</Label>
+                <Label htmlFor="additionalDetails">Additional Details</Label>
                 <Controller
                   name="additionalDetails"
                   control={control}
@@ -373,85 +351,6 @@ const EditMotorForm = () => {
                   </span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label>Nature of Holding</Label>
-                <Controller
-                  name="natureOfHolding"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowJointHolderName(value === "joint");
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-2 text-center">
-                        <RadioGroupItem id="single" value="single" />
-                        <Label htmlFor="single">Single</Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <RadioGroupItem id="joint" value="joint" />
-                        <Label htmlFor="joint">Joint</Label>
-                      </div>
-                    </RadioGroup>
-                  )}
-                />
-                {errors.natureOfHolding && (
-                  <span className="text-red-500">
-                    {errors.natureOfHolding.message}
-                  </span>
-                )}
-              </div>
-              {showJointHolderName && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                    <Controller
-                      name="jointHolderName"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="jointHolderName"
-                          placeholder="Enter Joint Holder Name"
-                          {...field}
-                          className={
-                            errors.jointHolderName ? "border-red-500" : ""
-                          }
-                        />
-                      )}
-                    />
-                    {errors.jointHolderName && (
-                      <span className="text-red-500">
-                        {errors.jointHolderName.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                    <Controller
-                      name="jointHolderPan"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="jointHolderPan"
-                          placeholder="Enter Joint Holder PAN"
-                          {...field}
-                          className={
-                            errors.jointHolderPan ? "border-red-500" : ""
-                          }
-                        />
-                      )}
-                    />
-                    {errors.jointHolderPan && (
-                      <span className="text-red-500">
-                        {errors.jointHolderPan.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
               {displaynominie && displaynominie.length > 0 && (
                 <div className="space-y-2   col-span-full">
                   <div className="grid gap-4 py-4">
@@ -484,7 +383,6 @@ const EditMotorForm = () => {
                   </div>
                 </div>
               )}
-
               <div className="space-y-2 col-span-full">
                 <Label htmlFor="registered-mobile">Add nominee</Label>
                 {console.log(Benifyciary?.nominees)}

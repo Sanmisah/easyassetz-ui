@@ -33,53 +33,14 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  companyName: z
-    .string()
-    .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  expiryDate: z.date().optional(),
-  premium: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  insurerName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
-  specificVehicalType: z.string().optional(),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
-  contactPerson: z.string().optional(),
-  contactNumber: z.string().optional(),
-  email: z.string().optional(),
-  registeredMobile: z.string().optional(),
-  registeredEmail: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  brokerName: z.string().optional(),
+  fdNumber: z.string().nonempty({ message: "Bank/Post Name is required" }),
+  nameOfBank: z.string().optional(),
+  branchName: z.string().optional(),
+  maturityDate: z.any().optional(),
+  maturityAmount: z.any().optional(),
+  natureOfHolding: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
 });
 
 const BankEditForm = () => {
@@ -98,6 +59,7 @@ const BankEditForm = () => {
   const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
     useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
+  const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [brokerSelected, setBrokerSelected] = useState(false);
@@ -126,15 +88,13 @@ const BankEditForm = () => {
       }
     );
     console.log(typeof response.data.data.MotorInsurance?.premium);
-    if (response.data.data.MotorInsurance?.modeOfPurchase === "broker") {
-      setBrokerSelected(true);
-      setHideRegisteredFields(false);
+    let data = response.data.data.MotorInsurance;
+    if (data.natureOfHolding === "joint") {
+      setShowJointHolderName(true);
+      setValue("jointHolderName", data.jointHolderName);
+      setValue("jointHolderPan", data.jointHolderPan);
     }
-    if (response.data.data.MotorInsurance?.modeOfPurchase === "e-insurance") {
-      setBrokerSelected(false);
-      setHideRegisteredFields(true);
-    }
-    console.log(typeof response.data.data.MotorInsurance?.premium);
+
     return response.data.data.MotorInsurance;
   };
 
@@ -158,28 +118,14 @@ const BankEditForm = () => {
       setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("vehicleType", data.vehicleType);
-      setValue("specificVehicalType", data.specificVehicalType);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("policyNumber", data.policyNumber);
-      setValue("expiryDate", data.expiryDate);
-      setValue("premium", data.premium);
-      setValue("sumInsured", data.sumInsured);
-      setValue("insurerName", data.insurerName);
-      setValue("modeOfPurchase", data.modeOfPurchase);
-      setValue("contactPerson", data.contactPerson);
-      setValue("contactNumber", data.contactNumber);
-      setValue("email", data.email);
-      setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
-      setValue("additionalDetails", data.additionalDetails);
-      setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("brokerName", data.brokerName);
-      setValue("contactPerson", data.contactPerson);
-      setValue("contactNumber", data.contactNumber);
+      setValue("fdNumber", data.fdNumber);
+      setValue("nameOfBank", data.nameOfBank);
+      setValue("branchName", data.branchName);
+      setValue("maturityDate", data.maturityDate);
+      setValue("maturityAmount", data.maturityAmount);
+      setValue("natureOfHolding", data.natureOfHolding);
+      setValue("jointHolderName", data.jointHolderName);
+      setValue("jointHolderPan", data.jointHolderPan);
 
       // Set fetched values to the form
       for (const key in data) {
@@ -233,23 +179,18 @@ const BankEditForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
-    if (data.modeOfPurchase === "broker") {
-      data.registeredMobile = null;
-      data.registeredEmail = null;
+    if (data.natureOfHolding === "single") {
+      data.jointHolderName = null;
+      data.jointHolderPan = null;
     }
-    if (data.modeOfPurchase === "e-insurance") {
-      data.brokerName = null;
-      data.contactPerson = null;
-      data.contactNumber = null;
-      data.email = null;
-    }
+
     console.log(data);
-    const date = new Date(data.expiryDate);
+    const date = new Date(data.maturityDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
-    data.expiryDate = newdate;
+    data.maturityDate = newdate;
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
@@ -287,417 +228,183 @@ const BankEditForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label htmlFor="fdNumber">FD Number</Label>
                 <Controller
-                  name="companyName"
+                  name="fdNumber"
                   control={control}
-                  defaultValue={Benifyciary?.companyName}
-                  render={({ field }) => (
-                    <Select
-                      id="insurance-company"
-                      value={field.value}
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
-                      }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.companyName || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherInsuranceCompany && (
-                  <Controller
-                    name="otherInsuranceCompany"
-                    control={control}
-                    defaultValue={Benifyciary?.otherInsuranceCompany || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Insurance Company"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherInsuranceCompany || ""}
-                      />
-                    )}
-                  />
-                )}
-                {errors.companyName && (
-                  <span className="text-red-500">
-                    {errors.companyName.message}
-                  </span>
-                )}
-              </div>
-              {console.log(Benifyciary)}
-              <div className="space-y-2">
-                <Label htmlFor="insuranceType">Insurance Type</Label>
-                <Controller
-                  name="insuranceType"
-                  control={control}
-                  defaultValue={Benifyciary?.insuranceType || ""}
-                  render={({ field }) => (
-                    <div className="flex items-center gap-2">
-                      <RadioGroup
-                        {...field}
-                        defaultValue={Benifyciary?.insuranceType || ""}
-                        onValueChange={(value) => {
-                          console.log("value:", value);
-                          field.onChange(value);
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex items-center gap-2 text-center">
-                          <RadioGroupItem id="company1" value="ThirdParty" />
-                          <Label htmlFor="company1">Third Party</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="company2" value="Comprehensive" />
-                          <Label htmlFor="company2">Comprehensive</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-                  )}
-                />
-                {errors.insuranceType && (
-                  <span className="text-red-500">
-                    {errors.insuranceType.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="policy-number">Policy Number</Label>
-                <Controller
-                  name="policyNumber"
-                  control={control}
-                  defaultValue={Benifyciary?.policyNumber || ""}
                   render={({ field }) => (
                     <Input
-                      id="policy-number"
-                      placeholder="Enter policy number"
-                      value={field.value}
+                      id="fdNumber"
+                      placeholder="Enter Bank/Post Name"
                       {...field}
-                      className={errors.policyNumber ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.policyNumber || ""}
+                      className={errors.fdNumber ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.policyNumber && (
+                {errors.fdNumber && (
                   <span className="text-red-500">
-                    {errors.policyNumber.message}
+                    {errors.fdNumber.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label htmlFor="nameOfBank">Name of Bank</Label>
                 <Controller
-                  name="expiryDate"
-                  defaultValue={new Date(Benifyciary?.expiryDate) || ""}
+                  name="nameOfBank"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="nameOfBank"
+                      placeholder="Enter Name of Bank"
+                      {...field}
+                      className={errors.nameOfBank ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.nameOfBank && (
+                  <span className="text-red-500">
+                    {errors.nameOfBank.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="branchName">Branch Name</Label>
+                <Controller
+                  name="branchName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="branchName"
+                      placeholder="Enter Branch Name"
+                      {...field}
+                      className={errors.branchName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.branchName && (
+                  <span className="text-red-500">
+                    {errors.branchName.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="maturityDate">Maturity Date</Label>
+                <Controller
+                  name="maturityDate"
                   control={control}
                   render={({ field }) => (
                     <Datepicker
-                      {...field}
+                      value={field.value}
                       onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      defaultValue={new Date(Benifyciary?.expiryDate) || ""}
+                      className={errors.maturityDate ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.expiryDate && (
+                {errors.maturityDate && (
                   <span className="text-red-500">
-                    {errors.expiryDate.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="premium">Premium</Label>
-                <Controller
-                  name="premium"
-                  control={control}
-                  defaultValue={Benifyciary?.premium || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="premium"
-                      placeholder="Enter premium amount"
-                      {...field}
-                      className={errors.premium ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.premium || ""}
-                    />
-                  )}
-                />
-                {errors.premium && (
-                  <span className="text-red-500">{errors.premium.message}</span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sum-insured">Sum Insured</Label>
-                <Controller
-                  name="sumInsured"
-                  control={control}
-                  defaultValue={Benifyciary?.sumInsured || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="sum-insured"
-                      placeholder="Enter sum insured"
-                      {...field}
-                      className={errors.sumInsured ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.sumInsured || ""}
-                    />
-                  )}
-                />
-                {errors.sumInsured && (
-                  <span className="text-red-500">
-                    {errors.sumInsured.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="policy-holder">Policy Holder Name</Label>
-                <Controller
-                  name="insurerName"
-                  control={control}
-                  defaultValue={Benifyciary?.insurerName || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="policy-holder"
-                      placeholder="Enter policy holder name"
-                      {...field}
-                      className={errors.insurerName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.insurerName || ""}
-                    />
-                  )}
-                />
-                {errors.insurerName && (
-                  <span className="text-red-500">
-                    {errors.insurerName.message}
+                    {errors.maturityDate.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="vehicleType">Vehical Type</Label>
+                <Label htmlFor="maturityAmount">Maturity Amount</Label>
                 <Controller
-                  name="vehicleType"
-                  defaultValue={Benifyciary?.vehicleType || ""}
+                  name="maturityAmount"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="vehicleType"
+                    <Input
+                      id="maturityAmount"
+                      placeholder="Enter Maturity Amount"
+                      {...field}
+                      className={errors.maturityAmount ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.maturityAmount && (
+                  <span className="text-red-500">
+                    {errors.maturityAmount.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+                <Controller
+                  name="natureOfHolding"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherRelationship(value === "other");
+                        setShowJointHolderName(value === "joint");
                       }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.vehicleType || ""}
+                      className="flex items-center gap-2"
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select vehicleType" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
-                        <SelectItem value="threewheeler">
-                          Three Wheeler
-                        </SelectItem>
-                        <SelectItem value="fourwheeler">
-                          Four Wheeler
-                        </SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      <div className="flex items-center gap-2 text-center">
+                        <RadioGroupItem id="single" value="single" />
+                        <Label htmlFor="single">Single</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem id="joint" value="joint" />
+                        <Label htmlFor="joint">Joint</Label>
+                      </div>
+                    </RadioGroup>
                   )}
                 />
-                {showOtherRelationship && (
-                  <Controller
-                    name="specificVehicalType"
-                    control={control}
-                    defaultValue={Benifyciary?.specificVehicalType || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Vehical Type"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.specificVehicalType || ""}
-                      />
-                    )}
-                  />
-                )}
-                {errors.vehicleType && (
+                {errors.natureOfHolding && (
                   <span className="text-red-500">
-                    {errors.vehicleType.message}
+                    {errors.natureOfHolding.message}
                   </span>
                 )}
               </div>
-            </div>
-
-            {displaynominie && displaynominie.length > 0 && (
-              <div className="space-y-2">
-                <div className="grid gap-4 py-4">
-                  {console.log(displaynominie)}
-                  {displaynominie &&
-                    displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                        <Label htmlFor={`nominee-${nominee?.id}`}>
-                          {nominee?.fullLegalName || nominee?.charityName}
-                        </Label>
-                        <img
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                            setSelectedNommie(
-                              selectedNommie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
-                          }}
-                          src={cross}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
-
-            
-
-            
-                
-               
-
-            {brokerSelected && (
-              <>
+              {showJointHolderName && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="contact-person">Broker Name</Label>
+                    <Label htmlFor="jointHolderName">Joint Holder Name</Label>
                     <Controller
-                      name="brokerName"
+                      name="jointHolderName"
                       control={control}
-                      defaultValue={Benifyciary?.brokerName || ""}
                       render={({ field }) => (
                         <Input
-                          id="brokerName"
-                          placeholder="Enter broker name"
-                          {...field}
-                          defaultValue={Benifyciary?.brokerName || ""}
-                          value={field.value}
-                          className={errors.brokerName ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.brokerName && (
-                      <span className="text-red-500">
-                        {errors.brokerName.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-person">Contact Person</Label>
-                    <Controller
-                      name="contactPerson"
-                      control={control}
-                      defaultValue={Benifyciary?.contactPerson || ""}
-                      render={({ field }) => (
-                        <Input
-                          id="contact-person"
-                          placeholder="Enter contact person name"
+                          id="jointHolderName"
+                          placeholder="Enter Joint Holder Name"
                           {...field}
                           className={
-                            errors.contactPerson ? "border-red-500" : ""
-                          }
-                          defaultValue={Benifyciary?.contactPerson || ""}
-                        />
-                      )}
-                    />
-                    {errors.contactPerson && (
-                      <span className="text-red-500">
-                        {errors.contactPerson.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-number">Contact Number</Label>
-                    <Controller
-                      name="contactNumber"
-                      defaultValue={Benifyciary?.contactNumber || ""}
-                      control={control}
-                      render={({ field }) => (
-                        <PhoneInput
-                          defaultValue={Benifyciary?.contactNumber || ""}
-                          id="guardian-mobile"
-                          type="tel"
-                          placeholder="Enter contact number"
-                          defaultCountry="in"
-                          value={field.value}
-                          inputStyle={{ minWidth: "30.5rem" }}
-                          onChange={field.onChange}
-                          className={
-                            errors.contactNumber ? "border-red-500" : ""
+                            errors.jointHolderName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.contactNumber && (
+                    {errors.jointHolderName && (
                       <span className="text-red-500">
-                        {errors.contactNumber.message}
+                        {errors.jointHolderName.message}
                       </span>
                     )}
                   </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
                     <Controller
-                      name="email"
+                      name="jointHolderPan"
                       control={control}
-                      defaultValue={Benifyciary?.email || ""}
                       render={({ field }) => (
                         <Input
-                          id="email"
-                          type="email"
-                          placeholder="Enter email"
+                          id="jointHolderPan"
+                          placeholder="Enter Joint Holder PAN"
                           {...field}
-                          className={errors.email ? "border-red-500" : ""}
-                          defaultValue={Benifyciary?.email || ""}
+                          className={
+                            errors.jointHolderPan ? "border-red-500" : ""
+                          }
                         />
                       )}
                     />
-                    {errors.email && (
+                    {errors.jointHolderPan && (
                       <span className="text-red-500">
-                        {errors.email.message}
+                        {errors.jointHolderPan.message}
                       </span>
                     )}
                   </div>
                 </div>
-              </>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="image-upload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                defaultValue={Benifyciary?.imageUpload || ""}
-                render={({ field }) => (
-                  <Input id="image-upload" type="file" {...field} />
-                )}
-              />
+              )}
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

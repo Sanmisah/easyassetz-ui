@@ -123,6 +123,12 @@ function App() {
         <Route path="/psad" element={<Personalpage />} />
         <Route path="/psad/add" element={<Personalpage />} />
         <Route path="/psad/edit" element={<Personalpage />} />
+        <Route path="/fixdeposit" element={<Personalpage />} />
+        <Route path="/fixdeposit/add" element={<Personalpage />} />
+        <Route path="/fixdeposit/edit" element={<Personalpage />} />
+        <Route path="/banklocker" element={<Personalpage />} />
+        <Route path="/banklocker/add" element={<Personalpage />} />
+        <Route path="/banklocker/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

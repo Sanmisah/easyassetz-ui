@@ -79,7 +79,7 @@ const FixDepositsMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Fix Deposit</h1>
-          <Button onMouseDown={() => navigate("/fix-deposit/add")}>
+          <Button onMouseDown={() => navigate("/fixdeposit/add")}>
             Add Fix Deposit
           </Button>
           {alertDialog && (
@@ -116,7 +116,7 @@ const FixDepositsMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/fix-deposit/edit");
+                          navigate("/fixdeposit/edit");
                         }}
                       >
                         Edit

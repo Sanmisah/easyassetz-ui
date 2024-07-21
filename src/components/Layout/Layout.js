@@ -120,6 +120,12 @@ import PSSEditForm from "@/components/Bank&Post/PostSavingScheme/PSSEdit";
 import PSADMainForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADMainForm";
 import PSADOtherForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADOtherForm";
 import PSADEditForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADEdit";
+import FixDepositsMainForm from "@/components/Bank&Post/FixDeposits/FixDepositsMainForm";
+import FixDepositsForm from "@/components/Bank&Post/FixDeposits/FixDepositsAdd";
+import FixDepositsEditForm from "@/components/Bank&Post/FixDeposits/FixDepositsEdit";
+import BankLockerMainForm from "@/components/Bank&Post/BankLocker/BankLockerMainForm";
+import BankLockerOtherForm from "@/components/Bank&Post/BankLocker/BankLockerOtherForm";
+import BankLockerEditForm from "@/components/Bank&Post/BankLocker/BankLockerEditForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -402,9 +408,10 @@ const Layout = () => {
       {location.pathname === "/bankaccount" && <BankAccountMainForm />}
       {location.pathname === "/bankaccount/add" && <BankAccountOtherForm />}
       {location.pathname === "/bankaccount/edit" && <BankEditForm />}
-      {location.pathname === "/fix-deposit" && <FixDepositsMainForm />}
-      {location.pathname === "/fix-deposit/add" && <FixDepositsForm />}
-      {location.pathname === "/fix-deposit/edit" && <FixDepositsEditForm />}
+      {location.pathname === "/fixdeposit" && <FixDepositsMainForm />}
+      {location.pathname === "/fixdeposit/add" && <FixDepositsForm />}
+      {location.pathname === "/fixdeposit/edit" && <FixDepositsEditForm />}
+
       {location.pathname === "/recoverable" && <RecoverableMainForm />}
       {location.pathname === "/recoverable/add" && <RecoverableForm />}
       {location.pathname === "/recoverable/edit" && <RecoverableEditForm />}
@@ -413,13 +420,18 @@ const Layout = () => {
       {location.pathname === "/other-asset/edit" && <OtherAssetEditForm />}
       {location.pathname === "/other-deposits" && <OtherDepositsMainForm />}
       {location.pathname === "/other-deposits/add" && <OtherDepositsForm />}
-      {location.pathname === "/other-deposits/edit" && <OtherDepositsEditForm />}
+      {location.pathname === "/other-deposits/edit" && (
+        <OtherDepositsEditForm />
+      )}
       {location.pathname === "/pss" && <PSSMainForm />}
       {location.pathname === "/pss/add" && <PSSOtherForm />}
       {location.pathname === "/pss/edit" && <PSSEditForm />}
       {location.pathname === "/psad" && <PSADMainForm />}
       {location.pathname === "/psad/add" && <PSADOtherForm />}
       {location.pathname === "/psad/edit" && <PSADEditForm />}
+      {location.pathname === "/banklocker" && <BankLockerMainForm />}
+      {location.pathname === "/banklocker/add" && <BankLockerOtherForm />}
+      {location.pathname === "/banklocker/edit" && <BankLockerEditForm />}
     </div>
   );
 };

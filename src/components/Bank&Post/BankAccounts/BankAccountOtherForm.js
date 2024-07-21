@@ -39,8 +39,9 @@ const schema = z.object({
     .nonempty({ message: "Insurance Sub Type is required" }),
   branchName: z.string().min(2, { message: "Policy Number is required" }),
   city: z.any().optional(),
-  holdingType: z.any().optional(),
+  natureOfHolding: z.any().optional(),
   jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
 });
 // .refine(
 //   (data) => {
@@ -59,7 +60,7 @@ const schema = z.object({
 //   },
 //   {
 //     message: "Required fields are missing",
-//     path: ["holdingType"],
+//     path: ["natureOfHolding"],
 //   }
 // );
 
@@ -95,7 +96,7 @@ const BankAccountForm = () => {
       accountNumber: "",
       branchName: "",
       city: "",
-      holdingType: "",
+      natureOfHolding: "",
       jointHolderName: "",
     },
   });
@@ -132,6 +133,7 @@ const BankAccountForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    console.log("data:", data);
     if (data.bankName === "other") {
       data.bankName = data.otherBankName;
     }

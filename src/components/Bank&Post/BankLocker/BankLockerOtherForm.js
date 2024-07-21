@@ -30,10 +30,11 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
+import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Insurance Company is required" }),
-  accountType: z.string().optional(),
+  branch: z.string().optional(),
   lockerNumber: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
@@ -139,22 +140,13 @@ const BankLockerForm = () => {
     if (data.bankName === "other") {
       data.bankName = data.otherBankName;
     }
-    // if (data.modeOfPurchase === "single") {
-    //   data.jointHolderName = null;
-    //   data.jointHolderPan = null;
-    // }
-    // if (data.modeOfPurchase === "joint") {
-    //   data.brokerName = null;
-    //   data.contactPerson = null;
-    //   data.contactNumber = null;
-    //   data.email = null;
-    // }
-    // const date = new Date(data.expiryDate);
-    // const month = String(date.getMonth() + 1).padStart(2, "0");
-    // const day = String(date.getDate()).padStart(2, "0");
-    // const year = date.getFullYear();
-    // const newdate = `${month}/${day}/${year}`;
-    // data.expiryDate = newdate;
+
+    const date = new Date(data.rentDue);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.rentDue = newdate;
     if (data.accountType === "other") {
       data.accountType = data.otherAccountType;
     }
@@ -284,10 +276,9 @@ const BankLockerForm = () => {
                   name="rentDue"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      id="rentDue"
-                      placeholder="Enter rent due"
-                      {...field}
+                    <Datepicker
+                      value={field.value}
+                      onChange={(date) => field.onChange(date)}
                       className={errors.rentDue ? "border-red-500" : ""}
                     />
                   )}
