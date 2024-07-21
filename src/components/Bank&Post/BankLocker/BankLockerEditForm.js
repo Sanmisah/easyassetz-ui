@@ -43,7 +43,7 @@ const schema = z.object({
 
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
-  rentDue: z.any().optional(),
+  rentDueDate: z.any().optional(),
   annualRent: z.any().optional(),
   additionalDetails: z.any().optional(),
   branch: z.string().min(2, { message: "Policy Number is required" }),
@@ -95,11 +95,12 @@ const EditMotorForm = () => {
       }
     );
     let data = response.data.data.BankLocker;
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
     console.log("Data:", data);
     setValue("bankName", data.bankName);
     setValue("branch", data.branch);
     setValue("lockerNumber", data.lockerNumber);
-    setValue("rentDue", data.rentDue);
+    setValue("rentDueDate", data.rentDueDate);
     setValue("annualRent", data.annualRent);
     setValue("additionalDetails", data.additionalDetails);
     setValue("natureOfHolding", data.natureOfHolding);
@@ -136,7 +137,7 @@ const EditMotorForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/motor-insurances/${lifeInsuranceEditId}`,
+        `/api/bank-lockers/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
@@ -144,7 +145,7 @@ const EditMotorForm = () => {
           },
         }
       );
-      return response.data.data.MotorInsurances;
+      return response.data.data.BankLocker;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
@@ -177,12 +178,12 @@ const EditMotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    const date = new Date(data.rentDue);
+    const date = new Date(data.rentDueDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
-    data.rentDue = newdate;
+    data.rentDueDate = newdate;
 
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
@@ -295,18 +296,20 @@ const EditMotorForm = () => {
               <div className="space-y-2">
                 <Label>Rent Due</Label>
                 <Controller
-                  name="rentDue"
+                  name="rentDueDate"
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       value={field.value}
                       onChange={(date) => field.onChange(date)}
-                      className={errors.rentDue ? "border-red-500" : ""}
+                      className={errors.rentDueDate ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.rentDue && (
-                  <span className="text-red-500">{errors.rentDue.message}</span>
+                {errors.rentDueDate && (
+                  <span className="text-red-500">
+                    {errors.rentDueDate.message}
+                  </span>
                 )}
               </div>
               <div className="space-y-2">

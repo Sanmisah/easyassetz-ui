@@ -33,14 +33,17 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  fdNumber: z.string().nonempty({ message: "Bank/Post Name is required" }),
-  nameOfBank: z.string().optional(),
+  fixDepositeNumber: z
+    .string()
+    .nonempty({ message: "Bank/Post Name is required" }),
+  bankName: z.string().optional(),
   branchName: z.string().optional(),
   maturityDate: z.any().optional(),
   maturityAmount: z.any().optional(),
-  natureOfHolding: z.string().optional(),
+  holdingType: z.string().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
+  additionalDetails: z.string().optional(),
 });
 
 const BankEditForm = () => {
@@ -80,7 +83,7 @@ const BankEditForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/motor-insurances/${lifeInsuranceEditId}`,
+      `/api/fix-deposits/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -89,13 +92,13 @@ const BankEditForm = () => {
     );
     console.log(typeof response.data.data.MotorInsurance?.premium);
     let data = response.data.data.MotorInsurance;
-    if (data.natureOfHolding === "joint") {
+    if (data.holdingType === "joint") {
       setShowJointHolderName(true);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
     }
 
-    return response.data.data.MotorInsurance;
+    return response.data.data.FixDeposite;
   };
 
   const {
@@ -118,12 +121,12 @@ const BankEditForm = () => {
       setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("fdNumber", data.fdNumber);
-      setValue("nameOfBank", data.nameOfBank);
+      setValue("fixDepositeNumber", data.fixDepositeNumber);
+      setValue("bankName", data.bankName);
       setValue("branchName", data.branchName);
       setValue("maturityDate", data.maturityDate);
       setValue("maturityAmount", data.maturityAmount);
-      setValue("natureOfHolding", data.natureOfHolding);
+      setValue("holdingType", data.holdingType);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
 
@@ -146,7 +149,7 @@ const BankEditForm = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/motor-insurances/${lifeInsuranceEditId}`,
+        `/api/fix-deposits/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -154,7 +157,7 @@ const BankEditForm = () => {
           },
         }
       );
-      return response.data.data.MotorInsurances;
+      return response.data.data.FixDeposite;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
@@ -179,7 +182,7 @@ const BankEditForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
-    if (data.natureOfHolding === "single") {
+    if (data.holdingType === "single") {
       data.jointHolderName = null;
       data.jointHolderPan = null;
     }
@@ -228,42 +231,44 @@ const BankEditForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="fdNumber">FD Number</Label>
+                <Label htmlFor="fixDepositeNumber">FD Number</Label>
                 <Controller
-                  name="fdNumber"
+                  name="fixDepositeNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="fdNumber"
+                      id="fixDepositeNumber"
                       placeholder="Enter Bank/Post Name"
                       {...field}
-                      className={errors.fdNumber ? "border-red-500" : ""}
+                      className={
+                        errors.fixDepositeNumber ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.fdNumber && (
+                {errors.fixDepositeNumber && (
                   <span className="text-red-500">
-                    {errors.fdNumber.message}
+                    {errors.fixDepositeNumber.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="nameOfBank">Name of Bank</Label>
+                <Label htmlFor="bankName">Name of Bank</Label>
                 <Controller
-                  name="nameOfBank"
+                  name="bankName"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="nameOfBank"
+                      id="bankName"
                       placeholder="Enter Name of Bank"
                       {...field}
-                      className={errors.nameOfBank ? "border-red-500" : ""}
+                      className={errors.bankName ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.nameOfBank && (
+                {errors.bankName && (
                   <span className="text-red-500">
-                    {errors.nameOfBank.message}
+                    {errors.bankName.message}
                   </span>
                 )}
               </div>
@@ -327,9 +332,31 @@ const BankEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+                <Label htmlFor="additionalDetails">Additional Details</Label>
                 <Controller
-                  name="natureOfHolding"
+                  name="additionalDetails"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="additionalDetails"
+                      placeholder="Enter Additional Details"
+                      {...field}
+                      className={
+                        errors.additionalDetails ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.additionalDetails && (
+                  <span className="text-red-500">
+                    {errors.additionalDetails.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="holdingType">Nature of Holding</Label>
+                <Controller
+                  name="holdingType"
                   control={control}
                   render={({ field }) => (
                     <RadioGroup
@@ -351,9 +378,9 @@ const BankEditForm = () => {
                     </RadioGroup>
                   )}
                 />
-                {errors.natureOfHolding && (
+                {errors.holdingType && (
                   <span className="text-red-500">
-                    {errors.natureOfHolding.message}
+                    {errors.holdingType.message}
                   </span>
                 )}
               </div>

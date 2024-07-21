@@ -29,14 +29,17 @@ import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  fdNumber: z.string().nonempty({ message: "Bank/Post Name is required" }),
-  nameOfBank: z.string().optional(),
+  fixDepositeNumber: z
+    .string()
+    .nonempty({ message: "Bank/Post Name is required" }),
+  bankName: z.string().optional(),
   branchName: z.string().optional(),
   maturityDate: z.any().optional(),
   maturityAmount: z.any().optional(),
-  natureOfHolding: z.string().optional(),
+  holdingType: z.string().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
+  additionalDetails: z.string().optional(),
 });
 // additionalDetails: z.string().optional(),
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -63,9 +66,9 @@ const BankAccountForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      fdNumber: "",
-      ppfAccountNumber: "",
-      branch: "",
+      fixDepositeNumber: "",
+      bankName: "",
+      branchName: "",
       holdingNature: "",
       jointHolderName: "",
       additionalDetails: "",
@@ -77,12 +80,12 @@ const BankAccountForm = () => {
 
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/ppf`, data, {
+      const response = await axios.post(`/api/fix-deposits`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.PPF;
+      return response.data.data.FixDeposite;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("PpfData");
@@ -97,7 +100,12 @@ const BankAccountForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-
+    const date = new Date(data.maturityDate);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.maturityDate = newdate;
     ppfMutate.mutate(data);
   };
 
@@ -123,42 +131,44 @@ const BankAccountForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="fdNumber">FD Number</Label>
+                <Label htmlFor="fixDepositeNumber">FD Number</Label>
                 <Controller
-                  name="fdNumber"
+                  name="fixDepositeNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="fdNumber"
+                      id="fixDepositeNumber"
                       placeholder="Enter Bank Name"
                       {...field}
-                      className={errors.fdNumber ? "border-red-500" : ""}
+                      className={
+                        errors.fixDepositeNumber ? "border-red-500" : ""
+                      }
                     />
                   )}
                 />
-                {errors.fdNumber && (
+                {errors.fixDepositeNumber && (
                   <span className="text-red-500">
-                    {errors.fdNumber.message}
+                    {errors.fixDepositeNumber.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="nameOfBank">Name of Bank</Label>
+                <Label htmlFor="bankName">Name of Bank</Label>
                 <Controller
-                  name="nameOfBank"
+                  name="bankName"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="nameOfBank"
+                      id="bankName"
                       placeholder="Enter Name of Bank"
                       {...field}
-                      className={errors.nameOfBank ? "border-red-500" : ""}
+                      className={errors.bankName ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.nameOfBank && (
+                {errors.bankName && (
                   <span className="text-red-500">
-                    {errors.nameOfBank.message}
+                    {errors.bankName.message}
                   </span>
                 )}
               </div>
@@ -222,9 +232,31 @@ const BankAccountForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+                <Label htmlFor="additionalDetails">Additional Details</Label>
                 <Controller
-                  name="natureOfHolding"
+                  name="additionalDetails"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="additionalDetails"
+                      placeholder="Enter Additional Details"
+                      {...field}
+                      className={
+                        errors.additionalDetails ? "border-red-500" : ""
+                      }
+                    />
+                  )}
+                />
+                {errors.additionalDetails && (
+                  <span className="text-red-500">
+                    {errors.additionalDetails.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="holdingType">Nature of Holding</Label>
+                <Controller
+                  name="holdingType"
                   control={control}
                   render={({ field }) => (
                     <RadioGroup
@@ -246,9 +278,9 @@ const BankAccountForm = () => {
                     </RadioGroup>
                   )}
                 />
-                {errors.natureOfHolding && (
+                {errors.holdingType && (
                   <span className="text-red-500">
-                    {errors.natureOfHolding.message}
+                    {errors.holdingType.message}
                   </span>
                 )}
               </div>

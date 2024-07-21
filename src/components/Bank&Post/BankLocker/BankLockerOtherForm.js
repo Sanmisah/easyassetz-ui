@@ -41,7 +41,7 @@ const schema = z.object({
 
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
-  rentDue: z.any().optional(),
+  rentDueDate: z.any().optional(),
   annualRent: z.any().optional(),
   additionalDetails: z.any().optional(),
   branch: z.string().min(2, { message: "Policy Number is required" }),
@@ -118,7 +118,7 @@ const BankLockerForm = () => {
         },
       });
 
-      return response.data.data.BankAccount;
+      return response.data.data.BankLocker;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
@@ -141,12 +141,12 @@ const BankLockerForm = () => {
       data.bankName = data.otherBankName;
     }
 
-    const date = new Date(data.rentDue);
+    const date = new Date(data.rentDueDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
-    data.rentDue = newdate;
+    data.rentDueDate = newdate;
     if (data.accountType === "other") {
       data.accountType = data.otherAccountType;
     }
@@ -271,20 +271,22 @@ const BankLockerForm = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="rentDue">Rent Due</Label>
+                <Label htmlFor="rentDueDate">Rent Due</Label>
                 <Controller
-                  name="rentDue"
+                  name="rentDueDate"
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       value={field.value}
                       onChange={(date) => field.onChange(date)}
-                      className={errors.rentDue ? "border-red-500" : ""}
+                      className={errors.rentDueDate ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.rentDue && (
-                  <span className="text-red-500">{errors.rentDue.message}</span>
+                {errors.rentDueDate && (
+                  <span className="text-red-500">
+                    {errors.rentDueDate.message}
+                  </span>
                 )}
               </div>
               <div className="space-y-2">

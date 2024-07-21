@@ -33,6 +33,7 @@ import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
   type: z.string().nonempty({ message: "Type is required" }),
+  otherType: z.string().optional(),
   certificateNumber: z.string().nonempty({ message: "Bank Name is required" }),
   maturityDate: z.any().optional(),
   amount: z.any().optional(),
@@ -168,7 +169,6 @@ const ppfForm = () => {
     // if (data) {
     //   data.firmName = data.otherFirmName;
     // }
-    
 
     lifeInsuranceMutate.mutate(data);
   };
@@ -193,7 +193,7 @@ const ppfForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="type">Type</Label>
                 <Controller
@@ -237,13 +237,10 @@ const ppfForm = () => {
                   />
                 )}
                 {errors.type && (
-                  <span className="text-red-500">
-                    {errors.type.message}
-                  </span>
+                  <span className="text-red-500">{errors.type.message}</span>
                 )}
               </div>
             </div>
-
 
             <div className="space-y-2">
               <Label htmlFor="certificateNumber">Certificate Number</Label>

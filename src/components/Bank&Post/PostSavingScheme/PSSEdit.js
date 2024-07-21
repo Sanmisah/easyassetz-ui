@@ -124,7 +124,7 @@ const PpfEditForm = ({}) => {
     // Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
     setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
-    return response.data.data.PublicProvidentFund;
+    return response.data.data.PostSavingScheme;
   };
 
   const {
@@ -181,7 +181,7 @@ const PpfEditForm = ({}) => {
   const onSubmit = (data) => {
     console.log(data);
     data.mobile = phone;
-    if (selectedNommie.length > 0) {
+    if (selectedNommie?.length > 0) {
       data.nominees = selectedNommie;
     }
     pssMutate.mutate(data);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -33,6 +33,10 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Insurance Company is required" }),
   accountType: z
@@ -41,30 +45,10 @@ const schema = z.object({
   accountNumber: z.string().nonempty({ message: "Policy Number is required" }),
   branchName: z.any().optional(),
   city: z.any().optional(),
-  natureOfHolding: z.any().optional(),
+  holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
 });
-// .refine(
-//   (data) => {
-//     if (data.modeOfPurchase === "broker") {
-//       return (
-//         !!data.brokerName &&
-//         !!data.contactPerson &&
-//         !!data.contactNumber &&
-//         !!data.email
-//       );
-//     }
-//     if (data.modeOfPurchase === "e-insurance") {
-//       return !!data.registeredMobile && !!data.registeredEmail;
-//     }
-//     return true;
-//   },
-//   {
-//     message: "Required fields are missing",
-//     path: ["modeOfPurchase"],
-//   }
-// );
 
 const EditMotorForm = () => {
   const navigate = useNavigate();
@@ -84,6 +68,8 @@ const EditMotorForm = () => {
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
+  const [showOtherAccountType, setShowOtherAccountType] = useState(false);
+  const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
@@ -102,7 +88,7 @@ const EditMotorForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/motor-insurances/${lifeInsuranceEditId}`,
+      `/api/bank-accounts/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -110,7 +96,18 @@ const EditMotorForm = () => {
       }
     );
 
-    return response.data.data.MotorInsurance;
+    let data = response.data.data.BankAccount;
+    setValue("bankName", data.bankName);
+    setValue("accountType", data.accountType);
+    setValue("accountNumber", data.accountNumber);
+    setValue("branchName", data.branchName);
+    setValue("city", data.city);
+    setValue("holdingType", data.holdingType);
+    setValue("jointHolderName", data.jointHolderName);
+    setValue("jointHolderPan", data.jointHolderPan);
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
+
+    return response.data.data.BankAccount;
   };
 
   const {
@@ -130,7 +127,7 @@ const EditMotorForm = () => {
       setValue("accountNumber", data.accountNumber);
       setValue("branchName", data.branchName);
       setValue("city", data.city);
-      setValue("natureOfHolding", data.natureOfHolding);
+      setValue("holdingType", data.holdingType);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
 
@@ -160,7 +157,7 @@ const EditMotorForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/motor-insurances/${lifeInsuranceEditId}`,
+        `/api/bank-accounts/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
@@ -168,7 +165,7 @@ const EditMotorForm = () => {
           },
         }
       );
-      return response.data.data.MotorInsurances;
+      return response.data.data.BankAccount;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
@@ -382,9 +379,9 @@ const EditMotorForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Label htmlFor="holdingType">Nature of Holding</Label>
               <Controller
-                name="natureOfHolding"
+                name="holdingType"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
@@ -406,9 +403,9 @@ const EditMotorForm = () => {
                   </RadioGroup>
                 )}
               />
-              {errors.natureOfHolding && (
+              {errors.holdingType && (
                 <span className="text-red-500">
-                  {errors.natureOfHolding.message}
+                  {errors.holdingType.message}
                 </span>
               )}
             </div>
