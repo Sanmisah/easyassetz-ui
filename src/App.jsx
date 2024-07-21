@@ -120,6 +120,9 @@ function App() {
         <Route path="/pss" element={<Personalpage />} />
         <Route path="/pss/add" element={<Personalpage />} />
         <Route path="/pss/edit" element={<Personalpage />} />
+        <Route path="/psad" element={<Personalpage />} />
+        <Route path="/psad/add" element={<Personalpage />} />
+        <Route path="/psad/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

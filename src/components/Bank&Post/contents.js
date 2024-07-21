@@ -154,6 +154,22 @@ const BankContentForm = () => {
           </div>
         </div>
         <div
+          onMouseDown={() => navigate("/psad")}
+          className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <img src={lifeInsurance} className="w-6 ml-2" />
+          <div className="flex  items-center gap-2 justify-center">
+            <h1 className="text-xl font-bold">Post Saving Account Details</h1> 
+            {GeneralInsurance && GeneralInsurance?.length > 0 && (
+              <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
+                <p className="text-green-500 self-center dark:text-green-800 ">
+                  {GeneralInsurance && GeneralInsurance?.length} Post Saving Account Details
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        <div
           onMouseDown={() => navigate("/pss")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
