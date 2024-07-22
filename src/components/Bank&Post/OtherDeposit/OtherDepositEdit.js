@@ -99,11 +99,13 @@ const PpfEditForm = ({}) => {
     );
     let data = response.data.data.OtherDeposite;
     console.log("Fetching Data:", data);
-    setValue("bankName", data.bankName);
-    setValue("ppfAccountNo", data.ppfAccountNo);
-    setValue("branch", data.branch);
+    setValue("fdNumber", data.fdNumber);
+    setValue("company", data.company);
+    setValue("maturityDate", data.maturityDate);
+    setValue("maturityAmount", data.maturityAmount);
     setValue("holdingType", data.holdingType);
     setValue("jointHolderName", data.jointHolderName);
+    setValue("jointHolderPan", data.jointHolderPan);
     setValue("additionalDetails", data.additionalDetails);
     setValue("name", data.name);
     setValue("mobile", data.mobile);
