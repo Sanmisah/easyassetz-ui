@@ -5,95 +5,112 @@ import { Button } from "@com/ui/button";
 import axios from "axios";
 
 const BankContentForm = () => {
-  const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
-  const [motorInsuranceData, setMotorInsuranceData] = useState([]);
-  const [otherInsuranceData, setOtherInsuranceData] = useState([]);
-  const [GeneralInsurance, setGeneralInsuranceData] = useState([]);
-  const [HealthInsurance, setHealthInsuranceData] = useState([]);
+  const [bankAccountData, setBankAccountData] = useState([]);
+  const [fixDepositData, setFixDepositData] = useState([]);
+  const [bankLockerData, setBankLockerData] = useState([]);
+  const [psadData, setPsadData] = useState([]);
+  const [pssData, setPssData] = useState([]);
+  const [otherDepositData, setOtherDepositData] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDataLifeinsurance = async () => {
+    const fetchDataBankAccount = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/life-insurances`, {
+        const response = await axios.get(`/api/bank-accounts`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setLifeInsuranceData(response?.data?.data?.LifeInsurances);
+        setBankAccountData(response?.data?.data?.BankAccount);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching bank account data", error);
       }
     };
-    const fetchDataMotorinsurance = async () => {
+    const fetchDataFixDeposit = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/motor-insurances`, {
+        const response = await axios.get(`/api/fix-deposits`, {
           headers: {
             Authorization: `Bearer ${user?.data?.token}`,
           },
         });
-        setMotorInsuranceData(response?.data?.data?.OtherInsurance);
+        setFixDepositData(response?.data?.data?.FixDeposite);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching fix deposit data", error);
       }
     };
-    const fetchDataOtherinsurance = async () => {
+    const fetchDataBankLocker = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/other-insurances`, {
+        const response = await axios.get(`/api/bank-lockers`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setBankLockerData(response?.data?.data?.BankLocker);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching Bank Locker data", error);
       }
     };
-    const fetchDataGeneralinsurance = async () => {
+    const fetchDataPsad = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/general-insurances`, {
+        const response = await axios.get(`/api/post-saving-account-details`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setPsadData(response?.data?.data?.PostalSavingAccount);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching Post Saving Account Details data", error);
       }
     };
-    const fetchDataHealthinsurance = async () => {
+    const fetchDataPss = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/health-insurances`, {
+        const response = await axios.get(`/api/post-saving-schemes`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setHealthInsuranceData(response?.data?.data?.HealthInsurances);
+        setPssData(response?.data?.data?.PostSavingScheme);
       } catch (error) {
-        console.error("Error fetching life insurance data", error);
+        console.error("Error fetching Post Saving Scheme data", error);
       }
     };
-    fetchDataGeneralinsurance();
-    fetchDataHealthinsurance();
-    fetchDataOtherinsurance();
-    fetchDataLifeinsurance();
-    fetchDataMotorinsurance();
+    const fetchDataOtherDeposit = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/other-deposites`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherDepositData(response?.data?.data?.OtherDeposite);
+      } catch (error) {
+        console.error("Error fetching Other Deposit data", error);
+      }
+    };
+    fetchDataBankAccount();
+    fetchDataFixDeposit();
+    fetchDataBankLocker();
+    fetchDataPsad();
+    fetchDataPss();
+    fetchDataOtherDeposit();
   }, []);
 
   return (
@@ -112,11 +129,11 @@ const BankContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Bank Account</h1>
-            {HealthInsurance?.length > 0 && (
+            {bankAccountData && bankAccountData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Bank
-                  Accouns
+                  {bankAccountData?.length && bankAccountData?.length} Bank
+                  Accounts
                 </p>
               </div>
             )}
@@ -129,10 +146,10 @@ const BankContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Fix Deposit</h1>
-            {HealthInsurance?.length > 0 && (
+            {fixDepositData && fixDepositData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Fix
+                  {fixDepositData?.length && fixDepositData?.length} Fix
                   Deposits
                 </p>
               </div>
@@ -146,10 +163,10 @@ const BankContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Bank Locker</h1>
-            {lifeInsuranceData && lifeInsuranceData?.length > 0 && (
+            {bankLockerData && bankLockerData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {lifeInsuranceData?.length} Bank Lockers
+                  {bankLockerData && bankLockerData?.length} Bank Lockers
                 </p>
               </div>
             )}
@@ -161,12 +178,11 @@ const BankContentForm = () => {
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Post Saving Account Details</h1>
-            {GeneralInsurance && GeneralInsurance?.length > 0 && (
+            <h1 className="text-xl font-bold">Postal Saving Account Details</h1>
+            {psadData && psadData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {GeneralInsurance && GeneralInsurance?.length} Post Saving
-                  Account Details
+                  {psadData && psadData?.length} Post Saving Account Details
                 </p>
               </div>
             )}
@@ -179,11 +195,10 @@ const BankContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Post Saving Scheme</h1>
-            {GeneralInsurance && GeneralInsurance?.length > 0 && (
+            {pssData && pssData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {GeneralInsurance && GeneralInsurance?.length} Post Saving
-                  Schemes
+                  {pssData && pssData?.length} Post Saving Schemes
                 </p>
               </div>
             )}
@@ -196,11 +211,10 @@ const BankContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Other Deposit</h1>
-            {otherInsuranceData && otherInsuranceData?.length > 0 && (
+            {otherDepositData && otherDepositData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherInsuranceData && otherInsuranceData?.length} Other
-                  Deposits
+                  {otherDepositData && otherDepositData?.length} Other Deposits
                 </p>
               </div>
             )}

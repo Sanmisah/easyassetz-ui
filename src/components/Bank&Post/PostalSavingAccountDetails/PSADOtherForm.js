@@ -162,7 +162,7 @@ const PSADOtherForm = () => {
     delete data.otherAccountNumber;
 
     // data.type = "company";
-    data.mobile = phone;
+    // data.mobile = phone;
     // if (data) {
     //   data.firmName = data.otherFirmName;
     // }
@@ -177,10 +177,10 @@ const PSADOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Post Saving Account Details
+                Postal Saving Account Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Post Saving Account Details.
+                Fill out the form to add a new Postal Saving Account Details.
               </CardDescription>
             </div>
           </div>

@@ -174,7 +174,10 @@ const BankEditForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("motorinsurance added successfully!");
+      toast.success("Fix Deposit added successfully!");
+
+
+      
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -226,10 +229,10 @@ const BankEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Insurance Policy Details
+                Fix Deposit Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the insurance policy details.
+                Edit the form to update the Fix Deposit details.
               </CardDescription>
             </div>
           </div>

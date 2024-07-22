@@ -118,9 +118,9 @@ import OtherDepositsEditForm from "@/components/Bank&Post/OtherDeposit/OtherDepo
 import PSSMainForm from "@/components/Bank&Post/PostSavingScheme/PSSMainForm";
 import PSSOtherForm from "@/components/Bank&Post/PostSavingScheme/PSSOtherForm";
 import PSSEditForm from "@/components/Bank&Post/PostSavingScheme/PSSEdit";
-import PSADMainForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADMainForm";
-import PSADOtherForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADOtherForm";
-import PSADEditForm from "@/components/Bank&Post/PostSavingAccountDetails/PSADEdit";
+import PSADMainForm from "@/components/Bank&Post/PostalSavingAccountDetails/PSADMainForm";
+import PSADOtherForm from "@/components/Bank&Post/PostalSavingAccountDetails/PSADOtherForm";
+import PSADEditForm from "@/components/Bank&Post/PostalSavingAccountDetails/PSADEdit";
 import FixDepositsMainForm from "@/components/Bank&Post/FixDeposits/FixDepositsMainForm";
 import FixDepositsForm from "@/components/Bank&Post/FixDeposits/FixDepositsAdd";
 import FixDepositsEditForm from "@/components/Bank&Post/FixDeposits/FixDepositsEdit";
@@ -206,13 +206,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Other Assets
           </NavLink> */}
-          <NavLink
+          {/* <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/digitalasset"
           >
             <UserIcon className="h-5 w-5" />
             Digital Assets
-          </NavLink>
+          </NavLink> */}
           {/* <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/liabilities"

@@ -28,6 +28,7 @@ import { PhoneInput } from "react-international-phone";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import Addnominee from "@/components/Nominee/addNominee";
+import cross from "@/components/image/close.png";
 
 const schema = z.object({
   fixDepositeNumber: z
@@ -119,10 +120,10 @@ const BankAccountForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Bank Account Details
+                Fix Deposit Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add new Bank Account Details.
+                Fill out the form to add new Fix Deposit Details.
               </CardDescription>
             </div>
           </div>

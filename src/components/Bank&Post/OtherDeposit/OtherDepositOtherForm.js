@@ -43,6 +43,9 @@ const schema = z.object({
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
   additionalDetails: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
+
   // typeOfInvestment: z
   //   .string()
   //   .nonempty({ message: "Type of Investment is required" }),
@@ -100,6 +103,8 @@ const OtherDepositForm = () => {
       maturityDate: "",
       maturityAmount: "",
       holdingType: "",
+      jointHolderName: "",
+      jointHolderPan: "",
       additionalDetails: "",
       name: "",
       email: "",

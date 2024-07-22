@@ -106,25 +106,19 @@ const PSDAEditForm = () => {
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
     }
-    // if (
-    //   data.accountNumber !== "NSC" ||
-    //   data.accountNumber !== "KVP" ||
-    //   data.accountNumber !== "IVP" ||
-    //   data.accountNumber !== "savingsAccount" ||
-    // )
-    {
-      setShowOtherAccountNumber(true);
-      setValue("accountNumber", "other");
-      setValue("otherAccountNumber", data.accountNumber);
-    }
-    setValue("accountNumber", data.accountNumber);
+    if (
+      data.accountNumber !== "NSC" ||
+      data.accountNumber !== "KVP" ||
+      data.accountNumber !== "IVP" ||
+      data.accountNumber !== "savingsAccount"
+    )
+      setValue("accountNumber", data.accountNumber);
     setValue("postOfficeBranch", data.postOfficeBranch);
     setValue("city", data.city);
     setValue("holdingType", data.holdingType);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
     setSelectedNommie(data.nominees.map((nominee) => nominee.id));
-
     return response.data.data.PostalSavingAccount;
   };
 
@@ -142,8 +136,7 @@ const PSDAEditForm = () => {
       reset(data);
       setValue(bankName, data.bankName);
       setValue("accountNumber", data.accountNumber);
-      setValue("accountNumber", data.accountNumber);
-      setValue("branchName", data.branchName);
+      setValue("postOfficeBranch", data.postOfficeBranch);
       setValue("city", data.city);
       setValue("holdingType", data.holdingType);
       setValue("jointHolderName", data.jointHolderName);
@@ -154,8 +147,7 @@ const PSDAEditForm = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherInsuranceCompany(data.companyName === "other");
-      setShowOtherRelationship(data.vehicleType === "other");
+      setShowOtherAccountNumber(data.accountNumber === "other");
 
       console.log(data);
     },
@@ -190,7 +182,7 @@ const PSDAEditForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("motorinsurance added successfully!");
+      toast.success("Post Saving Account Details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -223,17 +215,11 @@ const PSDAEditForm = () => {
     }
     lifeInsuranceMutate.mutate(data);
   };
-
-  const handleUploadFile = () => {
-    window.open(
-      `/storage/motorinsurance/aadharFile/${Benifyciary?.aadharFile}`
-    );
-  };
   useEffect(() => {
     console.log(Benifyciary);
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading Post Saving Account data</div>;
+  if (isError) return <div>Error loading Post Saving Account Details</div>;
   return (
     <div className="w-full">
       <Card>

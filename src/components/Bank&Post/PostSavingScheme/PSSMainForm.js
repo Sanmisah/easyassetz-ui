@@ -59,7 +59,7 @@ const PSSMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/post-saving-scheme/${lifeInsuranceDeleteId}`,
+      `/api/post-saving-schemes/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
