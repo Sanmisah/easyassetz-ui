@@ -38,7 +38,7 @@ const schema = z.object({
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
   maturityDate: z.any().optional(),
   maturityAmount: z.string().optional(),
-  holding_type: z.string().optional(),
+  holdingType: z.string().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -99,7 +99,7 @@ const OtherDepositForm = () => {
       branchName: "",
       maturityDate: "",
       maturityAmount: "",
-      holding_type: "",
+      holdingType: "",
       additionalDetails: "",
       name: "",
       email: "",
@@ -310,7 +310,7 @@ const OtherDepositForm = () => {
             <div className="space-y-4 flex flex-col">
               <Label className="text-lg font-bold">Holding Type</Label>
               <Controller
-                name="natureOfHolding"
+                name="holdingType"
                 defaultValues="single"
                 control={control}
                 render={({ field }) => (
@@ -334,9 +334,9 @@ const OtherDepositForm = () => {
                   </RadioGroup>
                 )}
               />
-              {errors.natureOfHolding && (
+              {errors.holdingType && (
                 <span className="text-red-500">
-                  {errors.natureOfHolding.message}
+                  {errors.holdingType.message}
                 </span>
               )}
             </div>

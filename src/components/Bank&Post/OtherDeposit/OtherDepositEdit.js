@@ -31,10 +31,11 @@ import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  bankName: z.any().optional(),
-  ppfAccountNo: z.any().optional(),
-  branch: z.any().optional(),
-  natureOfHolding: z.any().optional(),
+  fdNumber: z.any().optional(),
+  company: z.any().optional(),
+  maturityDate: z.any().optional(),
+  maturityAmount: z.any().optional(),
+  holdingType: z.string().optional(),
   additionalDetails: z.any().optional(),
   name: z.any().optional(),
   mobile: z.any().optional(),
@@ -44,7 +45,7 @@ const schema = z.object({
     .optional(),
 });
 // .refine((data) => {
-//   if (data.natureOfHolding === "joint") {
+//   if (data.holdingType === "joint") {
 //     return !!data.jointHolderName;
 //   }
 
@@ -73,46 +74,47 @@ const PpfEditForm = ({}) => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      bankName: "",
-      ppfAccountNo: "",
-      branch: "",
-      natureOfHolding: "",
-      jointHolderName: "",
+      fdNumber: "",
+      company: "",
+      branchName: "",
+      maturityDate: "",
+      maturityAmount: "",
+      holdingType: "",
       additionalDetails: "",
       name: "",
-      mobile: "",
       email: "",
+      phone: "",
     },
   });
 
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/public-provident-funds/${lifeInsuranceEditId}`,
+      `/api/other-deposites/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    let data = response.data.data.PublicProvidentFund;
+    let data = response.data.data.OtherDeposite;
     console.log("Fetching Data:", data);
     setValue("bankName", data.bankName);
     setValue("ppfAccountNo", data.ppfAccountNo);
     setValue("branch", data.branch);
-    setValue("natureOfHolding", data.natureOfHolding);
+    setValue("holdingType", data.holdingType);
     setValue("jointHolderName", data.jointHolderName);
     setValue("additionalDetails", data.additionalDetails);
     setValue("name", data.name);
     setValue("mobile", data.mobile);
     setValue("email", data.email);
-    if (data.natureOfHolding === "joint") {
+    if (data.holdingType === "joint") {
       setShowJointHolderName(true);
     }
     // Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
     setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
-    return response.data.data.PublicProvidentFund;
+    return response.data.data.OtherDeposite;
   };
 
   const {
@@ -130,7 +132,7 @@ const PpfEditForm = ({}) => {
           toast.error("Failed to fetch data");
         } // .email({ message: "Invalid Email" })
       });
-      if (data.natureOfHolding === "joint") {
+      if (data.holdingType === "joint") {
         setShowJointHolderName(true);
       }
       // Assume nomineeDetails is an array of nominee objects
@@ -145,7 +147,7 @@ const PpfEditForm = ({}) => {
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/public-provident-funds/${lifeInsuranceEditId}`,
+        `/api/other-deposites/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -153,7 +155,7 @@ const PpfEditForm = ({}) => {
           },
         }
       );
-      return response.data.data.PublicProvidentFund;
+      return response.data.data.OtherDeposite;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("PublicProvidentFund");
@@ -185,10 +187,10 @@ const PpfEditForm = ({}) => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Public Providend Fund Details
+                Edit Other Deposits Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the Public Providend Fund details.
+                Update the form to edit the Other Deposits details.
               </CardDescription>
             </div>
           </div>
@@ -199,63 +201,61 @@ const PpfEditForm = ({}) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="bankName">Post/Bank Name</Label>
+              <Label htmlFor="fdNumber">FD Number</Label>
               <Controller
-                name="bankName"
+                name="fdNumber"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="bankName"
-                    placeholder="Enter Post/Bank Name"
+                    id="fdNumber"
+                    placeholder="Enter FD Number"
                     {...field}
-                    className={errors.bankName ? "border-red-500" : ""}
+                    className={errors.fdNumber ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.bankName && (
-                <span className="text-red-500">{errors.bankName.message}</span>
+              {errors.fdNumber && (
+                <span className="text-red-500">{errors.fdNumber.message}</span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ppfAccountNo">
-                Public Providend Fund Account Number
-              </Label>
+              <Label htmlFor="company">Company</Label>
               <Controller
-                name="ppfAccountNo"
+                name="company"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="ppfAccountNo"
-                    placeholder="Enter Public Providend Fund Account Number"
+                    id="company"
+                    placeholder="Enter Company"
                     {...field}
-                    className={errors.ppfAccountNo ? "border-red-500" : ""}
+                    className={errors.company ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.ppfAccountNo && (
+              {errors.company && (
+                <span className="text-red-500">{errors.company.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="branchName">Branch Name</Label>
+              <Controller
+                name="branchName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="branchName"
+                    placeholder="Enter Branch Name</Label>"
+                    {...field}
+                    className={errors.branchName ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.branchName && (
                 <span className="text-red-500">
-                  {errors.ppfAccountNo.message}
+                  {errors.branchName.message}
                 </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="branch">Branch</Label>
-              <Controller
-                name="branch"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="branch"
-                    placeholder="Enter Branch"
-                    {...field}
-                    className={errors.branch ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.branch && (
-                <span className="text-red-500">{errors.branch.message}</span>
               )}
             </div>
 
@@ -305,9 +305,9 @@ const PpfEditForm = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Label htmlFor="holdingType">Nature of Holding</Label>
               <Controller
-                name="natureOfHolding"
+                name="holdingType"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
@@ -329,9 +329,9 @@ const PpfEditForm = ({}) => {
                   </RadioGroup>
                 )}
               />
-              {errors.natureOfHolding && (
+              {errors.holdingType && (
                 <span className="text-red-500">
-                  {errors.natureOfHolding.message}
+                  {errors.holdingType.message}
                 </span>
               )}
             </div>
