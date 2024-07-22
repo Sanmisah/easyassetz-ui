@@ -32,8 +32,12 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  bankName: z.string().nonempty({ message: "Insurance Company is required" }),
+  bankName: z
+    .string()
+    .nonempty({ message: "Bank/Institution Name is required" }),
+  otherBankName: z.string().optional(),
   accountType: z.string().optional(),
+  otherAccountType: z.string().optional(),
   accountNumber: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
@@ -87,6 +91,7 @@ const BankAccountForm = () => {
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -156,7 +161,6 @@ const BankAccountForm = () => {
     // const year = date.getFullYear();
     // const newdate = `${month}/${day}/${year}`;
     // data.expiryDate = newdate;
-
     data.nominees = selectedNommie;
     bankAccountMutate.mutate(data);
   };

@@ -68,6 +68,7 @@ const EditMotorForm = () => {
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
+  const [showOtherBankName, setShowOtherBankName] = useState(false);
   const [showOtherAccountType, setShowOtherAccountType] = useState(false);
   const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [brokerSelected, setBrokerSelected] = useState(false);
@@ -280,14 +281,40 @@ const EditMotorForm = () => {
                 name="bankName"
                 control={control}
                 render={({ field }) => (
-                  <Input
+                  <Select
                     id="bankName"
-                    placeholder="Enter Bank Name"
-                    {...field}
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherBankName(value === "other");
+                    }}
                     className={errors.bankName ? "border-red-500" : ""}
-                  />
+                  >
+                    <FocusableSelectTrigger>
+                      <SelectValue placeholder="Select Bank Name" />
+                    </FocusableSelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="company1">Company 1</SelectItem>
+                      <SelectItem value="company2">Company 2</SelectItem>
+                      <SelectItem value="company3">Company 3</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 )}
               />
+              {showOtherBankName && (
+                <Controller
+                  name="otherBankName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Specify Bank Name"
+                      className="mt-2"
+                    />
+                  )}
+                />
+              )}
               {errors.bankName && (
                 <span className="text-red-500">{errors.bankName.message}</span>
               )}
@@ -473,6 +500,40 @@ const EditMotorForm = () => {
                       {errors.jointHolderPan.message}
                     </span>
                   )}
+                </div>
+              </div>
+            )}
+
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
                 </div>
               </div>
             )}
