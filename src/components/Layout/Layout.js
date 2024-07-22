@@ -13,6 +13,7 @@ import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
 import OtherAssetMainForm from "@/components/OtherAssets/OtherAsset/OtherAssetMainForm";
+import ImmovableAssetsMainForm from "@/components/ImmovableAssets/contents";
 
 import {
   Sheet,
@@ -233,13 +234,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Retirement Fund
           </NavLink>
-          {/* <NavLink
+          <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/immovableassets"
           >
             <UserIcon className="h-5 w-5" />
             Immovable Assets
-          </NavLink> */}
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -432,6 +433,7 @@ const Layout = () => {
       {location.pathname === "/banklocker" && <BankLockerMainForm />}
       {location.pathname === "/banklocker/add" && <BankLockerOtherForm />}
       {location.pathname === "/banklocker/edit" && <BankLockerEditForm />}
+      {location.pathname === "/immovableassets" && <ImmovableAssetsMainForm />}
     </div>
   );
 };
