@@ -103,6 +103,12 @@ const EditMotorForm = () => {
     let data = response.data.data.BankAccount;
     setValue("bankName", data.bankName);
     setValue("accountType", data.accountType);
+    if (data.holdingType === "joint") {
+      setShowJointHolderName(true);
+      setValue("holdingType", data.holdingType);
+      setValue("jointHolderName", data.jointHolderName);
+      setValue("jointHolderPan", data.jointHolderPan);
+    }
     if (
       data.accountType !== "saving" ||
       data.accountType !== "current" ||

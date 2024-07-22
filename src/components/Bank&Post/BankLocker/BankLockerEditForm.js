@@ -97,9 +97,18 @@ const EditMotorForm = () => {
       }
     );
     let data = response.data.data.BankLocker;
-    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
+    setSelectedNommie(data.nominees.map((nominee) => [nominee.id]));
     console.log("Data:", data);
     setValue("bankName", data.bankName);
+    if (
+      data.bankName !== "company1" &&
+      data.bankName !== "company2" &&
+      data.bankName !== "company3"
+    ) {
+      setShowOtherBankName(true);
+      setValue("bankName", "other");
+      setValue("otherBankName", data.bankName);
+    }
     setValue("branch", data.branch);
     setValue("lockerNumber", data.lockerNumber);
     setValue("rentDueDate", data.rentDueDate);
@@ -315,6 +324,37 @@ const EditMotorForm = () => {
                 {errors.rentDueDate && (
                   <span className="text-red-500">
                     {errors.rentDueDate.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2 col-span-full">
+                <Label>Holding Type</Label>
+                <Controller
+                  name="holdingType"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowJointHolderName(value === "joint");
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 text-center">
+                        <RadioGroupItem id="single" value="single" />
+                        <Label htmlFor="single">Single</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem id="joint" value="joint" />
+                        <Label htmlFor="joint">Joint</Label>
+                      </div>
+                    </RadioGroup>
+                  )}
+                />
+                {errors.holdingType && (
+                  <span className="text-red-500">
+                    {errors.holdingType.message}
                   </span>
                 )}
               </div>

@@ -55,7 +55,7 @@ const schema = z.object({
 //   return true;
 // });
 
-const PpfEditForm = ({}) => {
+const PSSEditForm = ({}) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const getitem = localStorage.getItem("user");
@@ -486,4 +486,4 @@ const PpfEditForm = ({}) => {
   );
 };
 
-export default PpfEditForm;
+export default PSSEditForm;
