@@ -48,7 +48,7 @@ const schema = z.object({
   annualRent: z.any().optional(),
   additionalDetails: z.any().optional(),
   branch: z.string().min(2, { message: "Policy Number is required" }),
-  holdingType: z.any().optional(),
+  natureOfHolding: z.any().optional(),
 });
 
 const EditMotorForm = () => {
@@ -70,6 +70,7 @@ const EditMotorForm = () => {
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [showOtherBankName, setshowOtherBankName] = useState(false);
+
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
@@ -97,7 +98,7 @@ const EditMotorForm = () => {
       }
     );
     let data = response.data.data.BankLocker;
-    setSelectedNommie(data.nominees.map((nominee) => [nominee.id]));
+    setSelectedNommie(data?.nominees?.map((nominee) => nominee?.id));
     console.log("Data:", data);
     setValue("bankName", data.bankName);
     if (
@@ -105,7 +106,7 @@ const EditMotorForm = () => {
       data.bankName !== "company2" &&
       data.bankName !== "company3"
     ) {
-      setShowOtherBankName(true);
+      setshowOtherBankName(true);
       setValue("bankName", "other");
       setValue("otherBankName", data.bankName);
     }
@@ -114,7 +115,7 @@ const EditMotorForm = () => {
     setValue("rentDueDate", data.rentDueDate);
     setValue("annualRent", data.annualRent);
     setValue("additionalDetails", data.additionalDetails);
-    setValue("holdingType", data.holdingType);
+    setValue("natureOfHolding", data.natureOfHolding);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
 
@@ -330,7 +331,7 @@ const EditMotorForm = () => {
               <div className="space-y-2 col-span-full">
                 <Label>Holding Type</Label>
                 <Controller
-                  name="holdingType"
+                  name="natureOfHolding"
                   control={control}
                   render={({ field }) => (
                     <RadioGroup
@@ -352,12 +353,40 @@ const EditMotorForm = () => {
                     </RadioGroup>
                   )}
                 />
-                {errors.holdingType && (
-                  <span className="text-red-500">
-                    {errors.holdingType.message}
-                  </span>
-                )}
               </div>
+              {showJointHolderName && (
+                <Controller
+                  name="jointHolderName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="jointHolderName"
+                      placeholder="Enter Joint Holder Name"
+                      {...field}
+                      className={errors.jointHolderName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+              )}
+              {showJointHolderName && (
+                <Controller
+                  name="jointHolderPan"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="jointHolderPan"
+                      placeholder="Enter Joint Holder PAN"
+                      {...field}
+                      className={errors.jointHolderPan ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+              )}
+              {errors.natureOfHolding && (
+                <span className="text-red-500">
+                  {errors.natureOfHolding.message}
+                </span>
+              )}
               <div className="space-y-2">
                 <Label>Annual Rent</Label>
                 <Controller
