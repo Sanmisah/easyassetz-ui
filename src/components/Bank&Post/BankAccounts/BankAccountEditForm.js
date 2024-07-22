@@ -250,7 +250,7 @@ const EditMotorForm = () => {
     console.log(Benifyciary);
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading insurance data</div>;
+  if (isError) return <div>Error loading Bank Account data</div>;
   return (
     <div className="w-full">
       <Card>
@@ -258,10 +258,10 @@ const EditMotorForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Motor Insurance Policy Details
+                Bank Account Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the Motor Insurance policy details.
+                Edit the form to update the Bank Account details.
               </CardDescription>
             </div>
           </div>

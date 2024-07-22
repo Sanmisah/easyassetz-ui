@@ -102,9 +102,7 @@ const PSADOtherForm = () => {
       jointHolderName: "",
       jointHolderPan: "",
       additionalDetails: "",
-      name: "",
-      email: "",
-      phone: "",
+     
     },
   });
 
