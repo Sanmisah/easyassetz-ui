@@ -137,6 +137,9 @@ const BankAccountForm = () => {
     if (data.bankName === "other") {
       data.bankName = data.otherBankName;
     }
+    if (data.accountType === "other") {
+      data.accountType = data.otherAccountType;
+    }
     // if (data.modeOfPurchase === "single") {
     //   data.jointHolderName = null;
     //   data.jointHolderPan = null;
@@ -153,13 +156,7 @@ const BankAccountForm = () => {
     // const year = date.getFullYear();
     // const newdate = `${month}/${day}/${year}`;
     // data.expiryDate = newdate;
-    if (data.accountType === "other") {
-      data.accountType = data.otherAccountType;
-    }
 
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
-    }
     data.nominees = selectedNommie;
     bankAccountMutate.mutate(data);
   };
