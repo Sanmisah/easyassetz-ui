@@ -35,6 +35,8 @@ import Datepicker from "../../Beneficiarydetails/Datepicker";
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Insurance Company is required" }),
   branch: z.string().optional(),
+  otherBankName: z.any().optional(),
+
   lockerNumber: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
@@ -45,7 +47,7 @@ const schema = z.object({
   annualRent: z.any().optional(),
   additionalDetails: z.any().optional(),
   branch: z.string().min(2, { message: "Policy Number is required" }),
-  natureOfHolding: z.any().optional(),
+  holdingType: z.any().optional(),
 });
 // .refine(
 //   (data) => {
@@ -326,9 +328,9 @@ const BankLockerForm = () => {
               </div>
 
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+                <Label htmlFor="holdingType">Nature of Holding</Label>
                 <Controller
-                  name="natureOfHolding"
+                  name="holdingType"
                   control={control}
                   render={({ field }) => (
                     <RadioGroup
@@ -350,9 +352,9 @@ const BankLockerForm = () => {
                     </RadioGroup>
                   )}
                 />
-                {errors.natureOfHolding && (
+                {errors.holdingType && (
                   <span className="text-red-500">
-                    {errors.natureOfHolding.message}
+                    {errors.holdingType.message}
                   </span>
                 )}
               </div>

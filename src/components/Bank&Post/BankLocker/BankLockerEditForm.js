@@ -36,6 +36,7 @@ import AddNominee from "@/components/Nominee/EditNominee";
 
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Insurance Company is required" }),
+  otherBankName: z.any().optional(),
   branch: z.string().optional(),
   lockerNumber: z
     .string()
@@ -47,7 +48,7 @@ const schema = z.object({
   annualRent: z.any().optional(),
   additionalDetails: z.any().optional(),
   branch: z.string().min(2, { message: "Policy Number is required" }),
-  natureOfHolding: z.any().optional(),
+  holdingType: z.any().optional(),
 });
 
 const EditMotorForm = () => {
@@ -68,6 +69,7 @@ const EditMotorForm = () => {
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
+  const [showOtherBankName, setshowOtherBankName] = useState(false);
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
@@ -103,7 +105,7 @@ const EditMotorForm = () => {
     setValue("rentDueDate", data.rentDueDate);
     setValue("annualRent", data.annualRent);
     setValue("additionalDetails", data.additionalDetails);
-    setValue("natureOfHolding", data.natureOfHolding);
+    setValue("holdingType", data.holdingType);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
 
@@ -165,19 +167,10 @@ const EditMotorForm = () => {
   }, [control._formValues]);
 
   const onSubmit = (data) => {
-    if (data.companyName === "other") {
-      data.companyName = data.otherInsuranceCompany;
+    if (data.bankName === "other") {
+      data.bankName = data.otherBankName;
     }
-    if (data.modeOfPurchase === "broker") {
-      data.registeredMobile = null;
-      data.registeredEmail = null;
-    }
-    if (data.modeOfPurchase === "e-insurance") {
-      data.brokerName = null;
-      data.contactPerson = null;
-      data.contactNumber = null;
-      data.email = null;
-    }
+
     const date = new Date(data.rentDueDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -233,7 +226,7 @@ const EditMotorForm = () => {
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherCompanyRegistration(true);
+                        setshowOtherBankName(true);
                       }}
                       className={errors.bankName ? "border-red-500" : ""}
                     >
@@ -249,6 +242,19 @@ const EditMotorForm = () => {
                     </Select>
                   )}
                 />
+                {showOtherBankName && (
+                  <Controller
+                    name="otherBankName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Bank Name"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
                 {errors.bankName && (
                   <span className="text-red-500">
                     {errors.bankName.message}

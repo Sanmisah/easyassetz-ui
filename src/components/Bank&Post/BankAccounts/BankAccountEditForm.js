@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
+import Editnominee from "@/components/Nominee/EditNominee";
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -44,6 +45,8 @@ const schema = z.object({
     .nonempty({ message: "Insurance Sub Type is required" }),
   accountNumber: z.string().nonempty({ message: "Policy Number is required" }),
   branchName: z.any().optional(),
+  otherAccountType: z.any().optional(),
+  otherBankName: z.any().optional(),
   city: z.any().optional(),
   holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
@@ -217,25 +220,12 @@ const EditMotorForm = () => {
   // }, [Benifyciary, reset]);
 
   const onSubmit = (data) => {
-    if (data.companyName === "other") {
-      data.companyName = data.otherInsuranceCompany;
+    if (data.bankName === "other") {
+      data.bankName = data.otherBankName;
     }
-    if (data.modeOfPurchase === "broker") {
-      data.registeredMobile = null;
-      data.registeredEmail = null;
+    if (data.accountType === "other") {
+      data.accountType = data.otherAccountType;
     }
-    if (data.modeOfPurchase === "e-insurance") {
-      data.brokerName = null;
-      data.contactPerson = null;
-      data.contactNumber = null;
-      data.email = null;
-    }
-    const date = new Date(data.expiryDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.expiryDate = newdate;
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
@@ -508,7 +498,6 @@ const EditMotorForm = () => {
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
                   {console.log(displaynominie)}
-                  <Label className="text-lg font-bold">Selected Nominees</Label>
                   {displaynominie &&
                     displaynominie.map((nominee) => (
                       <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
@@ -537,6 +526,18 @@ const EditMotorForm = () => {
                 </div>
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              {console.log(Benifyciary?.nominees)}
+              <Editnominee
+                setSelectedNommie={setSelectedNommie}
+                AllNominees={Benifyciary?.nominees}
+                selectedNommie={selectedNommie}
+                displaynominie={displaynominie}
+                setDisplaynominie={setDisplaynominie}
+              />{" "}
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
