@@ -41,6 +41,8 @@ const schema = z.object({
   city: z.any().optional(),
   holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
+  additionalDetails: z.any().optional(),
 });
 // .refine(
 //   (data) => {
