@@ -34,7 +34,10 @@ const schema = z.object({
   fdNumber: z.any().optional(),
   company: z.any().optional(),
   maturityDate: z.any().optional(),
+  branchName: z.any().optional(),
   maturityAmount: z.any().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   holdingType: z.string().optional(),
   additionalDetails: z.any().optional(),
   name: z.any().optional(),
@@ -103,6 +106,7 @@ const PpfEditForm = ({}) => {
     setValue("company", data.company);
     setValue("maturityDate", data.maturityDate);
     setValue("maturityAmount", data.maturityAmount);
+    setValue("branchName", data.branchName);
     setValue("holdingType", data.holdingType);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
@@ -345,36 +349,39 @@ const PpfEditForm = ({}) => {
                   name="jointHolderName"
                   control={control}
                   render={({ field }) => (
-                    <Select
+                    <Input
                       id="jointHolderName"
-                      value={field.value}
-                      onValueChange={field.onChange}
+                      placeholder="Enter Joint Holder Name"
+                      {...field}
                       className={errors.jointHolderName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Joint Holder Name" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="family_member_1">
-                          Family Member 1
-                        </SelectItem>
-                        <SelectItem value="family_member_2">
-                          Family Member 2
-                        </SelectItem>
-                        <SelectItem value="other_contact_1">
-                          Other Contact 1
-                        </SelectItem>
-                        <SelectItem value="other_contact_2">
-                          Other Contact 2
-                        </SelectItem>
-                        {/* Add more options as needed */}
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
                 {errors.jointHolderName && (
                   <span className="text-red-500">
                     {errors.jointHolderName.message}
+                  </span>
+                )}
+              </div>
+            )}
+            {showJointHolderName && (
+              <div className="space-y-2">
+                <Label>jointHolderPan</Label>
+                <Controller
+                  name="jointHolderPan"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="jointHolderPan"
+                      placeholder="Enter Joint Holder PAN"
+                      {...field}
+                      className={errors.jointHolderPan ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.jointHolderPan && (
+                  <span className="text-red-500">
+                    {errors.jointHolderPan.message}
                   </span>
                 )}
               </div>
@@ -398,72 +405,6 @@ const PpfEditForm = ({}) => {
                 <span className="text-red-500">
                   {errors.additionalDetails.message}
                 </span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Controller
-                name="name"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="name"
-                    placeholder="Enter Name"
-                    {...field}
-                    className={errors.name ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.name && (
-                <span className="text-red-500">{errors.name.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="mobile">Mobile</Label>
-              <Controller
-                name="mobile"
-                control={control}
-                defaultValue={Benifyciary?.mobile || ""}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="mobile"
-                    type="tel"
-                    placeholder="Enter Mobile"
-                    defaultCountry="in"
-                    value={field.value}
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    onChange={(value) => {
-                      console.log(value);
-                      setValue("mobile", value);
-                      setPhone(value);
-                    }}
-                    className={errors.mobile ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.mobile && (
-                <span className="text-red-500">{errors.mobile.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="email"
-                    placeholder="Enter Email"
-                    {...field}
-                    className={errors.email ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.email && (
-                <span className="text-red-500">{errors.email.message}</span>
               )}
             </div>
 

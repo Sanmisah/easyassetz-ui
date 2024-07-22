@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import Addnominee from "@/components/Nominee/addNominee";
 
 const schema = z.object({
   fixDepositeNumber: z
@@ -56,6 +57,8 @@ const BankAccountForm = () => {
   const [showJointHolderName, setShowJointHolderName] = useState(false);
   const [showOtherAccountType, setShowOtherAccountType] = useState(false);
   const [nomineeDetails, setNomineeDetails] = useState([]);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeError, setNomineeError] = useState(false);
 
   const {
@@ -334,7 +337,49 @@ const BankAccountForm = () => {
                 </div>
               </div>
             )}
-
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="registered-mobile" className="text-lg font-bold">
+                Add nominee
+              </Label>
+              <Addnominee
+                setDisplaynominie={setDisplaynominie}
+                setSelectedNommie={setSelectedNommie}
+                displaynominie={displaynominie}
+              />
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

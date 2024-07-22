@@ -35,13 +35,13 @@ const FixDepositsMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/motor-insurances`, {
+    const response = await axios.get(`/api/fix-deposits`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.MotorInsurances;
+    return response.data.data.FixDeposite;
   };
 
   const {
@@ -63,7 +63,7 @@ const FixDepositsMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/motor-insurances/${lifeInsuranceDeleteId}`,
+      `/api/fix-deposits/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,

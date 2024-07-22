@@ -31,6 +31,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
+import Addnominee from "@/components/Nominee/EditNominee";
 
 const schema = z.object({
   fixDepositeNumber: z
@@ -90,13 +91,22 @@ const BankEditForm = () => {
         },
       }
     );
-    console.log(typeof response.data.data.MotorInsurance?.premium);
-    let data = response.data.data.MotorInsurance;
+    console.log(typeof response.data.data.FixDeposite?.premium);
+    let data = response.data.data.FixDeposite;
     if (data.holdingType === "joint") {
       setShowJointHolderName(true);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
     }
+    setValue("fixDepositeNumber", data.fixDepositeNumber);
+    setValue("bankName", data.bankName);
+    setValue("branchName", data.branchName);
+    setValue("maturityDate", data.maturityDate);
+    setValue("maturityAmount", data.maturityAmount);
+    setValue("holdingType", data.holdingType);
+    setValue("jointHolderName", data.jointHolderName);
+    setValue("jointHolderPan", data.jointHolderPan);
+    setValue("additionalDetails", data.additionalDetails);
 
     return response.data.data.FixDeposite;
   };
@@ -433,6 +443,50 @@ const BankEditForm = () => {
                 </div>
               )}
             </div>
+            {displaynominie && displaynominie.length > 0 && (
+              <div className="space-y-2   col-span-full">
+                <div className="grid gap-4 py-4">
+                  {console.log(displaynominie)}
+                  {displaynominie &&
+                    displaynominie.map((nominee) => (
+                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                        <Label htmlFor={`nominee-${nominee?.id}`}>
+                          {nominee?.fullLegalName || nominee?.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie(
+                              displaynominie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                            setSelectedNommie(
+                              selectedNommie.filter(
+                                (item) => item.id !== nominee.id
+                              )
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+            <div className="space-y-2 col-span-full">
+              <Label htmlFor="registered-mobile">Add nominee</Label>
+              {console.log(Benifyciary?.nominees)}
+              <Addnominee
+                setSelectedNommie={setSelectedNommie}
+                AllNominees={Benifyciary?.nominees}
+                selectedNommie={selectedNommie}
+                displaynominie={displaynominie}
+                setDisplaynominie={setDisplaynominie}
+              />{" "}
+            </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

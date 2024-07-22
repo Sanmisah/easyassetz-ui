@@ -46,10 +46,6 @@ const schema = z.object({
   additionalDetails: z.string().optional(),
   // typeOfInvestment: z
   //   .string()
-  //   .nonempty({ message: "Type of Investment is required" }),
-  name: z.string().optional(),
-  mobie: z.string().optional(),
-  email: z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -461,82 +457,7 @@ const PSADOtherForm = () => {
                 </span>
               )}
             </div>
-            <div className="w-full grid grid-cols-1 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="additionalDetails">Point Of Contact</Label>
-                <div className="mt-2  flex item-center  gap-2 justify-between">
-                  <div className="w-[40%] space-y-2 item-center">
-                    <Label htmlFor="name">Name</Label>
-                    <Controller
-                      name="name"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="name"
-                          placeholder="Enter Name"
-                          {...field}
-                          value={field.value}
-                          onChange={field.onChange}
-                          className={errors.name ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.name && (
-                      <span className="text-red-500">
-                        {errors.name.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="w-[40%] space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Controller
-                      name="email"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="email"
-                          placeholder="Enter Email"
-                          {...field}
-                          className={errors.email ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.email && (
-                      <span className="text-red-500">
-                        {errors.email.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Controller
-                      name="mobile"
-                      control={control}
-                      render={({ field }) => (
-                        <PhoneInput
-                          id="mobile"
-                          type="tel"
-                          placeholder="Enter mobile number"
-                          defaultCountry="in"
-                          inputStyle={{ minWidth: "15.5rem" }}
-                          value={field.value}
-                          onChange={(value) => {
-                            console.log(value);
-                            setValue("mobile", value);
-                            setPhone(value);
-                          }}
-                        />
-                      )}
-                    />
-                    {errors.phone && (
-                      <span className="text-red-500">
-                        {errors.phone.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

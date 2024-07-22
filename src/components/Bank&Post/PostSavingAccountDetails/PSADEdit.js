@@ -31,21 +31,14 @@ import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  type: z.any().optional(),
-  otherType: z.any().optional(),
-  certificateNumber: z.any().optional(),
-  maturityDate: z.any().optional(),
-  amount: z.any().optional(),
-  holdingType: z.any().optional(),
-  jointHolderName: z.any().optional(),
-  jointHolderPan: z.any().optional(),
-  additionalDetails: z.any().optional(),
-  name: z.any().optional(),
-  mobile: z.any().optional(),
-  email: z
-    .any()
-    // .email({ message: "Invalid Email" })
-    .optional(),
+  accountNumber: z.string().nonempty({ message: "Account Number is required" }),
+  postOfficeBranch: z.string().nonempty({ message: "Branch Name is required" }),
+  city: z.any().optional(),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName: z.string().optional(),
+  jointHolderPan: z.string().optional(),
+
+  additionalDetails: z.string().optional(),
 });
 // .refine((data) => {
 //   if (data.holdingType === "joint") {
@@ -80,7 +73,7 @@ const PpfEditForm = ({}) => {
     defaultValues: {
       type: "",
       otherType: "",
-      certificateNumber: "",
+      accountNumber: "",
       maturityDate: "",
       amount: "",
       holdingType: "",
@@ -96,19 +89,19 @@ const PpfEditForm = ({}) => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/post-saving-schemes/${lifeInsuranceEditId}`,
+      `/api/post-saving-account-details/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    let data = response.data.data.PostSavingScheme;
+    let data = response.data.data.PostalSavingAccount;
 
     console.log("Fetching Data:", data);
     setValue("type", data.type);
     setValue("otherType", data.otherType);
-    setValue("certificateNumber", data.certificateNumber);
+    setValue("accountNumber", data.accountNumber);
     setValue("maturityDate", data.maturityDate);
     setValue("amount", data.amount);
     setValue("holdingType", data.holdingType);
@@ -124,7 +117,7 @@ const PpfEditForm = ({}) => {
     // Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
     setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
-    return response.data.data.PublicProvidentFund;
+    return response.data.data.PostalSavingAccount;
   };
 
   const {
@@ -157,7 +150,7 @@ const PpfEditForm = ({}) => {
   const pssMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
-        `/api/post-saving-schemes/${lifeInsuranceEditId}`,
+        `/api/post-saving-account-details/${lifeInsuranceEditId}`,
         data,
         {
           headers: {
@@ -211,22 +204,38 @@ const PpfEditForm = ({}) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="certificateNumber">Certificate Number</Label>
+              <Label htmlFor="accountNumber">Certificate Number</Label>
               <Controller
-                name="certificateNumber"
+                name="accountNumber"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    id="certificateNumber"
-                    placeholder="Enter Certificate Number"
-                    {...field}
-                    className={errors.certificateNumber ? "border-red-500" : ""}
-                  />
+                  <Select
+                    id="accountNumber"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherCompanyRegistration(value === "other");
+                    }}
+                    className={errors.accountNumber ? "border-red-500" : ""}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Account Number" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="NSC">NSC</SelectItem>
+                      <SelectItem value="KVP">KVP</SelectItem>
+                      <SelectItem value="IVP">IVP</SelectItem>
+                      <SelectItem value="savingsAccount">
+                        Savings Account
+                      </SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 )}
               />
-              {errors.certificateNumber && (
+              {errors.accountNumber && (
                 <span className="text-red-500">
-                  {errors.certificateNumber.message}
+                  {errors.accountNumber.message}
                 </span>
               )}
             </div>
