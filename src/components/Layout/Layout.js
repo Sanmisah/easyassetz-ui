@@ -127,7 +127,11 @@ import FixDepositsEditForm from "@/components/Bank&Post/FixDeposits/FixDepositsE
 import BankLockerMainForm from "@/components/Bank&Post/BankLocker/BankLockerMainForm";
 import BankLockerOtherForm from "@/components/Bank&Post/BankLocker/BankLockerOtherForm";
 import BankLockerEditForm from "@/components/Bank&Post/BankLocker/BankLockerEditForm";
-import LandMainForm from "@/components/ImmovableAssets/Land/OtherForm";
+import FinancialAssetsMainForm from "@/components/FinancialAssets/contents";
+import ShareDetailsMainForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsMainForm";
+import ShareDetailsOtherForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsOtherForm";
+import ShareDetailsEditForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsEdit";
+
 
 const Layout = () => {
   const location = useLocation();
@@ -242,6 +246,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Immovable Assets
           </NavLink>
+          <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/financialassets"
+          >
+            <UserIcon className="h-5 w-5" />
+            Financial Assets
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -292,6 +303,13 @@ const Layout = () => {
                   >
                     <HomeIcon className="h-5 w-5" />
                     Digital Assets
+                  </NavLink>
+                  <NavLink
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                    to="/financialassets"
+                  >
+                    <HomeIcon className="h-5 w-5" />
+                    Financial Assets
                   </NavLink>
                 </nav>
               </SheetDescription>
@@ -435,6 +453,10 @@ const Layout = () => {
       {location.pathname === "/banklocker/add" && <BankLockerOtherForm />}
       {location.pathname === "/banklocker/edit" && <BankLockerEditForm />}
       {location.pathname === "/immovableassets" && <ImmovableAssetsMainForm />}
+      {location.pathname === "/financialassets" && <FinancialAssetsMainForm />}
+      {location.pathname === "/share-details" && <ShareDetailsMainForm />}
+      {location.pathname === "/share-details/add" && <ShareDetailsOtherForm />}
+      {location.pathname === "/share-details/edit" && <ShareDetailsEditForm />}
       {location.pathname === "/land" && <LandMainForm />}
     </div>
   );
