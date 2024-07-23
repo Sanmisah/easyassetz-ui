@@ -127,11 +127,10 @@ import FixDepositsEditForm from "@/components/Bank&Post/FixDeposits/FixDepositsE
 import BankLockerMainForm from "@/components/Bank&Post/BankLocker/BankLockerMainForm";
 import BankLockerOtherForm from "@/components/Bank&Post/BankLocker/BankLockerOtherForm";
 import BankLockerEditForm from "@/components/Bank&Post/BankLocker/BankLockerEditForm";
-import FinancialAssetsMainForm from "@/components/FinancialAssets/contents";
-import ShareDetailsMainForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsMainForm";
-import ShareDetailsOtherForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsOtherForm";
-import ShareDetailsEditForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsEdit";
-
+import LandMainForm from "@/components/ImmovableAssets/Land/OtherForm";
+import ResidentialOtherform from "@/components/ImmovableAssets/ResidentialProperty/ResidentialOtherForm";
+import ResidentialMainForm from "@/components/ImmovableAssets/ResidentialProperty/ResidentialMainForm";
+import ResidentialEditForm from "@/components/ImmovableAssets/ResidentialProperty/ResidentialEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -453,11 +452,14 @@ const Layout = () => {
       {location.pathname === "/banklocker/add" && <BankLockerOtherForm />}
       {location.pathname === "/banklocker/edit" && <BankLockerEditForm />}
       {location.pathname === "/immovableassets" && <ImmovableAssetsMainForm />}
-      {location.pathname === "/financialassets" && <FinancialAssetsMainForm />}
-      {location.pathname === "/share-details" && <ShareDetailsMainForm />}
-      {location.pathname === "/share-details/add" && <ShareDetailsOtherForm />}
-      {location.pathname === "/share-details/edit" && <ShareDetailsEditForm />}
       {location.pathname === "/land" && <LandMainForm />}
+      {location.pathname === "/residentialproperty" && <ResidentialMainForm />}
+      {location.pathname === "/residentialproperty/add" && (
+        <ResidentialOtherform />
+      )}
+      {location.pathname === "/residentialproperty/edit" && (
+        <ResidentialEditForm />
+      )}
     </div>
   );
 };

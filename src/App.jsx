@@ -135,6 +135,9 @@ function App() {
         <Route path="/share-details" element={<Personalpage />} />
         <Route path="/share-details/add" element={<Personalpage />} />
         <Route path="/share-details/edit" element={<Personalpage />} />
+        <Route path="/residentialproperty" element={<Personalpage />} />
+        <Route path="/residentialproperty/add" element={<Personalpage />} />
+        <Route path="/residentialproperty/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
