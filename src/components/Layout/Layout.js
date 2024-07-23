@@ -130,6 +130,10 @@ import BankLockerEditForm from "@/components/Bank&Post/BankLocker/BankLockerEdit
 import ResidentialOtherform from "@/components/ImmovableAssets/ResidentialProperty/ResidentialOtherForm";
 import ResidentialMainForm from "@/components/ImmovableAssets/ResidentialProperty/ResidentialMainForm";
 import ResidentialEditForm from "@/components/ImmovableAssets/ResidentialProperty/ResidentialEdit";
+import FinancialAssetsContentForm from "@/components/FinancialAssets/contents";
+import ShareDetailsMainForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsMainForm";
+import ShareDetailsEditForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsEdit";
+import ShareDetailsOtherForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsOtherForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -459,6 +463,10 @@ const Layout = () => {
       {location.pathname === "/residentialproperty/edit" && (
         <ResidentialEditForm />
       )}
+      {location.pathname === "/financialassets" && <FinancialAssetsContentForm />}
+      {location.pathname === "/share-details" && <ShareDetailsMainForm />}
+      {location.pathname === "/share-details/add" && <ShareDetailsOtherForm />}
+      {location.pathname === "/share-details/edit" && <ShareDetailsEditForm />}
     </div>
   );
 };
