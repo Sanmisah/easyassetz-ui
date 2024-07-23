@@ -127,7 +127,6 @@ import FixDepositsEditForm from "@/components/Bank&Post/FixDeposits/FixDepositsE
 import BankLockerMainForm from "@/components/Bank&Post/BankLocker/BankLockerMainForm";
 import BankLockerOtherForm from "@/components/Bank&Post/BankLocker/BankLockerOtherForm";
 import BankLockerEditForm from "@/components/Bank&Post/BankLocker/BankLockerEditForm";
-import LandMainForm from "@/components/ImmovableAssets/Land/OtherForm";
 import ResidentialOtherform from "@/components/ImmovableAssets/ResidentialProperty/ResidentialOtherForm";
 import ResidentialMainForm from "@/components/ImmovableAssets/ResidentialProperty/ResidentialMainForm";
 import ResidentialEditForm from "@/components/ImmovableAssets/ResidentialProperty/ResidentialEdit";
