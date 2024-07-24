@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -17,156 +17,88 @@ import {
 } from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
+import { Textarea } from "@com/ui/textarea";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { PhoneInput } from "react-international-phone";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
-import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
-import { PhoneInput } from "react-international-phone";
-
-const FocusableSelectTrigger = forwardRef((props, ref) => (
-  <SelectTrigger ref={ref} {...props} />
-));
+import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 const schema = z.object({
   propertyType: z.string().nonempty({ message: "Property Type is required" }),
-  houseNumber: z.string().nonempty({ message: "House Number is required" }),
-  address1: z.string().nonempty({ message: "Address Line 1 is required" }),
-  pincode: z.string().nonempty({ message: "Pincode is required" }),
-  area: z.string().nonempty({ message: "Area is required" }),
-  city: z.string().nonempty({ message: "City is required" }),
-  state: z.string().nonempty({ message: "State is required" }),
-  propertyStatus: z
-    .string()
-    .nonempty({ message: "Property Status is required" }),
+  surveyNumber: z.string().nonempty({ message: "Survey Number is required" }),
+  address: z.string().nonempty({ message: "Address is required" }),
+  villageName: z.string().nonempty({ message: "Village Name is required" }),
+  district: z.string().nonempty({ message: "District is required" }),
+  taluka: z.string().nonempty({ message: "Taluka is required" }),
   ownershipByVirtueOf: z
     .string()
     .nonempty({ message: "Ownership By Virtue Of is required" }),
   ownershipType: z.string().nonempty({ message: "Ownership Type is required" }),
-  firstHoldersName: z.any().optional(),
-  firstHoldersRelation: z.any().optional(),
-  firstHoldersAadhar: z.any().optional(),
-  firstHoldersPan: z.any().optional(),
-  joinHoldersName: z.any().optional(),
-  joinHoldersRelation: z.any().optional(),
-  joinHoldersPan: z.any().optional(),
-  anyLoanLitigation: z.any().optional(),
+
+  firstHoldersName: z.string().optional(),
+  firstHoldersRelation: z.string().optional(),
+  firstHoldersPan: z.string().optional(),
+  firstHoldersAadhar: z.string().optional(),
+  jointHoldersName: z.string().optional(),
+  jointHoldersRelation: z.string().optional(),
+  jointHoldersPan: z.string().optional(),
+  jointHoldersAadhar: z.string().optional(),
+  anyLoanLitigation: z.string().optional(),
+
+  name: z.string().optional(),
+  mobile: z.string().optional(),
+  email: z.string().optional(),
 });
 
-const ResidentialEditForm = () => {
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+
+const ResidentialOtherform = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
+  const queryClient = useQueryClient();
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
-  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [displaynominie, setDisplaynominie] = useState([]);
+  const [Joinholder, setJoinholder] = useState(false);
+  const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState(null);
-  const [defaultValues, setDefaultValues] = useState(null);
-  const [jointHolderName, setJointHolderName] = useState(false);
-  const [Joinholder, setJoinholder] = useState(false);
-  const [displaynominie, setDisplaynominie] = useState([]);
-  const [selectedNommie, setSelectedNommie] = useState([]);
-  const [numberOfArticles, setNumberOfArticles] = useState(null);
-
-  useEffect(() => {
-    if (lifeInsuranceEditId) {
-      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
-    }
-  }, [lifeInsuranceEditId]);
-
+  const [mobile, setPhone] = useState("");
   const {
     handleSubmit,
     control,
-    setValue,
-    reset,
+    register,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || {},
-  });
-
-  const getPersonalData = async () => {
-    if (!user) return;
-    const response = await axios.get(
-      `/api/residential-properties/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
-    const data = response.data.data.ResidentialProperty;
-    // console.log("bullion:", bullion);
-    setValue("propertyType", data.propertyType);
-    setValue("houseNumber", data.houseNumber);
-    setValue("address1", data.address1);
-    setValue("pincode", data.pincode);
-    setValue("area", data.area);
-    setValue("city", data.city);
-    setValue("state", data.state);
-    setValue("propertyStatus", data.propertyStatus);
-    setValue("ownershipByVirtueOf", data.ownershipByVirtueOf);
-    setValue("ownershipType", data.ownershipType);
-    setValue("firstHoldersName", data.firstHoldersName);
-    setValue("firstHoldersRelation", data.firstHoldersRelation);
-    setValue("firstHoldersAadhar", data.firstHoldersAadhar);
-    setValue("firstHoldersPan", data.firstHoldersPan);
-    setValue("joinHoldersName", data.joinHoldersName);
-    setValue("joinHoldersRelation", data.joinHoldersRelation);
-    setValue("joinHoldersPan", data.joinHoldersPan);
-    setValue("anyLoanLitigation", data.anyLoanLitigation);
-    return response.data.data.ResidentialProperty;
-  };
-
-  const {
-    data: Benifyciary,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
-    queryFn: getPersonalData,
-    onSuccess: (data) => {
-      reset(data);
-      setDefaultValues(data);
-      setValue("propertyType", data.propertyType);
-      setValue("houseNumber", data.houseNumber);
-      setValue("address1", data.address1);
-      setValue("pincode", data.pincode);
-      setValue("area", data.area);
-      setValue("city", data.city);
-      setValue("state", data.state);
-      setValue("propertyStatus", data.propertyStatus);
-      setValue("ownershipByVirtueOf", data.ownershipByVirtueOf);
-      setValue("ownershipType", data.ownershipType);
-      setValue("firstHoldersName", data.firstHoldersName);
-      setValue("firstHoldersRelation", data.firstHoldersRelation);
-      setValue("firstHoldersAadhar", data.firstHoldersAadhar);
-      setValue("firstHoldersPan", data.firstHoldersPan);
-      setValue("joinHoldersName", data.joinHoldersName);
-      setValue("joinHoldersRelation", data.joinHoldersRelation);
-      setValue("joinHoldersPan", data.joinHoldersPan);
-      setValue("anyLoanLitigation", data.anyLoanLitigation);
-      setValue("litigationFile", data.litigationFile);
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
-      }
-    },
-    onError: (error) => {
-      console.error("Error fetching profile:", error);
-      toast.error("Failed to fetch profile");
+    defaultValues: {
+      metalType: "",
+      otherMetalType: "",
+      articleDetails: "",
+      otherArticleDetails: "",
+      weightPerArticle: "",
+      numberOfArticles: "",
+      additionalInformation: "",
+      name: "",
+      email: "",
+      mobile: "",
     },
   });
 
-  const bullionMutate = useMutation({
+  const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const Formdata = new FormData();
       Formdata.append("bullionFile", data.bullionFile);
@@ -174,21 +106,24 @@ const ResidentialEditForm = () => {
       for (const [key, value] of Object.entries(data)) {
         Formdata.append(key, value);
       }
-      Formdata.append("_method", "put");
+
       const response = await axios.post(
-        `/api/residential-properties/${lifeInsuranceEditId}`,
+        `/api/lands`,
+
         Formdata,
+
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         }
       );
-      return response.data.data.ResidentialProperty;
+
+      return response.data.data.Bullion;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("bullionDataUpdate", lifeInsuranceEditId);
-      toast.success("ResidentialProperty updated successfully!");
+      queryClient.invalidateQueries("LifeInsuranceData");
+      toast.success("Other Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -197,26 +132,40 @@ const ResidentialEditForm = () => {
     },
   });
 
+  useEffect(() => {
+    if (selectedNommie.length > 0) {
+      setNomineeError(false);
+    }
+  }, [selectedNommie]);
+
   const onSubmit = (data) => {
-    console.log("data:", data);
+    console.log(data);
+    if (data.metalType === "other") {
+      data.metalType = data.otherMetalType;
+    }
+    if (data.articleDetails === "other") {
+      data.articleDetails = data.otherArticleDetails;
+    }
+    // data.name = name;
+    // data.email = email;
+    // data.mobile = mobile;
+    delete data.otherMetalType;
+    delete data.otherArticleDetails;
 
-    bullionMutate.mutate(data);
+    lifeInsuranceMutate.mutate(data);
   };
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading bullion data</div>;
 
   return (
     <div className="w-full">
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                ResidentialProperty Details
+                Bullion Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the bullion details.
+                Fill out the form to add a new Bullion.
               </CardDescription>
             </div>
           </div>
@@ -246,20 +195,16 @@ const ResidentialEditForm = () => {
                         <SelectValue placeholder="Select Property Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="residentialApartment">
-                          Residential Apartment/Flat
+                        <SelectItem value="agriculturalLand">
+                          Agricultural Land
                         </SelectItem>
-                        <SelectItem value="residentialVilla">
-                          Residential Villa
-                        </SelectItem>
-                        <SelectItem value="residentialPlot">
-                          Residential Plot
+                        <SelectItem value="nonAgriculturalLand">
+                          Non-Agricultural Land
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-
                 {errors.propertyType && (
                   <span className="text-red-500">
                     {errors.propertyType.message}
@@ -267,160 +212,118 @@ const ResidentialEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="houseNumber">House Number</Label>
+                <Label htmlFor="surveyNumber">Survey Number</Label>
                 <Controller
-                  name="houseNumber"
+                  name="surveyNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="houseNumber"
+                      id="surveyNumber"
                       placeholder="Enter House Number"
                       {...field}
-                      className={errors.houseNumber ? "border-red-500" : ""}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={errors.surveyNumber ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.houseNumber && (
+                {errors.surveyNumber && (
                   <span className="text-red-500">
-                    {errors.houseNumber.message}
+                    {errors.surveyNumber.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address1">Address Line 1</Label>
+                <Label htmlFor="address">Address Line</Label>
                 <Controller
-                  name="address1"
+                  name="address"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="address1"
+                      id="address"
                       placeholder="Enter Address Line 1"
                       {...field}
-                      className={errors.address1 ? "border-red-500" : ""}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={errors.address ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.address1 && (
+                {errors.address && (
+                  <span className="text-red-500">{errors.address.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="villageName">Village Name</Label>
+                <Controller
+                  name="villageName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="villageName"
+                      placeholder="Enter Pincode"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={errors.villageName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.villageName && (
                   <span className="text-red-500">
-                    {errors.address1.message}
+                    {errors.villageName.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="pincode">Pincode</Label>
+                <Label htmlFor="district">District</Label>
                 <Controller
-                  name="pincode"
+                  name="district"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="pincode"
-                      placeholder="Enter Pincode"
-                      {...field}
-                      className={errors.pincode ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.pincode && (
-                  <span className="text-red-500">{errors.pincode.message}</span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="area">Area</Label>
-                <Controller
-                  name="area"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="area"
+                      id="district"
                       placeholder="Enter Area"
                       {...field}
-                      className={errors.area ? "border-red-500" : ""}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={errors.district ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.area && (
-                  <span className="text-red-500">{errors.area.message}</span>
+                {errors.district && (
+                  <span className="text-red-500">
+                    {errors.district.message}
+                  </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="city">City</Label>
+                <Label htmlFor="taluka">Taluka</Label>
                 <Controller
-                  name="city"
+                  name="taluka"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="city"
+                      id="taluka"
                       placeholder="Enter City"
                       {...field}
-                      className={errors.city ? "border-red-500" : ""}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={errors.taluka ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.city && (
-                  <span className="text-red-500">{errors.city.message}</span>
+                {errors.taluka && (
+                  <span className="text-red-500">{errors.taluka.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="state">State</Label>
-                <Controller
-                  name="state"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="state"
-                      placeholder="Enter State"
-                      {...field}
-                      className={errors.state ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.state && (
-                  <span className="text-red-500">{errors.state.message}</span>
-                )}
-              </div>
+
               <div className="space-y-2 col-span-full">
                 <Label className="text-lg font-bold mt-8">
                   Ownership Details
                 </Label>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="propertyStatus">Property Status</Label>
-                <Controller
-                  name="propertyStatus"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-4">
-                        <Label
-                          className="flex items-center gap-2"
-                          htmlFor="pan-yes"
-                        >
-                          <RadioGroupItem id="pan-yes" value="leased" />
-                          Leased
-                        </Label>
-                        <Label
-                          className="flex items-center gap-2"
-                          htmlFor="pan-no"
-                        >
-                          <RadioGroupItem id="pan-no" value="freehold" />
-                          Freehold
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  )}
-                />
-                {errors.propertyStatus && (
-                  <span className="text-red-500">
-                    {errors.propertyStatus.message}
-                  </span>
-                )}
-              </div>
+
               <div className="space-y-2 wrap ">
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
@@ -434,27 +337,29 @@ const ResidentialEditForm = () => {
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
-                      className="flex items-center gap-2"
                     >
-                      <div className="flex items-center gap-2 text-center flex-wrap">
-                        <div className="flex items-center gap-2 text-center flex-wrap">
-                          <RadioGroupItem
-                            id="selfpurchase"
-                            value="selfpurchase"
-                          />
-                          <Label htmlFor="selfpurchase">Selfpurchase</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem id="asagift" value="asagift" />
-                          <Label htmlFor="asagift">As a gift</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem
-                            id="ancestralland"
-                            value="ancestralland"
-                          />
-                          <Label htmlFor="ancestralland">Ancestral Land</Label>
-                        </div>
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <Label
+                          className="flex items-center gap-2"
+                          htmlFor="pan-yes"
+                        >
+                          <RadioGroupItem id="pan-yes" value="selfpurchase" />
+                          selfpurchase
+                        </Label>
+                        <Label
+                          className="flex items-center gap-2"
+                          htmlFor="pan-no"
+                        >
+                          <RadioGroupItem id="pan-no" value="asagift" />
+                          As a gift
+                        </Label>
+                        <Label
+                          className="flex items-center gap-2"
+                          htmlFor="pan-no"
+                        >
+                          <RadioGroupItem id="pan-no" value="ancestralland" />
+                          Ancestral Land
+                        </Label>
                       </div>
                     </RadioGroup>
                   )}
@@ -477,22 +382,29 @@ const ResidentialEditForm = () => {
                         field.onChange(value);
                         setJoinholder(value === "joint");
                       }}
-                      className="flex items-center gap-2"
                     >
-                      <div className="flex items-center gap-2 text-center">
-                        <RadioGroupItem id="single" value="single" />
-                        <Label htmlFor="single">Single</Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <RadioGroupItem id="joint" value="joint" />
-                        <Label htmlFor="joint">Joint</Label>
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <Label
+                          className="flex items-center gap-2"
+                          htmlFor="pan-yes"
+                        >
+                          <RadioGroupItem id="pan-yes" value="single" />
+                          Single
+                        </Label>
+                        <Label
+                          className="flex items-center gap-2"
+                          htmlFor="pan-no"
+                        >
+                          <RadioGroupItem id="pan-no" value="joint" />
+                          Joint
+                        </Label>
                       </div>
                     </RadioGroup>
                   )}
                 />
-                {errors.ownershipType && (
+                {errors.ownershipByVirtueOf && (
                   <span className="text-red-500">
-                    {errors.ownershipType.message}
+                    {errors.ownershipByVirtueOf.message}
                   </span>
                 )}
               </div>
@@ -501,25 +413,24 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> First Joint Holder Name</Label>
                     <Controller
-                      name="firstHoldersName"
+                      name="firstHolderName"
                       control={control}
-                      // rules={{
-                      //   required:
-                      //     Joinholder && "First Joint Holder Name is required",
-                      // }}
                       render={({ field }) => (
                         <Input
+                          id="firstHoldersAadhar"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
                           className={
                             errors.firstHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.firstHoldersName && (
+                    {errors.firstHoldersRelation && (
                       <span className="text-red-500">
-                        {errors.firstHoldersName.message}
+                        {errors.firstHoldersRelation.message}
                       </span>
                     )}
                   </div>
@@ -534,9 +445,7 @@ const ResidentialEditForm = () => {
                         <Select
                           id="firstHoldersRelation"
                           value={field.value}
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                          }}
+                          onValueChange={field.onChange}
                           className={
                             errors.firstHoldersRelation ? "border-red-500" : ""
                           }
@@ -565,13 +474,15 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label>First Joint Holder PAN</Label>
                     <Controller
-                      name="joinHoldersName"
+                      name="joinHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
                           id="joinHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
                           className={
                             errors.joinHoldersName ? "border-red-500" : ""
                           }
@@ -594,8 +505,10 @@ const ResidentialEditForm = () => {
                       render={({ field }) => (
                         <Input
                           id="firstHoldersAadhar"
-                          placeholder="Enter Joint Holder Aadhar"
+                          placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
                           className={
                             errors.joinHoldersName ? "border-red-500" : ""
                           }
@@ -622,6 +535,8 @@ const ResidentialEditForm = () => {
                           id="joinHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
                           className={
                             errors.joinHoldersName ? "border-red-500" : ""
                           }
@@ -645,9 +560,7 @@ const ResidentialEditForm = () => {
                         <Select
                           id="joinHoldersRelation"
                           value={field.value}
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                          }}
+                          onValueChange={field.onChange}
                           className={
                             errors.joinHoldersRelation ? "border-red-500" : ""
                           }
@@ -665,9 +578,9 @@ const ResidentialEditForm = () => {
                         </Select>
                       )}
                     />
-                    {errors.joinHoldersRelation && (
+                    {errors.joinHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersRelation.message}
+                        {errors.joinHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -681,8 +594,36 @@ const ResidentialEditForm = () => {
                       render={({ field }) => (
                         <Input
                           id="joinHoldersName"
-                          placeholder="Enter Joint Holder Aadhar"
+                          placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          className={
+                            errors.joinHoldersName ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.joinHoldersName && (
+                      <span className="text-red-500">
+                        {errors.joinHoldersName.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {Joinholder && (
+                  <div className="space-y-2 wrap col-span-full">
+                    <Label> Second Joint Holder Aadhar</Label>
+                    <Controller
+                      name="joinHoldersAadhar"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="joinHoldersName"
+                          placeholder="Enter Joint Holder Name"
+                          {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
                           className={
                             errors.joinHoldersName ? "border-red-500" : ""
                           }
@@ -697,8 +638,27 @@ const ResidentialEditForm = () => {
                   </div>
                 )}
               </div>
+              <div className="space-y-2 space-x-2">
+                <Label>Any Loan Litigation</Label>
+                <Controller
+                  name="anyLoanLitigation"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="anyLoanLitigation"
+                      checked={field.value === "yes"}
+                      onCheckedChange={() => field.onChange("yes")}
+                    />
+                  )}
+                />
+                {errors.anyLoanLitigation && (
+                  <span className="text-red-500">
+                    {errors.anyLoanLitigation.message}
+                  </span>
+                )}
+              </div>
               {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2 col-span-full">
+                <div className="space-y-2">
                   <div className="grid gap-4 py-4">
                     {console.log(displaynominie)}
                     <Label className="text-lg font-bold">
@@ -733,14 +693,78 @@ const ResidentialEditForm = () => {
                 </div>
               )}
               <div className="space-y-2 col-span-full">
-                <Label htmlFor="registered-mobile">Add nominee</Label>
+                <Label
+                  htmlFor="registered-mobile"
+                  className="text-lg font-bold"
+                >
+                  Add nominee
+                </Label>
                 <Addnominee
                   setDisplaynominie={setDisplaynominie}
                   setSelectedNommie={setSelectedNommie}
                   displaynominie={displaynominie}
                 />
               </div>
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      {...field}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <span className="text-red-500">{errors.name.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobile">Mobile</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      {...field}
+                      className={errors.mobile ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
+                )}
+              </div>
             </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
@@ -751,4 +775,4 @@ const ResidentialEditForm = () => {
   );
 };
 
-export default ResidentialEditForm;
+export default ResidentialOtherform;

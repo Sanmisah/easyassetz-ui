@@ -146,6 +146,12 @@ import BondEdit from "@/components/FinancialAssets/Bond/BondEdit";
 import ESOPMainForm from "@/components/FinancialAssets/ESOP/ESOPMainForm";
 import ESOPOtherForm from "@/components/FinancialAssets/ESOP/ESOPOtherForm";
 import ESOPEditForm from "@/components/FinancialAssets/ESOP/ESOPEdit";
+import LandMainForm from "@/components/ImmovableAssets/Land/LandMainForm";
+import LandOtherForm from "@/components/ImmovableAssets/Land/LandOtherForm";
+import LandEditForm from "@/components/ImmovableAssets/Land/LandEdit";
+import CommercialMainForm from "@/components/ImmovableAssets/CommercialProperty/CommercialMainForm";
+import CommercialOtherForm from "@/components/ImmovableAssets/CommercialProperty/CommercialOtherForm";
+import CommercialEditForm from "@/components/ImmovableAssets/CommercialProperty/CommercialEdit";
 const Layout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -492,6 +498,16 @@ const Layout = () => {
       {location.pathname === "/esop" && <ESOPMainForm />}
       {location.pathname === "/esop/add" && <ESOPOtherForm />}
       {location.pathname === "/esop/edit" && <ESOPEditForm />}
+      {location.pathname === "/land" && <LandMainForm />}
+      {location.pathname === "/land/add" && <LandOtherForm />}
+      {location.pathname === "/land/edit" && <LandEditForm />}
+      {location.pathname === "/commercialproperty" && <CommercialMainForm />}
+      {location.pathname === "/commercialproperty/add" && (
+        <CommercialOtherForm />
+      )}
+      {location.pathname === "/commercialproperty/edit" && (
+        <CommercialEditForm />
+      )}
     </div>
   );
 };

@@ -29,33 +29,37 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import { PhoneInput } from "react-international-phone";
+import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
 ));
 const schema = z.object({
   propertyType: z.string().nonempty({ message: "Property Type is required" }),
-  houseNumber: z.string().nonempty({ message: "House Number is required" }),
-  address1: z.string().nonempty({ message: "Address Line 1 is required" }),
-  pincode: z.string().nonempty({ message: "Pincode is required" }),
-  area: z.string().nonempty({ message: "Area is required" }),
-  city: z.string().nonempty({ message: "City is required" }),
-  state: z.string().nonempty({ message: "State is required" }),
-  propertyStatus: z
-    .string()
-    .nonempty({ message: "Property Status is required" }),
+  surveyNumber: z.string().nonempty({ message: "Survey Number is required" }),
+  address: z.string().nonempty({ message: "Address is required" }),
+  villageName: z.string().nonempty({ message: "Village Name is required" }),
+  district: z.string().nonempty({ message: "District is required" }),
+  taluka: z.string().nonempty({ message: "Taluka is required" }),
   ownershipByVirtueOf: z
     .string()
     .nonempty({ message: "Ownership By Virtue Of is required" }),
   ownershipType: z.string().nonempty({ message: "Ownership Type is required" }),
+
   firstHoldersName: z.any().optional(),
   firstHoldersRelation: z.any().optional(),
-  firstHoldersAadhar: z.any().optional(),
   firstHoldersPan: z.any().optional(),
-  joinHoldersName: z.any().optional(),
-  joinHoldersRelation: z.any().optional(),
-  joinHoldersPan: z.any().optional(),
-  anyLoanLitigation: z.any().optional(),
+  firstHoldersAadhar: z.any().optional(),
+  jointHoldersName: z.any().optional(),
+  jointHoldersRelation: z.any().optional(),
+  jointHoldersPan: z.any().optional(),
+  jointHoldersAadhar: z.any().optional(),
+
+  anyLoanLitigation: z.string().optional(),
+
+  name: z.string().optional(),
+  mobile: z.string().optional(),
+  email: z.string().optional(),
 });
 
 const ResidentialEditForm = () => {
@@ -75,6 +79,7 @@ const ResidentialEditForm = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [numberOfArticles, setNumberOfArticles] = useState(null);
+  const [Litigation, setLitigation] = useState(false);
 
   useEffect(() => {
     if (lifeInsuranceEditId) {
@@ -95,22 +100,19 @@ const ResidentialEditForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `/api/residential-properties/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
-    const data = response.data.data.ResidentialProperty;
+    const response = await axios.get(`/api/lands/${lifeInsuranceEditId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
+    const data = response.data.data.Land;
     // console.log("bullion:", bullion);
     setValue("propertyType", data.propertyType);
-    setValue("houseNumber", data.houseNumber);
-    setValue("address1", data.address1);
-    setValue("pincode", data.pincode);
-    setValue("area", data.area);
-    setValue("city", data.city);
+    setValue("surveyNumber", data.surveyNumber);
+    setValue("address", data.address);
+    setValue("villageName", data.villageName);
+    setValue("district", data.district);
+    setValue("taluka", data.taluka);
     setValue("state", data.state);
     setValue("propertyStatus", data.propertyStatus);
     setValue("ownershipByVirtueOf", data.ownershipByVirtueOf);
@@ -123,7 +125,14 @@ const ResidentialEditForm = () => {
     setValue("joinHoldersRelation", data.joinHoldersRelation);
     setValue("joinHoldersPan", data.joinHoldersPan);
     setValue("anyLoanLitigation", data.anyLoanLitigation);
-    return response.data.data.ResidentialProperty;
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
+    if (data.anyLoanLitigation === "yes") {
+      setValue("anyLoanLitigation", data.anyLoanLitigation);
+      setLitigation(true);
+    }
+    return response.data.data.Land;
   };
 
   const {
@@ -137,11 +146,11 @@ const ResidentialEditForm = () => {
       reset(data);
       setDefaultValues(data);
       setValue("propertyType", data.propertyType);
-      setValue("houseNumber", data.houseNumber);
-      setValue("address1", data.address1);
-      setValue("pincode", data.pincode);
-      setValue("area", data.area);
-      setValue("city", data.city);
+      setValue("surveyNumber", data.surveyNumber);
+      setValue("address", data.address);
+      setValue("villageName", data.villageName);
+      setValue("district", data.district);
+      setValue("taluka", data.taluka);
       setValue("state", data.state);
       setValue("propertyStatus", data.propertyStatus);
       setValue("ownershipByVirtueOf", data.ownershipByVirtueOf);
@@ -155,6 +164,9 @@ const ResidentialEditForm = () => {
       setValue("joinHoldersPan", data.joinHoldersPan);
       setValue("anyLoanLitigation", data.anyLoanLitigation);
       setValue("litigationFile", data.litigationFile);
+      setValue("name", data.name);
+      setValue("mobile", data.mobile);
+      setValue("email", data.email);
       // Set fetched values to the form
       for (const key in data) {
         setValue(key, data[key]);
@@ -176,7 +188,7 @@ const ResidentialEditForm = () => {
       }
       Formdata.append("_method", "put");
       const response = await axios.post(
-        `/api/residential-properties/${lifeInsuranceEditId}`,
+        `/api/lands/${lifeInsuranceEditId}`,
         Formdata,
         {
           headers: {
@@ -199,7 +211,11 @@ const ResidentialEditForm = () => {
 
   const onSubmit = (data) => {
     console.log("data:", data);
-
+    if (Litigation) {
+      data.anyLoanLitigation = "yes";
+    } else {
+      data.anyLoanLitigation = "no";
+    }
     bullionMutate.mutate(data);
   };
 
@@ -267,161 +283,109 @@ const ResidentialEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="houseNumber">House Number</Label>
+                <Label htmlFor="surveyNumber">House Number</Label>
                 <Controller
-                  name="houseNumber"
+                  name="surveyNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="houseNumber"
-                      placeholder="Enter House Number"
+                      id="surveyNumber"
+                      placeholder="Enter Survey Number"
                       {...field}
-                      className={errors.houseNumber ? "border-red-500" : ""}
+                      className={errors.surveyNumber ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.houseNumber && (
+                {errors.surveyNumber && (
                   <span className="text-red-500">
-                    {errors.houseNumber.message}
+                    {errors.surveyNumber.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address1">Address Line 1</Label>
+                <Label htmlFor="address">Address Line</Label>
                 <Controller
-                  name="address1"
+                  name="address"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="address1"
+                      id="address"
                       placeholder="Enter Address Line 1"
                       {...field}
-                      className={errors.address1 ? "border-red-500" : ""}
+                      className={errors.address ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.address1 && (
+                {errors.address && (
+                  <span className="text-red-500">{errors.address.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="villageName">Pincode</Label>
+                <Controller
+                  name="villageName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="villageName"
+                      placeholder="Enter Pincode"
+                      {...field}
+                      className={errors.villageName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.villageName && (
                   <span className="text-red-500">
-                    {errors.address1.message}
+                    {errors.villageName.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="pincode">Pincode</Label>
+                <Label htmlFor="district">District</Label>
                 <Controller
-                  name="pincode"
+                  name="district"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="pincode"
-                      placeholder="Enter Pincode"
-                      {...field}
-                      className={errors.pincode ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.pincode && (
-                  <span className="text-red-500">{errors.pincode.message}</span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="area">Area</Label>
-                <Controller
-                  name="area"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="area"
+                      id="district"
                       placeholder="Enter Area"
                       {...field}
-                      className={errors.area ? "border-red-500" : ""}
+                      className={errors.district ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.area && (
-                  <span className="text-red-500">{errors.area.message}</span>
+                {errors.district && (
+                  <span className="text-red-500">
+                    {errors.district.message}
+                  </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="city">City</Label>
+                <Label htmlFor="taluka">Taluka</Label>
                 <Controller
-                  name="city"
+                  name="taluka"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="city"
+                      id="taluka"
                       placeholder="Enter City"
                       {...field}
-                      className={errors.city ? "border-red-500" : ""}
+                      className={errors.taluka ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.city && (
-                  <span className="text-red-500">{errors.city.message}</span>
+                {errors.taluka && (
+                  <span className="text-red-500">{errors.taluka.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="state">State</Label>
-                <Controller
-                  name="state"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="state"
-                      placeholder="Enter State"
-                      {...field}
-                      className={errors.state ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.state && (
-                  <span className="text-red-500">{errors.state.message}</span>
-                )}
-              </div>
+
               <div className="space-y-2 col-span-full">
                 <Label className="text-lg font-bold mt-8">
                   Ownership Details
                 </Label>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="propertyStatus">Property Status</Label>
-                <Controller
-                  name="propertyStatus"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-4">
-                        <Label
-                          className="flex items-center gap-2"
-                          htmlFor="pan-yes"
-                        >
-                          <RadioGroupItem id="pan-yes" value="leased" />
-                          Leased
-                        </Label>
-                        <Label
-                          className="flex items-center gap-2"
-                          htmlFor="pan-no"
-                        >
-                          <RadioGroupItem id="pan-no" value="freehold" />
-                          Freehold
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  )}
-                />
-                {errors.propertyStatus && (
-                  <span className="text-red-500">
-                    {errors.propertyStatus.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2 wrap ">
+
+              <div className="space-y-2 ">
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
                 </Label>
@@ -465,7 +429,7 @@ const ResidentialEditForm = () => {
                   </span>
                 )}
               </div>
-              <div className="space-y-2 wrap col-span-full">
+              <div className="space-y-2 ">
                 <Label htmlFor="ownershipByVirtueOf">Ownership Type</Label>
                 <Controller
                   name="ownershipType"
@@ -739,6 +703,87 @@ const ResidentialEditForm = () => {
                   setSelectedNommie={setSelectedNommie}
                   displaynominie={displaynominie}
                 />
+              </div>
+              <div className="space-y-2 space-x-2">
+                <Label>Any Loan Litigation</Label>
+                <Controller
+                  name="anyLoanLitigation"
+                  defaultValue={Benifyciary?.anyLoanLitigation === "yes"}
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="anyLoanLitigation"
+                      checked={Litigation}
+                      onCheckedChange={() => {
+                        setLitigation(!Litigation);
+                        // field.onChange("yes");
+                      }}
+                    />
+                  )}
+                />
+                {errors.anyLoanLitigation && (
+                  <span className="text-red-500">
+                    {errors.anyLoanLitigation.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2 space-x-2">
+                <Label>Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      {...field}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <span className="text-red-500">{errors.name.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobile">Mobile</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      {...field}
+                      className={errors.mobile ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
+                )}
               </div>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">

@@ -58,7 +58,7 @@ const schema = z.object({
   anyLoanLitigation: z.any().optional(),
 });
 
-const ResidentialEditForm = () => {
+const CommercialEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -96,14 +96,14 @@ const ResidentialEditForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/residential-properties/${lifeInsuranceEditId}`,
+      `/api/commercial-properties/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    const data = response.data.data.ResidentialProperty;
+    const data = response.data.data.CommercialProperty;
     // console.log("bullion:", bullion);
     setValue("propertyType", data.propertyType);
     setValue("houseNumber", data.houseNumber);
@@ -123,7 +123,7 @@ const ResidentialEditForm = () => {
     setValue("joinHoldersRelation", data.joinHoldersRelation);
     setValue("joinHoldersPan", data.joinHoldersPan);
     setValue("anyLoanLitigation", data.anyLoanLitigation);
-    return response.data.data.ResidentialProperty;
+    return response.data.data.CommercialProperty;
   };
 
   const {
@@ -176,7 +176,7 @@ const ResidentialEditForm = () => {
       }
       Formdata.append("_method", "put");
       const response = await axios.post(
-        `/api/residential-properties/${lifeInsuranceEditId}`,
+        `/api/commercial-properties/${lifeInsuranceEditId}`,
         Formdata,
         {
           headers: {
@@ -184,11 +184,11 @@ const ResidentialEditForm = () => {
           },
         }
       );
-      return response.data.data.ResidentialProperty;
+      return response.data.data.CommercialProperty;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("bullionDataUpdate", lifeInsuranceEditId);
-      toast.success("ResidentialProperty updated successfully!");
+      toast.success("CommercialProperty updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -213,7 +213,7 @@ const ResidentialEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                ResidentialProperty Details
+                CommercialProperty Details
               </CardTitle>
               <CardDescription>
                 Edit the form to update the bullion details.
@@ -246,14 +246,14 @@ const ResidentialEditForm = () => {
                         <SelectValue placeholder="Select Property Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="residentialApartment">
-                          Residential Apartment/Flat
+                        <SelectItem value="CommercialBuilding">
+                          Commercial Building
                         </SelectItem>
-                        <SelectItem value="residentialVilla">
-                          Residential Villa
+                        <SelectItem value="commercialplot">
+                          Commercial Plot
                         </SelectItem>
-                        <SelectItem value="residentialPlot">
-                          Residential Plot
+                        <SelectItem value="commercialland">
+                          Commercial Land
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -751,4 +751,4 @@ const ResidentialEditForm = () => {
   );
 };
 
-export default ResidentialEditForm;
+export default CommercialEditForm;
