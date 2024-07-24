@@ -106,7 +106,7 @@ const ImmovableAssetsMainForm = () => {
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/#")}
+          onMouseDown={() => navigate("/commercialproperty")}
           className=" cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
