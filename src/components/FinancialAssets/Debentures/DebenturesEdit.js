@@ -39,9 +39,14 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
+  bankServiceProvider: z
+    .string()
+    .nonempty({ message: "Bank Service Provider is required" }),
   companyName: z.string().nonempty({ message: "Company Name is required" }),
   folioNumber: z.string().optional(),
-  noOfShares: z.string().nonempty({ message: "No of Shares is required" }),
+  numberOfDebentures: z
+    .string()
+    .nonempty({ message: "No of Debentures is required" }),
   certificateNumber: z.any().optional(),
   distinguishNoFrom: z.any().optional(),
   distinguishNoTo: z.any().optional(),
@@ -105,19 +110,17 @@ const PSSEditForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(
-      `/api/share-details/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
+    const response = await axios.get(`/api/debentures/${lifeInsuranceEditId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
 
-    let data = response.data.data.ShareDetail;
+    let data = response.data.data.Debenture;
+    setValue("bankServiceProvider", data.bankServiceProvider);
     setValue("companyName", data.companyName);
     setValue("folioNumber", data.folioNumber);
-    setValue("noOfShares", data.noOfShares);
+    setValue("numberOfDebentures", data.numberOfDebentures);
     setValue("certificateNumber", data.certificateNumber);
     setValue("distinguishNoFrom", data.distinguishNoFrom);
     setValue("distinguishNoTo", data.distinguishNoTo);
@@ -135,7 +138,7 @@ const PSSEditForm = () => {
       setValue("mobile", data.mobile);
     }
 
-    return response.data.data.ShareDetail;
+    return response.data.data.Debenture;
   };
 
   const {
@@ -150,9 +153,10 @@ const PSSEditForm = () => {
       console.log("Data:", data);
       setDefaultValues(data);
       reset(data);
+      setValue("bankServiceProvider", data.bankServiceProvider);
       setValue("companyName", data.companyName);
       setValue("folioNumber", data.folioNumber);
-      setValue("noOfShares", data.noOfShares);
+      setValue("numberOfDebentures", data.numberOfDebentures);
       setValue("certificateNumber", data.certificateNumber);
       setValue("distinguishNoFrom", data.distinguishNoFrom);
       setValue("distinguishNoTo", data.distinguishNoTo);
@@ -189,7 +193,7 @@ const PSSEditForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/share-details/${lifeInsuranceEditId}`,
+        `/api/debentures/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
@@ -197,14 +201,14 @@ const PSSEditForm = () => {
           },
         }
       );
-      return response.data.data.ShareDetail;
+      return response.data.data.Debenture;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Share Details added successfully!");
+      toast.success("Debenture details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -253,10 +257,10 @@ const PSSEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Share Details
+                Debenture Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the Share Details.
+                Edit the form to update the Debenture Details.
               </CardDescription>
             </div>
           </div>
@@ -266,6 +270,28 @@ const PSSEditForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
+            <div className="space-y-2">
+              <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
+              <Controller
+                name="bankServiceProvider"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="bankServiceProvider"
+                    placeholder="Enter Bank Service Provider"
+                    {...field}
+                    className={
+                      errors.bankServiceProvider ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.bankServiceProvider && (
+                <span className="text-red-500">
+                  {errors.bankServiceProvider.message}
+                </span>
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
               <Controller
@@ -307,22 +333,24 @@ const PSSEditForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="noOfShares">Number of Shares</Label>
+              <Label htmlFor="numberOfDebentures">Number of Debentures</Label>
               <Controller
-                name="noOfShares"
+                name="numberOfDebentures"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="noOfShares"
-                    placeholder="Enter Number of Shares"
+                    id="numberOfDebentures"
+                    placeholder="Enter Number of Debentures"
                     {...field}
-                    className={errors.noOfShares ? "border-red-500" : ""}
+                    className={
+                      errors.numberOfDebentures ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
-              {errors.noOfShares && (
+              {errors.numberOfDebentures && (
                 <span className="text-red-500">
-                  {errors.noOfShares.message}
+                  {errors.numberOfDebentures.message}
                 </span>
               )}
             </div>
@@ -551,48 +579,48 @@ const PSSEditForm = () => {
                 )}
               </div>
 
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Controller
-                name="email"
-                control={control}
-                defaultValue={Benifyciary?.email || ""}
-                render={({ field }) => (
-                  <Input
-                    id="email"
-                    placeholder="Enter Email"
-                    {...field}
-                    className={errors.email ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.email || ""}
-                  />
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue={Benifyciary?.email || ""}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      placeholder="Enter Email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.email || ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
                 )}
-              />
-              {errors.email && (
-                <span className="text-red-500">{errors.email.message}</span>
-              )}
-            </div>
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="mobile">Phone</Label>
-              <Controller
-                name="mobile"
-                control={control}
-                defaultValue={Benifyciary?.mobile || ""}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="mobile"
-                    type="tel"
-                    {...field}
-                    placeholder="Enter mobile number"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    defaultValue={Benifyciary?.mobile || ""}
-                  />
+              </div>
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="mobile">Phone</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  defaultValue={Benifyciary?.mobile || ""}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      {...field}
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      defaultValue={Benifyciary?.mobile || ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
                 )}
-              />
-              {errors.mobile && (
-                <span className="text-red-500">{errors.mobile.message}</span>
-              )}
-            </div>
+              </div>
             </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">

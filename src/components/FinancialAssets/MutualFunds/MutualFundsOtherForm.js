@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -18,34 +18,27 @@ import {
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
 import { Textarea } from "@com/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
-import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import Addnominee from "@/components/Nominee/EditNominee";
-import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
-import Editnominee from "@/components/Nominee/EditNominee";
-
-const FocusableSelectTrigger = forwardRef((props, ref) => (
-  <SelectTrigger ref={ref} {...props} />
-));
+import Addnominee from "@/components/Nominee/addNominee";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import cross from "@/components/image/close.png";
+// import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  companyName: z.string().nonempty({ message: "Company Name is required" }),
+  fundName: z.string().nonempty({ message: "Company Name is required" }),
   folioNumber: z.string().optional(),
-  noOfShares: z.string().nonempty({ message: "No of Shares is required" }),
-  certificateNumber: z.any().optional(),
-  distinguishNoFrom: z.any().optional(),
-  distinguishNoTo: z.any().optional(),
-  faceValue: z.any().optional(),
+  numberOfUnits: z.string().nonempty({ message: "No of Shares is required" }),
+  // certificateNumber: z.any().optional(),
+  // distinguishNoFrom: z.any().optional(),
+  // distinguishNoTo: z.any().optional(),
+  // faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
   natureOfHolding: z
     .string()
@@ -64,147 +57,81 @@ const schema = z.object({
   email: z.string().optional(),
 });
 
-const PSSEditForm = () => {
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
+FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+
+const MutualFundOtherForm = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
+  const queryClient = useQueryClient();
+  const [showOtherCompanyRegistration, setShowOtherCompanyRegistration] =
+    useState(true);
+  const [showOtherMyStatus, setShowOthermyStatus] = useState(false);
+  const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
+  const [showOthertypeOfInvestment, setShowOthertypeOfInvestment] =
+    useState(false);
+  const [showOtherPPFAccountNo, setShowOtherPPFAccountNo] = useState(false);
+  // const [showOtherCompanyName, setshowOtherCompanyName] = useState(false);
+  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
-  const user = JSON.parse(getitem);
-  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
 
-  console.log(lifeInsuranceEditId);
-  useEffect(() => {
-    if (lifeInsuranceEditId) {
-      console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
-    }
-  }, [lifeInsuranceEditId]);
-  const [showOtherInsuranceCompany, setShowOtherInsuranceCompany] =
-    useState(false);
-  const [showOtherRelationship, setShowOtherRelationship] = useState(false);
-  const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
-  const [defaultValues, setDefaultValues] = useState(null);
-  // const [showOtherBankName, setShowOtherBankName] = useState(false);
-  // const [showOtherAccountType, setShowOtherAccountType] = useState(false);
-  const [showJointHolderName, setShowJointHolderName] = useState(false);
-  const [brokerSelected, setBrokerSelected] = useState(false);
-  const [selectedNommie, setSelectedNommie] = useState([]);
+  const [phone, setPhone] = useState(null);
   const [displaynominie, setDisplaynominie] = useState([]);
+  const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] =
+    useState(false);
+  const [showOtherType, setShowOtherType] = useState(false);
+  const [otherFirmRegistrationNumber, setOtherFirmRegistrationNumber] =
+    useState("");
+  const [otherFirmName, setOtherFirmName] = useState("");
+  const [showOtherJointHolderName, setShowOtherJointHolderName] =
+    useState(false);
 
+  const [showOtherJointName, setShowOtherJointName] = useState(false);
   const {
     handleSubmit,
     control,
+    register,
     setValue,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || {},
-  });
-
-  const getPersonalData = async () => {
-    if (!user) return;
-    const response = await axios.get(
-      `/api/share-details/${lifeInsuranceEditId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      }
-    );
-
-    let data = response.data.data.ShareDetail;
-    setValue("companyName", data.companyName);
-    setValue("folioNumber", data.folioNumber);
-    setValue("noOfShares", data.noOfShares);
-    setValue("certificateNumber", data.certificateNumber);
-    setValue("distinguishNoFrom", data.distinguishNoFrom);
-    setValue("distinguishNoTo", data.distinguishNoTo);
-    setValue("faceValue", data.faceValue);
-    setValue("natureOfHolding", data.natureOfHolding);
-    setValue("jointHolderName", data.jointHolderName);
-    setValue("jointHolderPan", data.jointHolderPan);
-    if (data.natureOfHolding === "joint") {
-      setShowJointHolderName(true);
-      setValue("natureOfHolding", data.natureOfHolding);
-      setValue("jointHolderName", data.jointHolderName);
-      setValue("jointHolderPan", data.jointHolderPan);
-      setValue("name", data.name);
-      setValue("email", data.email);
-      setValue("mobile", data.mobile);
-    }
-
-    return response.data.data.ShareDetail;
-  };
-
-  const {
-    data: Benifyciary,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
-    queryFn: getPersonalData,
-
-    onSuccess: (data) => {
-      console.log("Data:", data);
-      setDefaultValues(data);
-      reset(data);
-      setValue("companyName", data.companyName);
-      setValue("folioNumber", data.folioNumber);
-      setValue("noOfShares", data.noOfShares);
-      setValue("certificateNumber", data.certificateNumber);
-      setValue("distinguishNoFrom", data.distinguishNoFrom);
-      setValue("distinguishNoTo", data.distinguishNoTo);
-      setValue("faceValue", data.faceValue);
-      setValue("natureOfHolding", data.natureOfHolding);
-      setValue("jointHolderName", data.jointHolderName);
-      setValue("jointHolderPan", data.jointHolderPan);
-      setValue("name", data.name);
-      setValue("mobile", data.mobile);
-      setValue("email", data.email);
-
-      // Set fetched values to the form
-      for (const key in data) {
-        setValue(key, data[key]);
-      }
-
-      // setShowOtherRelationship(data.type === "other");
-
-      console.log(data);
-    },
-    onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
+    defaultValues: {
+      fundName: "",
+      folioNumber: "",
+      numberOfUnits: "",
+      // certificateNumber: "",
+      // distinguishNoFrom: "",
+      // distinguishNoTo: "",
+      faceValue: "",
+      natureOfHolding: "",
+      jointHolderName: "",
+      jointHolderPan: "",
+      additionalDetails: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      console.log("data:", data);
-      const formData = new FormData();
-      for (const [key, value] of Object.entries(data)) {
-        formData.append(key, value);
-      }
-      formData.append("_method", "put");
+      const response = await axios.post(`/api/mutual-funds`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
 
-      const response = await axios.post(
-        `/api/share-details/${lifeInsuranceEditId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
-      return response.data.data.ShareDetail;
+      return response.data.data.MutualFund;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(
-        "lifeInsuranceDataUpdate",
-        lifeInsuranceEditId
-      );
-      toast.success("Share Details added successfully!");
+      queryClient.invalidateQueries("LifeInsuranceData");
+      toast.success("Mutual Fund added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -212,43 +139,49 @@ const PSSEditForm = () => {
       toast.error("Failed to submit profile");
     },
   });
-  useEffect(() => {
-    console.log("Form values:", control._formValues);
-  }, [control._formValues]);
 
-  // useEffect(() => {
-  //   if (Benifyciary) {
-  //     const defaultValues = {
-  //       ...Benifyciary,
-  //       expiryDate: new Date(Benifyciary.expiryDate)
-  //     };
-  //     reset(defaultValues);
-  //     setShowOtherInsuranceCompany(Benifyciary.companyName === "other");
-  //     setShowOtherRelationship(Benifyciary.vehicleType === "other");
-  //   }
-  // }, [Benifyciary, reset]);
+  useEffect(() => {
+    if (selectedNommie.length > 0) {
+      setNomineeError(false);
+    }
+  }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    // if (data.type === "other") {
-    //   data.type = data.otherType;
+    console.log(data);
+    // const date = new Date(data.maturityDate);
+    // const month = String(date.getMonth() + 1).padStart(2, "0");
+    // const day = String(date.getDate()).padStart(2, "0");
+    // const year = date.getFullYear();
+    // const newdate = `${month}/${day}/${year}`;
+    // data.maturityDate = newdate;
+
+    // data.firmsRegistrationNumberType = showOtherCompanyRegistration;
+    // if (selectedNommie.length < 1) {
+    //   toast.error("Please select atleast one nominee");
+    //   setNomineeError(true);
+    //   return;
     // }
-    data.name = name;
-    data.email = email;
-    data.mobile = mobile;
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
+
+    if (data.type === "other") {
+      data.type = data.otherType;
+    }
+    delete data.otherType;
+
+    // data.type = "company";
+    data.mobile = phone;
+    // if (data) {
+    //   data.firmName = data.otherFirmName;
+    // }
+
     lifeInsuranceMutate.mutate(data);
   };
 
-  useEffect(() => {
-    console.log(Benifyciary);
-  }, [Benifyciary]);
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading Share Details data</div>;
   return (
     <div className="w-full">
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
@@ -256,7 +189,7 @@ const PSSEditForm = () => {
                 Share Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the Share Details.
+                Fill out the form to add a new Share Details.
               </CardDescription>
             </div>
           </div>
@@ -267,23 +200,24 @@ const PSSEditForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
+              <Label htmlFor="fundName">Fund Name</Label>
               <Controller
-                name="companyName"
+                name="fundName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="companyName"
-                    placeholder="Enter Company Name"
+                    id="fundName"
+                    placeholder="Enter Fund Name"
                     {...field}
-                    className={errors.companyName ? "border-red-500" : ""}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={errors.fundName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.companyName && (
-                <span className="text-red-500">
-                  {errors.companyName.message}
-                </span>
+
+              {errors.fundName && (
+                <span className="text-red-500">{errors.fundName.message}</span>
               )}
             </div>
             <div className="space-y-2">
@@ -296,10 +230,13 @@ const PSSEditForm = () => {
                     id="folioNumber"
                     placeholder="Enter Folio Number"
                     {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className={errors.folioNumber ? "border-red-500" : ""}
                   />
                 )}
               />
+
               {errors.folioNumber && (
                 <span className="text-red-500">
                   {errors.folioNumber.message}
@@ -307,26 +244,29 @@ const PSSEditForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="noOfShares">Number of Shares</Label>
+              <Label htmlFor="numberOfUnits">Number of Units</Label>
               <Controller
-                name="noOfShares"
+                name="numberOfUnits"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="noOfShares"
-                    placeholder="Enter Number of Shares"
+                    id="numberOfUnits"
+                    placeholder="Enter Number of Units"
                     {...field}
-                    className={errors.noOfShares ? "border-red-500" : ""}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={errors.numberOfUnits ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.noOfShares && (
+
+              {errors.numberOfUnits && (
                 <span className="text-red-500">
-                  {errors.noOfShares.message}
+                  {errors.numberOfUnits.message}
                 </span>
               )}
             </div>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="certificateNumber">Certificate Number</Label>
               <Controller
                 name="certificateNumber"
@@ -336,17 +276,20 @@ const PSSEditForm = () => {
                     id="certificateNumber"
                     placeholder="Enter Certificate Number"
                     {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className={errors.certificateNumber ? "border-red-500" : ""}
                   />
                 )}
               />
+
               {errors.certificateNumber && (
                 <span className="text-red-500">
                   {errors.certificateNumber.message}
                 </span>
               )}
-            </div>
-            <div className="space-y-2">
+            </div> */}
+            {/* <div className="space-y-2">
               <Label htmlFor="distinguishNoFrom">Distinguish Number From</Label>
               <Controller
                 name="distinguishNoFrom"
@@ -356,10 +299,13 @@ const PSSEditForm = () => {
                     id="distinguishNoFrom"
                     placeholder="Enter Distinguish Number From"
                     {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className={errors.distinguishNoFrom ? "border-red-500" : ""}
                   />
                 )}
               />
+
               {errors.distinguishNoFrom && (
                 <span className="text-red-500">
                   {errors.distinguishNoFrom.message}
@@ -376,17 +322,20 @@ const PSSEditForm = () => {
                     id="distinguishNoTo"
                     placeholder="Enter Distinguish Number To"
                     {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className={errors.distinguishNoTo ? "border-red-500" : ""}
                   />
                 )}
               />
+
               {errors.distinguishNoTo && (
                 <span className="text-red-500">
                   {errors.distinguishNoTo.message}
                 </span>
               )}
-            </div>
-            <div className="space-y-2">
+            </div> */}
+            {/* <div className="space-y-2">
               <Label htmlFor="faceValue">Face Value</Label>
               <Controller
                 name="faceValue"
@@ -396,26 +345,51 @@ const PSSEditForm = () => {
                     id="faceValue"
                     placeholder="Enter Face Value"
                     {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className={errors.faceValue ? "border-red-500" : ""}
                   />
                 )}
               />
+
               {errors.faceValue && (
                 <span className="text-red-500">{errors.faceValue.message}</span>
               )}
-            </div>
+            </div> */}
 
-            <div className="space-y-2">
-              <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+            {/* <div className="space-y-2">
+              <Label htmlFor="maturityDate">Maturity Date</Label>
+              <Controller
+                name="maturityDate"
+                control={control}
+                render={({ field }) => (
+                  <Datepicker
+                    {...field}
+                    onChange={(date) => field.onChange(date)}
+                    selected={field.value}
+                  />
+                )}
+              />
+              {errors.maturityDate && (
+                <span className="text-red-500 mt-5">
+                  {errors.maturityDate.message}
+                </span>
+              )}
+            </div> */}
+
+            <div className="space-y-4 flex flex-col">
+              <Label className="text-lg font-bold">Holding Type</Label>
               <Controller
                 name="natureOfHolding"
+                defaultValues="single"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
+                    defaultValue="single"
                     onValueChange={(value) => {
                       field.onChange(value);
-                      setShowJointHolderName(value === "joint");
+                      setShowOtherJointName(value === "joint");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -425,7 +399,7 @@ const PSSEditForm = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem id="joint" value="joint" />
-                      <Label htmlFor="joint">Joint</Label>
+                      <Label htmlFor="joint">Joint Name</Label>
                     </div>
                   </RadioGroup>
                 )}
@@ -436,23 +410,16 @@ const PSSEditForm = () => {
                 </span>
               )}
             </div>
-            {showJointHolderName && (
+
+            {showOtherJointName && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                  <Controller
-                    name="jointHolderName"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        id="jointHolderName"
-                        placeholder="Enter Joint Holder Name"
-                        {...field}
-                        className={
-                          errors.jointHolderName ? "border-red-500" : ""
-                        }
-                      />
-                    )}
+                  <Input
+                    id="jointHolderName"
+                    placeholder="Enter Joint Holder Name"
+                    {...register("jointHolderName")}
+                    className={errors.jointHolderName ? "border-red-500" : ""}
                   />
                   {errors.jointHolderName && (
                     <span className="text-red-500">
@@ -462,19 +429,11 @@ const PSSEditForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Controller
-                    name="jointHolderPan"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        id="jointHolderPan"
-                        placeholder="Enter Joint Holder PAN"
-                        {...field}
-                        className={
-                          errors.jointHolderPan ? "border-red-500" : ""
-                        }
-                      />
-                    )}
+                  <Input
+                    id="jointHolderPan"
+                    placeholder="Enter Joint Holder PAN"
+                    {...register("jointHolderPan")}
+                    className={errors.jointHolderPan ? "border-red-500" : ""}
                   />
                   {errors.jointHolderPan && (
                     <span className="text-red-500">
@@ -484,11 +443,11 @@ const PSSEditForm = () => {
                 </div>
               </div>
             )}
-
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
                   {console.log(displaynominie)}
+                  <Label className="text-lg font-bold">Selected Nominees</Label>
                   {displaynominie &&
                     displaynominie.map((nominee) => (
                       <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
@@ -517,84 +476,114 @@ const PSSEditForm = () => {
                 </div>
               </div>
             )}
-
             <div className="space-y-2">
-              <Label htmlFor="registered-mobile">Add nominee</Label>
-              {console.log(Benifyciary?.nominees)}
-              <Editnominee
+              <Label htmlFor="registered-phone">Add nominee</Label>
+              <Addnominee
                 setSelectedNommie={setSelectedNommie}
-                AllNominees={Benifyciary?.nominees}
                 selectedNommie={selectedNommie}
                 displaynominie={displaynominie}
                 setDisplaynominie={setDisplaynominie}
               />{" "}
             </div>
-            <div className="w-full grid grid-cols-1 gap-4 mt-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  defaultValue={Benifyciary?.name || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="name"
-                      placeholder="Enter Name"
-                      {...field}
-                      className={errors.name ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.name || ""}
-                    />
-                  )}
-                />
-                {errors.name && (
-                  <span className="text-red-500">{errors.name.message}</span>
-                )}
-              </div>
 
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-2">
+              <Label htmlFor="additionalDetails">Additional Information</Label>
               <Controller
-                name="email"
+                name="additionalDetails"
                 control={control}
-                defaultValue={Benifyciary?.email || ""}
                 render={({ field }) => (
                   <Input
-                    id="email"
-                    placeholder="Enter Email"
+                    id="additionalDetails"
+                    placeholder="Enter Additional Information"
                     {...field}
-                    className={errors.email ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.email || ""}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.additionalDetails ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.email && (
-                <span className="text-red-500">{errors.email.message}</span>
+              {errors.additionalDetails && (
+                <span className="text-red-500">
+                  {errors.additionalDetails.message}
+                </span>
               )}
             </div>
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="mobile">Phone</Label>
-              <Controller
-                name="mobile"
-                control={control}
-                defaultValue={Benifyciary?.mobile || ""}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="mobile"
-                    type="tel"
-                    {...field}
-                    placeholder="Enter mobile number"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    defaultValue={Benifyciary?.mobile || ""}
-                  />
-                )}
-              />
-              {errors.mobile && (
-                <span className="text-red-500">{errors.mobile.message}</span>
-              )}
+            <div className="w-full grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="additionalDetails">Point Of Contact</Label>
+                <div className="mt-2  flex item-center  gap-2 justify-between">
+                  <div className="w-[40%] space-y-2 item-center">
+                    <Label htmlFor="name">Name</Label>
+                    <Controller
+                      name="name"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="name"
+                          placeholder="Enter Name"
+                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          className={errors.name ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.name && (
+                      <span className="text-red-500">
+                        {errors.name.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="w-[40%] space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="email"
+                          placeholder="Enter Email"
+                          {...field}
+                          className={errors.email ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.email && (
+                      <span className="text-red-500">
+                        {errors.email.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="w-[40%] space-y-2">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Controller
+                      name="mobile"
+                      control={control}
+                      render={({ field }) => (
+                        <PhoneInput
+                          id="mobile"
+                          type="tel"
+                          placeholder="Enter mobile number"
+                          defaultCountry="in"
+                          inputStyle={{ minWidth: "15.5rem" }}
+                          value={field.value}
+                          onChange={(value) => {
+                            console.log(value);
+                            setValue("mobile", value);
+                            setPhone(value);
+                          }}
+                        />
+                      )}
+                    />
+                    {errors.phone && (
+                      <span className="text-red-500">
+                        {errors.phone.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-            </div>
-
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
@@ -605,4 +594,4 @@ const PSSEditForm = () => {
   );
 };
 
-export default PSSEditForm;
+export default MutualFundOtherForm;

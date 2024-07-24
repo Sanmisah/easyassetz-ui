@@ -6,8 +6,10 @@ import axios from "axios";
 
 const FinancialAssetsContentForm = () => {
   const [shareDetailsData, setShareDetailsData] = useState([]);
-  const [fixDepositData, setFixDepositData] = useState([]);
-  const [bankLockerData, setBankLockerData] = useState([]);
+  const [mutualFundsData, setMutualFundsData] = useState([]);
+  const [debenturesData, setDebenturesData] = useState([]);
+  const [bondData, setBondData] = useState([]);
+  const [ESOPData, setESOPData] = useState([]);
   const [psadData, setPsadData] = useState([]);
   const [pssData, setPssData] = useState([]);
   const [otherDepositData, setOtherDepositData] = useState([]);
@@ -30,64 +32,64 @@ const FinancialAssetsContentForm = () => {
         console.error("Error fetching share details data", error);
       }
     };
-    const fetchDataFixDeposit = async () => {
+    const fetchDataMutualFunds = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/fix-deposits`, {
+        const response = await axios.get(`/api/mutual-funds`, {
           headers: {
             Authorization: `Bearer ${user?.data?.token}`,
           },
         });
-        setFixDepositData(response?.data?.data?.FixDeposite);
+        setMutualFundsData(response?.data?.data?.MutualFund);
       } catch (error) {
-        console.error("Error fetching fix deposit data", error);
+        console.error("Error fetching Mutual Fund data", error);
       }
     };
-    const fetchDataBankLocker = async () => {
+    const fetchDataDebentures = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/bank-lockers`, {
+        const response = await axios.get(`/api/debentures`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setBankLockerData(response?.data?.data?.BankLocker);
+        setDebenturesData(response?.data?.data?.Debenture);
       } catch (error) {
-        console.error("Error fetching Bank Locker data", error);
+        console.error("Error fetching Debenture data", error);
       }
     };
-    const fetchDataPsad = async () => {
+    const fetchDataBond = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/post-saving-account-details`, {
+        const response = await axios.get(`/api/bond`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setPsadData(response?.data?.data?.PostalSavingAccount);
+        setBondData(response?.data?.data?.Bond);
       } catch (error) {
-        console.error("Error fetching Post Saving Account Details data", error);
+        console.error("Error fetching Bond data", error);
       }
     };
-    const fetchDataPss = async () => {
+    const fetchDataESOP = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/post-saving-schemes`, {
+        const response = await axios.get(`/api/esop`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setPssData(response?.data?.data?.PostSavingScheme);
+        setESOPData(response?.data?.data?.ESOP);
       } catch (error) {
-        console.error("Error fetching Post Saving Scheme data", error);
+        console.error("Error fetching ESOP data", error);
       }
     };
     const fetchDataOtherDeposit = async () => {
@@ -105,20 +107,21 @@ const FinancialAssetsContentForm = () => {
         console.error("Error fetching Other Deposit data", error);
       }
     };
-    fetchDataFixDeposit();
-    fetchDataBankLocker();
-    fetchDataPsad();
-    fetchDataPss();
     fetchDataOtherDeposit();
     fetchDataShareDetails();
+    fetchDataMutualFunds();
+    fetchDataDebentures();
+    fetchDataBond();
+    fetchDataESOP();
+
   }, []);
 
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold">Bank & Post Form</h1>
+        <h1 className="text-2xl font-bold">Financial Assets Form</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Fill out the form to add a new Bank & Post Form.
+          Fill out the form to add a new Financial Assets Form.
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">
@@ -139,16 +142,16 @@ const FinancialAssetsContentForm = () => {
           </div>
         </div>
         <div
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/mutualfunds")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Mutual Funds</h1>
-            {fixDepositData && fixDepositData?.length > 0 && (
+            {mutualFundsData && mutualFundsData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {fixDepositData?.length && fixDepositData?.length} Mutual
+                  {mutualFundsData?.length && mutualFundsData?.length} Mutual
                   Funds
                 </p>
               </div>
@@ -156,48 +159,48 @@ const FinancialAssetsContentForm = () => {
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/#")}
+          onMouseDown={() => navigate("/debentures")}
           className=" cursor-pointer flex items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Debentures</h1>
-            {bankLockerData && bankLockerData?.length > 0 && (
+            {debenturesData && debenturesData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {bankLockerData && bankLockerData?.length} Debentures
+                  {debenturesData && debenturesData?.length} Debentures
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/#")}
+          onMouseDown={() => navigate("/bond")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Bond</h1>
-            {psadData && psadData?.length > 0 && (
+            {bondData && bondData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {psadData && psadData?.length} Bond
+                  {bondData && bondData?.length} Bond
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onMouseDown={() => navigate("/#")}
+          onMouseDown={() => navigate("/esop")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">ESOP</h1>
-            {pssData && pssData?.length > 0 && (
+            {ESOPData && ESOPData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {pssData && pssData?.length} ESOP
+                  {ESOPData && ESOPData?.length} ESOP
                 </p>
               </div>
             )}

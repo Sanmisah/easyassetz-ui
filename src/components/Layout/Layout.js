@@ -134,6 +134,18 @@ import FinancialAssetsContentForm from "@/components/FinancialAssets/contents";
 import ShareDetailsMainForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsMainForm";
 import ShareDetailsEditForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsEdit";
 import ShareDetailsOtherForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsOtherForm";
+import MutualFundsMainForm from "@/components/FinancialAssets/MutualFunds/MutualFundsMainForm";
+import MutualFundsEditForm from "@/components/FinancialAssets/MutualFunds/MutualFundsEdit";
+import MutualFundsOtherForm from "@/components/FinancialAssets/MutualFunds/MutualFundsOtherForm";
+import DebenturesMainForm from "@/components/FinancialAssets/Debentures/DebenturesMainForm";
+import DebenturesEditForm from "@/components/FinancialAssets/Debentures/DebenturesEdit";
+import DebenturesOtherForm from "@/components/FinancialAssets/Debentures/DebenturesOtherForm";
+import BondMainForm from "@/components/FinancialAssets/Bond/BondMainForm";
+import BondOtherForm from "@/components/FinancialAssets/Bond/BondOtherForm";
+import BondEdit from "@/components/FinancialAssets/Bond/BondEdit";
+import ESOPMainForm from "@/components/FinancialAssets/ESOP/ESOPMainForm";
+import ESOPOtherForm from "@/components/FinancialAssets/ESOP/ESOPOtherForm";
+import ESOPEditForm from "@/components/FinancialAssets/ESOP/ESOPEdit";
 import LandMainForm from "@/components/ImmovableAssets/Land/LandMainForm";
 import LandOtherForm from "@/components/ImmovableAssets/Land/LandOtherForm";
 import LandEditForm from "@/components/ImmovableAssets/Land/LandEdit";
@@ -474,6 +486,18 @@ const Layout = () => {
       {location.pathname === "/share-details" && <ShareDetailsMainForm />}
       {location.pathname === "/share-details/add" && <ShareDetailsOtherForm />}
       {location.pathname === "/share-details/edit" && <ShareDetailsEditForm />}
+      {location.pathname === "/mutualfunds" && <MutualFundsMainForm />}
+      {location.pathname === "/mutualfunds/add" && <MutualFundsOtherForm />}
+      {location.pathname === "/mutualfunds/edit" && <MutualFundsEditForm />}
+      {location.pathname === "/debentures" && <DebenturesMainForm />}
+      {location.pathname === "/debentures/add" && <DebenturesOtherForm />}
+      {location.pathname === "/debentures/edit" && <DebenturesEditForm />}
+      {location.pathname === "/bond" && <BondMainForm />}
+      {location.pathname === "/bond/add" && <BondOtherForm />}
+      {location.pathname === "/bond/edit" && <BondEdit />}
+      {location.pathname === "/esop" && <ESOPMainForm />}
+      {location.pathname === "/esop/add" && <ESOPOtherForm />}
+      {location.pathname === "/esop/edit" && <ESOPEditForm />}
       {location.pathname === "/land" && <LandMainForm />}
       {location.pathname === "/land/add" && <LandOtherForm />}
       {location.pathname === "/land/edit" && <LandEditForm />}
