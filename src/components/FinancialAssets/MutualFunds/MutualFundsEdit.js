@@ -39,13 +39,13 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  companyName: z.string().nonempty({ message: "Company Name is required" }),
+  fundName: z.string().nonempty({ message: "Company Name is required" }),
   folioNumber: z.string().optional(),
-  noOfShares: z.string().nonempty({ message: "No of Shares is required" }),
-  certificateNumber: z.any().optional(),
-  distinguishNoFrom: z.any().optional(),
-  distinguishNoTo: z.any().optional(),
-  faceValue: z.any().optional(),
+  numberOfUnits: z.string().nonempty({ message: "No of Shares is required" }),
+  // certificateNumber: z.any().optional(),
+  // distinguishNoFrom: z.any().optional(),
+  // distinguishNoTo: z.any().optional(),
+  // faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
   natureOfHolding: z
     .string()
@@ -106,7 +106,7 @@ const PSSEditForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/share-details/${lifeInsuranceEditId}`,
+      `/api/mutual-funds/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -114,14 +114,14 @@ const PSSEditForm = () => {
       }
     );
 
-    let data = response.data.data.ShareDetail;
-    setValue("companyName", data.companyName);
+    let data = response.data.data.MutualFund;
+    setValue("fundName", data.fundName);
     setValue("folioNumber", data.folioNumber);
-    setValue("noOfShares", data.noOfShares);
-    setValue("certificateNumber", data.certificateNumber);
-    setValue("distinguishNoFrom", data.distinguishNoFrom);
-    setValue("distinguishNoTo", data.distinguishNoTo);
-    setValue("faceValue", data.faceValue);
+    setValue("numberOfUnits", data.numberOfUnits);
+    // setValue("certificateNumber", data.certificateNumber);
+    // setValue("distinguishNoFrom", data.distinguishNoFrom);
+    // setValue("distinguishNoTo", data.distinguishNoTo);
+    // setValue("faceValue", data.faceValue);
     setValue("natureOfHolding", data.natureOfHolding);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
@@ -135,7 +135,7 @@ const PSSEditForm = () => {
       setValue("mobile", data.mobile);
     }
 
-    return response.data.data.ShareDetail;
+    return response.data.data.MutualFund;
   };
 
   const {
@@ -150,13 +150,13 @@ const PSSEditForm = () => {
       console.log("Data:", data);
       setDefaultValues(data);
       reset(data);
-      setValue("companyName", data.companyName);
+      setValue("fundName", data.fundName);
       setValue("folioNumber", data.folioNumber);
-      setValue("noOfShares", data.noOfShares);
-      setValue("certificateNumber", data.certificateNumber);
-      setValue("distinguishNoFrom", data.distinguishNoFrom);
-      setValue("distinguishNoTo", data.distinguishNoTo);
-      setValue("faceValue", data.faceValue);
+      setValue("numberOfUnits", data.numberOfUnits);
+      // setValue("certificateNumber", data.certificateNumber);
+      // setValue("distinguishNoFrom", data.distinguishNoFrom);
+      // setValue("distinguishNoTo", data.distinguishNoTo);
+      // setValue("faceValue", data.faceValue);
       setValue("natureOfHolding", data.natureOfHolding);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
@@ -189,7 +189,7 @@ const PSSEditForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/share-details/${lifeInsuranceEditId}`,
+        `/api/mutual-funds/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
@@ -197,14 +197,14 @@ const PSSEditForm = () => {
           },
         }
       );
-      return response.data.data.ShareDetail;
+      return response.data.data.MutualFund;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Share Details added successfully!");
+      toast.success("Mutual Fund details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -223,7 +223,7 @@ const PSSEditForm = () => {
   //       expiryDate: new Date(Benifyciary.expiryDate)
   //     };
   //     reset(defaultValues);
-  //     setShowOtherInsuranceCompany(Benifyciary.companyName === "other");
+  //     setShowOtherInsuranceCompany(Benifyciary.fundName === "other");
   //     setShowOtherRelationship(Benifyciary.vehicleType === "other");
   //   }
   // }, [Benifyciary, reset]);
@@ -253,10 +253,10 @@ const PSSEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Share Details
+                Mutual Fund Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the Share Details.
+                Edit the form to update the Mutual Fund Details.
               </CardDescription>
             </div>
           </div>
@@ -267,23 +267,21 @@ const PSSEditForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
+              <Label htmlFor="fundName">Fund Name</Label>
               <Controller
-                name="companyName"
+                name="fundName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="companyName"
-                    placeholder="Enter Company Name"
+                    id="fundName"
+                    placeholder="Enter Fund Name"
                     {...field}
-                    className={errors.companyName ? "border-red-500" : ""}
+                    className={errors.fundName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.companyName && (
-                <span className="text-red-500">
-                  {errors.companyName.message}
-                </span>
+              {errors.fundName && (
+                <span className="text-red-500">{errors.fundName.message}</span>
               )}
             </div>
             <div className="space-y-2">
@@ -307,26 +305,26 @@ const PSSEditForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="noOfShares">Number of Shares</Label>
+              <Label htmlFor="numberOfUnits">Number of Units</Label>
               <Controller
-                name="noOfShares"
+                name="numberOfUnits"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="noOfShares"
-                    placeholder="Enter Number of Shares"
+                    id="numberOfUnits"
+                    placeholder="Enter Number of Units"
                     {...field}
-                    className={errors.noOfShares ? "border-red-500" : ""}
+                    className={errors.numberOfUnits ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.noOfShares && (
+              {errors.numberOfUnits && (
                 <span className="text-red-500">
-                  {errors.noOfShares.message}
+                  {errors.numberOfUnits.message}
                 </span>
               )}
             </div>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="certificateNumber">Certificate Number</Label>
               <Controller
                 name="certificateNumber"
@@ -403,7 +401,7 @@ const PSSEditForm = () => {
               {errors.faceValue && (
                 <span className="text-red-500">{errors.faceValue.message}</span>
               )}
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <Label htmlFor="natureOfHolding">Nature of Holding</Label>
@@ -551,48 +549,48 @@ const PSSEditForm = () => {
                 )}
               </div>
 
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Controller
-                name="email"
-                control={control}
-                defaultValue={Benifyciary?.email || ""}
-                render={({ field }) => (
-                  <Input
-                    id="email"
-                    placeholder="Enter Email"
-                    {...field}
-                    className={errors.email ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.email || ""}
-                  />
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue={Benifyciary?.email || ""}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      placeholder="Enter Email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.email || ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
                 )}
-              />
-              {errors.email && (
-                <span className="text-red-500">{errors.email.message}</span>
-              )}
-            </div>
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="mobile">Phone</Label>
-              <Controller
-                name="mobile"
-                control={control}
-                defaultValue={Benifyciary?.mobile || ""}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="mobile"
-                    type="tel"
-                    {...field}
-                    placeholder="Enter mobile number"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    defaultValue={Benifyciary?.mobile || ""}
-                  />
+              </div>
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="mobile">Phone</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  defaultValue={Benifyciary?.mobile || ""}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      {...field}
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      defaultValue={Benifyciary?.mobile || ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
                 )}
-              />
-              {errors.mobile && (
-                <span className="text-red-500">{errors.mobile.message}</span>
-              )}
-            </div>
+              </div>
             </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">

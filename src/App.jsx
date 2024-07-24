@@ -138,6 +138,18 @@ function App() {
         <Route path="/residentialproperty" element={<Personalpage />} />
         <Route path="/residentialproperty/add" element={<Personalpage />} />
         <Route path="/residentialproperty/edit" element={<Personalpage />} />
+        <Route path="/mutualfunds" element={<Personalpage />} />
+        <Route path="/mutualfunds/add" element={<Personalpage />} />
+        <Route path="/mutualfunds/edit" element={<Personalpage />} />
+        <Route path="/debentures" element={<Personalpage />} />
+        <Route path="/debentures/add" element={<Personalpage />} />
+        <Route path="/debentures/edit" element={<Personalpage />} />
+        <Route path="/bond" element={<Personalpage />} />
+        <Route path="/bond/add" element={<Personalpage />} />
+        <Route path="/bond/edit" element={<Personalpage />} />
+        <Route path="/esop" element={<Personalpage />} />
+        <Route path="/esop/add" element={<Personalpage />} />
+        <Route path="/esop/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
