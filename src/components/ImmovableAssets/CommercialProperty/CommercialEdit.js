@@ -732,7 +732,7 @@ const CommercialEditForm = () => {
                   </div>
                 </div>
               )}
-              <div className="space-y-2">
+              <div className="space-y-2 col-span-full">
                 <Label htmlFor="registered-mobile">Add nominee</Label>
                 <Addnominee
                   setDisplaynominie={setDisplaynominie}
