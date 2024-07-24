@@ -130,14 +130,19 @@ function App() {
         <Route path="/banklocker/add" element={<Personalpage />} />
         <Route path="/banklocker/edit" element={<Personalpage />} />
         <Route path="/immovableassets" element={<Personalpage />} />
-        <Route path="/land" element={<Personalpage />} />
         <Route path="/financialassets" element={<Personalpage />} />
         <Route path="/share-details" element={<Personalpage />} />
         <Route path="/share-details/add" element={<Personalpage />} />
+        <Route path="/land" element={<Personalpage />} />
+        <Route path="/land/add" element={<Personalpage />} />
+        <Route path="/land/edit" element={<Personalpage />} />
         <Route path="/share-details/edit" element={<Personalpage />} />
         <Route path="/residentialproperty" element={<Personalpage />} />
         <Route path="/residentialproperty/add" element={<Personalpage />} />
         <Route path="/residentialproperty/edit" element={<Personalpage />} />
+        <Route path="/commercialproperty" element={<Personalpage />} />
+        <Route path="/commercialproperty/add" element={<Personalpage />} />
+        <Route path="/commercialproperty/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

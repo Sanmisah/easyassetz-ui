@@ -746,7 +746,7 @@ const ResidentialOtherform = () => {
                   </div>
                 </div>
               )}
-              <div className="space-y-2">
+              <div className="space-y-2 col-span-full">
                 <Label
                   htmlFor="registered-mobile"
                   className="text-lg font-bold"

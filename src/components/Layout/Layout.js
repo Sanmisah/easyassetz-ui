@@ -134,7 +134,12 @@ import FinancialAssetsContentForm from "@/components/FinancialAssets/contents";
 import ShareDetailsMainForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsMainForm";
 import ShareDetailsEditForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsEdit";
 import ShareDetailsOtherForm from "@/components/FinancialAssets/ShareDetails/ShareDetailsOtherForm";
-
+import LandMainForm from "@/components/ImmovableAssets/Land/LandMainForm";
+import LandOtherForm from "@/components/ImmovableAssets/Land/LandOtherForm";
+import LandEditForm from "@/components/ImmovableAssets/Land/LandEdit";
+import CommercialMainForm from "@/components/ImmovableAssets/CommercialProperty/CommercialMainForm";
+import CommercialOtherForm from "@/components/ImmovableAssets/CommercialProperty/CommercialOtherForm";
+import CommercialEditForm from "@/components/ImmovableAssets/CommercialProperty/CommercialEdit";
 const Layout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -463,10 +468,22 @@ const Layout = () => {
       {location.pathname === "/residentialproperty/edit" && (
         <ResidentialEditForm />
       )}
-      {location.pathname === "/financialassets" && <FinancialAssetsContentForm />}
+      {location.pathname === "/financialassets" && (
+        <FinancialAssetsContentForm />
+      )}
       {location.pathname === "/share-details" && <ShareDetailsMainForm />}
       {location.pathname === "/share-details/add" && <ShareDetailsOtherForm />}
       {location.pathname === "/share-details/edit" && <ShareDetailsEditForm />}
+      {location.pathname === "/land" && <LandMainForm />}
+      {location.pathname === "/land/add" && <LandOtherForm />}
+      {location.pathname === "/land/edit" && <LandEditForm />}
+      {location.pathname === "/commercialproperty" && <CommercialMainForm />}
+      {location.pathname === "/commercialproperty/add" && (
+        <CommercialOtherForm />
+      )}
+      {location.pathname === "/commercialproperty/edit" && (
+        <CommercialEditForm />
+      )}
     </div>
   );
 };
