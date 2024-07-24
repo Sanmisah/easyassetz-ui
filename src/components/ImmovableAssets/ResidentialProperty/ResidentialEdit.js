@@ -49,13 +49,13 @@ const schema = z.object({
     .nonempty({ message: "Ownership By Virtue Of is required" }),
   ownershipType: z.string().nonempty({ message: "Ownership Type is required" }),
   firstHoldersName: z.any().optional(),
-  firstHoldersRelation: z.string().optional(),
-  firstHoldersAadhar: z.string().optional(),
-  firstHoldersPan: z.string().optional(),
-  joinHoldersName: z.string().optional(),
-  joinHoldersRelation: z.string().optional(),
-  joinHoldersPan: z.string().optional(),
-  anyLoanLitigation: z.string().optional(),
+  firstHoldersRelation: z.any().optional(),
+  firstHoldersAadhar: z.any().optional(),
+  firstHoldersPan: z.any().optional(),
+  joinHoldersName: z.any().optional(),
+  joinHoldersRelation: z.any().optional(),
+  joinHoldersPan: z.any().optional(),
+  anyLoanLitigation: z.any().optional(),
 });
 
 const ResidentialEditForm = () => {
@@ -517,9 +517,9 @@ const ResidentialEditForm = () => {
                         />
                       )}
                     />
-                    {errors.firstHoldersAadhar && (
+                    {errors.firstHoldersName && (
                       <span className="text-red-500">
-                        {errors.firstHoldersAadhar.message}
+                        {errors.firstHoldersName.message}
                       </span>
                     )}
                   </div>
