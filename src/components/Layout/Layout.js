@@ -218,13 +218,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Other Assets
           </NavLink> */}
-          {/* <NavLink
+          <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/digitalasset"
           >
             <UserIcon className="h-5 w-5" />
             Digital Assets
-          </NavLink> */}
+          </NavLink>
           {/* <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/liabilities"

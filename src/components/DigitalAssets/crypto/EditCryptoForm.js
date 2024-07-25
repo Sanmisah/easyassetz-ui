@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -32,62 +32,33 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
 const schema = z.object({
   cryptoWalletType: z
     .string()
-    .nonempty({ message: "Insurance Company is required" }),
+    .nonempty({ message: "Wallet type is required required" }),
   otherCryptoWalletType: z.string().optional(),
   cryptoWalletAddress: z
     .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z
+    .nonempty({ message: "Crypto Wallet Address is required" }),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName: z.string().optional(),
+  jointHolderPan: z.string().optional(),
+  exchange: z.string().nonempty({ message: "exchange is required required" }),
+  otherExchange: z.string().optional(),
+  tradingAccount: z
     .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  maturityDate: z.date().optional(),
-  premium: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  policyHolderName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  relationship: z.string().nonempty({ message: "Relationship is required" }),
-  otherRelationship: z.string().optional(),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
-  contactPerson: z.string().nonempty({ message: "Contact Person is required" }),
-  contactNumber: z.string().min(7, { message: "Contact Number is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  registeredMobile: z.string().optional(),
-  registeredEmail: z.string().optional(),
+    .nonempty({ message: "Trading Account is required" }),
+  typeOfCurrency: z.string().optional(),
+  otherTypeOfCurrency: z.string().optional(),
+  holdingQty: z.string().optional(),
+  name: z.string().optional(),
+  mobile: z.string().optional(),
+  email: z.string().optional(),
   additionalDetails: z.string().optional(),
-  brokerName: z.string().nonempty({ message: "Broker Name is required" }),
-  previousPolicyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
 });
 
 const EditCryptoForm = () => {
@@ -109,6 +80,10 @@ const EditCryptoForm = () => {
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [brokerSelected, setBrokerSelected] = useState(false);
+  const [JoinHolder, setJoinHolder] = useState(false);
+  const [otherCryptoWalletType, setOtherCryptoWalletType] = useState(false);
+  const [otherExchange, setOtherExchange] = useState(false);
+  const [otherTypeOfCurrency, setOtherTypeOfCurrency] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
 
@@ -130,14 +105,55 @@ const EditCryptoForm = () => {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
-    if (response.data.data.LifeInsurance?.modeOfPurchase === "broker") {
-      setBrokerSelected(true);
-      setHideRegisteredFields(false);
+    let data = response.data.data.Crypto;
+    setValue("cryptoWalletType", data.cryptoWalletType);
+    setValue("cryptoWalletAddress", data.cryptoWalletAddress);
+    setValue("holdingType", data.holdingType);
+    setValue("holdingQty", data.holdingQty);
+    setValue("exchange", data.exchange);
+    setValue("tradingAccount", data.tradingAccount);
+    setValue("typeOfCurrency", data.typeOfCurrency);
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
+    if (data.holdingType === "joint") {
+      setShowJointHolderName(true);
+      setValue("holdingType", data.holdingType);
+      setValue("jointHolderName", data.jointHolderName);
+      setValue("jointHolderPan", data.jointHolderPan);
     }
-    if (response.data.data.LifeInsurance?.modeOfPurchase === "e-insurance") {
-      setBrokerSelected(false);
-      setHideRegisteredFields(true);
+    if (
+      data.cryptoWalletType !== "cryptoExchange" ||
+      data.cryptoWalletType !== "digitalWallet" ||
+      data.cryptoWalletType !== "coldWallet"
+    ) {
+      setOtherCryptoWalletType(true);
+      setValue("cryptoWalletType", "other");
+      setValue("otherCryptoWalletType", data.cryptoWalletType);
     }
+    if (
+      data.exchange !== "wazirX" ||
+      data.exchange !== "unoCoin" ||
+      data.exchange !== "coinDCX" ||
+      data.exchange !== "coinSwitchKuber" ||
+      data.exchange !== "buyUCoin" ||
+      data.exchange !== "Giottus" ||
+      data.exchange !== "Mudrax"
+    ) {
+      setOtherExchange(true);
+      setValue("exchange", "other");
+      setValue("otherExchange", data.exchange);
+    }
+    if (
+      data.typeOfCurrency !== "cryptoExchange" ||
+      data.typeOfCurrency !== "digitalWallet" ||
+      data.typeOfCurrency !== "coldWallet"
+    ) {
+      setOtherTypeOfCurrency(true);
+      setValue("typeOfCurrency", "other");
+      setValue("otherTypeOfCurrency", data.typeOfCurrency);
+    }
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
     return response.data.data.Crypto;
   };
 
@@ -161,17 +177,16 @@ const EditCryptoForm = () => {
       setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("relationship", data.relationship);
+      setValue("additionalDetails", data.additionalDetails);
       setValue("otherRelationship", data.otherRelationship);
       setValue("registeredMobile", data.registeredMobile);
       setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
-      setValue("policyNumber", data.policyNumber);
-      setValue("maturityDate", data.maturityDate);
-      setValue("premium", data.premium);
-      setValue("sumInsured", data.sumInsured);
-      setValue("policyHolderName", data.policyHolderName);
+      setValue("exchange", data.exchange);
+      setValue("typeOfCurrency", data.typeOfCurrency);
+      setValue("holdingQty", data.holdingQty);
+      setValue("holdingType", data.holdingType);
       setValue("modeOfPurchase", data.modeOfPurchase);
       setValue("contactPerson", data.contactPerson);
       setValue("contactNumber", data.contactNumber);
@@ -189,8 +204,8 @@ const EditCryptoForm = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherInsuranceCompany(data.companyName === "other");
-      setShowOtherRelationship(data.relationship === "other");
+      setShowOtherInsuranceCompany(data.cryptoWalletType === "other");
+      setShowOtherRelationship(data.additionalDetails === "other");
 
       console.log(data);
     },
@@ -236,30 +251,18 @@ const EditCryptoForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
-    console.log(data);
+    if (data.cryptoWalletType === "other") {
+      data.cryptoWalletType = data.otherCryptoWalletType;
+    }
+    if (data.exchange === "other") {
+      data.exchange = data.otherExchange;
+    }
     if (data.typeOfCurrency === "other") {
-      data.typeOfCurrency = data.specifyCurrencyType;
+      data.typeOfCurrency = data.otherTypeOfCurrency;
     }
-    const date = new Date(data.maturityDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
-    console.log("brokerName:", data.brokerName);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
-
-      setnomineeerror(true);
-      return;
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
     }
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
-    }
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.specificVehicalType;
-    }
-    data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
   useEffect(() => {
@@ -293,282 +296,339 @@ const EditCryptoForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label htmlFor="cryptoWalletType">Wallet Type</Label>
                 <Controller
-                  name="companyName"
+                  name="cryptoWalletType"
                   control={control}
-                  defaultValue={Benifyciary?.companyName}
+                  defaultValue={Benifyciary?.cryptoWalletType}
                   render={({ field }) => (
                     <Select
-                      id="insurance-company"
-                      value={field.value}
+                      id="cryptoWalletType"
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
+                        setOtherCryptoWalletType(value === "other");
                       }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.companyName || ""}
+                      className={
+                        errors.cryptoWalletType ? "border-red-500" : ""
+                      }
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
-                      </SelectTrigger>
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Wallet Type" />
+                      </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
+                        <SelectItem value="cryptoExchange">
+                          Crypto Exchange
+                        </SelectItem>
+                        <SelectItem value="digitalWallet">
+                          Digital Wallet
+                        </SelectItem>
+                        <SelectItem value="coldWallet">Cold Wallet</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherInsuranceCompany && (
+                {otherCryptoWalletType && (
                   <Controller
-                    name="otherInsuranceCompany"
+                    name="otherCryptoWalletType"
                     control={control}
-                    defaultValue={Benifyciary?.otherInsuranceCompany || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Insurance Company"
+                        placeholder="Specify Crypto Wallet Type"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherInsuranceCompany || ""}
                       />
                     )}
                   />
                 )}
-                {errors.companyName && (
+                {errors.cryptoWalletType && (
                   <span className="text-red-500">
-                    {errors.companyName.message}
+                    {errors.cryptoWalletType.message}
                   </span>
                 )}
               </div>
-              {console.log(Benifyciary)}
               <div className="space-y-2">
-                <Label htmlFor="insuranceType">Insurance Sub Type</Label>
+                <Label htmlFor="cryptoWalletAddress">
+                  Crypto Wallet Address
+                </Label>
                 <Controller
-                  name="insuranceType"
+                  name="cryptoWalletAddress"
                   control={control}
-                  defaultValue={Benifyciary?.insuranceType || ""}
+                  defaultValue={Benifyciary?.cryptoWalletAddress || ""}
                   render={({ field }) => (
                     <Input
-                      id="insuranceType"
+                      id="cryptoWalletAddress"
                       placeholder="Enter sub type"
                       value={field.value}
                       {...field}
-                      className={errors.insuranceType ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.insuranceType || ""}
-                    />
-                  )}
-                />
-                {errors.insuranceType && (
-                  <span className="text-red-500">
-                    {errors.insuranceType.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="policy-number">Policy Number</Label>
-                <Controller
-                  name="policyNumber"
-                  control={control}
-                  defaultValue={Benifyciary?.policyNumber || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="policy-number"
-                      placeholder="Enter policy number"
-                      value={field.value}
-                      {...field}
-                      className={errors.policyNumber ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.policyNumber || ""}
-                    />
-                  )}
-                />
-                {errors.policyNumber && (
-                  <span className="text-red-500">
-                    {errors.policyNumber.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
-                <Controller
-                  name="maturityDate"
-                  defaultValue={new Date(Benifyciary?.maturityDate) || ""}
-                  control={control}
-                  render={({ field }) => (
-                    <Datepicker
-                      {...field}
-                      onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      defaultValue={new Date(Benifyciary?.maturityDate) || ""}
-                    />
-                  )}
-                />
-                {errors.maturityDate && (
-                  <span className="text-red-500">
-                    {errors.maturityDate.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="premium">Premium</Label>
-                <Controller
-                  name="premium"
-                  control={control}
-                  defaultValue={Benifyciary?.premium || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="premium"
-                      placeholder="Enter premium amount"
-                      {...field}
-                      className={errors.premium ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.premium || ""}
-                    />
-                  )}
-                />
-                {errors.premium && (
-                  <span className="text-red-500">{errors.premium.message}</span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sum-insured">Sum Insured</Label>
-                <Controller
-                  name="sumInsured"
-                  control={control}
-                  defaultValue={Benifyciary?.sumInsured || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="sum-insured"
-                      placeholder="Enter sum insured"
-                      {...field}
-                      className={errors.sumInsured ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.sumInsured || ""}
-                    />
-                  )}
-                />
-                {errors.sumInsured && (
-                  <span className="text-red-500">
-                    {errors.sumInsured.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="policy-holder">Policy Holder Name</Label>
-                <Controller
-                  name="policyHolderName"
-                  control={control}
-                  defaultValue={Benifyciary?.policyHolderName || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="policy-holder"
-                      placeholder="Enter policy holder name"
-                      {...field}
                       className={
-                        errors.policyHolderName ? "border-red-500" : ""
+                        errors.cryptoWalletAddress ? "border-red-500" : ""
                       }
-                      defaultValue={Benifyciary?.policyHolderName || ""}
+                      defaultValue={Benifyciary?.cryptoWalletAddress || ""}
                     />
                   )}
                 />
-                {errors.policyHolderName && (
+                {errors.cryptoWalletAddress && (
                   <span className="text-red-500">
-                    {errors.policyHolderName.message}
+                    {errors.cryptoWalletAddress.message}
                   </span>
                 )}
               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="relationship">Relationship</Label>
+                <Label htmlFor="exchange">Exchange</Label>
                 <Controller
-                  name="relationship"
-                  defaultValue={Benifyciary?.relationship || ""}
+                  name="exchange"
                   control={control}
+                  defaultValue={Benifyciary?.exchange || ""}
                   render={({ field }) => (
                     <Select
-                      id="relationship"
+                      id="exchange"
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherRelationship(value === "other");
+                        setOtherExchange(value === "other");
                       }}
-                      className={errors.relationship ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.relationship || ""}
+                      className={errors.exchange ? "border-red-500" : ""}
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select relationship" />
-                      </SelectTrigger>
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="self">Self</SelectItem>
-                        <SelectItem value="spouse">Spouse</SelectItem>
-                        <SelectItem value="parent">Parent</SelectItem>
-                        <SelectItem value="child">Child</SelectItem>
+                        <SelectItem value="wazirX">Wazir X</SelectItem>
+                        <SelectItem value="unoCoin">UnoCoin</SelectItem>
+                        <SelectItem value="coinDCX">Coin DCX</SelectItem>
+                        <SelectItem value="coinSwitchKuber">
+                          Coin Switch Kuber
+                        </SelectItem>
+                        <SelectItem value="buyUCoin">BuyUCoin</SelectItem>
+                        <SelectItem value="giottus">Giottus</SelectItem>
+                        <SelectItem value="mudrax">MUDRAX</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherRelationship && (
+                {otherExchange && (
                   <Controller
-                    name="otherRelationship"
+                    name="otherExchange"
                     control={control}
-                    defaultValue={Benifyciary?.otherRelationship || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Relationship"
+                        placeholder="Specify other Exchange"
                         className="mt-2"
-                        defaultValue={Benifyciary?.otherRelationship || ""}
                       />
                     )}
                   />
                 )}
-                {errors.relationship && (
+                {errors.exchange && (
                   <span className="text-red-500">
-                    {errors.relationship.message}
+                    {errors.exchange.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tradingAccount">Trading Account</Label>
+                <Controller
+                  name="tradingAccount"
+                  defaultValue={new Date(Benifyciary?.tradingAccount) || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="tradingAccount"
+                      placeholder="Enter Trading Account Details"
+                      {...field}
+                      className={errors.tradingAccount ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.tradingAccount && (
+                  <span className="text-red-500">
+                    {errors.tradingAccount.message}
                   </span>
                 )}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="previous-policy">Previous Policy Number</Label>
+                <Label htmlFor="typeOfCurrency">Type Of Currency</Label>
                 <Controller
-                  name="previousPolicyNumber"
+                  name="typeOfCurrency"
                   control={control}
-                  defaultValue={Benifyciary?.previousPolicyNumber || ""}
+                  defaultValue={Benifyciary?.typeOfCurrency || ""}
+                  render={({ field }) => (
+                    <Select
+                      id="typeOfCurrency"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setOtherTypeOfCurrency(value === "other");
+                      }}
+                      className={errors.typeOfCurrency ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select currency Type" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cryptoExchange">ApeMax</SelectItem>
+                        <SelectItem value="digitalWallet">Bitcoin</SelectItem>
+                        <SelectItem value="coldWallet">Etherium</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {otherTypeOfCurrency && (
+                  <Controller
+                    name="otherTypeOfCurrency"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Other Type Of Currency"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
+                {errors.typeOfCurrency && (
+                  <span className="text-red-500">
+                    {errors.typeOfCurrency.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sum-insured">Holding Type</Label>
+                <Controller
+                  name="holdingQty"
+                  control={control}
+                  defaultValue={Benifyciary?.holdingQty || ""}
                   render={({ field }) => (
                     <Input
-                      id="previousPolicyNumber"
-                      placeholder="Enter previous policy number"
+                      id="holdingQty"
+                      placeholder="Enter Holding Type"
                       {...field}
-                      defaultValue={Benifyciary?.previousPolicyNumber || ""}
+                      className={errors.holdingQty ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.holdingQty || ""}
                     />
                   )}
                 />
+                {errors.holdingQty && (
+                  <span className="text-red-500">
+                    {errors.holdingQty.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="holdingType">Holding Type</Label>
+                <Controller
+                  name="holdingType"
+                  control={control}
+                  defaultValue={Benifyciary?.holdingType || ""}
+                  render={({ field }) => (
+                    <RadioGroup
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setJoinHolder(value === "joint");
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 text-center">
+                        <RadioGroupItem id="single" value="single" />
+                        <Label htmlFor="single">Single</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem id="joint" value="joint" />
+                        <Label htmlFor="joint">Joint</Label>
+                      </div>
+                    </RadioGroup>
+                  )}
+                />
+                {errors.holdingType && (
+                  <span className="text-red-500">
+                    {errors.holdingType.message}
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-full">
+                {JoinHolder && (
+                  <div className="space-y-2">
+                    <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                    <Controller
+                      name="jointHolderName"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="jointHolderName"
+                          placeholder="Enter Joint Holder Name"
+                          {...field}
+                          className={
+                            errors.jointHolderName ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.jointHolderName && (
+                      <span className="text-red-500">
+                        {errors.jointHolderName.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {JoinHolder && (
+                  <div className="space-y-2">
+                    <Label htmlFor="jointHolderPan">Joint Holder Pan</Label>
+                    <Controller
+                      name="jointHolderPan"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="jointHolderPan"
+                          placeholder="Enter Joint Holder Name"
+                          {...field}
+                          className={
+                            errors.jointHolderPan ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.jointHolderPan && (
+                      <span className="text-red-500">
+                        {errors.jointHolderPan.message}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="additional-details">Additional Details</Label>
+                <Label htmlFor="additionalDetails">Additional Details</Label>
                 <Controller
                   name="additionalDetails"
-                  control={control}
                   defaultValue={Benifyciary?.additionalDetails || ""}
+                  control={control}
                   render={({ field }) => (
                     <Textarea
+                      value={field.value}
                       id="additional-details"
                       placeholder="Enter additional details"
                       {...field}
-                      defaultValue={Benifyciary?.additionalDetails || ""}
                     />
                   )}
                 />
+                {errors.additionalDetails && (
+                  <span className="text-red-500">
+                    {errors.additionalDetails.message}
+                  </span>
+                )}
               </div>
             </div>
+
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
@@ -613,179 +673,68 @@ const EditCryptoForm = () => {
                 setDisplaynominie={setDisplaynominie}
               />{" "}
             </div>
-            <div className="space-y-2">
-              <Label>Mode of Purchase</Label>
-              <Controller
-                name="modeOfPurchase"
-                defaultValue={Benifyciary?.modeOfPurchase || ""}
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    {...field}
-                    defaultValue={Benifyciary?.modeOfPurchase || ""}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setHideRegisteredFields(value === "e-insurance");
-                      setBrokerSelected(value === "broker");
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="broker" value="broker" />
-                      <Label htmlFor="broker">Broker</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="e-insurance" value="e-insurance" />
-                      <Label htmlFor="e-insurance">E-Insurance</Label>
-                    </div>
-                  </RadioGroup>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      {...field}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <span className="text-red-500">{errors.name.message}</span>
                 )}
-              />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobile">Mobile</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      {...field}
+                      className={errors.mobile ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
+                )}
+              </div>
             </div>
 
-            {hideRegisteredFields && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registered-mobile">Registered Mobile</Label>
-                  <Controller
-                    name="registeredMobile"
-                    control={control}
-                    defaultValue={Benifyciary?.registeredMobile || ""}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-mobile"
-                        placeholder="Enter registered mobile"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredMobile || ""}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="registered-email">Registered Email ID</Label>
-                  <Controller
-                    name="registeredEmail"
-                    defaultValue={Benifyciary?.registeredEmail || ""}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        id="registered-email"
-                        placeholder="Enter registered email"
-                        type="email"
-                        {...field}
-                        defaultValue={Benifyciary?.registeredEmail || ""}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-            )}
-
-            {brokerSelected && (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-person">Broker Name</Label>
-                    <Controller
-                      name="brokerName"
-                      control={control}
-                      defaultValue={Benifyciary?.brokerName || ""}
-                      render={({ field }) => (
-                        <Input
-                          id="brokerName"
-                          placeholder="Enter broker name"
-                          {...field}
-                          defaultValue={Benifyciary?.brokerName || ""}
-                          value={field.value}
-                          className={errors.brokerName ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.brokerName && (
-                      <span className="text-red-500">
-                        {errors.brokerName.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-person">Contact Person</Label>
-                    <Controller
-                      name="contactPerson"
-                      control={control}
-                      defaultValue={Benifyciary?.contactPerson || ""}
-                      render={({ field }) => (
-                        <Input
-                          id="contact-person"
-                          placeholder="Enter contact person name"
-                          {...field}
-                          className={
-                            errors.contactPerson ? "border-red-500" : ""
-                          }
-                          defaultValue={Benifyciary?.contactPerson || ""}
-                        />
-                      )}
-                    />
-                    {errors.contactPerson && (
-                      <span className="text-red-500">
-                        {errors.contactPerson.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-number">Contact Number</Label>
-                    <Controller
-                      name="contactNumber"
-                      defaultValue={Benifyciary?.contactNumber || ""}
-                      control={control}
-                      render={({ field }) => (
-                        <PhoneInput
-                          defaultValue={Benifyciary?.contactNumber || ""}
-                          id="guardian-mobile"
-                          type="tel"
-                          placeholder="Enter contact number"
-                          defaultCountry="in"
-                          value={field.value}
-                          inputStyle={{ minWidth: "30.5rem" }}
-                          onChange={field.onChange}
-                          className={
-                            errors.contactNumber ? "border-red-500" : ""
-                          }
-                        />
-                      )}
-                    />
-                    {errors.contactNumber && (
-                      <span className="text-red-500">
-                        {errors.contactNumber.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Controller
-                      name="email"
-                      control={control}
-                      defaultValue={Benifyciary?.email || ""}
-                      render={({ field }) => (
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="Enter email"
-                          {...field}
-                          className={errors.email ? "border-red-500" : ""}
-                          defaultValue={Benifyciary?.email || ""}
-                        />
-                      )}
-                    />
-                    {errors.email && (
-                      <span className="text-red-500">
-                        {errors.email.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </>
-            )}
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller

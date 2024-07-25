@@ -39,6 +39,9 @@ const schema = z.object({
   cryptoWalletAddress: z
     .string()
     .nonempty({ message: "Crypto Wallet Address is required" }),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName: z.string().optional(),
+  jointHolderPan: z.string().optional(),
   exchange: z.string().nonempty({ message: "exchange is required required" }),
   otherExchange: z.string().optional(),
   tradingAccount: z
@@ -47,43 +50,10 @@ const schema = z.object({
   typeOfCurrency: z.string().optional(),
   otherTypeOfCurrency: z.string().optional(),
   holdingQty: z.string().optional(),
-  // maturityDate: z.date().optional(),
-  // premium: z
-  //   .string()
-  //   .min(3, { message: "Premium is required" })
-  //   .transform((value) => (value === "" ? null : value))
-  //   .nullable()
-  //   .refine((value) => value === null || !isNaN(Number(value)), {
-  //     message: "Premium must be a number",
-  //   })
-  //   .transform((value) => (value === null ? null : Number(value))),
-  // sumInsured: z
-  //   .string()
-  //   .min(3, { message: "Sum Insured is required" })
-  //   .transform((value) => (value === "" ? null : value))
-  //   .nullable()
-  //   .refine((value) => value === null || !isNaN(Number(value)), {
-  //     message: "Sum Insured must be a number",
-  //   })
-  //   .transform((value) => (value === null ? null : Number(value))),
-  // policyHolderName: z
-  //   .string()
-  //   .nonempty({ message: "Policy Holder Name is required" }),
-  // relationship: z.string().nonempty({ message: "Relationship is required" }),
-  // otherRelationship: z.string().optional(),
-  // modeOfPurchase: z
-  //   .string()
-  //   .nonempty({ message: "Mode of Purchase is required" }),
-  // contactPerson: z.string().nonempty({ message: "Contact Person is required" }),
-  // contactNumber: z.string().min(7, {
-  //   message: "Contact Number is required and must be more than 7 digits",
-  // }),
-  // email: z.string().email({ message: "Invalid email address" }),
-  // registeredMobile: z.string().optional(),
-  // registeredEmail: z.string().optional(),
+  name: z.string().optional(),
+  mobile: z.string().optional(),
+  email: z.string().optional(),
   additionalDetails: z.string().optional(),
-  // previousPolicyNumber: z.string().optional(),
-  // brokerName: z.string().nonempty({ message: "Broker Name is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -104,6 +74,7 @@ const CryptoForm = () => {
   const [otherTypeOfCurrency, setOtherTypeOfCurrency] = useState(false);
   const [showOtherRelationship, setShowOtherRelationship] = useState(false);
   const [hideRegisteredFields, setHideRegisteredFields] = useState(false);
+  const [JoinHolder, setJoinHolder] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
@@ -181,6 +152,9 @@ const CryptoForm = () => {
     }
     if (data.exchange === "other") {
       data.exchange = data.otherExchange;
+    }
+    if (data.cryptoWalletType === "other") {
+      data.cryptoWalletType = data.otherCryptoWalletType;
     }
     if (data.cryptoWalletAddress === "other") {
       data.cryptoWalletAddress = data.otherCryptoWalletAddress;
@@ -448,6 +422,89 @@ const CryptoForm = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
+                <Label>Holding Type </Label>
+                <Controller
+                  name="holdingType"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setJoinHolder(value === "joint");
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 text-center">
+                        <RadioGroupItem id="single" value="single" />
+                        <Label htmlFor="single">Single</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem id="joint" value="joint" />
+                        <Label htmlFor="joint">Joint</Label>
+                      </div>
+                    </RadioGroup>
+                  )}
+                />
+                {errors.holdingType && (
+                  <span className="text-red-500">
+                    {errors.holdingType.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {JoinHolder && (
+                <div className="space-y-2">
+                  <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                  <Controller
+                    name="jointHolderName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderName"
+                        placeholder="Enter Joint Holder Name"
+                        {...field}
+                        className={
+                          errors.jointHolderName ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.jointHolderName && (
+                    <span className="text-red-500">
+                      {errors.jointHolderName.message}
+                    </span>
+                  )}
+                </div>
+              )}
+              {JoinHolder && (
+                <div className="space-y-2">
+                  <Label htmlFor="jointHolderPan">Joint Holder Pan</Label>
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter Joint Holder Name"
+                        {...field}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.jointHolderPan && (
+                    <span className="text-red-500">
+                      {errors.jointHolderPan.message}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="additional-details">Additional Details</Label>
                 <Controller
                   name="additionalDetails"
@@ -510,6 +567,66 @@ const CryptoForm = () => {
                   Please select atleast one nominee
                 </span>
               )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      {...field}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <span className="text-red-500">{errors.name.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobile">Mobile</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      {...field}
+                      className={errors.mobile ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
