@@ -32,12 +32,14 @@ import cross from "@/components/image/close.png";
 // import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  depository: z.string().nonempty({ message: "Depository is required" }),
-  depositoryName: z
-    .string()
-    .nonempty({ message: "Depository Name is required" }),
-  depositoryId: z.string().optional(),
-  accountNumber: z.string().nonempty({ message: "Account Number is required" }),
+  // bankServiceProvider: z
+  //   .string()
+  //   .nonempty({ message: "Bank Service Provider is required" }),
+  brokerName: z.string().nonempty({ message: "Broker Name is required" }),
+  brokingAccountNumber: z.string().optional(),
+  // numberOfDebentures: z
+  //   .string()
+  //   .nonempty({ message: "No of Debentures is required" }),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
@@ -78,7 +80,7 @@ const MutualFundOtherForm = () => {
   const [showOthertypeOfInvestment, setShowOthertypeOfInvestment] =
     useState(false);
   const [showOtherPPFAccountNo, setShowOtherPPFAccountNo] = useState(false);
-  // const [showOtherdepositoryName, setshowOtherdepositoryName] = useState(false);
+  // const [showOtherCompanyName, setshowOtherCompanyName] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
@@ -105,10 +107,10 @@ const MutualFundOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      depository: "",
-      depositoryName: "",
-      depositoryId: "",
-      accountNumber: "",
+      // bankServiceProvider: "",
+      brokerName: "",
+      brokingAccountNumber: "",
+      // numberOfDebentures: "",
       // certificateNumber: "",
       // distinguishNoFrom: "",
       // distinguishNoTo: "",
@@ -125,17 +127,21 @@ const MutualFundOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/demat-accounts`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.post(
+        `/api/broking-accounts`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
 
-      return response.data.data.DematAccount;
+      return response.data.data.BrokingAccount;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Demat Account added successfully!");
+      toast.success("Debentures added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -190,10 +196,10 @@ const MutualFundOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Demat Account Details
+                Broking Account Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Demat Account Details.
+                Fill out the form to add a new Broking Account Details. Details.
               </CardDescription>
             </div>
           </div>
@@ -203,109 +209,107 @@ const MutualFundOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-4 flex flex-col">
-              <Label className="text-lg font-bold">Depository Type</Label>
+            {/* <div className="space-y-2">
+              <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
               <Controller
-                name="depository"
-                defaultValues="NSDL"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    {...field}
-                    defaultValue="NSDL"
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // setShowOtherJointName(value === "joint");
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem id="NSDL" value="NSDL" />
-                      <Label htmlFor="NSDL">NSDL</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="CDSL" value="CDSL" />
-                      <Label htmlFor="CDSL">CDSL</Label>
-                    </div>
-                  </RadioGroup>
-                )}
-              />
-              {errors.depository && (
-                <span className="text-red-500">
-                  {errors.depository.message}
-                </span>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="depositoryName">Depository Name</Label>
-              <Controller
-                name="depositoryName"
+                name="bankServiceProvider"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="depositoryName"
-                    placeholder="Enter Depository Name"
+                    id="bankServiceProvider"
+                    placeholder="Enter Bank Service Provider"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.depositoryName ? "border-red-500" : ""}
+                    className={
+                      errors.bankServiceProvider ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
 
-              {errors.depositoryName && (
+              {errors.bankServiceProvider && (
                 <span className="text-red-500">
-                  {errors.depositoryName.message}
+                  {errors.bankServiceProvider.message}
                 </span>
               )}
-            </div>
+            </div> */}
             <div className="space-y-2">
-              <Label htmlFor="depositoryId">Depository ID</Label>
+              <Label htmlFor="brokerName">Broker Name</Label>
               <Controller
-                name="depositoryId"
+                name="brokerName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="depositoryId"
-                    placeholder="Enter Depository ID"
+                    id="brokerName"
+                    placeholder="Enter Broker Name"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.depositoryId ? "border-red-500" : ""}
+                    className={errors.brokerName ? "border-red-500" : ""}
                   />
                 )}
               />
 
-              {errors.depositoryId && (
+              {errors.brokerName && (
                 <span className="text-red-500">
-                  {errors.depositoryId.message}
+                  {errors.brokerName.message}
                 </span>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="accountNumber">Account Number</Label>
+              <Label htmlFor="brokingAccountNumber">
+                Broking Account Number
+              </Label>
               <Controller
-                name="accountNumber"
+                name="brokingAccountNumber"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="accountNumber"
-                    placeholder="Enter Account Number"
+                    id="brokingAccountNumber"
+                    placeholder="Enter Broking Account Number"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.accountNumber ? "border-red-500" : ""}
+                    className={
+                      errors.brokingAccountNumber ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
 
-              {errors.accountNumber && (
+              {errors.brokingAccountNumber && (
                 <span className="text-red-500">
-                  {errors.accountNumber.message}
+                  {errors.brokingAccountNumber.message}
                 </span>
               )}
             </div>
             {/* <div className="space-y-2">
+              <Label htmlFor="numberOfDebentures">Number of Debentures</Label>
+              <Controller
+                name="numberOfDebentures"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="numberOfDebentures"
+                    placeholder="Enter Number of Debentures"
+                    {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={
+                      errors.numberOfDebentures ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+
+              {errors.numberOfDebentures && (
+                <span className="text-red-500">
+                  {errors.numberOfDebentures.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="certificateNumber">Certificate Number</Label>
               <Controller
                 name="certificateNumber"

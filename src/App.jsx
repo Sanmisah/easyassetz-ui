@@ -161,6 +161,22 @@ function App() {
         <Route path="/digitalassets" element={<Personalpage />} />
         <Route path="/digitalassets/add" element={<Personalpage />} />
         <Route path="/digitalassets/edit" element={<Personalpage />} />
+        <Route path="/wealth-account" element={<Personalpage />} />
+        <Route path="/wealth-account/add" element={<Personalpage />} />
+        <Route path="/wealth-account/edit" element={<Personalpage />} />
+        <Route path="/broking-account" element={<Personalpage />} />
+        <Route path="/broking-account/add" element={<Personalpage />} />
+        <Route path="/broking-account/edit" element={<Personalpage />} />
+        <Route path="/aif" element={<Personalpage />} />
+        <Route path="/aif/add" element={<Personalpage />} />
+        <Route path="/aif/edit" element={<Personalpage />} />
+        <Route path="/pms" element={<Personalpage />} />
+        <Route path="/pms/add" element={<Personalpage />} />
+        <Route path="/pms/edit" element={<Personalpage />} />
+        <Route path="/ofa" element={<Personalpage />} />
+        <Route path="/ofa/add" element={<Personalpage />} />
+        <Route path="/ofa/edit" element={<Personalpage />} />
+        <Route path="/digital-asset" element={<Personalpage />} />
       </Routes>
     </div>
   );

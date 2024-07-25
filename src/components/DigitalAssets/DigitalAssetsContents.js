@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@com/ui/button";
 import axios from "axios";
 
-const DigitalAssetsMainForm = () => {
+const DigitalAssetsContents = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);
   const [cryptoData, setCryptoData] = useState([]);
   const [digitalAsset, setDigitalAsset] = useState([]);
@@ -99,4 +99,4 @@ const DigitalAssetsMainForm = () => {
   );
 };
 
-export default DigitalAssetsMainForm;
+export default DigitalAssetsContents;

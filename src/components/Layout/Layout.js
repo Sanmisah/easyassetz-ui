@@ -7,7 +7,7 @@ import Hamburger from "../image/hamburger.svg";
 import Insurance from "@/components/Insurance/Lifeinsurance/LifeInsurance";
 import Crypto from "@/components/DigitalAssets/crypto/Crypto";
 import InsuranceMainForm from "@/components/Insurance/InsuranceMainForm";
-import DigitalAssetsMainForm from "@/components/DigitalAssets/DigitalAssetsMainForm";
+import DigitalAssetsMainForm from "@/components/DigitalAssets/DigitalAssetsContents";
 import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
 import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
@@ -155,7 +155,24 @@ import CommercialEditForm from "@/components/ImmovableAssets/CommercialProperty/
 import DematAccounts from "@/components/FinancialAssets/DematAccount/DematAccountMainForm";
 import DematAccountsOtherForm from "@/components/FinancialAssets/DematAccount/DematAccountOtherForm";
 import DematAccountsEditForm from "@/components/FinancialAssets/DematAccount/DematAccountEdit";
+import WealthAccountMainForm from "@/components/FinancialAssets/WealthManagementAccount/WMAMainForm";
+import WealthAccountOtherForm from "@/components/FinancialAssets/WealthManagementAccount/WMAOtherForm";
+import WealthAccountEditForm from "@/components/FinancialAssets/WealthManagementAccount/WMAEdit";
 import DigitalAssetEditForm from "@/components/DigitalAssets/DigitalAssets/DigitalAssetEdit";
+import BrokingAccountMainForm from "@/components/FinancialAssets/BrokingAccount/BrokingAccountMainForm";
+import BrokingAccountOtherForm from "@/components/FinancialAssets/BrokingAccount/BrokingAccountOtherForm";
+import BrokingAccountEditForm from "@/components/FinancialAssets/BrokingAccount/BrokingAccountEdit";
+import AlternateInvestmentMainForm from "@/components/FinancialAssets/AlternateInvestmentFund/AIFMainForm";
+import AlternateInvestmentOtherForm from "@/components/FinancialAssets/AlternateInvestmentFund/AIFOtherForm";
+import AlternateInvestmentEditForm from "@/components/FinancialAssets/AlternateInvestmentFund/AIFEdit";
+import PortfolioManagementMainForm from "@/components/FinancialAssets/PortfolioManagementServices/PMSMainForm";
+import PortfolioManagementOtherForm from "@/components/FinancialAssets/PortfolioManagementServices/PMSOtherForm";
+import PortfolioManagementEditForm from "@/components/FinancialAssets/PortfolioManagementServices/PMSEdit";
+import OtherFinancialAssetMainForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAMainForm";
+import OtherFinancialAssetOtherForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAOtherForm";
+import OtherFinancialAssetEditForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAEdit";
+import DigitalAssetContents from "@/components/DigitalAssets/DigitalAssetsContents";
+
 const Layout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -236,7 +253,7 @@ const Layout = () => {
           </NavLink> */}
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/digitalassets"
+            to="/digital-asset"
           >
             <UserIcon className="h-5 w-5" />
             Digital Assets
@@ -512,12 +529,32 @@ const Layout = () => {
         <CommercialEditForm />
       )}
       {location.pathname === "/demataccounts" && <DematAccounts />}
-      {location.pathname === "/demataccounts/add" && (
-        <DematAccountsOtherForm />
+      {location.pathname === "/demataccounts/add" && <DematAccountsOtherForm />}
+      {location.pathname === "/demataccounts/edit" && <DematAccountsEditForm />}
+      {location.pathname === "/wealth-account" && <WealthAccountMainForm />}
+      {location.pathname === "/wealth-account/add" && (
+        <WealthAccountOtherForm />
       )}
-      {location.pathname === "/demataccounts/edit" && (
-        <DematAccountsEditForm />
+      {location.pathname === "/wealth-account/edit" && (
+        <WealthAccountEditForm />
       )}
+      {location.pathname === "/broking-account" && <BrokingAccountMainForm />}
+      {location.pathname === "/broking-account/add" && (
+        <BrokingAccountOtherForm />
+      )}
+      {location.pathname === "/broking-account/edit" && (
+        <BrokingAccountEditForm />
+      )}
+      {location.pathname === "/aif" && <AlternateInvestmentMainForm />}
+      {location.pathname === "/aif/add" && <AlternateInvestmentOtherForm />}
+      {location.pathname === "/aif/edit" && <AlternateInvestmentEditForm />}
+      {location.pathname === "/pms" && <PortfolioManagementMainForm />}
+      {location.pathname === "/pms/add" && <PortfolioManagementOtherForm />}
+      {location.pathname === "/pms/edit" && <PortfolioManagementEditForm />}
+      {location.pathname === "/ofa" && <OtherFinancialAssetMainForm />}
+      {location.pathname === "/ofa/add" && <OtherFinancialAssetOtherForm />}
+      {location.pathname === "/ofa/edit" && <OtherFinancialAssetEditForm />}
+      {location.pathname === "/digital-asset" && <DigitalAssetContents />}
     </div>
   );
 };
