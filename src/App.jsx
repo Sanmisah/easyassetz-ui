@@ -155,6 +155,9 @@ function App() {
         <Route path="/commercialproperty" element={<Personalpage />} />
         <Route path="/commercialproperty/add" element={<Personalpage />} />
         <Route path="/commercialproperty/edit" element={<Personalpage />} />
+        <Route path="/digitalassets" element={<Personalpage />} />
+        <Route path="/digitalassets/add" element={<Personalpage />} />
+        <Route path="/digitalassets/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
