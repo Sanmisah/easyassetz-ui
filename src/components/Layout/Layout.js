@@ -265,13 +265,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Immovable Assets
           </NavLink>
-          <NavLink
+          {/* <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/financialassets"
           >
             <UserIcon className="h-5 w-5" />
             Financial Assets
-          </NavLink>
+          </NavLink> */}
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -472,7 +472,6 @@ const Layout = () => {
       {location.pathname === "/banklocker/add" && <BankLockerOtherForm />}
       {location.pathname === "/banklocker/edit" && <BankLockerEditForm />}
       {location.pathname === "/immovableassets" && <ImmovableAssetsMainForm />}
-      {location.pathname === "/land" && <LandMainForm />}
       {location.pathname === "/residentialproperty" && <ResidentialMainForm />}
       {location.pathname === "/residentialproperty/add" && (
         <ResidentialOtherform />
