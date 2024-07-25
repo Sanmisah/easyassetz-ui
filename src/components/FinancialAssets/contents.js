@@ -11,6 +11,8 @@ const FinancialAssetsContentForm = () => {
   const [bondData, setBondData] = useState([]);
   const [ESOPData, setESOPData] = useState([]);
   const [otherDematAccountData, setOtherDematAccountData] = useState([]);
+  const [otherWealthAccountData, setOtherWealthAccountData] = useState([]);
+  const [otherBrokingAccountData, setOtherBrokingAccountData] = useState([]);
   const [psadData, setPsadData] = useState([]);
   const [pssData, setPssData] = useState([]);
   const [otherDepositData, setOtherDepositData] = useState([]);
@@ -108,13 +110,46 @@ const FinancialAssetsContentForm = () => {
         console.error("Error fetching Demat Account data", error);
       }
     };
+    const fetchDataWealthAccount = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/wealth-accounts`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherWealthAccountData(
+          response?.data?.data?.WealthManagementAccount
+        );
+      } catch (error) {
+        console.error("Error fetching Demat Account data", error);
+      }
+    };
+    const fetchDataBrokingAccount = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/broking-accounts`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherBrokingAccountData(response?.data?.data?.BrokingAccount);
+      } catch (error) {
+        console.error("Error fetching Demat Account data", error);
+      }
+    };
     fetchDataShareDetails();
     fetchDataMutualFunds();
     fetchDataDebentures();
     fetchDataBond();
     fetchDataESOP();
     fetchDataDematAccount();
-
+    fetchDataWealthAccount();
+    fetchDataBrokingAccount();
   }, []);
 
   return (
@@ -217,47 +252,49 @@ const FinancialAssetsContentForm = () => {
             {otherDematAccountData && otherDematAccountData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherDematAccountData && otherDematAccountData?.length} Demat Account
+                  {otherDematAccountData && otherDematAccountData?.length} Demat
+                  Account
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/wealth-management-account")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Wealth Management Account</h1>
-            {otherDepositData && otherDepositData?.length > 0 && (
+            {otherWealthAccountData && otherWealthAccountData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherDepositData && otherDepositData?.length} Wealth
-                  Management Account
+                  {otherWealthAccountData && otherWealthAccountData?.length}{" "}
+                  Wealth Management Account
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/broking-account")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Broking Account</h1>
-            {otherDepositData && otherDepositData?.length > 0 && (
+            {otherBrokingAccountData && otherBrokingAccountData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherDepositData && otherDepositData?.length} Broking Account
+                  {otherBrokingAccountData && otherBrokingAccountData?.length}{" "}
+                  Broking Account
                 </p>
               </div>
             )}
           </div>
         </div>
         <div
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/aif")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
@@ -274,7 +311,7 @@ const FinancialAssetsContentForm = () => {
           </div>
         </div>
         <div
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/pms")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
@@ -291,7 +328,7 @@ const FinancialAssetsContentForm = () => {
           </div>
         </div>
         <div
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/ofa")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />

@@ -39,16 +39,20 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  depository: z
+  // bankServiceProvider: z
+  //   .string()
+  //   .nonempty({ message: "Bank Service Provider is required" }),
+  wealthManagerName: z
     .string()
-    .nonempty({ message: "Bank Service Provider is required" }),
-  depositoryName: z.string().nonempty({ message: "Company Name is required" }),
-  depositoryId: z.string().optional(),
-  accountNumber: z.string().nonempty({ message: "ESOPS Vested is required" }),
-  // certificateNumber: z.any().optional(),
-  // distinguishNoFrom: z.any().optional(),
-  // distinguishNoTo: z.any().optional(),
-  // faceValue: z.any().optional(),
+    .nonempty({ message: "Wealth Manager Name is required" }),
+  accountNumber: z.string().optional(),
+  numberOfDebentures: z
+    .string()
+    .nonempty({ message: "No of Bonds is required" }),
+  certificateNumber: z.any().optional(),
+  distinguishNoFrom: z.any().optional(),
+  distinguishNoTo: z.any().optional(),
+  faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
   natureOfHolding: z
     .string()
@@ -67,7 +71,7 @@ const schema = z.object({
   email: z.string().optional(),
 });
 
-const DematAccountEditForm = () => {
+const PSSEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -109,7 +113,7 @@ const DematAccountEditForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/demat-accounts/${lifeInsuranceEditId}`,
+      `/api/wealth-accounts/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -117,15 +121,15 @@ const DematAccountEditForm = () => {
       }
     );
 
-    let data = response.data.data.DematAccount;
-    setValue("depository", data.depository);
-    setValue("depositoryName", data.depositoryName);
-    setValue("depositoryId", data.depositoryId);
+    let data = response.data.data.WealthManagementAccount;
+    // setValue("bankServiceProvider", data.bankServiceProvider);
+    setValue("wealthManagerName", data.wealthManagerName);
     setValue("accountNumber", data.accountNumber);
-    // setValue("certificateNumber", data.certificateNumber);
-    // setValue("distinguishNoFrom", data.distinguishNoFrom);
-    // setValue("distinguishNoTo", data.distinguishNoTo);
-    // setValue("faceValue", data.faceValue);
+    setValue("numberOfDebentures", data.numberOfDebentures);
+    setValue("certificateNumber", data.certificateNumber);
+    setValue("distinguishNoFrom", data.distinguishNoFrom);
+    setValue("distinguishNoTo", data.distinguishNoTo);
+    setValue("faceValue", data.faceValue);
     setValue("natureOfHolding", data.natureOfHolding);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
@@ -139,7 +143,7 @@ const DematAccountEditForm = () => {
       setValue("mobile", data.mobile);
     }
 
-    return response.data.data.DematAccount;
+    return response.data.data.WealthManagementAccount;
   };
 
   const {
@@ -154,14 +158,14 @@ const DematAccountEditForm = () => {
       console.log("Data:", data);
       setDefaultValues(data);
       reset(data);
-      setValue("depository", data.depository);
-      setValue("depositoryName", data.depositoryName);
-      setValue("depositoryId", data.depositoryId);
+      // setValue("bankServiceProvider", data.bankServiceProvider);
+      setValue("wealthManagerName", data.wealthManagerName);
       setValue("accountNumber", data.accountNumber);
-      // setValue("certificateNumber", data.certificateNumber);
-      // setValue("distinguishNoFrom", data.distinguishNoFrom);
-      // setValue("distinguishNoTo", data.distinguishNoTo);
-      // setValue("faceValue", data.faceValue);
+      setValue("numberOfDebentures", data.numberOfDebentures);
+      setValue("certificateNumber", data.certificateNumber);
+      setValue("distinguishNoFrom", data.distinguishNoFrom);
+      setValue("distinguishNoTo", data.distinguishNoTo);
+      setValue("faceValue", data.faceValue);
       setValue("natureOfHolding", data.natureOfHolding);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
@@ -194,7 +198,7 @@ const DematAccountEditForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/demat-accounts/${lifeInsuranceEditId}`,
+        `/api/wealth-accounts/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
@@ -202,14 +206,14 @@ const DematAccountEditForm = () => {
           },
         }
       );
-      return response.data.data.DematAccount;
+      return response.data.data.WealthManagementAccount;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("ESOPS details added successfully!");
+      toast.success("Wealth Management Account details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -228,7 +232,7 @@ const DematAccountEditForm = () => {
   //       expiryDate: new Date(Benifyciary.expiryDate)
   //     };
   //     reset(defaultValues);
-  //     setShowOtherInsuranceCompany(Benifyciary.depositoryName === "other");
+  //     setShowOtherInsuranceCompany(Benifyciary.wealthManagerName === "other");
   //     setShowOtherRelationship(Benifyciary.vehicleType === "other");
   //   }
   // }, [Benifyciary, reset]);
@@ -250,7 +254,8 @@ const DematAccountEditForm = () => {
     console.log(Benifyciary);
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading Demat Account data</div>;
+  if (isError)
+    return <div>Error loading Wealth Management Account Details data</div>;
   return (
     <div className="w-full">
       <Card>
@@ -258,10 +263,10 @@ const DematAccountEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Demat Account Details
+                Wealth Management Account Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the Demat Account Details.
+                Edit the form to update the Wealth Management Account Details.
               </CardDescription>
             </div>
           </div>
@@ -271,74 +276,45 @@ const DematAccountEditForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-2">
-              <Label htmlFor="depository">Depository Type</Label>
+            {/* <div className="space-y-2">
+              <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
               <Controller
-                name="depository"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    {...field}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // setShowJointHolderName(value === "CDSL");
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem id="NSDL" value="NSDL" />
-                      <Label htmlFor="NSDL">NSDL</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="CDSL" value="CDSL" />
-                      <Label htmlFor="CDSL">CDSL</Label>
-                    </div>
-                  </RadioGroup>
-                )}
-              />
-              {errors.depository && (
-                <span className="text-red-500">
-                  {errors.depository.message}
-                </span>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="depositoryName">Depository Name</Label>
-              <Controller
-                name="depositoryName"
+                name="bankServiceProvider"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="depositoryName"
-                    placeholder="Enter Depository Name"
+                    id="bankServiceProvider"
+                    placeholder="Enter Bank Service Provider"
                     {...field}
-                    className={errors.depositoryName ? "border-red-500" : ""}
+                    className={
+                      errors.bankServiceProvider ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
-              {errors.depositoryName && (
+              {errors.bankServiceProvider && (
                 <span className="text-red-500">
-                  {errors.depositoryName.message}
+                  {errors.bankServiceProvider.message}
                 </span>
               )}
-            </div>
+            </div> */}
             <div className="space-y-2">
-              <Label htmlFor="depositoryId">Depository ID</Label>
+              <Label htmlFor="wealthManagerName">Wealth Manager Name</Label>
               <Controller
-                name="depositoryId"
+                name="wealthManagerName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="depositoryId"
-                    placeholder="Enter Depository ID"
+                    id="wealthManagerName"
+                    placeholder="Enter Wealth Manager Name"
                     {...field}
-                    className={errors.depositoryId ? "border-red-500" : ""}
+                    className={errors.wealthManagerName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.depositoryId && (
+              {errors.wealthManagerName && (
                 <span className="text-red-500">
-                  {errors.depositoryId.message}
+                  {errors.wealthManagerName.message}
                 </span>
               )}
             </div>
@@ -363,6 +339,28 @@ const DematAccountEditForm = () => {
               )}
             </div>
             {/* <div className="space-y-2">
+              <Label htmlFor="numberOfDebentures">Number of Debentures</Label>
+              <Controller
+                name="numberOfDebentures"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="numberOfDebentures"
+                    placeholder="Enter Number of Debentures"
+                    {...field}
+                    className={
+                      errors.numberOfDebentures ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.numberOfDebentures && (
+                <span className="text-red-500">
+                  {errors.numberOfDebentures.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="certificateNumber">Certificate Number</Label>
               <Controller
                 name="certificateNumber"
@@ -641,4 +639,4 @@ const DematAccountEditForm = () => {
   );
 };
 
-export default DematAccountEditForm;
+export default PSSEditForm;
