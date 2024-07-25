@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const ESOPMainForm = () => {
+const DematAccountMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -31,13 +31,13 @@ const ESOPMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/esops`, {
+    const response = await axios.get(`/api/demat-accounts`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.ESOP;
+    return response.data.data.DematAccount;
   };
 
   const {
@@ -58,21 +58,26 @@ const ESOPMainForm = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(`/api/esops/${lifeInsuranceDeleteId}`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
+    const response = await axios.delete(
+      `/api/demat-accounts/${lifeInsuranceDeleteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
     queryClient.invalidateQueries("LifeInsuraQuerynceData");
-    toast.success("ESOP deleted successfully!");
+    toast.success("Demat Account deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ESOP</h1>
-          <Button onMouseDown={() => navigate("/esop/add")}>Add ESOP</Button>
+          <h1 className="text-2xl font-bold">Demat Accounts</h1>
+          <Button onMouseDown={() => navigate("/demataccounts/add")}>
+            Add Demat Account
+          </Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}
@@ -90,8 +95,8 @@ const ESOPMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.companyName}</h1>
-                  <p className="text-sm">{data.unitsGranted}</p>
+                  <h1 className="font-bold">{data.depository}</h1>
+                  <p className="text-sm">{data.depositoryName}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -107,7 +112,7 @@ const ESOPMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/esop/edit");
+                          navigate("/demataccounts/edit");
                         }}
                       >
                         Edit
@@ -131,4 +136,4 @@ const ESOPMainForm = () => {
   );
 };
 
-export default ESOPMainForm;
+export default DematAccountMainForm;

@@ -10,6 +10,7 @@ const FinancialAssetsContentForm = () => {
   const [debenturesData, setDebenturesData] = useState([]);
   const [bondData, setBondData] = useState([]);
   const [ESOPData, setESOPData] = useState([]);
+  const [otherDematAccountData, setOtherDematAccountData] = useState([]);
   const [psadData, setPsadData] = useState([]);
   const [pssData, setPssData] = useState([]);
   const [otherDepositData, setOtherDepositData] = useState([]);
@@ -67,7 +68,7 @@ const FinancialAssetsContentForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/bond`, {
+        const response = await axios.get(`/api/bonds`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
@@ -82,7 +83,7 @@ const FinancialAssetsContentForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/esop`, {
+        const response = await axios.get(`/api/esops`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
@@ -92,27 +93,27 @@ const FinancialAssetsContentForm = () => {
         console.error("Error fetching ESOP data", error);
       }
     };
-    const fetchDataOtherDeposit = async () => {
+    const fetchDataDematAccount = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/other-deposites`, {
+        const response = await axios.get(`/api/demat-accounts`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherDepositData(response?.data?.data?.OtherDeposite);
+        setOtherDematAccountData(response?.data?.data?.DematAccount);
       } catch (error) {
-        console.error("Error fetching Other Deposit data", error);
+        console.error("Error fetching Demat Account data", error);
       }
     };
-    fetchDataOtherDeposit();
     fetchDataShareDetails();
     fetchDataMutualFunds();
     fetchDataDebentures();
     fetchDataBond();
     fetchDataESOP();
+    fetchDataDematAccount();
 
   }, []);
 
@@ -207,16 +208,16 @@ const FinancialAssetsContentForm = () => {
           </div>
         </div>
         <div
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/demataccounts")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
-            <h1 className="text-xl font-bold">Demant Account</h1>
-            {otherDepositData && otherDepositData?.length > 0 && (
+            <h1 className="text-xl font-bold">Demat Account</h1>
+            {otherDematAccountData && otherDematAccountData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherDepositData && otherDepositData?.length} Demant Account
+                  {otherDematAccountData && otherDematAccountData?.length} Demat Account
                 </p>
               </div>
             )}
