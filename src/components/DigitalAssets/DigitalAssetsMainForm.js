@@ -3,7 +3,6 @@ import lifeInsurance from "../image/LifeInsurance.png";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@com/ui/button";
 import axios from "axios";
-import MotorInsurance from "./MotorInsurance/MotorInsurance";
 
 const DigitalAssetsMainForm = () => {
   const [lifeInsuranceData, setLifeInsuranceData] = useState([]);

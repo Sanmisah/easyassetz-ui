@@ -158,6 +158,9 @@ function App() {
         <Route path="/demataccounts" element={<Personalpage />} />
         <Route path="/demataccounts/add" element={<Personalpage />} />
         <Route path="/demataccounts/edit" element={<Personalpage />} />
+        <Route path="/digitalassets" element={<Personalpage />} />
+        <Route path="/digitalassets/add" element={<Personalpage />} />
+        <Route path="/digitalassets/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

@@ -75,7 +75,7 @@ const DigitalAssetsMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Digital Assets</h1>
-          <Button onMouseDown={() => navigate("/digital-assets/add")}>
+          <Button onMouseDown={() => navigate("/digitalassets/add")}>
             Add Digital Assets
           </Button>
           {alertDialog && (
@@ -111,7 +111,7 @@ const DigitalAssetsMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/digital-assets/edit");
+                          navigate("/digitalassets/edit");
                         }}
                       >
                         Edit
