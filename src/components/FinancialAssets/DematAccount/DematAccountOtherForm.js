@@ -32,14 +32,12 @@ import cross from "@/components/image/close.png";
 // import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  // bankServiceProvider: z
-  //   .string()
-  //   .nonempty({ message: "Bank Service Provider is required" }),
-  companyName: z.string().nonempty({ message: "Company Name is required" }),
-  unitsGranted: z.string().optional(),
-  esopsVested: z
+  depository: z.string().nonempty({ message: "Depository is required" }),
+  depositoryName: z
     .string()
-    .nonempty({ message: "No of Debentures is required" }),
+    .nonempty({ message: "Depository Name is required" }),
+  depositoryId: z.string().optional(),
+  accountNumber: z.string().nonempty({ message: "Account Number is required" }),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
@@ -80,7 +78,7 @@ const MutualFundOtherForm = () => {
   const [showOthertypeOfInvestment, setShowOthertypeOfInvestment] =
     useState(false);
   const [showOtherPPFAccountNo, setShowOtherPPFAccountNo] = useState(false);
-  // const [showOtherCompanyName, setshowOtherCompanyName] = useState(false);
+  // const [showOtherdepositoryName, setshowOtherdepositoryName] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
   const [name, setName] = useState("");
@@ -96,6 +94,7 @@ const MutualFundOtherForm = () => {
   const [otherFirmName, setOtherFirmName] = useState("");
   const [showOtherJointHolderName, setShowOtherJointHolderName] =
     useState(false);
+    
 
   const [showOtherJointName, setShowOtherJointName] = useState(false);
   const {
@@ -107,10 +106,10 @@ const MutualFundOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      // bankServiceProvider: "",
-      companyName: "",
-      unitsGranted: "",
-      esopsVested: "",
+      depository: "",
+      depositoryName: "",
+      depositoryId: "",
+      accountNumber: "",
       // certificateNumber: "",
       // distinguishNoFrom: "",
       // distinguishNoTo: "",
@@ -127,17 +126,17 @@ const MutualFundOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/esops`, data, {
+      const response = await axios.post(`/api/demat-accounts`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.ESOP;
+      return response.data.data.DematAccount;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("ESOPS added successfully!");
+      toast.success("Demat Account added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -171,10 +170,10 @@ const MutualFundOtherForm = () => {
       data.nominees = selectedNommie;
     }
 
-    if (data.type === "other") {
-      data.type = data.otherType;
-    }
-    delete data.otherType;
+    // if (data.type === "other") {
+    //   data.type = data.otherType;
+    // }
+    // delete data.otherType;
 
     // data.type = "company";
     data.mobile = phone;
@@ -192,10 +191,10 @@ const MutualFundOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                ESOPS Details
+                Demat Account Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new ESOPS Details.
+                Fill out the form to add a new Demat Account Details.
               </CardDescription>
             </div>
           </div>
@@ -205,97 +204,105 @@ const MutualFundOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            {/* <div className="space-y-2">
-              <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
+            <div className="space-y-4 flex flex-col">
+              <Label className="text-lg font-bold">Depository Type</Label>
               <Controller
-                name="bankServiceProvider"
+                name="depository"
+                defaultValues="nsdl"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    id="bankServiceProvider"
-                    placeholder="Enter Bank Service Provider"
+                  <RadioGroup
                     {...field}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className={
-                      errors.bankServiceProvider ? "border-red-500" : ""
-                    }
-                  />
+                    defaultValue="nsdl"
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // setShowOtherJointName(value === "joint");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="nsdl" value="nsdl" />
+                      <Label htmlFor="nsdl">NSDL</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="cdsl" value="cdsl" />
+                      <Label htmlFor="cdsl">CDSL</Label>
+                    </div>
+                  </RadioGroup>
                 )}
               />
-
-              {errors.bankServiceProvider && (
+              {errors.depository && (
                 <span className="text-red-500">
-                  {errors.bankServiceProvider.message}
-                </span>
-              )}
-            </div> */}
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Controller
-                name="companyName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="companyName"
-                    placeholder="Enter Company Name"
-                    {...field}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.companyName ? "border-red-500" : ""}
-                  />
-                )}
-              />
-
-              {errors.companyName && (
-                <span className="text-red-500">
-                  {errors.companyName.message}
+                  {errors.depository.message}
                 </span>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="unitsGranted">Units Granted</Label>
+              <Label htmlFor="depositoryName">Depository Name</Label>
               <Controller
-                name="unitsGranted"
+                name="depositoryName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="unitsGranted"
-                    placeholder="Enter Units Granted"
+                    id="depositoryName"
+                    placeholder="Enter Depository Name"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.unitsGranted ? "border-red-500" : ""}
+                    className={errors.depositoryName ? "border-red-500" : ""}
                   />
                 )}
               />
 
-              {errors.unitsGranted && (
+              {errors.depositoryName && (
                 <span className="text-red-500">
-                  {errors.unitsGranted.message}
+                  {errors.depositoryName.message}
                 </span>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="esopsVested">ESOPS Vested</Label>
+              <Label htmlFor="depositoryId">Depository ID</Label>
               <Controller
-                name="esopsVested"
+                name="depositoryId"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="esopsVested"
-                    placeholder="Enter ESOPS Vested"
+                    id="depositoryId"
+                    placeholder="Enter Depository ID"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.esopsVested ? "border-red-500" : ""}
+                    className={errors.depositoryId ? "border-red-500" : ""}
                   />
                 )}
               />
 
-              {errors.esopsVested && (
+              {errors.depositoryId && (
                 <span className="text-red-500">
-                  {errors.esopsVested.message}
+                  {errors.depositoryId.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="accountNumber">Account Number</Label>
+              <Controller
+                name="accountNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="accountNumber"
+                    placeholder="Enter Account Number"
+                    {...field}
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className={errors.accountNumber ? "border-red-500" : ""}
+                  />
+                )}
+              />
+
+              {errors.accountNumber && (
+                <span className="text-red-500">
+                  {errors.accountNumber.message}
                 </span>
               )}
             </div>

@@ -152,6 +152,9 @@ import LandEditForm from "@/components/ImmovableAssets/Land/LandEdit";
 import CommercialMainForm from "@/components/ImmovableAssets/CommercialProperty/CommercialMainForm";
 import CommercialOtherForm from "@/components/ImmovableAssets/CommercialProperty/CommercialOtherForm";
 import CommercialEditForm from "@/components/ImmovableAssets/CommercialProperty/CommercialEdit";
+import DematAccounts from "@/components/FinancialAssets/DematAccount/DematAccountMainForm";
+import DematAccountsOtherForm from "@/components/FinancialAssets/DematAccount/DematAccountOtherForm";
+import DematAccountsEditForm from "@/components/FinancialAssets/DematAccount/DematAccountEdit";
 const Layout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -265,13 +268,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Immovable Assets
           </NavLink>
-          {/* <NavLink
+          <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/financialassets"
           >
             <UserIcon className="h-5 w-5" />
             Financial Assets
-          </NavLink> */}
+          </NavLink>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -506,6 +509,13 @@ const Layout = () => {
       )}
       {location.pathname === "/commercialproperty/edit" && (
         <CommercialEditForm />
+      )}
+      {location.pathname === "/demataccounts" && <DematAccounts />}
+      {location.pathname === "/demataccounts/add" && (
+        <DematAccountsOtherForm />
+      )}
+      {location.pathname === "/demataccounts/edit" && (
+        <DematAccountsEditForm />
       )}
     </div>
   );

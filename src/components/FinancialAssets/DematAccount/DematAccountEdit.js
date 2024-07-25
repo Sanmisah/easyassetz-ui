@@ -39,12 +39,12 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  // bankServiceProvider: z
-  //   .string()
-  //   .nonempty({ message: "Bank Service Provider is required" }),
-  companyName: z.string().nonempty({ message: "Company Name is required" }),
-  unitsGranted: z.string().optional(),
-  esopsVested: z.string().nonempty({ message: "ESOPS Vested is required" }),
+  depository: z
+    .string()
+    .nonempty({ message: "Bank Service Provider is required" }),
+  depositoryName: z.string().nonempty({ message: "Company Name is required" }),
+  depositoryId: z.string().optional(),
+  accountNumber: z.string().nonempty({ message: "ESOPS Vested is required" }),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
@@ -67,7 +67,7 @@ const schema = z.object({
   email: z.string().optional(),
 });
 
-const PSSEditForm = () => {
+const DematAccountEditForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
@@ -108,17 +108,17 @@ const PSSEditForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/esops/${lifeInsuranceEditId}`, {
+    const response = await axios.get(`/api/demat-accounts/${lifeInsuranceEditId}`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    let data = response.data.data.ESOP;
-    // setValue("bankServiceProvider", data.bankServiceProvider);
-    setValue("companyName", data.companyName);
-    setValue("unitsGranted", data.unitsGranted);
-    setValue("esopsVested", data.esopsVested);
+    let data = response.data.data.DematAccount;
+    setValue("depository", data.depository);
+    setValue("depositoryName", data.depositoryName);
+    setValue("depositoryId", data.depositoryId);
+    setValue("accountNumber", data.accountNumber);
     // setValue("certificateNumber", data.certificateNumber);
     // setValue("distinguishNoFrom", data.distinguishNoFrom);
     // setValue("distinguishNoTo", data.distinguishNoTo);
@@ -136,7 +136,7 @@ const PSSEditForm = () => {
       setValue("mobile", data.mobile);
     }
 
-    return response.data.data.ESOP;
+    return response.data.data.DematAccount;
   };
 
   const {
@@ -151,10 +151,10 @@ const PSSEditForm = () => {
       console.log("Data:", data);
       setDefaultValues(data);
       reset(data);
-      // setValue("bankServiceProvider", data.bankServiceProvider);
-      setValue("companyName", data.companyName);
-      setValue("unitsGranted", data.unitsGranted);
-      setValue("esopsVested", data.esopsVested);
+      setValue("depository", data.depository);
+      setValue("depositoryName", data.depositoryName);
+      setValue("depositoryId", data.depositoryId);
+      setValue("accountNumber", data.accountNumber);
       // setValue("certificateNumber", data.certificateNumber);
       // setValue("distinguishNoFrom", data.distinguishNoFrom);
       // setValue("distinguishNoTo", data.distinguishNoTo);
@@ -191,7 +191,7 @@ const PSSEditForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/esops/${lifeInsuranceEditId}`,
+        `/api/demat-accounts/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
@@ -199,7 +199,7 @@ const PSSEditForm = () => {
           },
         }
       );
-      return response.data.data.ESOP;
+      return response.data.data.DematAccount;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
@@ -225,7 +225,7 @@ const PSSEditForm = () => {
   //       expiryDate: new Date(Benifyciary.expiryDate)
   //     };
   //     reset(defaultValues);
-  //     setShowOtherInsuranceCompany(Benifyciary.companyName === "other");
+  //     setShowOtherInsuranceCompany(Benifyciary.depositoryName === "other");
   //     setShowOtherRelationship(Benifyciary.vehicleType === "other");
   //   }
   // }, [Benifyciary, reset]);
@@ -268,85 +268,94 @@ const PSSEditForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            {/* <div className="space-y-2">
-              <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
+             <div className="space-y-2">
+              <Label htmlFor="depository">Depository Type</Label>
               <Controller
-                name="bankServiceProvider"
+                name="depository"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    id="bankServiceProvider"
-                    placeholder="Enter Bank Service Provider"
+                  <RadioGroup
                     {...field}
-                    className={
-                      errors.bankServiceProvider ? "border-red-500" : ""
-                    }
-                  />
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // setShowJointHolderName(value === "cdsl");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="nsdl" value="nsdl" />
+                      <Label htmlFor="nsdl">NSDL</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="cdsl" value="cdsl" />
+                      <Label htmlFor="cdsl">CDSL</Label>
+                    </div>
+                  </RadioGroup>
                 )}
               />
-              {errors.bankServiceProvider && (
+              {errors.depository && (
                 <span className="text-red-500">
-                  {errors.bankServiceProvider.message}
-                </span>
-              )}
-            </div> */}
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Controller
-                name="companyName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="companyName"
-                    placeholder="Enter Company Name"
-                    {...field}
-                    className={errors.companyName ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.companyName && (
-                <span className="text-red-500">
-                  {errors.companyName.message}
+                  {errors.depository.message}
                 </span>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="unitsGranted">Units Granted</Label>
+              <Label htmlFor="depositoryName">Depository Name</Label>
               <Controller
-                name="unitsGranted"
+                name="depositoryName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="unitsGranted"
-                    placeholder="Enter Units Granted"
+                    id="depositoryName"
+                    placeholder="Enter Depository Name"
                     {...field}
-                    className={errors.unitsGranted ? "border-red-500" : ""}
+                    className={errors.depositoryName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.unitsGranted && (
+              {errors.depositoryName && (
                 <span className="text-red-500">
-                  {errors.unitsGranted.message}
+                  {errors.depositoryName.message}
                 </span>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="esopsVested">ESOPS Vested</Label>
+              <Label htmlFor="depositoryId">Depository ID</Label>
               <Controller
-                name="esopsVested"
+                name="depositoryId"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="esopsVested"
-                    placeholder="Enter ESOPS Vested"
+                    id="depositoryId"
+                    placeholder="Enter Depository ID"
                     {...field}
-                    className={errors.esopsVested ? "border-red-500" : ""}
+                    className={errors.depositoryId ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.esopsVested && (
+              {errors.depositoryId && (
                 <span className="text-red-500">
-                  {errors.esopsVested.message}
+                  {errors.depositoryId.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="accountNumber">Account Number</Label>
+              <Controller
+                name="accountNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="accountNumber"
+                    placeholder="Enter Account Number"
+                    {...field}
+                    className={errors.accountNumber ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.accountNumber && (
+                <span className="text-red-500">
+                  {errors.accountNumber.message}
                 </span>
               )}
             </div>
@@ -629,4 +638,4 @@ const PSSEditForm = () => {
   );
 };
 
-export default PSSEditForm;
+export default DematAccountEditForm;
