@@ -28,7 +28,8 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  digitalAssets: z.string().nonempty({ message: "Digital Assets is required" }),
+  digitalAsset: z.string().nonempty({ message: "Digital Assets is required" }),
+  otherDigitalAsset: z.string().optional(),
   account: z.string().nonempty({ message: "Account is required" }),
   linkedMobileNumber: z
     .string()
@@ -40,6 +41,9 @@ const schema = z.object({
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .transform((value) => (value === null ? null : Number(value))),
+  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email" }),
+  mobile: z.string().nonempty({ message: "Mobile number is required" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -68,7 +72,7 @@ const DigitalAssetOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      digitalAssets: "",
+      digitalAsset: "",
       linkedMobileNumber: "",
       description: "",
       additionalInformation: "",
@@ -106,9 +110,9 @@ const DigitalAssetOtherForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
+    if (data.digitalAsset === "other") {
+      data.digitalAsset = data.otherDigitalAsset;
+    }
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -132,56 +136,58 @@ const DigitalAssetOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-2">
-              <Label htmlFor="digitalAssets">Digital Assets</Label>
-              <Controller
-                name="digitalAssets"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    id="digitalAssets"
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setShowOtherdigitalAssets(value === "other");
-                    }}
-                    className={errors.digitalAssets ? "border-red-500" : ""}
-                  >
-                    <FocusableSelectTrigger>
-                      <SelectValue placeholder="Select Digital Assets" />
-                    </FocusableSelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="socialMedia">Social Media</SelectItem>
-                      <SelectItem value="website">Website</SelectItem>
-                      <SelectItem value="email">Email</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {showOtherdigitalAssets && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="digitalAsset">Digital Assets</Label>
                 <Controller
-                  name="otherdigitalAssets"
+                  name="digitalAsset"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Digital Assets"
-                      className="mt-2"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                    />
+                    <Select
+                      id="digitalAsset"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherdigitalAssets(value === "other");
+                      }}
+                      className={errors.digitalAsset ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Digital Assets" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="socialMedia">
+                          Social Media
+                        </SelectItem>
+                        <SelectItem value="website">Website</SelectItem>
+                        <SelectItem value="email">Email</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-              )}
-              {errors.digitalAssets && (
-                <span className="text-red-500">
-                  {errors.digitalAssets.message}
-                </span>
-              )}
-            </div>
+                {showOtherdigitalAssets && (
+                  <Controller
+                    name="otherDigitalAsset"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Digital Assets"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                )}
+                {errors.digitalAsset && (
+                  <span className="text-red-500">
+                    {errors.digitalAsset.message}
+                  </span>
+                )}
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="account">Account/ID</Label>
                 <Controller
@@ -202,16 +208,18 @@ const DigitalAssetOtherForm = () => {
                   <span className="text-red-500">{errors.account.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2  ">
                 <Label htmlFor="linkedMobileNumber"> Mobile Number</Label>
                 <Controller
                   name="linkedMobileNumber"
                   control={control}
                   render={({ field }) => (
-                    <Input
+                    <PhoneInput
+                      inputStyle={{ minWidth: "22rem" }}
                       id="linkedMobileNumber"
+                      type="tel"
                       placeholder="Enter Linked Mobile Number"
-                      {...field}
+                      defaultCountry="in"
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
@@ -226,32 +234,30 @@ const DigitalAssetOtherForm = () => {
                   </span>
                 )}
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="description"
-                    placeholder="Enter Description"
-                    {...field}
-                    value={field.value || ""}
-                    onChange={field.onChange}
-                    className={errors.description ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.description && (
-                <span className="text-red-500">
-                  {errors.description.message}
-                </span>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="description"
+                      placeholder="Enter Description"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={errors.description ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.description && (
+                  <span className="text-red-500">
+                    {errors.description.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-2 col-span-full">
                 <Label htmlFor="additionalInformation">
                   Additional Information
                 </Label>
@@ -266,7 +272,9 @@ const DigitalAssetOtherForm = () => {
                       value={field.value || ""}
                       onChange={field.onChange}
                       className={
-                        errors.additionalInformation ? "border-red-500" : ""
+                        errors.additionalInformation
+                          ? "border-red-500 w-full"
+                          : "w-full"
                       }
                     />
                   )}
@@ -277,80 +285,75 @@ const DigitalAssetOtherForm = () => {
                   </span>
                 )}
               </div>
-            </div>
-            <div className="w-full grid grid-cols-1 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">Point Of Contact</Label>
-                <div className="mt-2  flex item-center  gap-2 justify-between">
-                  <div className="w-[40%] space-y-2 item-center">
-                    <Label htmlFor="name">Name</Label>
-                    <Controller
-                      name="name"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="name"
-                          placeholder="Enter Name"
-                          {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className={errors.name ? "border-red-500" : ""}
-                        />
+              <div className="w-full grid grid-cols-1 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-lg font-bold mt-4 mb-4 ">
+                    Point Of Contact
+                  </Label>
+                  <div className="mt-2  flex item-center  gap-2 justify-between">
+                    <div className="w-[40%] space-y-2 item-center">
+                      <Label htmlFor="name">Name</Label>
+                      <Controller
+                        name="name"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="name"
+                            placeholder="Enter Name"
+                            {...field}
+                            className={errors.name ? "border-red-500" : ""}
+                          />
+                        )}
+                      />
+                      {errors.name && (
+                        <span className="text-red-500">
+                          {errors.name.message}
+                        </span>
                       )}
-                    />
-                    {errors.name && (
-                      <span className="text-red-500">
-                        {errors.name.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="w-[40%] space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Controller
-                      name="email"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="email"
-                          placeholder="Enter Email"
-                          {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className={errors.email ? "border-red-500" : ""}
-                        />
+                    </div>
+                    <div className="w-[40%] space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Controller
+                        name="email"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="email"
+                            placeholder="Enter Email"
+                            {...field}
+                            className={errors.email ? "border-red-500" : ""}
+                          />
+                        )}
+                      />
+                      {errors.email && (
+                        <span className="text-red-500">
+                          {errors.email.message}
+                        </span>
                       )}
-                    />
-                    {errors.email && (
-                      <span className="text-red-500">
-                        {errors.email.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="w-[40%] space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Controller
-                      name="mobile"
-                      control={control}
-                      render={({ field }) => (
-                        <PhoneInput
-                          id="mobile"
-                          type="tel"
-                          placeholder="Enter mobile number"
-                          defaultCountry="in"
-                          inputStyle={{ minWidth: "15.5rem" }}
-                          value={field.value}
-                          onChange={(value) => {
-                            console.log(value);
-                            setPhone(value);
-                          }}
-                        />
+                    </div>
+                    <div className="w-[40%] space-y-2">
+                      <Label htmlFor="phone">Phone</Label>
+                      <Controller
+                        name="mobile"
+                        control={control}
+                        render={({ field }) => (
+                          <PhoneInput
+                            id="mobile"
+                            type="tel"
+                            placeholder="Enter mobile number"
+                            defaultCountry="in"
+                            inputStyle={{ minWidth: "15.5rem" }}
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                          />
+                        )}
+                      />
+                      {errors.phone && (
+                        <span className="text-red-500">
+                          {errors.phone.message}
+                        </span>
                       )}
-                    />
-                    {errors.phone && (
-                      <span className="text-red-500">
-                        {errors.phone.message}
-                      </span>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>

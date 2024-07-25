@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -28,8 +28,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
 const schema = z.object({
-  digitalAssets: z.string().nonempty({ message: "Digital Asset is required" }),
+  digitalAsset: z.string().nonempty({ message: "Digital Assets is required" }),
+  otherDigitalAsset: z.string().optional(),
   account: z.string().nonempty({ message: "Account is required" }),
   linkedMobileNumber: z
     .string()
@@ -41,6 +46,9 @@ const schema = z.object({
     .transform((value) => (value === "" ? null : value))
     .nullable()
     .transform((value) => (value === null ? null : Number(value))),
+  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email" }),
+  mobile: z.string().nonempty({ message: "Mobile number is required" }),
 });
 
 const DigitalAssetEditForm = () => {
@@ -48,13 +56,13 @@ const DigitalAssetEditForm = () => {
   const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  const [showOtherdigitalAssets, setShowOtherdigitalAssets] = useState(false);
+  const [showOtherDigitalAsset, setShowOtherDigitalAsset] = useState(false);
+
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setPhone] = useState("");
-  console.log(lifeInsuranceEditId);
   useEffect(() => {
     if (lifeInsuranceEditId) {
       console.log("lifeInsuranceEditId:", lifeInsuranceEditId);
@@ -84,35 +92,33 @@ const DigitalAssetEditForm = () => {
         },
       }
     );
-    let othertype = response.data.data.Bullion?.metalType;
-    let otherarticle = response.data.data.Bullion?.articleDetails;
     if (
-      othertype === "gold" ||
-      othertype === "silver" ||
-      othertype === "copper"
+      response.data.data.DigitalAsset.digitalAsset !== "website" &&
+      response.data.data.DigitalAsset.digitalAsset !== "socialMedia" &&
+      response.data.data.DigitalAsset.digitalAsset !== "email"
     ) {
-      setShowOtherMetalType(false);
-      setValue("metalType", othertype);
-    } else {
-      setShowOtherMetalType(true);
-      setValue("otherMetalType", othertype);
+      setShowOtherDigitalAsset(true);
+      setValue("digitalAsset", "other");
+      setValue(
+        "otherDigitalAsset",
+        response.data.data.DigitalAsset.digitalAsset
+      );
     }
-
-    if (
-      otherarticle === "plates" ||
-      otherarticle === "glass" ||
-      otherarticle === "bowl" ||
-      otherarticle === "bar" ||
-      otherarticle === "utensils"
-    ) {
-      setShowOtherArticleDetails(false);
-      setValue("articleDetails", otherarticle);
-    } else {
-      setShowOtherArticleDetails(true);
-      setValue("otherArticleDetails", otherarticle);
-    }
-    console.log(typeof response.data.data.Bullion?.premium);
-    return response.data.data.Bullion;
+    setValue("digitalAsset", response.data.data.DigitalAsset.digitalAsset);
+    setValue("account", response.data.data.DigitalAsset?.account);
+    setValue(
+      "linkedMobileNumber",
+      response.data.data.DigitalAsset?.linkedMobileNumber
+    );
+    setValue("description", response.data.data.DigitalAsset?.description);
+    setValue(
+      "additionalInformation",
+      response.data.data.DigitalAsset?.additionalInformation
+    );
+    setValue("name", response.data.data.DigitalAsset?.name);
+    setValue("email", response.data.data.DigitalAsset?.email);
+    setValue("mobile", response.data.data.DigitalAsset?.mobile);
+    return response.data.data.DigitalAsset;
   };
 
   const {
@@ -120,18 +126,10 @@ const DigitalAssetEditForm = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["bullionDataUpdate", lifeInsuranceEditId],
+    queryKey: ["DigitalAssetDataUpdate", lifeInsuranceEditId],
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
-      if (data.modeOfPurchase === "broker") {
-        setBrokerSelected(true);
-        setHideRegisteredFields(false);
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        setBrokerSelected(false);
-        setHideRegisteredFields(true);
-      }
       setDefaultValues(data);
       reset(data);
       setValue(data);
@@ -147,7 +145,7 @@ const DigitalAssetEditForm = () => {
         setValue(key, data[key]);
       }
 
-      setShowOtherBullion(data.Bullion === "other");
+      setShowOtherDigitalAsset(data.digitalAsset === "other");
 
       console.log(data);
     },
@@ -157,7 +155,7 @@ const DigitalAssetEditForm = () => {
     },
   });
 
-  const bullionMutate = useMutation({
+  const DigitalAssetMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.put(
         `/api/digital-assets/${lifeInsuranceEditId}`,
@@ -168,10 +166,13 @@ const DigitalAssetEditForm = () => {
           },
         }
       );
-      return response.data.data.DigitalAsset;
+      return response.data.data.digitalAsset;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
+      queryClient.invalidateQueries(
+        "DigitalAssetDataUpdate",
+        lifeInsuranceEditId
+      );
       toast.success("Digital Asset added successfully!");
       navigate("/dashboard");
     },
@@ -192,29 +193,10 @@ const DigitalAssetEditForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    if (name) {
-      data.name = name;
+    if (data.digitalAsset === "other") {
+      data.digitalAsset = data.otherDigitalAsset;
     }
-    if (email) {
-      data.email = email;
-    }
-    if (mobile) {
-      data.mobile = mobile;
-    }
-    console.log(
-      // "bullion:",
-      data.mobile,
-      data.name,
-      data.email,
-      mobile,
-      name,
-      email
-    );
-    if (data.metalType === "other") {
-      data.metalType = data.otherMetalType;
-    }
-
-    bullionMutate.mutate(data);
+    DigitalAssetMutate.mutate(data);
   };
 
   useEffect(() => {
@@ -239,71 +221,72 @@ const DigitalAssetEditForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-2">
-              <Label htmlFor="digitalAssets">Digital Assets</Label>
-              <Controller
-                name="digitalAssets"
-                control={control}
-                defaultValue={Benifyciary?.digitalAssets}
-                render={({ field }) => (
-                  <Select
-                    id="digitalAssets"
-                    value={field.value}
-                    {...field}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setShowOtherdigitalAssets(value === "other");
-                    }}
-                    className={errors.digitalAssets ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.digitalAssets || ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Digital Assets" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="socialMedia">Social Media</SelectItem>
-                      <SelectItem value="website">Website</SelectItem>
-                      <SelectItem value="email">Email</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {showOtherdigitalAssets && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="digitalAsset">Digital Asset</Label>
                 <Controller
-                  name="otherdigitalAssets"
+                  name="digitalAsset"
                   control={control}
-                  defaultValue={Benifyciary?.otherdigitalAssets || ""}
                   render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Digital Assets"
-                      className="mt-2"
-                      defaultValue={Benifyciary?.otherdigitalAssets || ""}
-                    />
+                    <Select
+                      id="digitalAsset"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherDigitalAsset(value === "other");
+                      }}
+                      className={errors.digitalAsset ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select Digital Asset Type" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="socialMedia">
+                          Social Media
+                        </SelectItem>
+                        <SelectItem value="website">Website</SelectItem>
+                        <SelectItem value="email">Email</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-              )}
-              {errors.digitalAssets && (
-                <span className="text-red-500">
-                  {errors.digitalAssets.message}
-                </span>
-              )}
+                {showOtherDigitalAsset && (
+                  <Controller
+                    name="otherDigitalAsset"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Digital Asset Type"
+                        className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                )}
+                {errors.digitalAsset && (
+                  <span className="text-red-500">
+                    {errors.digitalAsset.message}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="account">Account/ID</Label>
               <Controller
                 name="account"
-                defaultValue={Benifyciary?.account || ""}
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="account"
                     placeholder="Enter Account/ID"
                     {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     className={errors.account ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.account || ""}
                   />
                 )}
               />
@@ -311,21 +294,23 @@ const DigitalAssetEditForm = () => {
                 <span className="text-red-500">{errors.account.message}</span>
               )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="linkedMobileNumber">Mobile Number</Label>
+            <div className="space-y-2  ">
+              <Label htmlFor="linkedMobileNumber"> Mobile Number</Label>
               <Controller
                 name="linkedMobileNumber"
-                defaultValue={Benifyciary?.linkedMobileNumber || ""}
                 control={control}
                 render={({ field }) => (
-                  <Input
+                  <PhoneInput
+                    inputStyle={{ minWidth: "22rem" }}
                     id="linkedMobileNumber"
-                    placeholder="Weight Per Aricle"
-                    {...field}
+                    type="tel"
+                    placeholder="Enter Linked Mobile Number"
+                    defaultCountry="in"
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     className={
                       errors.linkedMobileNumber ? "border-red-500" : ""
                     }
-                    defaultValue={Benifyciary?.linkedMobileNumber || ""}
                   />
                 )}
               />
@@ -335,72 +320,72 @@ const DigitalAssetEditForm = () => {
                 </span>
               )}
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  defaultValue={Benifyciary?.description || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="description"
-                      type="number"
-                      {...field}
-                      placeholder="Enter Description"
-                      value={parseInt(field.value)}
-                      className={errors.description ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.description || ""}
-                    />
-                  )}
-                />
-                {errors.description && (
-                  <span className="text-red-500">
-                    {errors.description.message}
-                  </span>
+            <div className="space-y-2 col-span-full">
+              <Label htmlFor="description">Description</Label>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="description"
+                    placeholder="Enter Description"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.description ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
+              />
+              {errors.description && (
+                <span className="text-red-500">
+                  {errors.description.message}
+                </span>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  {" "}
-                  Additional Information
-                </Label>
-                <Controller
-                  name="additionalInformation"
-                  control={control}
-                  defaultValue={Benifyciary?.additionalInformation || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="additionalInformation"
-                      placeholder="Enter Addtional Information"
-                      {...field}
-                      className={
-                        errors.additionalInformation ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.additionalInformation || ""}
-                    />
-                  )}
-                />
-                {errors.additionalInformation && (
-                  <span className="text-red-500">
-                    {errors.additionalInformation.message}
-                  </span>
+            <div className="space-y-2 col-span-full">
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter Additional Information"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={
+                      errors.additionalInformation
+                        ? "border-red-500 w-full"
+                        : "w-full"
+                    }
+                  />
                 )}
-              </div>
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
             </div>
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
 
-                <Input
-                  id="name"
-                  placeholder="Enter Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className={errors.name ? "border-red-500" : ""}
-                  defaultValue={Benifyciary?.name || ""}
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="name"
+                      placeholder="Enter Name"
+                      {...field}
+                      className={errors.name ? "border-red-500" : ""}
+                    />
+                  )}
                 />
 
                 {errors.name && (
@@ -412,15 +397,12 @@ const DigitalAssetEditForm = () => {
                 <Controller
                   name="email"
                   control={control}
-                  defaultValue={Benifyciary?.email || ""}
                   render={({ field }) => (
                     <Input
                       id="email"
                       placeholder="Enter Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      {...field}
                       className={errors.email ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.email || ""}
                     />
                   )}
                 />
@@ -441,9 +423,8 @@ const DigitalAssetEditForm = () => {
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setPhone(e.target)}
-                      defaultValue={Benifyciary?.mobile || ""}
+                      value={field.value || ""}
+                      onChange={field.onChange}
                     />
                   )}
                 />

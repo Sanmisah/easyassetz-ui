@@ -140,6 +140,7 @@ import LandEditForm from "@/components/ImmovableAssets/Land/LandEdit";
 import CommercialMainForm from "@/components/ImmovableAssets/CommercialProperty/CommercialMainForm";
 import CommercialOtherForm from "@/components/ImmovableAssets/CommercialProperty/CommercialOtherForm";
 import CommercialEditForm from "@/components/ImmovableAssets/CommercialProperty/CommercialEdit";
+import DigitalAssetEditForm from "@/components/DigitalAssets/DigitalAssets/DigitalAssetEdit";
 const Layout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -220,7 +221,7 @@ const Layout = () => {
           </NavLink> */}
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/digitalasset"
+            to="/digitalassets"
           >
             <UserIcon className="h-5 w-5" />
             Digital Assets
@@ -329,7 +330,7 @@ const Layout = () => {
       {location.pathname === "/personal" && <PersonalDetails />}
       {location.pathname === "/benificiary" && <BeneficiaryDetails />}
       {location.pathname === "/insurance" && <InsuranceMainForm />}
-      {location.pathname === "/digitalasset" && <DigitalAssetsMainForm />}
+
       {location.pathname === "/lifeinsurance" && <Insurance />}
       {location.pathname === "/crypto" && <Crypto />}
       {location.pathname === "/lifeinsurance/add" && <InsuranceForm />}
@@ -387,9 +388,9 @@ const Layout = () => {
       {location.pathname === "/jewellery" && <JewelleryMainForm />}
       {location.pathname === "/jewellery/add" && <JewelleryOtherForm />}
       {location.pathname === "/jewellery/edit" && <JewelleryEdit />}
-      {location.pathname === "/digital-assets" && <DigitalAssetMainForm />}
-      {location.pathname === "/digital-assets/add" && <DigitalAssetOtherForm />}
-      {location.pathname === "/digital-assets/edit" && <DigitalAssetEditForm />}
+      {location.pathname === "/digitalassets" && <DigitalAssetMainForm />}
+      {location.pathname === "/digitalassets/add" && <DigitalAssetOtherForm />}
+      {location.pathname === "/digitalassets/edit" && <DigitalAssetEditForm />}
       {location.pathname === "/watch" && <WatchMainForm />}
       {location.pathname === "/watch/add" && <WatchOtherForm />}
       {location.pathname === "/watch/edit" && <WatchEdit />}
