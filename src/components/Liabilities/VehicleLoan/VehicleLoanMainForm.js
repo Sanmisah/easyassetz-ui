@@ -31,13 +31,13 @@ const VehicleLoanMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions`, {
+    const response = await axios.get(`/api/vehicle-loans`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Bullion;
+    return response.data.data.VehicleLoan;
   };
 
   const {
@@ -59,7 +59,7 @@ const VehicleLoanMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/bullions/${lifeInsuranceDeleteId}`,
+      `/api/vehicle-loans/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -75,7 +75,7 @@ const VehicleLoanMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Vehicle Loan</h1>
-          <Button onMouseDown={() => navigate("/homeloans/add")}>
+          <Button onMouseDown={() => navigate("/vehicleloan/add")}>
             Add Vehicle Loan
           </Button>
           {alertDialog && (
@@ -112,7 +112,7 @@ const VehicleLoanMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/homeloans/edit");
+                          navigate("/vehicleloan/edit");
                         }}
                       >
                         Edit

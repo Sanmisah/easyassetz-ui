@@ -19,17 +19,18 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
   bankName: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
-  loanAccountNumber: z
+  loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.string().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
   duration: z.string().nonempty({ message: "Duration is required" }),
   guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
   guarantorMobile: z
@@ -44,6 +45,7 @@ const schema = z.object({
 const HomeLoanEditForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
@@ -57,7 +59,7 @@ const HomeLoanEditForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      loanAccountNumber: "",
+      loanAccountNo: "",
       branch: "",
       emiDate: "",
       startDate: "",
@@ -67,43 +69,60 @@ const HomeLoanEditForm = () => {
       guarantorEmail: "",
     },
   });
-
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(`/api/home-loans/${lifeInsuranceEditId}`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
+    let data = response.data.data.HomeLoan;
+    setValue("bankName", data.bankName);
+    setValue("loanAccountNo", data.loanAccountNo);
+    setValue("branch", data.branch);
+    setValue("emiDate", data.emiDate);
+    setValue("startDate", data.startDate);
+    setValue("duration", data.duration);
+    setValue("guarantorName", data.guarantorName);
+    setValue("guarantorMobile", data.guarantorMobile);
+    setValue("guarantorEmail", data.guarantorEmail);
+    if (data.guarantorName === "other") {
+      setValue("guarantorName", data.guarantorName);
+      setValue("guarantorMobile", data.guarantorMobile);
+      setValue("guarantorEmail", data.guarantorEmail);
+    }
+    return response.data.data.HomeLoan;
+  };
   const {
     data: loanData,
     isLoading,
     isError,
-  } = useQuery(
-    ["loanData", id],
-    async () => {
-      const response = await axios.get(`/api/home-loans/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
+  } = useQuery({
+    queryKey: ["loanData", id],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      Object.keys(data).forEach((key) => {
+        if (schema.shape[key]) {
+          setValue(key, data[key]);
+        }
       });
-      return response.data.data.HomeLoan;
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching loan data:", error);
-        toast.error("Failed to fetch loan data");
-      },
-    }
-  );
-
+    onError: (error) => {
+      console.error("Error fetching loan data:", error);
+      toast.error("Failed to fetch loan data");
+    },
+  });
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/home-loans/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.put(
+        `/api/home-loans/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.HomeLoan;
     },
     onSuccess: () => {
@@ -178,24 +197,22 @@ const HomeLoanEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label htmlFor="loanAccountNo">Loan Account Number</Label>
                 <Controller
-                  name="loanAccountNumber"
+                  name="loanAccountNo"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="loanAccountNumber"
+                      id="loanAccountNo"
                       placeholder="Enter Loan Account Number"
                       {...field}
-                      className={
-                        errors.loanAccountNumber ? "border-red-500" : ""
-                      }
+                      className={errors.loanAccountNo ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.loanAccountNumber && (
+                {errors.loanAccountNo && (
                   <span className="text-red-500">
-                    {errors.loanAccountNumber.message}
+                    {errors.loanAccountNo.message}
                   </span>
                 )}
               </div>
