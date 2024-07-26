@@ -113,7 +113,7 @@ const PSSEditForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/wealth-accounts/${lifeInsuranceEditId}`,
+      `/api/wealth-management-accounts/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -198,7 +198,7 @@ const PSSEditForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/wealth-accounts/${lifeInsuranceEditId}`,
+        `/api/wealth-management-accounts/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
