@@ -212,7 +212,7 @@ const MutualFundOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
               <Controller
                 name="bankServiceProvider"
@@ -236,7 +236,7 @@ const MutualFundOtherForm = () => {
                   {errors.bankServiceProvider.message}
                 </span>
               )}
-            </div>
+            </div> */}
             <div className="space-y-2">
               <Label htmlFor="wealthManagerName">Wealth Manager Name</Label>
               <Controller
@@ -260,15 +260,15 @@ const MutualFundOtherForm = () => {
                 </span>
               )}
             </div>
-            {/* <div className="space-y-2">
-              <Label htmlFor="accountNumber">Folio Number</Label>
+            <div className="space-y-2">
+              <Label htmlFor="accountNumber">Account Number</Label>
               <Controller
                 name="accountNumber"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="accountNumber"
-                    placeholder="Enter Folio Number"
+                    placeholder="Enter Account Number"
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
@@ -282,7 +282,7 @@ const MutualFundOtherForm = () => {
                   {errors.accountNumber.message}
                 </span>
               )}
-            </div> */}
+            </div>
             {/* <div className="space-y-2">
               <Label htmlFor="numberOfDebentures">Number of Debentures</Label>
               <Controller

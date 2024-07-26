@@ -127,17 +127,17 @@ const OtherFinancialAssetOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/portfolio-managements`, data, {
+      const response = await axios.post(`/api/other-financial-assets`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.PortfolioManagement;
+      return response.data.data.OtherFinancialAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Portfolio Management Service added successfully!");
+      toast.success("Other Financial Asset added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -192,10 +192,10 @@ const OtherFinancialAssetOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Alternate Portfolio Management Service Details
+                Other Financial Asset Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Alternate Portfolio Management
+                Fill out the form to add a new Other Financial Asset.
                 Service Details.
               </CardDescription>
             </div>
