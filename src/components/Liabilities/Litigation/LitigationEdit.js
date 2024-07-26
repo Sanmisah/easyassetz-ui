@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
   litigationType: z
@@ -34,11 +35,14 @@ const schema = z.object({
   otherLitigationType: z.string().optional(),
   courtName: z.string().nonempty({ message: "Court/Forum Name is required" }),
   city: z.string().nonempty({ message: "City is required" }),
-  caseNumber: z
+  caseRegistrationNumber: z
     .string()
     .nonempty({ message: "Case Registration Number is required" }),
-  status: z.string().nonempty({ message: "My Status is required" }),
-  otherParty: z
+  myStatus: z.string().nonempty({ message: "My Status is required" }),
+  otherPartyName: z
+    .string()
+    .nonempty({ message: "Other Party (Name & Address) is required" }),
+  otherPartyAddress: z
     .string()
     .nonempty({ message: "Other Party (Name & Address) is required" }),
   lawyerName: z
@@ -47,14 +51,14 @@ const schema = z.object({
   lawyerContact: z
     .string()
     .nonempty({ message: "Lawyer's Contact Number is required" }),
-  filingDate: z.date({ message: "Date of Filing the Case is required" }),
-  caseStatus: z.string().optional(),
-  additionalInfo: z.string().optional(),
+  caseFillingDate: z.any().optional(),
+  status: z.string().optional(),
+  additionalInformation: z.string().optional(),
 });
 
 const LitigationEditForm = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
@@ -72,57 +76,75 @@ const LitigationEditForm = () => {
       otherLitigationType: "",
       courtName: "",
       city: "",
-      caseNumber: "",
-      status: "",
-      otherParty: "",
+      caseRegistrationNumber: "",
+      myStatus: "",
+      otherPartyName: "",
       lawyerName: "",
       lawyerContact: "",
-      filingDate: "",
-      caseStatus: "",
-      additionalInfo: "",
+      caseFillingDate: "",
+      status: "",
+      additionalInformation: "",
     },
   });
 
-  const {
-    data: litigationData,
-    isLoading,
-    isError,
-  } = useQuery(
-    ["litigationData", id],
-    async () => {
-      const response = await axios.get(`/api/litigations/${id}`, {
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/litigations/${lifeInsuranceEditId}`,
+      {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
-      });
-      return response.data.data.Litigation;
-    },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-        if (data.litigationType === "other") {
-          setShowOtherLitigationType(true);
-          setValue("otherLitigationType", data.otherLitigationType);
+      }
+    );
+    let data = response.data.data.Litigation;
+    setValue("litigationType", data.litigationType);
+    setValue("otherLitigationType", data.otherLitigationType);
+    setValue("courtName", data.courtName);
+    setValue("city", data.city);
+    setValue("caseRegistrationNumber", data.caseRegistrationNumber);
+    setValue("myStatus", data.myStatus);
+    setValue("otherPartyName", data.otherPartyName);
+    setValue("lawyerName", data.lawyerName);
+    setValue("lawyerContact", data.lawyerContact);
+    setValue("caseFillingDate", data.caseFillingDate);
+    setValue("status", data.status);
+    setValue("additionalInformation", data.additionalInformation);
+    setValue("otherPartyAddress", data.otherPartyAddress);
+
+    return response.data.data.Litigation;
+  };
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["litigationData", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      Object.keys(data).forEach((key) => {
+        if (schema.shape[key]) {
+          setValue(key, data[key]);
         }
-      },
-      onError: (error) => {
-        console.error("Error fetching litigation data:", error);
-        toast.error("Failed to fetch litigation data");
-      },
-    }
-  );
+      });
+      if (data.litigationType === "other") {
+        setShowOtherLitigationType(true);
+        setValue("otherLitigationType", data.otherLitigationType);
+      }
+    },
+    onError: (error) => {
+      console.error("Error fetching litigation data:", error);
+      toast.error("Failed to fetch litigation data");
+    },
+  });
 
   const litigationMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/litigations/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.put(
+        `/api/litigations/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.Litigation;
     },
     onSuccess: () => {
@@ -141,7 +163,12 @@ const LitigationEditForm = () => {
       data.litigationType = data.otherLitigationType;
     }
     delete data.otherLitigationType;
-
+    const date = new Date(data.caseFillingDate);
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const newdate = `${month}/${day}/${year}`;
+    data.caseFillingDate = newdate;
     litigationMutate.mutate(data);
   };
 
@@ -274,37 +301,41 @@ const LitigationEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="caseNumber">Case Registration Number</Label>
+              <Label htmlFor="caseRegistrationNumber">
+                Case Registration Number
+              </Label>
               <Controller
-                name="caseNumber"
+                name="caseRegistrationNumber"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="caseNumber"
+                    id="caseRegistrationNumber"
                     placeholder="Enter Case Registration Number"
                     {...field}
-                    className={errors.caseNumber ? "border-red-500" : ""}
+                    className={
+                      errors.caseRegistrationNumber ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
-              {errors.caseNumber && (
+              {errors.caseRegistrationNumber && (
                 <span className="text-red-500">
-                  {errors.caseNumber.message}
+                  {errors.caseRegistrationNumber.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">My Status</Label>
+              <Label htmlFor="myStatus">My Status</Label>
               <Controller
-                name="status"
+                name="myStatus"
                 control={control}
                 render={({ field }) => (
                   <Select
-                    id="status"
+                    id="myStatus"
                     value={field.value}
                     onValueChange={field.onChange}
-                    className={errors.status ? "border-red-500" : ""}
+                    className={errors.myStatus ? "border-red-500" : ""}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select My Status" />
@@ -318,28 +349,52 @@ const LitigationEditForm = () => {
                   </Select>
                 )}
               />
-              {errors.status && (
-                <span className="text-red-500">{errors.status.message}</span>
+              {errors.myStatus && (
+                <span className="text-red-500">{errors.myStatus.message}</span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="otherParty">Other Party (Name & Address)</Label>
+              <Label htmlFor="otherPartyName">
+                Other Party (Name & Address)
+              </Label>
               <Controller
-                name="otherParty"
+                name="otherPartyName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="otherParty"
+                    id="otherPartyName"
                     placeholder="Enter Other Party (Name & Address)"
                     {...field}
-                    className={errors.otherParty ? "border-red-500" : ""}
+                    className={errors.otherPartyName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.otherParty && (
+              {errors.otherPartyName && (
                 <span className="text-red-500">
-                  {errors.otherParty.message}
+                  {errors.otherPartyName.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="otherPartyAddress">
+                Other Party (Name & Address)
+              </Label>
+              <Controller
+                name="otherPartyAddress"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="otherPartyAddress"
+                    placeholder="Enter Other Party (Name & Address)"
+                    {...field}
+                    className={errors.otherPartyAddress ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.otherPartyAddress && (
+                <span className="text-red-500">
+                  {errors.otherPartyAddress.message}
                 </span>
               )}
             </div>
@@ -390,59 +445,61 @@ const LitigationEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="filingDate">Date of Filing the Case</Label>
+              <Label htmlFor="caseFillingDate">Date of Filing the Case</Label>
               <Controller
-                name="filingDate"
+                name="caseFillingDate"
                 control={control}
                 render={({ field }) => (
                   <Datepicker value={field.value} onChange={field.onChange} />
                 )}
               />
-              {errors.filingDate && (
+              {errors.caseFillingDate && (
                 <span className="text-red-500">
-                  {errors.filingDate.message}
+                  {errors.caseFillingDate.message}
                 </span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="caseStatus">Status</Label>
+              <Label htmlFor="status">Status</Label>
               <Controller
-                name="caseStatus"
+                name="status"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="caseStatus"
+                    id="status"
                     placeholder="Enter Status"
                     {...field}
-                    className={errors.caseStatus ? "border-red-500" : ""}
+                    className={errors.status ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.caseStatus && (
-                <span className="text-red-500">
-                  {errors.caseStatus.message}
-                </span>
+              {errors.status && (
+                <span className="text-red-500">{errors.status.message}</span>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="additionalInfo">Additional Information</Label>
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
               <Controller
-                name="additionalInfo"
+                name="additionalInformation"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="additionalInfo"
+                    id="additionalInformation"
                     placeholder="Enter Additional Information"
                     {...field}
-                    className={errors.additionalInfo ? "border-red-500" : ""}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
-              {errors.additionalInfo && (
+              {errors.additionalInformation && (
                 <span className="text-red-500">
-                  {errors.additionalInfo.message}
+                  {errors.additionalInformation.message}
                 </span>
               )}
             </div>

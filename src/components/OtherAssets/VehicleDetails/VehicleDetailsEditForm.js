@@ -56,7 +56,7 @@ const VehicleDetailsEditForm = () => {
   const [showOtherType, setShowOtherType] = useState(false);
   const [showOtherFourWheeler, setShowOtherFourWheeler] = useState(false);
   const [initialData, setInitialData] = useState({});
-  
+
   const {
     handleSubmit,
     control,
@@ -73,22 +73,31 @@ const VehicleDetailsEditForm = () => {
       registrationNumber: "",
       yearOfManufacture: "",
       location: "",
-      type : "vehicle",
+      type: "vehicle",
     },
   });
-
-  const { data, isLoading } = useQuery(["vehicleDetails"], async () => {
-    const response = await axios.get("/api/other-assets", {
+  console.log("Data:", data);
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(`/api/other-assets`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
     return response.data.data.Vehicle;
-  }, {
+  };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["vehicleDetails"],
+    queryFn: getPersonalData,
     onSuccess: (data) => {
       setInitialData(data);
       reset(data);
-    }
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
+    },
   });
 
   const lifeInsuranceMutate = useMutation({
@@ -129,8 +138,12 @@ const VehicleDetailsEditForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Vehicle Details</CardTitle>
-              <CardDescription>Fill out the form to update your vehicle details.</CardDescription>
+              <CardTitle className="text-2xl font-bold">
+                Vehicle Details
+              </CardTitle>
+              <CardDescription>
+                Fill out the form to update your vehicle details.
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -159,7 +172,9 @@ const VehicleDetailsEditForm = () => {
                         <SelectValue placeholder="Select Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="fourWheeler">Four Wheeler</SelectItem>
+                        <SelectItem value="fourWheeler">
+                          Four Wheeler
+                        </SelectItem>
                         <SelectItem value="twoWheeler">Two Wheeler</SelectItem>
                         <SelectItem value="tractor">Tractor</SelectItem>
                         <SelectItem value="bulidozer">Bulidozer</SelectItem>
@@ -189,7 +204,6 @@ const VehicleDetailsEditForm = () => {
                 )}
               </div>
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="fourWheeler">Four Wheeler</Label>
               <Controller
@@ -239,7 +253,6 @@ const VehicleDetailsEditForm = () => {
                 </span>
               )}
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
@@ -308,7 +321,6 @@ const VehicleDetailsEditForm = () => {
                 )}
               </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
@@ -334,8 +346,8 @@ const VehicleDetailsEditForm = () => {
                   </span>
                 )}
               </div>
-            </div>VehicleDetailsOtherForm
-
+            </div>
+            VehicleDetailsOtherForm
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="location">Location</Label>
@@ -360,7 +372,6 @@ const VehicleDetailsEditForm = () => {
                 )}
               </div>
             </div>
-
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

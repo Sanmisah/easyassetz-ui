@@ -31,13 +31,13 @@ const VehicleLoanMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions`, {
+    const response = await axios.get(`/api/litigations`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Bullion;
+    return response.data.data.Litigation;
   };
 
   const {
@@ -59,7 +59,7 @@ const VehicleLoanMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/bullions/${lifeInsuranceDeleteId}`,
+      `/api/litigations/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
