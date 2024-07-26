@@ -19,12 +19,12 @@ const LibilitiesMainForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/life-insurances`, {
+        const response = await axios.get(`/api/home-loans`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setLifeInsuranceData(response?.data?.data?.LifeInsurances);
+        setLifeInsuranceData(response?.data?.data?.HomeLoan);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -34,12 +34,12 @@ const LibilitiesMainForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/motor-insurances`, {
+        const response = await axios.get(`/api/personal-loans`, {
           headers: {
             Authorization: `Bearer ${user?.data?.token}`,
           },
         });
-        setMotorInsuranceData(response?.data?.data?.OtherInsurance);
+        setMotorInsuranceData(response?.data?.data?.PersonalLoan);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -49,12 +49,12 @@ const LibilitiesMainForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/other-insurances`, {
+        const response = await axios.get(`/api/vehicle-loans`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setOtherInsuranceData(response?.data?.data?.VehicleLoan);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -64,12 +64,12 @@ const LibilitiesMainForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/general-insurances`, {
+        const response = await axios.get(`/api/other-loans`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setGeneralInsuranceData(response?.data?.data?.OtherLoan);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -79,12 +79,12 @@ const LibilitiesMainForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/health-insurances`, {
+        const response = await axios.get(`/api/litigations`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setHealthInsuranceData(response?.data?.data?.HealthInsurances);
+        setHealthInsuranceData(response?.data?.data?.Litigation);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -179,8 +179,7 @@ const LibilitiesMainForm = () => {
             {otherInsuranceData && otherInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherInsuranceData && otherInsuranceData?.length} Insurance
-                  Policies
+                  {otherInsuranceData && otherInsuranceData?.length} Litigation
                 </p>
               </div>
             )}
