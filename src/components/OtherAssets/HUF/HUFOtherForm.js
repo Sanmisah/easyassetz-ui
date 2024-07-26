@@ -32,10 +32,10 @@ const schema = z.object({
   hufName: z.string().nonempty({ message: " HUF Name is required" }),
   panNumber: z.string().nonempty({ message: "   PAN Number is required" }),
   hufShare: z.string().min(2, { message: "HUF Share is required" }),
- additionalInformation: z.string().optional(),
- name: z.string().nonempty({ message: "Name is required" }),
- email: z.string().email({ message: "Invalid email address" }),
- mobile: z.string().nonempty({ message: "Mobile is required" }),
+  additionalInformation: z.string().optional(),
+  name: z.string().optional(),
+  email: z.string().optional(),
+  mobile: z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -107,6 +107,7 @@ const HUFForm = () => {
     data.name = name;
     data.email = email;
     data.mobile = phone;
+    data.type = "huf";
     console.log("Form Data:", data);
     lifeInsuranceMutate.mutate(data);
   };
@@ -172,57 +173,54 @@ const HUFForm = () => {
               )}
             </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="hufShare">HUF Share</Label>
-                <Controller
-                  name="hufShare"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="hufShare"
-                      placeholder="Enter HUF Share"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={errors.hufShare ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.hufShare && (
-                  <span className="text-red-500">
-                    {errors.hufShare.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="hufShare">HUF Share</Label>
+              <Controller
+                name="hufShare"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="hufShare"
+                    placeholder="Enter HUF Share"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.hufShare ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
+              />
+              {errors.hufShare && (
+                <span className="text-red-500">{errors.hufShare.message}</span>
+              )}
+            </div>
 
-           
-              <div className="space-y-2">
-                <Label htmlFor="additionalInformation">
-                  Additional Information
-                </Label>
-                <Controller
-                  name="additionalInformation"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="additionalInformation"
-                      placeholder="Enter Additional Information"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.additionalInformation ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.additionalInformation && (
-                  <span className="text-red-500">
-                    {errors.additionalInformation.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter Additional Information"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
+                  />
                 )}
-              </div>
-              
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
+            </div>
+
             <div className="w-full grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="additionalInformation">Point Of Contact</Label>

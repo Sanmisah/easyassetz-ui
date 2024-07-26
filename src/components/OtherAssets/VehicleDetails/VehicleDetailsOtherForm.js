@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  type: z.string().nonempty({ message: "Type is required" }),
+  vehicle_type: z.string().nonempty({ message: "Type is required" }),
   fourWheeler: z.string().nonempty({ message: "Four Wheeler is required" }),
   company: z.string().min(2, { message: "Company is required" }),
   model: z.string().nonempty({ message: "Model is required" }),
@@ -69,7 +69,7 @@ const VehicleDetailsOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: "",
+      vehicle_type: "",
       fourWheeler: "",
       company: "",
       model: "",
@@ -135,19 +135,19 @@ const VehicleDetailsOtherForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="type">Type</Label>
+              <Label htmlFor="vehicle_type">Type</Label>
               <Controller
-                name="type"
+                name="vehicle_type"
                 control={control}
                 render={({ field }) => (
                   <Select
-                    id="type"
+                    id="vehicle_type"
                     value={field.value}
                     onValueChange={(value) => {
                       field.onChange(value);
                       setShowOtherType(value === "other");
                     }}
-                    className={errors.type ? "border-red-500" : ""}
+                    className={errors.vehicle_type ? "border-red-500" : ""}
                   >
                     <FocusableSelectTrigger>
                       <SelectValue placeholder="Select Type" />
@@ -178,8 +178,10 @@ const VehicleDetailsOtherForm = () => {
                   )}
                 />
               )}
-              {errors.type && (
-                <span className="text-red-500">{errors.type.message}</span>
+              {errors.vehicle_type && (
+                <span className="text-red-500">
+                  {errors.vehicle_type.message}
+                </span>
               )}
             </div>
 

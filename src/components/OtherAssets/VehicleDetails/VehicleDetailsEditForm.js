@@ -24,9 +24,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
-  type: z.string().nonempty({ message: "Type is required" }),
+  vehicleType: z.string().nonempty({ message: "Type is required" }),
   fourWheeler: z.string().nonempty({ message: "Four Wheeler is required" }),
   company: z.string().min(2, { message: "Company is required" }),
   model: z.string().nonempty({ message: "Model is required" }),
@@ -51,6 +52,7 @@ FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 const VehicleDetailsEditForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
   const [showOtherType, setShowOtherType] = useState(false);
@@ -66,25 +68,36 @@ const VehicleDetailsEditForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: "",
+      vehicleType: "",
       fourWheeler: "",
       company: "",
       model: "",
       registrationNumber: "",
       yearOfManufacture: "",
       location: "",
-      type: "vehicle",
+      vehicleType: "vehicle",
     },
   });
-  console.log("Data:", data);
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/other-assets`, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
-    return response.data.data.Vehicle;
+    const response = await axios.get(
+      `/api/other-assets/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    // let data = response.data.data.OtherAsset;
+    // console.log("Data:", data);
+    // setValue("vehicleType", data.vehicleType);
+    // setValue("fourWheeler", data.fourWheeler);
+    // setValue("company", data.company);
+    // setValue("model", data.model);
+    // setValue("registrationNumber", data.registrationNumber);
+    // setValue("yearOfManufacture", data.yearOfManufacture);
+    // setValue("location", data.location);
+    return response.data.data.OtherAsset;
   };
 
   const { data, isLoading } = useQuery({
@@ -92,7 +105,13 @@ const VehicleDetailsEditForm = () => {
     queryFn: getPersonalData,
     onSuccess: (data) => {
       setInitialData(data);
-      reset(data);
+      setValue("vehicleType", data.vehicleType);
+      setValue("fourWheeler", data.fourWheeler);
+      setValue("company", data.company);
+      setValue("model", data.model);
+      setValue("registrationNumber", data.registrationNumber);
+      setValue("yearOfManufacture", data.yearOfManufacture);
+      setValue("location", data.location);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -102,12 +121,18 @@ const VehicleDetailsEditForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/other-assets`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.Vehicle;
+      const response = await axios.put(
+        `/api/other-assets/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      console.log("Data:", data);
+
+      return response.data.data.OtherAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("vehicleDetails");
@@ -154,19 +179,19 @@ const VehicleDetailsEditForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="type">Type</Label>
+                <Label>Vehicle Type</Label>
                 <Controller
-                  name="type"
+                  name="vehicleType"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="type"
+                      id="vehicleType"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherType(value === "other");
                       }}
-                      className={errors.type ? "border-red-500" : ""}
+                      className={errors.vehicleType ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
                         <SelectValue placeholder="Select Type" />
@@ -199,8 +224,10 @@ const VehicleDetailsEditForm = () => {
                     )}
                   />
                 )}
-                {errors.type && (
-                  <span className="text-red-500">{errors.type.message}</span>
+                {errors.vehicleType && (
+                  <span className="text-red-500">
+                    {errors.vehicleType.message}
+                  </span>
                 )}
               </div>
             </div>
@@ -253,6 +280,7 @@ const VehicleDetailsEditForm = () => {
                 </span>
               )}
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
@@ -321,6 +349,7 @@ const VehicleDetailsEditForm = () => {
                 )}
               </div>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
@@ -347,7 +376,7 @@ const VehicleDetailsEditForm = () => {
                 )}
               </div>
             </div>
-            VehicleDetailsOtherForm
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="location">Location</Label>
@@ -373,7 +402,7 @@ const VehicleDetailsEditForm = () => {
               </div>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
-              <Button type="submit">Submit</Button>
+              <Button vehicleType="submit">Submit</Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -75,7 +75,9 @@ const HUFMainForm = () => {
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">HUF Details</h1>
-          <Button onMouseDown={() => navigate("/huf/add")}>Add HUF Details</Button>
+          <Button onMouseDown={() => navigate("/huf/add")}>
+            Add HUF Details
+          </Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}
@@ -110,9 +112,11 @@ const HUFMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/dashboard");
+                          navigate("/huf/edit");
                         }}
-                      >Edit</DropdownMenuItem>
+                      >
+                        Edit
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
                           setAlertDialog(true);

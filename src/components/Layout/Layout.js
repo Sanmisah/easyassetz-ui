@@ -172,6 +172,7 @@ import OtherFinancialAssetMainForm from "@/components/FinancialAssets/OtherFinan
 import OtherFinancialAssetOtherForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAOtherForm";
 import OtherFinancialAssetEditForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAEdit";
 import DigitalAssetContents from "@/components/DigitalAssets/DigitalAssetsContents";
+import HUFEdit from "@/components/OtherAssets/HUF/HUFEdit";
 
 const Layout = () => {
   const location = useLocation();
@@ -417,6 +418,7 @@ const Layout = () => {
       {location.pathname === "/vehicle/edit" && <VehicleDetailsEditForm />}
       {location.pathname === "/huf" && <HUFMainForm />}
       {location.pathname === "/huf/add" && <HUFOtherForm />}
+      {location.pathname === "/huf/edit" && <HUFEdit />}
       {location.pathname === "/jewellery" && <JewelleryMainForm />}
       {location.pathname === "/jewellery/add" && <JewelleryOtherForm />}
       {location.pathname === "/jewellery/edit" && <JewelleryEdit />}
