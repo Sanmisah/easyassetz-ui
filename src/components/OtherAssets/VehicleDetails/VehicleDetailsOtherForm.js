@@ -110,6 +110,7 @@ const VehicleDetailsOtherForm = () => {
     // data.name = name;
     // data.email = email;
     // data.mobile = phone;
+    data.type = "vehicle";
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -119,8 +120,12 @@ const VehicleDetailsOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Vehicle Details</CardTitle>
-              <CardDescription>Fill out the form to add a new Vehicle Details.</CardDescription>
+              <CardTitle className="text-2xl font-bold">
+                Vehicle Details
+              </CardTitle>
+              <CardDescription>
+                Fill out the form to add a new Vehicle Details.
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -129,54 +134,54 @@ const VehicleDetailsOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
-              <div className="space-y-2">
-                <Label htmlFor="type">Type</Label>
+            <div className="space-y-2">
+              <Label htmlFor="type">Type</Label>
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="type"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOtherType(value === "other");
+                    }}
+                    className={errors.type ? "border-red-500" : ""}
+                  >
+                    <FocusableSelectTrigger>
+                      <SelectValue placeholder="Select Type" />
+                    </FocusableSelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fourWheeler">Four Wheeler</SelectItem>
+                      <SelectItem value="twoWheeler">Two Wheeler</SelectItem>
+                      <SelectItem value="tractor">Tractor</SelectItem>
+                      <SelectItem value="bulidozer">Bulidozer</SelectItem>
+                      <SelectItem value="crane">Crane</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {showOtherType && (
                 <Controller
-                  name="type"
+                  name="otherType"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="type"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherType(value === "other");
-                      }}
-                      className={errors.type ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="fourWheeler">Four Wheeler</SelectItem>
-                        <SelectItem value="twoWheeler">Two Wheeler</SelectItem>
-                        <SelectItem value="tractor">Tractor</SelectItem>
-                        <SelectItem value="bulidozer">Bulidozer</SelectItem>
-                        <SelectItem value="crane">Crane</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      {...field}
+                      placeholder="Specify Type"
+                      className="mt-2"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
                   )}
                 />
-                {showOtherType && (
-                  <Controller
-                    name="otherType"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Type"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                )}
-                {errors.type && (
-                  <span className="text-red-500">{errors.type.message}</span>
-                )}
-              </div>
+              )}
+              {errors.type && (
+                <span className="text-red-500">{errors.type.message}</span>
+              )}
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="fourWheeler">Four Wheeler</Label>
@@ -271,78 +276,74 @@ const VehicleDetailsOtherForm = () => {
                 )}
               </div>
             </div>
-              <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Registration Number</Label>
-                <Controller
-                  name="registrationNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="registrationNumber"
-                      placeholder="Enter Registration Number"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.registrationNumber ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.registrationNumber && (
-                  <span className="text-red-500">
-                    {errors.registrationNumber.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="registrationNumber">Registration Number</Label>
+              <Controller
+                name="registrationNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="registrationNumber"
+                    placeholder="Enter Registration Number"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={
+                      errors.registrationNumber ? "border-red-500" : ""
+                    }
+                  />
                 )}
-              </div>
+              />
+              {errors.registrationNumber && (
+                <span className="text-red-500">
+                  {errors.registrationNumber.message}
+                </span>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
-                <Controller
-                  name="yearOfManufacture"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="yearOfManufacture"
-                      placeholder="Enter Year Of Manufacture"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={
-                        errors.yearOfManufacture ? "border-red-500" : ""
-                      }
-                    />
-                  )}
-                />
-                {errors.yearOfManufacture && (
-                  <span className="text-red-500">
-                    {errors.yearOfManufacture.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
+              <Controller
+                name="yearOfManufacture"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="yearOfManufacture"
+                    placeholder="Enter Year Of Manufacture"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.yearOfManufacture ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
+              />
+              {errors.yearOfManufacture && (
+                <span className="text-red-500">
+                  {errors.yearOfManufacture.message}
+                </span>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <Controller
-                  name="location"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="location"
-                      placeholder="Enter Location"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={errors.location ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.location && (
-                  <span className="text-red-500">
-                    {errors.location.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="location">Location</Label>
+              <Controller
+                name="location"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="location"
+                    placeholder="Enter Location"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.location ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
+              />
+              {errors.location && (
+                <span className="text-red-500">{errors.location.message}</span>
+              )}
+            </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

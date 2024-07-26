@@ -19,24 +19,32 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
   bankName: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
-  loanAccountNumber: z
+  loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  branch: z.string().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
+  bankName: z.string().optional(),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
   duration: z.string().nonempty({ message: "Duration is required" }),
-  otherDetails: z.string().optional(),
+  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
+  guarantorMobile: z
+    .string()
+    .nonempty({ message: "Guarantor Mobile is required" }),
+  guarantorEmail: z
+    .string()
+    .email({ message: "Invalid Email" })
+    .nonempty({ message: "Guarantor Email is required" }),
 });
 
 const VehicleLoanEdit = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
@@ -50,8 +58,8 @@ const VehicleLoanEdit = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      loanAccountNumber: "",
-      branch: "",
+      loanAccountNo: "",
+      bankName: "",
       emiDate: "",
       startDate: "",
       duration: "",
@@ -60,43 +68,51 @@ const VehicleLoanEdit = () => {
       guarantorEmail: "",
     },
   });
-
-  const {
-    data: loanData,
-    isLoading,
-    isError,
-  } = useQuery(
-    ["loanData", id],
-    async () => {
-      const response = await axios.get(`/api/vehicle-loans/${id}`, {
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/vehicle-loans/${lifeInsuranceEditId}`,
+      {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
-      });
-      return response.data.data.VehicleLoan;
+      }
+    );
+    let data = response.data.data.VehicleLoan;
+    setValue("bankName", data.bankName);
+    setValue("loanAccountNo", data.loanAccountNo);
+    setValue("bankName", data.bankName);
+    setValue("emiDate", data.emiDate);
+    setValue("startDate", data.startDate);
+    setValue("duration", data.duration);
+    setValue("guarantorName", data.guarantorName);
+    setValue("guarantorMobile", data.guarantorMobile);
+    setValue("guarantorEmail", data.guarantorEmail);
+    return response.data.data.VehicleLoan;
+  };
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["loanData", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      setInitialData(data);
+      reset(data);
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching loan data:", error);
-        toast.error("Failed to fetch loan data");
-      },
-    }
-  );
-
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
+    },
+  });
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/vehicle-loans/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.put(
+        `/api/vehicle-loans/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.VehicleLoan;
     },
     onSuccess: () => {
@@ -171,45 +187,43 @@ const VehicleLoanEdit = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label htmlFor="loanAccountNo">Loan Account Number</Label>
                 <Controller
-                  name="loanAccountNumber"
+                  name="loanAccountNo"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="loanAccountNumber"
+                      id="loanAccountNo"
                       placeholder="Enter Loan Account Number"
                       {...field}
-                      className={
-                        errors.loanAccountNumber ? "border-red-500" : ""
-                      }
+                      className={errors.loanAccountNo ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.loanAccountNumber && (
+                {errors.loanAccountNo && (
                   <span className="text-red-500">
-                    {errors.loanAccountNumber.message}
+                    {errors.loanAccountNo.message}
                   </span>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="branch">Branch</Label>
+              <Label htmlFor="bankName">bankName</Label>
               <Controller
-                name="branch"
+                name="bankName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="branch"
-                    placeholder="Enter Branch"
+                    id="bankName"
+                    placeholder="Enter bankName"
                     {...field}
-                    className={errors.branch ? "border-red-500" : ""}
+                    className={errors.bankName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.branch && (
-                <span className="text-red-500">{errors.branch.message}</span>
+              {errors.bankName && (
+                <span className="text-red-500">{errors.bankName.message}</span>
               )}
             </div>
 
@@ -263,22 +277,66 @@ const VehicleLoanEdit = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="otherDetails">Other Details</Label>
+              <Label htmlFor="guarantorName">Name of Guarantor</Label>
               <Controller
-                name="otherDetails"
+                name="guarantorName"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="otherDetails"
-                    placeholder="Enter Other Details"
+                    id="guarantorName"
+                    placeholder="Enter Name of Guarantor"
                     {...field}
-                    className={errors.otherDetails ? "border-red-500" : ""}
+                    className={errors.guarantorName ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.otherDetails && (
+              {errors.guarantorName && (
                 <span className="text-red-500">
-                  {errors.otherDetails.message}
+                  {errors.guarantorName.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="guarantorMobile">Mobile of Guarantor</Label>
+              <Controller
+                name="guarantorMobile"
+                control={control}
+                render={({ field }) => (
+                  <PhoneInput
+                    id="guarantorMobile"
+                    type="tel"
+                    placeholder="Enter Mobile of Guarantor"
+                    defaultCountry="in"
+                    inputStyle={{ minWidth: "15.5rem" }}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.guarantorMobile ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.guarantorMobile && (
+                <span className="text-red-500">
+                  {errors.guarantorMobile.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="guarantorEmail">Email of Guarantor</Label>
+              <Controller
+                name="guarantorEmail"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="guarantorEmail"
+                    placeholder="Enter Email of Guarantor"
+                    {...field}
+                    className={errors.guarantorEmail ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.guarantorEmail && (
+                <span className="text-red-500">
+                  {errors.guarantorEmail.message}
                 </span>
               )}
             </div>

@@ -31,14 +31,21 @@ const schema = z.object({
   bankName: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
-  loanAccountNumber: z
+  loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.string().optional(),
   emiDate: z.date({ message: "EMI Date is required" }),
   startDate: z.date({ message: "Start Date is required" }),
   duration: z.string().nonempty({ message: "Duration is required" }),
-  otherDetails: z.string().optional(),
+  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
+  guarantorMobile: z
+    .string()
+    .nonempty({ message: "Guarantor Mobile is required" }),
+  guarantorEmail: z
+    .string()
+    .email({ message: "Invalid Email" })
+    .nonempty({ message: "Guarantor Email is required" }),
 });
 
 const VehicleLoanOtherForm = () => {
@@ -55,7 +62,7 @@ const VehicleLoanOtherForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      loanAccountNumber: "",
+      loanAccountNo: "",
       branch: "",
       emiDate: "",
       startDate: "",
@@ -143,24 +150,22 @@ const VehicleLoanOtherForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label htmlFor="loanAccountNo">Loan Account Number</Label>
                 <Controller
-                  name="loanAccountNumber"
+                  name="loanAccountNo"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="loanAccountNumber"
+                      id="loanAccountNo"
                       placeholder="Enter Loan Account Number"
                       {...field}
-                      className={
-                        errors.loanAccountNumber ? "border-red-500" : ""
-                      }
+                      className={errors.loanAccountNo ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.loanAccountNumber && (
+                {errors.loanAccountNo && (
                   <span className="text-red-500">
-                    {errors.loanAccountNumber.message}
+                    {errors.loanAccountNo.message}
                   </span>
                 )}
               </div>
@@ -235,25 +240,71 @@ const VehicleLoanOtherForm = () => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="otherDetails">Other Details</Label>
-              <Controller
-                name="otherDetails"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="otherDetails"
-                    placeholder="Enter Other Details"
-                    {...field}
-                    className={errors.otherDetails ? "border-red-500" : ""}
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="guarantorName">Name of Guarantor</Label>
+                <Controller
+                  name="guarantorName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="guarantorName"
+                      placeholder="Enter Name of Guarantor"
+                      {...field}
+                      className={errors.guarantorName ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.guarantorName && (
+                  <span className="text-red-500">
+                    {errors.guarantorName.message}
+                  </span>
                 )}
-              />
-              {errors.otherDetails && (
-                <span className="text-red-500">
-                  {errors.otherDetails.message}
-                </span>
-              )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="guarantorMobile">Mobile of Guarantor</Label>
+                <Controller
+                  name="guarantorMobile"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="guarantorMobile"
+                      type="tel"
+                      placeholder="Enter Mobile of Guarantor"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className={errors.guarantorMobile ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.guarantorMobile && (
+                  <span className="text-red-500">
+                    {errors.guarantorMobile.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="guarantorEmail">Email of Guarantor</Label>
+                <Controller
+                  name="guarantorEmail"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="guarantorEmail"
+                      placeholder="Enter Email of Guarantor"
+                      {...field}
+                      className={errors.guarantorEmail ? "border-red-500" : ""}
+                    />
+                  )}
+                />
+                {errors.guarantorEmail && (
+                  <span className="text-red-500">
+                    {errors.guarantorEmail.message}
+                  </span>
+                )}
+              </div>
             </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">

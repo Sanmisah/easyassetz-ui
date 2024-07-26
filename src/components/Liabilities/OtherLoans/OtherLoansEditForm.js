@@ -24,7 +24,7 @@ const schema = z.object({
   bankName: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
-  loanAccountNumber: z
+  loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.string().optional(),
@@ -43,7 +43,7 @@ const schema = z.object({
 
 const OtherLoansEditForm = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
@@ -57,7 +57,7 @@ const OtherLoansEditForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      loanAccountNumber: "",
+      loanAccountNo: "",
       branch: "",
       emiDate: "",
       startDate: "",
@@ -75,11 +75,14 @@ const OtherLoansEditForm = () => {
   } = useQuery(
     ["loanData", id],
     async () => {
-      const response = await axios.get(`/api/other-loans/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.get(
+        `/api/other-loans/${lifeInsuranceEditId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.OtherLoan;
     },
     {
@@ -99,11 +102,15 @@ const OtherLoansEditForm = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/other-loans/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.put(
+        `/api/other-loans/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.OtherLoan;
     },
     onSuccess: () => {
@@ -178,24 +185,22 @@ const OtherLoansEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label htmlFor="loanAccountNo">Loan Account Number</Label>
                 <Controller
-                  name="loanAccountNumber"
+                  name="loanAccountNo"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="loanAccountNumber"
+                      id="loanAccountNo"
                       placeholder="Enter Loan Account Number"
                       {...field}
-                      className={
-                        errors.loanAccountNumber ? "border-red-500" : ""
-                      }
+                      className={errors.loanAccountNo ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.loanAccountNumber && (
+                {errors.loanAccountNo && (
                   <span className="text-red-500">
-                    {errors.loanAccountNumber.message}
+                    {errors.loanAccountNo.message}
                   </span>
                 )}
               </div>
