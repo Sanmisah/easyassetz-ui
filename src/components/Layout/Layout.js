@@ -14,7 +14,7 @@ import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranc
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
 import OtherAssetMainForm from "@/components/OtherAssets/OtherAsset/OtherAssetMainForm";
 import ImmovableAssetsMainForm from "@/components/ImmovableAssets/contents";
-
+import { ScrollArea } from "@com/ui/scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -244,13 +244,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Membership
           </NavLink>
-          <NavLink
+          {/* <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/other-assets"
           >
             <UserIcon className="h-5 w-5" />
             Other Assets
-          </NavLink>
+          </NavLink> */}
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/digital-asset"
@@ -302,55 +302,103 @@ const Layout = () => {
               <SheetDescription>
                 <nav className="space-y-4">
                   <img src={Logo} alt="Logo" width="190" height="100" />
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
-                    to="/personal"
-                  >
-                    <UserIcon className="h-5 w-5" />
-                    Personal Details
-                  </NavLink>
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="/benificiary"
-                  >
-                    <HandHelpingIcon className="h-5 w-5" />
-                    Beneficiary Details
-                  </NavLink>
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="/nomination"
-                  >
-                    <HomeIcon className="h-5 w-5" />
-                    Insurance
-                  </NavLink>
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="/insurance"
-                  >
-                    <HomeIcon className="h-5 w-5" />
-                    Bullion
-                  </NavLink>
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="/bullion"
-                  >
-                    <HomeIcon className="h-5 w-5" />
-                    Other Assets
-                  </NavLink>
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="/digitalassets"
-                  >
-                    <HomeIcon className="h-5 w-5" />
-                    Digital Assets
-                  </NavLink>
-                  <NavLink
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                    to="/financialassets"
-                  >
-                    <HomeIcon className="h-5 w-5" />
-                    Financial Assets
-                  </NavLink>
+                  <ScrollArea className="w-full h-[85vh] rounded-md space-y-4">
+                    <NavLink
+                      prefetch="true"
+                      activeClassName="active"
+                      className="flex items-center gap-2 rounded-md  px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/personal"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Personal Details
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/benificiary"
+                    >
+                      <HandHelpingIcon className="h-5 w-5" />
+                      Beneficiary Details
+                    </NavLink>
+
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/insurance"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Insurance
+                    </NavLink>
+
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/bullion"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Bullion
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/businessasset"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Buisness Assets
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/membership"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Membership
+                    </NavLink>
+                    {/* <NavLink
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            to="/other-assets"
+          >
+            <UserIcon className="h-5 w-5" />
+            Other Assets
+          </NavLink> */}
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/digital-asset"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Digital Assets
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/liabilities"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Liabilities
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/bank"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Bank & Post
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/retirementfund"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Retirement Fund
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/immovableassets"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Immovable Assets
+                    </NavLink>
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/financialassets"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Financial Assets
+                    </NavLink>
+                  </ScrollArea>
                 </nav>
               </SheetDescription>
             </SheetHeader>
