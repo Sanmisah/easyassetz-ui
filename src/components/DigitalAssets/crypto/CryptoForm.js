@@ -167,12 +167,7 @@ const CryptoForm = () => {
     const newdate = `${month}/${day}/${year}`;
     data.maturityDate = newdate;
     console.log("Nomiee:", selectedNommie.length > 0);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length > 0);
 
-      setnomineeerror(true);
-      return;
-    }
     data.nominees = selectedNommie;
     cryptoMutate.mutate(data);
   };
