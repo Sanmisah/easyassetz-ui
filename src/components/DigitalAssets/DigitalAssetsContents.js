@@ -88,7 +88,7 @@ const DigitalAssetsContents = () => {
             {digitalAsset && digitalAsset?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {digitalAsset && digitalAsset?.length} Crypto
+                  {digitalAsset && digitalAsset?.length} Digital Assets
                 </p>
               </div>
             )}

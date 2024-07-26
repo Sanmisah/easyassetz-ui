@@ -137,7 +137,7 @@ const MutualFundOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Debentures added successfully!");
+      toast.success("Bond added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -191,11 +191,9 @@ const MutualFundOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Debentures Details
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold">Bond Details</CardTitle>
               <CardDescription>
-                Fill out the form to add a new Debentures Details.
+                Fill out the form to add a new Bond Details.
               </CardDescription>
             </div>
           </div>

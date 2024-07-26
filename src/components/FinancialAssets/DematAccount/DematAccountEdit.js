@@ -39,12 +39,14 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  depository: z
+  depository: z.string().nonempty({ message: "Depository is required" }),
+  depositoryName: z
     .string()
-    .nonempty({ message: "Bank Service Provider is required" }),
-  depositoryName: z.string().nonempty({ message: "Company Name is required" }),
+    .nonempty({ message: "Depository Name is required" }),
   depositoryId: z.string().optional(),
-  accountNumber: z.string().nonempty({ message: "ESOPS Vested is required" }),
+  accountNumber: z
+    .string()
+    .nonempty({ message: "Account Number Vested is required" }),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
@@ -209,7 +211,7 @@ const DematAccountEditForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("ESOPS details added successfully!");
+      toast.success("Demat Account details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -618,6 +620,7 @@ const DematAccountEditForm = () => {
                       id="mobile"
                       type="tel"
                       {...field}
+                      value={field.value || ""}
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}

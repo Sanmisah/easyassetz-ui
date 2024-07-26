@@ -46,13 +46,13 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Wealth Manager Name is required" }),
   accountNumber: z.string().optional(),
-  numberOfDebentures: z
-    .string()
-    .nonempty({ message: "No of Bonds is required" }),
-  certificateNumber: z.any().optional(),
-  distinguishNoFrom: z.any().optional(),
-  distinguishNoTo: z.any().optional(),
-  faceValue: z.any().optional(),
+  // numberOfDebentures: z
+  //   .string()
+  //   .nonempty({ message: "No of Bonds is required" }),
+  // certificateNumber: z.any().optional(),
+  // distinguishNoFrom: z.any().optional(),
+  // distinguishNoTo: z.any().optional(),
+  // faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
   natureOfHolding: z
     .string()
@@ -125,11 +125,11 @@ const PSSEditForm = () => {
     // setValue("bankServiceProvider", data.bankServiceProvider);
     setValue("wealthManagerName", data.wealthManagerName);
     setValue("accountNumber", data.accountNumber);
-    setValue("numberOfDebentures", data.numberOfDebentures);
-    setValue("certificateNumber", data.certificateNumber);
-    setValue("distinguishNoFrom", data.distinguishNoFrom);
-    setValue("distinguishNoTo", data.distinguishNoTo);
-    setValue("faceValue", data.faceValue);
+    // setValue("numberOfDebentures", data.numberOfDebentures);
+    // setValue("certificateNumber", data.certificateNumber);
+    // setValue("distinguishNoFrom", data.distinguishNoFrom);
+    // setValue("distinguishNoTo", data.distinguishNoTo);
+    // setValue("faceValue", data.faceValue);
     setValue("natureOfHolding", data.natureOfHolding);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
@@ -161,11 +161,11 @@ const PSSEditForm = () => {
       // setValue("bankServiceProvider", data.bankServiceProvider);
       setValue("wealthManagerName", data.wealthManagerName);
       setValue("accountNumber", data.accountNumber);
-      setValue("numberOfDebentures", data.numberOfDebentures);
-      setValue("certificateNumber", data.certificateNumber);
-      setValue("distinguishNoFrom", data.distinguishNoFrom);
-      setValue("distinguishNoTo", data.distinguishNoTo);
-      setValue("faceValue", data.faceValue);
+      // setValue("numberOfDebentures", data.numberOfDebentures);
+      // setValue("certificateNumber", data.certificateNumber);
+      // setValue("distinguishNoFrom", data.distinguishNoFrom);
+      // setValue("distinguishNoTo", data.distinguishNoTo);
+      // setValue("faceValue", data.faceValue);
       setValue("natureOfHolding", data.natureOfHolding);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
