@@ -31,13 +31,13 @@ const HomeLoanMainForm = () => {
 
   const getPersonalData = async () => {
     if (!user) return;
-    const response = await axios.get(`/api/bullions`, {
+    const response = await axios.get(`/api/home-loans`, {
       headers: {
         Authorization: `Bearer ${user.data.token}`,
       },
     });
 
-    return response.data.data.Bullion;
+    return response.data.data.HomeLoan;
   };
 
   const {
@@ -59,7 +59,7 @@ const HomeLoanMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/bullions/${lifeInsuranceDeleteId}`,
+      `/api/home-loans/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
