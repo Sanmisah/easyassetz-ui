@@ -186,10 +186,10 @@ const MutualFundOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Share Details
+                Mutual Fund Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Share Details.
+                Fill out the form to add a new Mutual Fund.
               </CardDescription>
             </div>
           </div>

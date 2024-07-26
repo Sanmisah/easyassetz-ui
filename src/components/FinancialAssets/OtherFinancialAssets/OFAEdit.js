@@ -614,6 +614,7 @@ const PSSEditForm = () => {
                       id="mobile"
                       type="tel"
                       {...field}
+                      value={field.value || ""}
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}

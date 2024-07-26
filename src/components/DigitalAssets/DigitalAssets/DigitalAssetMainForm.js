@@ -95,7 +95,7 @@ const DigitalAssetsMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.digitalAssets}</h1>
+                  <h1 className="font-bold">{data.digitalAsset}</h1>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>

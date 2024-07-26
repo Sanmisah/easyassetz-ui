@@ -13,9 +13,9 @@ const FinancialAssetsContentForm = () => {
   const [otherDematAccountData, setOtherDematAccountData] = useState([]);
   const [otherWealthAccountData, setOtherWealthAccountData] = useState([]);
   const [otherBrokingAccountData, setOtherBrokingAccountData] = useState([]);
-  const [psadData, setPsadData] = useState([]);
-  const [pssData, setPssData] = useState([]);
-  const [otherDepositData, setOtherDepositData] = useState([]);
+  const [otherAIFData, setOtherAIFData] = useState([]);
+  const [otherPMSData, setOtherPMSData] = useState([]);
+  const [otherOFAData, setOtherOFAData] = useState([]);
 
   const navigate = useNavigate();
 
@@ -115,7 +115,7 @@ const FinancialAssetsContentForm = () => {
       const user = JSON.parse(getitem);
 
       try {
-        const response = await axios.get(`/api/wealth-accounts`, {
+        const response = await axios.get(`/api/wealth-management-accounts`, {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
@@ -139,7 +139,52 @@ const FinancialAssetsContentForm = () => {
         });
         setOtherBrokingAccountData(response?.data?.data?.BrokingAccount);
       } catch (error) {
-        console.error("Error fetching Demat Account data", error);
+        console.error("Error fetching Broking Account data", error);
+      }
+    };
+    const fetchDataAIF = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/alternate-investment-funds`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherAIFData(response?.data?.data?.InvestmentFund);
+      } catch (error) {
+        console.error("Error fetching Alternate Investment Fund data", error);
+      }
+    };
+    const fetchDataPMS = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/portfolio-managements`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherPMSData(response?.data?.data?.PortfolioManagement);
+      } catch (error) {
+        console.error("Error fetching Alternate Investment Fund data", error);
+      }
+    };
+    const fetchDataOFA = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+
+      try {
+        const response = await axios.get(`/api/other-financial-assets`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setOtherOFAData(response?.data?.data?.OtherFinancialAsset);
+      } catch (error) {
+        console.error("Error fetching Other Financial Asset data", error);
       }
     };
     fetchDataShareDetails();
@@ -150,6 +195,9 @@ const FinancialAssetsContentForm = () => {
     fetchDataDematAccount();
     fetchDataWealthAccount();
     fetchDataBrokingAccount();
+    fetchDataAIF();
+    fetchDataPMS();
+    fetchDataOFA();
   }, []);
 
   return (
@@ -300,11 +348,11 @@ const FinancialAssetsContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Alternate Investment Fund</h1>
-            {otherDepositData && otherDepositData?.length > 0 && (
+            {otherAIFData && otherAIFData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherDepositData && otherDepositData?.length} Alternate
-                  Investment Fund
+                  {otherAIFData && otherAIFData?.length} Alternate Investment
+                  Fund
                 </p>
               </div>
             )}
@@ -317,11 +365,11 @@ const FinancialAssetsContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Portfolio Management Services</h1>
-            {otherDepositData && otherDepositData?.length > 0 && (
+            {otherPMSData && otherPMSData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherDepositData && otherDepositData?.length} Portfolio
-                  Management Services
+                  {otherPMSData && otherPMSData?.length} Portfolio Management
+                  Services
                 </p>
               </div>
             )}
@@ -334,11 +382,10 @@ const FinancialAssetsContentForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Other Financial Asset</h1>
-            {otherDepositData && otherDepositData?.length > 0 && (
+            {otherOFAData && otherOFAData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherDepositData && otherDepositData?.length} Other Financial
-                  Asset
+                  {otherOFAData && otherOFAData?.length} Other Financial Asset
                 </p>
               </div>
             )}
