@@ -12,7 +12,6 @@ import InsuranceForm from "@/components/Insurance/Lifeinsurance/InsuranceForm";
 import CryptoForm from "@/components/DigitalAssets/crypto/CryptoForm";
 import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranceForm";
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
-import OtherAssetMainForm from "@/components/OtherAssets/OtherAsset/OtherAssetMainForm";
 import ImmovableAssetsMainForm from "@/components/ImmovableAssets/contents";
 import { ScrollArea } from "@com/ui/scroll-area";
 import {
@@ -47,7 +46,6 @@ import PropritershipForm from "@/components/BusinessAssets/Propritorship/Proprit
 import PropritershipEditForm from "@/components/BusinessAssets/Propritorship/PropritorshipEdit";
 import IntellectualPropertyMainForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyMainForm";
 import IntellectualPropertyOtherForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyOtherForm";
-import OtherAssetsMainForm from "@/components/OtherAssets/OtherAssetsMainForm";
 import Dashboard from "@/components/Dashboard/Dashboard";
 import PartnershipFirmMainForm from "@/components/BusinessAssets/PartnershipFirm/partnershipMainForm";
 import PartnershipFirmOtherForm from "@/components/BusinessAssets/PartnershipFirm/PartnershipOtherForm";
@@ -55,21 +53,8 @@ import PartnershipFirmEditForm from "@/components/BusinessAssets/PartnershipFirm
 import CompanyMainForm from "@/components/BusinessAssets/Company/CompanyMainForm";
 import CompanyOtherForm from "@/components/BusinessAssets/Company/CompanyOtherForm";
 import CompanyEditForm from "@/components/BusinessAssets/Company/CompanyEdit";
-import VehicleDetailsMainForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsMainForm";
-import VehicleDetailsOtherForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsOtherForm";
-import VehicleDetailsEditForm from "@/components/OtherAssets/VehicleDetails/VehicleDetailsEditForm";
-import HUFMainForm from "@/components/OtherAssets/HUF/HUFMainForm";
-import HUFOtherForm from "@/components/OtherAssets/HUF/HUFOtherForm";
-import JewelleryMainForm from "@/components/OtherAssets/Jewellery/JewelleryMainForm";
-import JewelleryOtherForm from "@/components/OtherAssets/Jewellery/JewelleryOtherForm";
-import JewelleryEdit from "@/components/OtherAssets/Jewellery/JewelleryEdit";
 import DigitalAssetMainForm from "@/components/DigitalAssets/DigitalAssets/DigitalAssetMainForm";
 import DigitalAssetOtherForm from "@/components/DigitalAssets/DigitalAssets/DigitalAssetOtherForm";
-import WatchMainForm from "@/components/OtherAssets/Watch/WatchMainForm";
-import WatchOtherForm from "@/components/OtherAssets/Watch/WatchOtherForm";
-import WatchEdit from "@/components/OtherAssets/Watch/WatchEdit";
-import ArtifactsMainForm from "@/components/OtherAssets/Artifacts/MainForm";
-import ArtifactsOtherForm from "@/components/OtherAssets/Artifacts/ArtifactsOtherForm";
 import HomeLoanOtherForm from "@/components/Liabilities/HomeLoans/HomeLoanOtherForm";
 import EditHomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanEdit";
 import HomeLoanForm from "@/components/Liabilities/HomeLoans/HomeLoanMainForm";
@@ -106,11 +91,7 @@ import BankContentForm from "@/components/Bank&Post/contents";
 import BankAccountMainForm from "@/components/Bank&Post/BankAccounts/BankAccountMainForm";
 import BankAccountOtherForm from "@/components/Bank&Post/BankAccounts/BankAccountOtherForm";
 import BankEditForm from "@/components/Bank&Post/BankAccounts/BankAccountEditForm";
-import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
-import RecoverableForm from "@/components/OtherAssets/Recoverable/RecoverableForm";
-import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEdit";
-import OtherAssetForm from "@/components/OtherAssets/OtherAsset/OtherAssetForm";
-import OtherAssetEditForm from "@/components/OtherAssets/OtherAsset/OtherAssetEdit";
+
 import IntellectualPropertyEditForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyEditForm";
 import OtherDepositsMainForm from "@/components/Bank&Post/OtherDeposit/OtherDepositMainForm";
 import OtherDepositsForm from "@/components/Bank&Post/OtherDeposit/OtherDepositOtherForm";
@@ -459,12 +440,12 @@ const Layout = () => {
       {location.pathname === "/company" && <CompanyMainForm />}
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
-      {location.pathname === "/other-assets" && <OtherAssetsMainForm />}
       {location.pathname === "/vehicle" && <VehicleDetailsMainForm />}
       {location.pathname === "/vehicle/add" && <VehicleDetailsOtherForm />}
       {location.pathname === "/vehicle/edit" && <VehicleDetailsEditForm />}
       {location.pathname === "/huf" && <HUFMainForm />}
       {location.pathname === "/huf/add" && <HUFOtherForm />}
+      {location.pathname === "/huf/edit" && <HUFEdit />}
       {location.pathname === "/jewellery" && <JewelleryMainForm />}
       {location.pathname === "/jewellery/add" && <JewelleryOtherForm />}
       {location.pathname === "/jewellery/edit" && <JewelleryEdit />}

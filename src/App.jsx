@@ -47,12 +47,12 @@ function App() {
         <Route path="/membership" element={<Personalpage />} />
         <Route path="/membership/add" element={<Personalpage />} />
         <Route path="/membership/edit" element={<Personalpage />} />
-        <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/vehicle" element={<Personalpage />} />
         <Route path="/vehicle/add" element={<Personalpage />} />
         <Route path="/vehicle/edit" element={<Personalpage />} />
         <Route path="/huf" element={<Personalpage />} />
         <Route path="/huf/add" element={<Personalpage />} />
+        <Route path="/huf/edit" element={<Personalpage />} />
         <Route path="/Digitalasset" element={<Personalpage />} />
         <Route path="/crypto" element={<Personalpage />} />
         <Route path="/crypto/add" element={<Personalpage />} />
@@ -72,7 +72,6 @@ function App() {
         <Route path="/bankAccount" element={<Personalpage />} />
         <Route path="/bankAccount/add" element={<Personalpage />} />
         <Route path="/bankAccount/edit" element={<Personalpage />} />
-        <Route path="/other-assets" element={<Personalpage />} />
         <Route path="/liabilities" element={<Personalpage />} />
         <Route path="/homeloans" element={<Personalpage />} />
         <Route path="/homeloans/add" element={<Personalpage />} />
@@ -111,12 +110,7 @@ function App() {
         <Route path="/recoverable" element={<Personalpage />} />
         <Route path="/recoverable/add" element={<Personalpage />} />
         <Route path="/recoverable/edit" element={<Personalpage />} />
-        <Route path="/other-asset" element={<Personalpage />} />
-        <Route path="/other-asset/add" element={<Personalpage />} />
-        <Route path="/other-asset/edit" element={<Personalpage />} />
-        <Route path="/other-deposits" element={<Personalpage />} />
-        <Route path="/other-deposits/add" element={<Personalpage />} />
-        <Route path="/other-deposits/edit" element={<Personalpage />} />
+
         <Route path="/pss" element={<Personalpage />} />
         <Route path="/pss/add" element={<Personalpage />} />
         <Route path="/pss/edit" element={<Personalpage />} />
