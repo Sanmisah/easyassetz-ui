@@ -153,7 +153,9 @@ import OtherFinancialAssetOtherForm from "@/components/FinancialAssets/OtherFina
 import OtherFinancialAssetEditForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAEdit";
 import DigitalAssetContents from "@/components/DigitalAssets/DigitalAssetsContents";
 import OtherAssetsContentForm from "@/components/OtherAssets/otherAssetsContents";
-import RecoverableMainForm from "@/components/OtherAssets/Recoverable/OtherLoanMainForm";
+import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
+import RecoverableOtherForm from "@/components/OtherAssets/Recoverable/RecoverableOtherForm";
+import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEditForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -501,10 +503,6 @@ const Layout = () => {
       {location.pathname === "/fixdeposit" && <FixDepositsMainForm />}
       {location.pathname === "/fixdeposit/add" && <FixDepositsForm />}
       {location.pathname === "/fixdeposit/edit" && <FixDepositsEditForm />}
-
-      {location.pathname === "/recoverable" && <RecoverableMainForm />}
-      {location.pathname === "/recoverable/add" && <RecoverableForm />}
-      {location.pathname === "/recoverable/edit" && <RecoverableEditForm />}
       {location.pathname === "/other-asset" && <OtherAssetMainForm />}
       {location.pathname === "/other-asset/add" && <OtherAssetForm />}
       {location.pathname === "/other-asset/edit" && <OtherAssetEditForm />}
@@ -587,7 +585,7 @@ const Layout = () => {
       {location.pathname === "/digital-asset" && <DigitalAssetContents />}
       {location.pathname === "/otherassets" && <OtherAssetsContentForm />}
       {location.pathname === "/recoverable" && <RecoverableMainForm />}
-      {location.pathname === "/recoverable/add" && <RecoverableForm />}
+      {location.pathname === "/recoverable/add" && <RecoverableOtherForm />}
       {location.pathname === "/recoverable/edit" && <RecoverableEditForm />}
     </div>
   );
