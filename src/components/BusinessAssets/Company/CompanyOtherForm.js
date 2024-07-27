@@ -40,7 +40,7 @@ const schema = z.object({
     .min(2, { message: " Company Registration is required" }),
 
   myStatus: z.string().nonempty({ message: "My Status is required" }),
-  // holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z
@@ -49,7 +49,7 @@ const schema = z.object({
   additionalInformation: z.string().optional(),
   typeOfInvestment: z.string().optional(),
   name: z.string().nonempty({ message: "Name is required" }),
-  // mobile: z.string().nonempty({ message: "Mobile is required" }),
+  mobile: z.string().nonempty({ message: "Mobile is required" }),
   email: z.string().email({ message: "Invalid email address" }),
 });
 

@@ -36,7 +36,7 @@ const schema = z.object({
   firmsRegistrationNumber: z
     .string()
     .min(2, { message: "Firm Registration Number is required" }),
-
+  otherFirmsRegistrationNumber: z.string().optional(),
   additionalInformation: z
     .string()
     .min(3, { message: "Additional Information is required" }),
@@ -115,15 +115,8 @@ const PropritershipForm = () => {
     data.name = name;
     data.email = email;
     data.mobile = phone;
-    if (showOtherFirmsRegistrationNumber) {
-      data.firmsRegistrationNumberType = showOtherFirmsRegistrationNumber;
-      data.firmsRegistrationNumber = data.otherFirmsRegistrationNumber;
-    }
-
-    if (data.firmsRegistrationNumber === "other") {
-      data.firmsRegistrationNumberType = "other";
-      data.firmsRegistrationNumber = data.otherFirmsRegistrationNumber;
-    }
+    data.firmsRegistrationNumberType = showOtherFirmsRegistrationNumber;
+    data.firmsRegistrationNumber = data.otherFirmsRegistrationNumber;
 
     lifeInsuranceMutate.mutate(data);
   };
