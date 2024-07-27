@@ -37,7 +37,7 @@ const schema = z.object({
   firmsRegistrationNumber: z
     .string()
     .min(3, { message: "Registration Number is required" }),
-  whetherAssigned: z.enum(["yes", "no"]),
+  whetherAssigned: z.string().optional(),
   nameOfAssignee: z
     .string()
     .nonempty({ message: "Name of assignee is required" }),
@@ -145,7 +145,7 @@ const IntellectualPropertyOtherForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
       toast.success("Propritership added successfully!");
-      navigate("/propritership");
+      navigate("/intellectualproperty");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

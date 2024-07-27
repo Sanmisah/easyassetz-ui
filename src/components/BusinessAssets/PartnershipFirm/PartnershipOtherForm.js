@@ -38,6 +38,7 @@ const schema = z.object({
   firmsRegistrationNumber: z
     .string()
     .min(2, { message: "  Registration Number is required" }),
+  otherRegistrationNumber: z.string().optional(),
   holdingPercentage: z
     .string()
     .transform((value) => (value === "" ? null : value))
@@ -126,16 +127,8 @@ const PropritershipForm = () => {
 
   const onSubmit = (data) => {
     data.firmsRegistrationNumberType = showOtherRegistrationNumber;
-    if (showOtherRegistrationNumber) {
-      data.firmRegistrationNumberType = showOtherRegistrationNumber;
-      console.log(data.otherRegistrationNumber);
-      data.firmsRegistrationNumber = data.otherRegistrationNumber;
-    }
-    if (selectedNommie.length < 1) {
-      toast.error("Please select atleast one nominee");
-      setNomineeError(true);
-      return;
-    }
+    data.firmsRegistrationNumber = data.otherRegistrationNumber;
+
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }

@@ -33,22 +33,23 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  companyName: z
+  companyName: z.string().nonempty({ message: "Company Name is required" }),
+  companyAddress: z
     .string()
-    .nonempty({ message: "Insurance Company is required" }),
-  companyAddress: z.string().optional(),
-  firmsRegistrationNumber: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  myStatus: z.string().optional(),
-  // holdingType: z.string().nonempty({ message: "Holding Type is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
-  typeOfInvestment: z.string().optional(),
+    .nonempty({ message: "Company Address is required" }),
+  firmsRegistrationNumberType: z.string().optional(),
+  firmsRegistrationNumber: z.string().optional(),
+
+  myStatus: z.string().nonempty({ message: "My Status is required" }),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
+
   additionalInformation: z.string().optional(),
+  typeOfInvestment: z.string().optional(),
   name: z.string().nonempty({ message: "Name is required" }),
-  // mobile: z.string().nonempty({ message: "mobile is required" }),
-  email: z.string().optional(),
+  mobile: z.string().nonempty({ message: "Mobile is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -101,6 +102,17 @@ const EditFormHealth = () => {
       }
     );
     const data = response.data.data.BusinessAsset;
+    setValue("firmsRegistrationNumberType", data.firmsRegistrationNumberType);
+    setValue("firmsRegistrationNumber", data.firmsRegistrationNumber);
+    setValue("typeOfInvestment", data.typeOfInvestment);
+    setValue("holdingType", data.holdingType);
+    setValue("jointHolderName", data.jointHolderName);
+    setValue("jointHolderPan", data.jointHolderPan);
+    setValue("additionalInformation", data.additionalInformation);
+    setValue("typeOfInvestment", data.typeOfInvestment);
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
 
     if (data.documentAvailability === "broker") {
       setBrokerSelected(true);
@@ -117,7 +129,7 @@ const EditFormHealth = () => {
     setShowOtherCompanyRegistration(
       !["CIN", "PAN", "FIRM NO"].includes(data.companyRegistration)
     );
-    setJointHolderName(data.holdingType === "jointName");
+    setJointHolderName(data.holdingType === "joint");
 
     return data;
   };
@@ -175,6 +187,7 @@ const EditFormHealth = () => {
     if (data.companyAddress === "other") {
       data.companyAddress = data.specifycompanyAddress;
     }
+    data.type = "company";
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -238,55 +251,7 @@ const EditFormHealth = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="insurance-company">Insurance Company</Label>
-                <Controller
-                  name="companyName"
-                  control={control}
-                  defaultValue={defaultValues.companyName}
-                  render={({ field }) => (
-                    <Select
-                      id="insurance-company"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
-                      }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {showOtherInsuranceCompany && (
-                  <Controller
-                    name="otherInsuranceCompany"
-                    control={control}
-                    defaultValue={defaultValues.otherInsuranceCompany}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Insurance Company"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
-                {errors.companyName && (
-                  <span className="text-red-500">
-                    {errors.companyName.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="companyAddress">Insurance Type</Label>
+                <Label htmlFor="companyAddress">Company Address</Label>
                 <Controller
                   name="companyAddress"
                   control={control}
@@ -300,19 +265,7 @@ const EditFormHealth = () => {
                     />
                   )}
                 />
-                {showOthercompanyAddress && (
-                  <Controller
-                    name="specifycompanyAddress"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify company address"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.companyAddress && (
                   <span className="text-red-500">
                     {errors.companyAddress.message}
@@ -324,12 +277,12 @@ const EditFormHealth = () => {
               <div className="space-y-2 col-span-full">
                 <Label>Company Registration</Label>
                 <Controller
-                  name="companyRegistration"
+                  name="firmsRegistrationNumberType"
                   control={control}
-                  defaultValue={defaultValues.companyRegistration}
+                  defaultValue={defaultValues.firmsRegistrationNumberType}
                   render={({ field }) => (
                     <Select
-                      id="companyRegistration"
+                      id="firmsRegistrationNumberType"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -338,7 +291,9 @@ const EditFormHealth = () => {
                         );
                       }}
                       className={
-                        errors.companyRegistration ? "border-red-500" : ""
+                        errors.firmsRegistrationNumberType
+                          ? "border-red-500"
+                          : ""
                       }
                     >
                       <FocusableSelectTrigger>
@@ -356,9 +311,9 @@ const EditFormHealth = () => {
                 />
                 {showOtherCompanyRegistration && (
                   <Controller
-                    name="otherCompanyRegistration"
+                    name="firmsRegistrationNumber"
                     control={control}
-                    defaultValue={defaultValues.otherCompanyRegistration}
+                    defaultValue={defaultValues.firmsRegistrationNumber}
                     render={({ field }) => (
                       <Input
                         {...field}
@@ -375,7 +330,7 @@ const EditFormHealth = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="myStatus">Maturity Date</Label>
+                <Label htmlFor="myStatus">My Status</Label>
                 <Controller
                   name="myStatus"
                   control={control}
@@ -393,10 +348,11 @@ const EditFormHealth = () => {
                         </SelectValue>
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="shares">Shares</SelectItem>
-                        <SelectItem value="profit">Profit</SelectItem>
-                        <SelectItem value="loan">Loan</SelectItem>
-                        <SelectItem value="deposit">Deposit</SelectItem>
+                        <SelectItem value="shareholder">Shareholder</SelectItem>
+                        <SelectItem value="partnerBO">Partner BO</SelectItem>
+                        <SelectItem value="nominee">Nominee</SelectItem>
+                        <SelectItem value="lender">Lender</SelectItem>
+                        <SelectItem value="depositor">Depositor</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -408,77 +364,73 @@ const EditFormHealth = () => {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="typeOfInvestment">Type Of Investment</Label>
-                <Controller
-                  name="typeOfInvestment"
-                  control={control}
-                  defaultValue={defaultValues.typeOfInvestment}
-                  render={({ field }) => (
-                    <Select
-                      id="typeOfInvestment"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOthertypeOfInvestment(value === "other");
-                      }}
-                      className={
-                        errors.typeOfInvestment ? "border-red-500" : ""
-                      }
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Type Of Investment">
-                          {field.value || "Select Type Of Investment"}
-                        </SelectValue>
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="shares">Shares</SelectItem>
-                        <SelectItem value="profit">Profit</SelectItem>
-                        <SelectItem value="loan">Loan</SelectItem>
-                        <SelectItem value="deposit">Deposit</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.typeOfInvestment && (
-                  <span className="text-red-500">
-                    {errors.typeOfInvestment.message}
-                  </span>
+            <div className="space-y-2">
+              <Label htmlFor="typeOfInvestment">Type Of Investment</Label>
+              <Controller
+                name="typeOfInvestment"
+                control={control}
+                defaultValue={defaultValues.typeOfInvestment}
+                render={({ field }) => (
+                  <Select
+                    id="typeOfInvestment"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setShowOthertypeOfInvestment(value === "other");
+                    }}
+                    className={errors.typeOfInvestment ? "border-red-500" : ""}
+                  >
+                    <FocusableSelectTrigger>
+                      <SelectValue placeholder="Select Type Of Investment">
+                        {field.value || "Select Type Of Investment"}
+                      </SelectValue>
+                    </FocusableSelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="shares">Shares</SelectItem>
+                      <SelectItem value="profit">Profit</SelectItem>
+                      <SelectItem value="loan">Loan</SelectItem>
+                      <SelectItem value="deposit">Deposit</SelectItem>
+                    </SelectContent>
+                  </Select>
                 )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="holdingType">Holding Type</Label>
-                <Controller
-                  name="holdingType"
-                  control={control}
-                  defaultValue={defaultValues.holdingType}
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setJointHolderName(value === "jointName");
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-2 text-center">
-                        <RadioGroupItem id="single" value="single" />
-                        <Label htmlFor="single">Single</Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <RadioGroupItem id="jointName" value="jointName" />
-                        <Label htmlFor="jointName">Joint Name</Label>
-                      </div>
-                    </RadioGroup>
-                  )}
-                />
-                {errors.holdingType && (
-                  <span className="text-red-500">
-                    {errors.holdingType.message}
-                  </span>
+              />
+              {errors.typeOfInvestment && (
+                <span className="text-red-500">
+                  {errors.typeOfInvestment.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="holdingType">Holding Type</Label>
+              <Controller
+                name="holdingType"
+                control={control}
+                defaultValue={defaultValues.holdingType}
+                render={({ field }) => (
+                  <RadioGroup
+                    {...field}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setJointHolderName(value === "joint");
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center gap-2 text-center">
+                      <RadioGroupItem id="single" value="single" />
+                      <Label htmlFor="single">Single</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="joint" value="joint" />
+                      <Label htmlFor="joint">Joint Name</Label>
+                    </div>
+                  </RadioGroup>
                 )}
-              </div>
+              />
+              {errors.holdingType && (
+                <span className="text-red-500">
+                  {errors.holdingType.message}
+                </span>
+              )}
             </div>
             {jointHolderName && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -502,6 +454,33 @@ const EditFormHealth = () => {
                   {errors.jointHolderName && (
                     <span className="text-red-500">
                       {errors.jointHolderName.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+            {jointHolderName && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="jointHolderPan">Joint Holder Name</Label>
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    defaultValue={defaultValues.jointHolderPan}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter joint holder name"
+                        {...field}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.jointHolderPan && (
+                    <span className="text-red-500">
+                      {errors.jointHolderPan.message}
                     </span>
                   )}
                 </div>
@@ -576,133 +555,67 @@ const EditFormHealth = () => {
                 </span>
               )}
             </div>
-            {hideRegisteredFields && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registeredMobile">Registered Mobile</Label>
-                  <Controller
-                    name="registeredMobile"
-                    control={control}
-                    defaultValue={defaultValues.registeredMobile}
-                    render={({ field }) => (
-                      <Input
-                        id="registeredMobile"
-                        placeholder="Enter registered mobile"
-                        {...field}
-                        className={
-                          errors.registeredMobile ? "border-red-500" : ""
-                        }
-                      />
-                    )}
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Controller
+                name="name"
+                control={control}
+                defaultValue={defaultValues.name}
+                render={({ field }) => (
+                  <Input
+                    id="name"
+                    placeholder="Enter Name"
+                    {...field}
+                    className={errors.name ? "border-red-500" : ""}
                   />
-                  {errors.registeredMobile && (
-                    <span className="text-red-500">
-                      {errors.registeredMobile.message}
-                    </span>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="registeredEmail">Registered Email</Label>
-                  <Controller
-                    name="registeredEmail"
-                    control={control}
-                    defaultValue={defaultValues.registeredEmail}
-                    render={({ field }) => (
-                      <Input
-                        id="registeredEmail"
-                        placeholder="Enter registered email"
-                        type="email"
-                        {...field}
-                        className={
-                          errors.registeredEmail ? "border-red-500" : ""
-                        }
-                      />
-                    )}
+                )}
+              />
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="mobile">Mobile</Label>
+              <Controller
+                name="mobile"
+                control={control}
+                defaultValue={defaultValues.mobile}
+                render={({ field }) => (
+                  <PhoneInput
+                    id="mobile"
+                    type="tel"
+                    placeholder="Enter mobile number"
+                    defaultCountry="in"
+                    inputStyle={{ minWidth: "15.5rem" }}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.mobile ? "border-red-500" : ""}
                   />
-                  {errors.registeredEmail && (
-                    <span className="text-red-500">
-                      {errors.registeredEmail.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-            {brokerSelected && (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Controller
-                      name="name"
-                      control={control}
-                      defaultValue={defaultValues.name}
-                      render={({ field }) => (
-                        <Input
-                          id="name"
-                          placeholder="Enter name"
-                          {...field}
-                          className={errors.name ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.name && (
-                      <span className="text-red-500">
-                        {errors.name.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mobile">Mobile</Label>
-                    <Controller
-                      name="mobile"
-                      control={control}
-                      defaultValue={defaultValues.mobile}
-                      render={({ field }) => (
-                        <PhoneInput
-                          id="mobile"
-                          type="tel"
-                          placeholder="Enter mobile"
-                          defaultCountry="in"
-                          value={field.value}
-                          inputStyle={{ minWidth: "30.5rem" }}
-                          onChange={field.onChange}
-                          className={errors.mobile ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.mobile && (
-                      <span className="text-red-500">
-                        {errors.mobile.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Controller
-                      name="email"
-                      control={control}
-                      defaultValue={defaultValues.email}
-                      render={({ field }) => (
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="Enter email"
-                          {...field}
-                          className={errors.email ? "border-red-500" : ""}
-                        />
-                      )}
-                    />
-                    {errors.email && (
-                      <span className="text-red-500">
-                        {errors.email.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </>
-            )}
+                )}
+              />
+              {errors.mobile && (
+                <span className="text-red-500">{errors.mobile.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Controller
+                name="email"
+                control={control}
+                defaultValue={defaultValues.email}
+                render={({ field }) => (
+                  <Input
+                    id="email"
+                    placeholder="Enter email"
+                    {...field}
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
+              )}
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
