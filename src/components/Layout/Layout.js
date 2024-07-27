@@ -156,6 +156,15 @@ import OtherAssetsContentForm from "@/components/OtherAssets/otherAssetsContents
 import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
 import RecoverableOtherForm from "@/components/OtherAssets/Recoverable/RecoverableOtherForm";
 import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEditForm";
+import VehicleMainForm from "@/components/OtherAssets/Vehicle/VehicleMainForm";
+import VehicleOtherForm from "@/components/OtherAssets/Vehicle/VehicleOtherForm";
+import VehicleEditForm from "@/components/OtherAssets/Vehicle/VehicleEditForm";
+import HufMainForm from "@/components/OtherAssets/Huf/HUFMainForm";
+import HufOtherForm from "@/components/OtherAssets/Huf/HufOtherForm";
+import HufEditForm from "@/components/OtherAssets/Huf/HufEditForm";
+import JwelleryMainForm from "@/components/OtherAssets/Jwellery/JwelleryMainForm";
+import JwelleryOtherForm from "@/components/OtherAssets/Jwellery/JwelleryOtherForm";
+import JwelleryEditForm from "@/components/OtherAssets/Jwellery/JwelleryEditForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -443,12 +452,13 @@ const Layout = () => {
       {location.pathname === "/company" && <CompanyMainForm />}
       {location.pathname === "/company/add" && <CompanyOtherForm />}
       {location.pathname === "/company/edit" && <CompanyEditForm />}
-      {location.pathname === "/vehicle" && <VehicleDetailsMainForm />}
-      {location.pathname === "/vehicle/add" && <VehicleDetailsOtherForm />}
-      {location.pathname === "/vehicle/edit" && <VehicleDetailsEditForm />}
-      {location.pathname === "/huf" && <HUFMainForm />}
-      {location.pathname === "/huf/add" && <HUFOtherForm />}
-      {location.pathname === "/huf/edit" && <HUFEdit />}
+      {location.pathname === "/vehicle" && <VehicleMainForm />}
+      {location.pathname === "/vehicle/add" && <VehicleOtherForm />}
+      {location.pathname === "/vehicle/edit" && <VehicleEditForm />}
+      {location.pathname === "/huf" && <HufMainForm />}
+      {location.pathname === "/huf/add" && <HufOtherForm />}
+      {location.pathname === "/huf/edit" && <HufEditForm />}
+
       {location.pathname === "/jewellery" && <JewelleryMainForm />}
       {location.pathname === "/jewellery/add" && <JewelleryOtherForm />}
       {location.pathname === "/jewellery/edit" && <JewelleryEdit />}
@@ -587,6 +597,9 @@ const Layout = () => {
       {location.pathname === "/recoverable" && <RecoverableMainForm />}
       {location.pathname === "/recoverable/add" && <RecoverableOtherForm />}
       {location.pathname === "/recoverable/edit" && <RecoverableEditForm />}
+      {location.pathname === "/jwellery" && <JwelleryMainForm />}
+      {location.pathname === "/jwellery/add" && <JwelleryOtherForm />}
+      {location.pathname === "/jwellery/edit" && <JwelleryEditForm />}
     </div>
   );
 };
