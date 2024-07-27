@@ -110,7 +110,6 @@ function App() {
         <Route path="/recoverable" element={<Personalpage />} />
         <Route path="/recoverable/add" element={<Personalpage />} />
         <Route path="/recoverable/edit" element={<Personalpage />} />
-
         <Route path="/pss" element={<Personalpage />} />
         <Route path="/pss/add" element={<Personalpage />} />
         <Route path="/pss/edit" element={<Personalpage />} />
@@ -171,6 +170,10 @@ function App() {
         <Route path="/ofa/add" element={<Personalpage />} />
         <Route path="/ofa/edit" element={<Personalpage />} />
         <Route path="/digital-asset" element={<Personalpage />} />
+        <Route path="/otherassets" element={<Personalpage />} />
+        <Route path="/recoverable" element={<Personalpage />} />
+        <Route path="/recoverable/add" element={<Personalpage />} />
+        <Route path="/recoverable/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
