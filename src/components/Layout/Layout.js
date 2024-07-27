@@ -91,7 +91,6 @@ import BankContentForm from "@/components/Bank&Post/contents";
 import BankAccountMainForm from "@/components/Bank&Post/BankAccounts/BankAccountMainForm";
 import BankAccountOtherForm from "@/components/Bank&Post/BankAccounts/BankAccountOtherForm";
 import BankEditForm from "@/components/Bank&Post/BankAccounts/BankAccountEditForm";
-
 import IntellectualPropertyEditForm from "@/components/BusinessAssets/IntellectualProperty (IP)/IntellectualPropertyEditForm";
 import OtherDepositsMainForm from "@/components/Bank&Post/OtherDeposit/OtherDepositMainForm";
 import OtherDepositsForm from "@/components/Bank&Post/OtherDeposit/OtherDepositOtherForm";
@@ -153,6 +152,8 @@ import OtherFinancialAssetMainForm from "@/components/FinancialAssets/OtherFinan
 import OtherFinancialAssetOtherForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAOtherForm";
 import OtherFinancialAssetEditForm from "@/components/FinancialAssets/OtherFinancialAssets/OFAEdit";
 import DigitalAssetContents from "@/components/DigitalAssets/DigitalAssetsContents";
+import OtherAssetsContentForm from "@/components/OtherAssets/otherAssetsContents";
+import RecoverableMainForm from "@/components/OtherAssets/Recoverable/OtherLoanMainForm";
 
 const Layout = () => {
   const location = useLocation();
@@ -225,13 +226,13 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Membership
           </NavLink>
-          {/* <NavLink
+          <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/other-assets"
+            to="/otherassets"
           >
             <UserIcon className="h-5 w-5" />
             Other Assets
-          </NavLink> */}
+          </NavLink>
           <NavLink
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
             to="/digital-asset"
@@ -330,13 +331,13 @@ const Layout = () => {
                       <UserIcon className="h-5 w-5" />
                       Membership
                     </NavLink>
-                    {/* <NavLink
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
-            to="/other-assets"
-          >
-            <UserIcon className="h-5 w-5" />
-            Other Assets
-          </NavLink> */}
+                    <NavLink
+                      className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+                      to="/other-assets"
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      Other Assets
+                    </NavLink>
                     <NavLink
                       className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
                       to="/digital-asset"
@@ -584,6 +585,10 @@ const Layout = () => {
       {location.pathname === "/ofa/add" && <OtherFinancialAssetOtherForm />}
       {location.pathname === "/ofa/edit" && <OtherFinancialAssetEditForm />}
       {location.pathname === "/digital-asset" && <DigitalAssetContents />}
+      {location.pathname === "/otherassets" && <OtherAssetsContentForm />}
+      {location.pathname === "/recoverable" && <RecoverableMainForm />}
+      {location.pathname === "/recoverable/add" && <RecoverableForm />}
+      {location.pathname === "/recoverable/edit" && <RecoverableEditForm />}
     </div>
   );
 };
