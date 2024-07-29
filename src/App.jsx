@@ -177,6 +177,9 @@ function App() {
         <Route path="/other-asset" element={<Personalpage />} />
         <Route path="/other-asset/add" element={<Personalpage />} />
         <Route path="/other-asset/edit" element={<Personalpage />} />
+        <Route path="/jwellery" element={<Personalpage />} />
+        <Route path="/jwellery/add" element={<Personalpage />} />
+        <Route path="/jwellery/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
