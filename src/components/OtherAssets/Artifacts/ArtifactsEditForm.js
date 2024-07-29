@@ -28,23 +28,20 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  metalType: z.string().nonempty({ message: "Metal Name is required" }),
-  otherMetalType: z.string().optional(),
-  articleDetails: z
-    .string()
-    .nonempty({ message: "Article Detail is required" }),
-  otherArticleDetails: z.string().optional(),
+  typeOfArtifacts: z.string().optional(),
+  othertypeOfArtifacts: z.string().optional(),
+  otherPaintings: z.string().optional(),
   numberOfArticles: z.string().optional(),
-  weightPerArticle: z
-    .string()
-    .min(1, { message: "Weight Per Article is required" }),
-  additionalInformation: z
-    .string()
-    .min(1, { message: "Additional Information is required" }),
-  name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email" }),
-  mobile: z.string().nonempty({ message: "Mobile number is required" }),
-  bullionFile: z.any().optional(),
+  // weightPerArticle: z
+  //   .string()
+  //   .min(1, { message: "Weight Per Article is required" }),
+  // additionalInformation: z
+  //   .string()
+  //   .min(1, { message: "Additional Information is required" }),
+  // name: z.string().nonempty({ message: "Name is required" }),
+  // email: z.string().email({ message: "Invalid email" }),
+  // mobile: z.string().nonempty({ message: "Mobile number is required" }),
+  // bullionFile: z.any().optional(),
 });
 
 const BullionEdit = () => {

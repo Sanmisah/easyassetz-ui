@@ -28,24 +28,28 @@ import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
 const schema = z.object({
-  nameOfAsset: z.string().nonempty({ message: "Name of Assets is required" }),
-  assetDescription: z
-    .string()
-    .nonempty({ message: "Asset Description is required" }),
-  additionalInformation: z
-    .string()
-    .nonempty({ message: "Additional Information is required" }),
-  name: z.any().optional(),
-  mobile: z.any().optional(),
-  email: z.any().optional(),
+  nameOfAsset: z.string().optional(),
+  assetDescription: z.string().optional(),
+  // hufShare: z.string().optional(),
+  additionalInformation: z.string().optional(),
+  name: z.string().optional(),
+  email: z.string().optional(),
+  mobile: z.string().optional(),
+  type: z.any().optional(),
 });
 
-const RecoverableOtherForm = () => {
+const OtherAssetOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
+  const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
+  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const {
     handleSubmit,
     control,
@@ -56,10 +60,12 @@ const RecoverableOtherForm = () => {
     defaultValues: {
       nameOfAsset: "",
       assetDescription: "",
+      // hufShare: "",
       additionalInformation: "",
       name: "",
-      mobile: "",
       email: "",
+      mobile: "",
+      type: "otherAsset",
     },
   });
 
@@ -74,7 +80,7 @@ const RecoverableOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");
-      toast.success("Recoverable added successfully!");
+      toast.success("Other Asset added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -85,12 +91,19 @@ const RecoverableOtherForm = () => {
 
   const onSubmit = (data) => {
     // console.log(data);
-    // const date = new Date(data.dueDate);
+    // const date = new Date(data.yearOfManufacture);
     // const month = String(date.getMonth() + 1).padStart(2, "0");
     // const day = String(date.getDate()).padStart(2, "0");
     // const year = date.getFullYear();
     // const newdate = `${month}/${day}/${year}`;
-    // data.dueDate = newdate;
+    // data.yearOfManufacture = newdate;
+    // if (data.vehicleType === "other") {
+    //   data.vehicleType = data.otherVehicleType;
+    // }
+    // if (data.fourWheeler === "other") {
+    //   data.fourWheeler = data.otherFourWheeler;
+    // }
+    // data.type = "vehicle";
     loanMutate.mutate(data);
   };
 
@@ -114,14 +127,14 @@ const RecoverableOtherForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="nameOfAsset">Name of Assets</Label>
+                <Label htmlFor="nameOfAsset">Name of Asset</Label>
                 <Controller
                   name="nameOfAsset"
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="nameOfAsset"
-                      placeholder="Enter Name of Assets"
+                      placeholder="Enter nameOfAsset"
                       {...field}
                       className={errors.nameOfAsset ? "border-red-500" : ""}
                     />
@@ -133,6 +146,7 @@ const RecoverableOtherForm = () => {
                   </span>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="assetDescription">Asset Description</Label>
                 <Controller
@@ -156,11 +170,26 @@ const RecoverableOtherForm = () => {
                 )}
               </div>
             </div>
-
+            {/* <div className="space-y-2">
+              <Label htmlFor="hufShare">Share of Huf</Label>
+              <Controller
+                name="hufShare"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="hufShare"
+                    placeholder="Enter Share of Huf"
+                    {...field}
+                    className={errors.hufShare ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.hufShare && (
+                <span className="text-red-500">{errors.hufShare.message}</span>
+              )}
+            </div> */}
             <div className="space-y-2">
-              <Label htmlFor="additionalInformation">
-                Additional Information
-              </Label>
+              <Label>Additional Information</Label>
               <Controller
                 name="additionalInformation"
                 control={control}
@@ -199,27 +228,7 @@ const RecoverableOtherForm = () => {
                 <span className="text-red-500">{errors.name.message}</span>
               )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="mobile">Mobile</Label>
-              <Controller
-                name="mobile"
-                control={control}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="mobile"
-                    type="tel"
-                    placeholder="Enter Mobile"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
-                    className={errors.mobile ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.mobile && (
-                <span className="text-red-500">{errors.mobile.message}</span>
-              )}
-            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Controller
@@ -238,6 +247,27 @@ const RecoverableOtherForm = () => {
                 <span className="text-red-500">{errors.email.message}</span>
               )}
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="mobile">Mobile</Label>
+              <Controller
+                name="mobile"
+                control={control}
+                render={({ field }) => (
+                  <PhoneInput
+                    id="mobile"
+                    type="tel"
+                    placeholder="Enter mobile number"
+                    defaultCountry="in"
+                    inputStyle={{ minWidth: "15.5rem" }}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {errors.mobile && (
+                <span className="text-red-500">{errors.mobile.message}</span>
+              )}
+            </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
@@ -249,4 +279,4 @@ const RecoverableOtherForm = () => {
   );
 };
 
-export default RecoverableOtherForm;
+export default OtherAssetOtherForm;

@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const ArtifactsMainForm = () => {
+const ArtifactsMainFrom = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -95,8 +95,8 @@ const ArtifactsMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.metalType}</h1>
-                  <p className="text-sm">{data.articleDetails}</p>
+                  <h1 className="font-bold">{data.typeOfArtifacts}</h1>
+                  <p className="text-sm">{data.numberOfArticles}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>
@@ -136,4 +136,4 @@ const ArtifactsMainForm = () => {
   );
 };
 
-export default ArtifactsMainForm;
+export default ArtifactsMainFrom;

@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const RecoverableMainForm = () => {
+const OtherAssetMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -136,4 +136,4 @@ const RecoverableMainForm = () => {
   );
 };
 
-export default RecoverableMainForm;
+export default OtherAssetMainForm;

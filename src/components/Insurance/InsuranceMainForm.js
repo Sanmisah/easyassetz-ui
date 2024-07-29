@@ -40,7 +40,7 @@ const InsuranceMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setMotorInsuranceData(response?.data?.data?.OtherInsurance);
+        setMotorInsuranceData(response?.data?.data?.MotorInsurances);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -55,7 +55,7 @@ const InsuranceMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setOtherInsuranceData(response?.data?.data?.OtherInsurance);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -70,7 +70,7 @@ const InsuranceMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setOtherInsuranceData(response?.data?.data?.MotorInsurances);
+        setGeneralInsuranceData(response?.data?.data?.GeneralInsurance);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -85,7 +85,7 @@ const InsuranceMainForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setHealthInsuranceData(response?.data?.data?.HealthInsurances);
+        setHealthInsuranceData(response?.data?.data?.HealthInsurance);
       } catch (error) {
         console.error("Error fetching life insurance data", error);
       }
@@ -130,7 +130,7 @@ const InsuranceMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Health Insurance</h1>
-            {HealthInsurance?.length > 0 && (
+            {HealthInsurance && HealthInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
                   {HealthInsurance?.length && HealthInsurance?.length} Insurance
