@@ -37,7 +37,7 @@ const RecoverableMainForm = () => {
       },
     });
 
-    return response.data.data.HUF;
+    return response.data.data.Jewellery;
   };
 
   const {
@@ -74,8 +74,10 @@ const RecoverableMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Vehicle</h1>
-          <Button onMouseDown={() => navigate("/huf/add")}>Add Vehicle</Button>
+          <h1 className="text-2xl font-bold">Jewellery</h1>
+          <Button onMouseDown={() => navigate("/jwellery/add")}>
+            Add Jewellery
+          </Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}
@@ -93,7 +95,7 @@ const RecoverableMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.nameOfBorrower}</h1>
+                  <h1 className="font-bold">{data.jewelleryType}</h1>
                   <p className="text-sm">{data.address}</p>
                 </div>
                 <div className="flex items-center mr-8">
@@ -110,7 +112,7 @@ const RecoverableMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/huf/edit");
+                          navigate("/jwellery/edit");
                         }}
                       >
                         Edit

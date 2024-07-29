@@ -34,12 +34,17 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  hufName: z.string().optional(),
-  panNumber: z.string().optional(),
-  hufShare: z.string().optional(),
+  jewelleryType: z.string().optional(),
+  otherJewellery: z.string().optional(),
+  metal: z.string().optional(),
+  otherMetal: z.string().optional(),
+  preciousStone: z.string().optional(),
+  otherPreciousStone: z.string().optional(),
+  weightPerJewellery: z.string().optional(),
+  quantity: z.string().optional(),
   additionalInformation: z.string().optional(),
   name: z.string().optional(),
-  email: z.string().optional(),
+  email: z.string().email().optional(),
   mobile: z.string().optional(),
 });
 
@@ -51,6 +56,10 @@ const OtherLoansEditForm = () => {
   const queryClient = useQueryClient();
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
+  const [OtherJwelleryType, setOtherJwelleryType] = useState(false);
+  const [OthermetalSelected, setOthermetalSelected] = useState(false);
+  const [OtherPreciousStoneSelected, setOtherPreciousStoneSelected] =
+    useState(false);
 
   const {
     handleSubmit,
@@ -82,9 +91,38 @@ const OtherLoansEditForm = () => {
       }
     );
     let data = response.data.data.OtherAsset;
-    setValue("hufName", data.hufName);
-    setValue("panNumber", data.panNumber);
-    setValue("hufShare", data.hufShare);
+    if (
+      data.jewelleryType !== "bracelet" &&
+      data.jewelleryType !== "necklace" &&
+      data.jewelleryType !== "ring" &&
+      data.jewelleryType !== "other"
+    ) {
+      setValue("otherJewellery", data.jewelleryType);
+      setValue("jewelleryType", "other");
+      setOtherJwelleryType(true);
+    }
+    if (
+      data.metal !== "gold" &&
+      data.metal !== "silver" &&
+      data.metal !== "copper" &&
+      data.metal !== "other"
+    ) {
+      setValue("otherMetal", data.metal);
+      setValue("metal", "other");
+      setOthermetalSelected(true);
+    }
+    if (
+      data.preciousStone !== "diamond" &&
+      data.preciousStone !== "ruby" &&
+      data.preciousStone !== "saffron" &&
+      data.preciousStone !== "other"
+    ) {
+      setValue("otherPreciousStone", data.preciousStone);
+      setValue("preciousStone", "other");
+      setOtherPreciousStoneSelected(true);
+    }
+    setValue("weightPerJewellery", data.weightPerJewellery);
+    setValue("quantity", data.quantity);
     setValue("additionalInformation", data.additionalInformation);
     setValue("name", data.name);
     setValue("email", data.email);
@@ -142,7 +180,16 @@ const OtherLoansEditForm = () => {
     data.type = "huf";
     data.emiDate = formatDate(data.emiDate);
     data.startDate = formatDate(data.startDate);
-    data.type = "vehicle";
+    data.type = "jewellery";
+    if (data.jewelleryType === "other") {
+      data.jewelleryType = data.otherJewellery;
+    }
+    if (data.preciousStone === "other") {
+      data.preciousStone = data.otherPreciousStone;
+    }
+    if (data.metal === "other") {
+      data.metal = data.otherMetal;
+    }
     loanMutate.mutate(data);
   };
 
@@ -171,65 +218,218 @@ const OtherLoansEditForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="hufName">Name of HUF</Label>
+                <Label htmlFor="jewelleryType">Type of Jewellery</Label>
                 <Controller
-                  name="hufName"
+                  name="jewelleryType"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      id="hufName"
-                      placeholder="Enter Name of HUF"
+                    <Select
+                      id="jewelleryType"
+                      placeholder="Enter Type of Jewellery"
                       {...field}
-                      className={errors.hufName ? "border-red-500" : ""}
-                    />
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setOtherJwelleryType(value === "other");
+                      }}
+                      className={errors.jewelleryType ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="company1">Company 1</SelectItem>
+                        <SelectItem value="company2">Company 2</SelectItem>
+                        <SelectItem value="company3">Company 3</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-                {errors.hufName && (
-                  <span className="text-red-500">{errors.hufName.message}</span>
+                {OtherJwelleryType && (
+                  <div className="space-y-2">
+                    <Controller
+                      name="otherJewellery"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="otherJewellery"
+                          placeholder="Enter Other Jewellery"
+                          {...field}
+                          className={
+                            errors.otherJewellery ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.otherJewellery && (
+                      <span className="text-red-500">
+                        {errors.otherJewellery.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {errors.jewelleryType && (
+                  <span className="text-red-500">
+                    {errors.jewelleryType.message}
+                  </span>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="panNumber">PAN Number</Label>
+                <Label htmlFor="metal">Metal</Label>
                 <Controller
-                  name="panNumber"
+                  name="metal"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      id="panNumber"
-                      placeholder="Enter PAN Number"
+                    <Select
+                      id="metal"
+                      placeholder="Enter Metal"
                       {...field}
-                      className={errors.panNumber ? "border-red-500" : ""}
-                    />
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setOthermetalSelected(value === "other");
+                      }}
+                      className={errors.metal ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="silver">Silver</SelectItem>
+                        <SelectItem value="copper">Copper</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-                {errors.panNumber && (
+                {OthermetalSelected && (
+                  <div className="space-y-2">
+                    <Controller
+                      name="otherMetal"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="otherMetal"
+                          placeholder="Enter Other Metal"
+                          {...field}
+                          className={errors.otherMetal ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.otherMetal && (
+                      <span className="text-red-500">
+                        {errors.otherMetal.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {errors.metal && (
+                  <span className="text-red-500">{errors.metal.message}</span>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="preciousStone">Precious Stone</Label>
+                <Controller
+                  name="preciousStone"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="preciousStone"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setOtherPreciousStoneSelected(value === "other");
+                      }}
+                      className={errors.preciousStone ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="diamond">Diamond</SelectItem>
+                        <SelectItem value="ruby">Ruby</SelectItem>
+                        <SelectItem value="saffron">Safron</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {OtherPreciousStoneSelected && (
+                  <div className="space-y-2">
+                    <Controller
+                      name="otherPreciousStone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="otherPreciousStone"
+                          placeholder="Enter Other Precious Stone"
+                          {...field}
+                          className={
+                            errors.otherPreciousStone ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.otherPreciousStone && (
+                      <span className="text-red-500">
+                        {errors.otherPreciousStone.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {errors.preciousStone && (
                   <span className="text-red-500">
-                    {errors.panNumber.message}
+                    {errors.preciousStone.message}
                   </span>
                 )}
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="hufShare">Share of Huf</Label>
+              <Label htmlFor="weightPerJewellery">Weight Per Jewellery</Label>
               <Controller
-                name="hufShare"
+                name="weightPerJewellery"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="hufShare"
-                    placeholder="Enter Share of Huf"
+                    id="weightPerJewellery"
+                    placeholder="Enter Weight Per Jewellery"
                     {...field}
-                    className={errors.hufShare ? "border-red-500" : ""}
+                    className={
+                      errors.weightPerJewellery ? "border-red-500" : ""
+                    }
                   />
                 )}
               />
-              {errors.hufShare && (
-                <span className="text-red-500">{errors.hufShare.message}</span>
+              {errors.weightPerJewellery && (
+                <span className="text-red-500">
+                  {errors.weightPerJewellery.message}
+                </span>
               )}
             </div>
             <div className="space-y-2">
-              <Label>Additional Information</Label>
+              <Label htmlFor="quantity">Quantity</Label>
+              <Controller
+                name="quantity"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="quantity"
+                    placeholder="Enter Quantity"
+                    {...field}
+                    className={errors.quantity ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.quantity && (
+                <span className="text-red-500">{errors.quantity.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
               <Controller
                 name="additionalInformation"
                 control={control}
@@ -308,7 +508,6 @@ const OtherLoansEditForm = () => {
                 <span className="text-red-500">{errors.mobile.message}</span>
               )}
             </div>
-
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
