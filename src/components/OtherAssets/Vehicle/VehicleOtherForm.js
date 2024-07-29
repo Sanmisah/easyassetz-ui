@@ -115,9 +115,9 @@ const RecoverableOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Recoverable</CardTitle>
+              <CardTitle className="text-2xl font-bold">Vehicle</CardTitle>
               <CardDescription>
-                Fill out the form to add a new Recoverable.
+                Fill out the form to add a new Vehicle.
               </CardDescription>
             </div>
           </div>
@@ -181,7 +181,7 @@ const RecoverableOtherForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="fourWheeler">fourWheeler</Label>
+                <Label htmlFor="fourWheeler">Four Wheeler</Label>
                 <Controller
                   name="fourWheeler"
                   control={control}

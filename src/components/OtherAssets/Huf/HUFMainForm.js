@@ -67,15 +67,15 @@ const RecoverableMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Vehicle deleted successfully!");
+    toast.success("HUF deleted successfully!");
   };
 
   return (
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Vehicle</h1>
-          <Button onMouseDown={() => navigate("/huf/add")}>Add Vehicle</Button>
+          <h1 className="text-2xl font-bold">HUF</h1>
+          <Button onMouseDown={() => navigate("/huf/add")}>Add HUF</Button>
           {alertDialog && (
             <DeleteAlert
               alertDialog={alertDialog}

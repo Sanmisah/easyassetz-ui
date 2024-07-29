@@ -37,9 +37,11 @@ const schema = z.object({
   vehicleType: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
+  otherVehicleType: z.string().optional(),
   fourWheeler: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
+  otherFourWheeler: z.string().optional(),
   company: z.string().optional(),
   model: z.any().optional(),
   registrationNumber: z.any().optional(),
@@ -160,10 +162,10 @@ const OtherLoansEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
+                Edit Vehicle Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the loan details.
+                Update the form to edit the vehicle details.
               </CardDescription>
             </div>
           </div>
@@ -226,7 +228,7 @@ const OtherLoansEditForm = () => {
                 />
               )}
               <div className="space-y-2">
-                <Label htmlFor="fourWheeler">fourWheeler</Label>
+                <Label htmlFor="fourWheeler">Four Wheeler</Label>
                 <Controller
                   name="fourWheeler"
                   control={control}
@@ -241,7 +243,7 @@ const OtherLoansEditForm = () => {
                       className={errors.fourWheeler ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Vehicle Type" />
+                        <SelectValue placeholder="Select Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="car">Car</SelectItem>
@@ -260,7 +262,7 @@ const OtherLoansEditForm = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Vehicle Type"
+                        placeholder="Specify Type"
                         className="mt-2"
                       />
                     )}

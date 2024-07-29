@@ -67,7 +67,7 @@ const RecoverableMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Vehicle deleted successfully!");
+    toast.success("Jewellery deleted successfully!");
   };
 
   return (
