@@ -174,6 +174,9 @@ function App() {
         <Route path="/recoverable" element={<Personalpage />} />
         <Route path="/recoverable/add" element={<Personalpage />} />
         <Route path="/recoverable/edit" element={<Personalpage />} />
+        <Route path="/other-asset" element={<Personalpage />} />
+        <Route path="/other-asset/add" element={<Personalpage />} />
+        <Route path="/other-asset/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
