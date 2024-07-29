@@ -34,6 +34,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 const schema = z.object({
   jewelleryType: z.string().optional(),
+  otherJewellery: z.string().optional(),
   metal: z.string().optional(),
   otherMetal: z.string().optional(),
   preciousStone: z.string().optional(),
@@ -53,6 +54,10 @@ const RecoverableOtherForm = () => {
   const queryClient = useQueryClient();
   const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
+  const [OtherJwelleryType, setOtherJwelleryType] = useState(false);
+  const [OthermetalSelected, setOthermetalSelected] = useState(false);
+  const [OtherPreciousStoneSelected, setOtherPreciousStoneSelected] =
+    useState(false);
   const {
     handleSubmit,
     control,
@@ -64,6 +69,7 @@ const RecoverableOtherForm = () => {
       vehicleType: "",
       fourWheeler: "",
       company: "",
+
       model: "",
       duration: "",
       yearOfManufacture: "",
@@ -98,6 +104,7 @@ const RecoverableOtherForm = () => {
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
+    data.type = "jewellery";
     data.yearOfManufacture = newdate;
     if (data.vehicleType === "other") {
       data.vehicleType = data.otherVehicleType;
@@ -105,7 +112,15 @@ const RecoverableOtherForm = () => {
     if (data.fourWheeler === "other") {
       data.fourWheeler = data.otherFourWheeler;
     }
-    data.type = "vehicle";
+    if (data.jewelleryType === "other") {
+      data.jewelleryType = data.otherJewellery;
+    }
+    if (data.preciousStone === "other") {
+      data.preciousStone = data.otherPreciousStone;
+    }
+    if (data.metal === "other") {
+      data.metal = data.otherMetal;
+    }
     loanMutate.mutate(data);
   };
 
@@ -127,6 +142,301 @@ const RecoverableOtherForm = () => {
             className="space-y-6 flex flex-col"
             onSubmit={handleSubmit(onSubmit)}
           >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="jewelleryType">Type of Jewellery</Label>
+                <Controller
+                  name="jewelleryType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="jewelleryType"
+                      placeholder="Enter Type of Jewellery"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setOtherJwelleryType(value === "other");
+                      }}
+                      className={errors.jewelleryType ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="company1">Company 1</SelectItem>
+                        <SelectItem value="company2">Company 2</SelectItem>
+                        <SelectItem value="company3">Company 3</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {OtherJwelleryType && (
+                  <div className="space-y-2">
+                    <Controller
+                      name="otherJewellery"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="otherJewellery"
+                          placeholder="Enter Other Jewellery"
+                          {...field}
+                          className={
+                            errors.otherJewellery ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.otherJewellery && (
+                      <span className="text-red-500">
+                        {errors.otherJewellery.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {errors.jewelleryType && (
+                  <span className="text-red-500">
+                    {errors.jewelleryType.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="metal">Metal</Label>
+                <Controller
+                  name="metal"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="metal"
+                      placeholder="Enter Metal"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setOthermetalSelected(value === "other");
+                      }}
+                      className={errors.metal ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="silver">Silver</SelectItem>
+                        <SelectItem value="copper">Copper</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {OthermetalSelected && (
+                  <div className="space-y-2">
+                    <Controller
+                      name="otherMetal"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="otherMetal"
+                          placeholder="Enter Other Metal"
+                          {...field}
+                          className={errors.otherMetal ? "border-red-500" : ""}
+                        />
+                      )}
+                    />
+                    {errors.otherMetal && (
+                      <span className="text-red-500">
+                        {errors.otherMetal.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {errors.metal && (
+                  <span className="text-red-500">{errors.metal.message}</span>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="preciousStone">Precious Stone</Label>
+                <Controller
+                  name="preciousStone"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="preciousStone"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setOtherPreciousStoneSelected(value === "other");
+                      }}
+                      className={errors.preciousStone ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="diamond">Diamond</SelectItem>
+                        <SelectItem value="ruby">Ruby</SelectItem>
+                        <SelectItem value="saffron">Safron</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {OtherPreciousStoneSelected && (
+                  <div className="space-y-2">
+                    <Label htmlFor="otherPreciousStone">
+                      Other Precious Stone
+                    </Label>
+                    <Controller
+                      name="otherPreciousStone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="otherPreciousStone"
+                          placeholder="Enter Other Precious Stone"
+                          {...field}
+                          className={
+                            errors.otherPreciousStone ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.otherPreciousStone && (
+                      <span className="text-red-500">
+                        {errors.otherPreciousStone.message}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {errors.preciousStone && (
+                  <span className="text-red-500">
+                    {errors.preciousStone.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="weightPerJewellery">Weight Per Jewellery</Label>
+              <Controller
+                name="weightPerJewellery"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="weightPerJewellery"
+                    placeholder="Enter Weight Per Jewellery"
+                    {...field}
+                    className={
+                      errors.weightPerJewellery ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.weightPerJewellery && (
+                <span className="text-red-500">
+                  {errors.weightPerJewellery.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="quantity">Quantity</Label>
+              <Controller
+                name="quantity"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="quantity"
+                    placeholder="Enter Quantity"
+                    {...field}
+                    className={errors.quantity ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.quantity && (
+                <span className="text-red-500">{errors.quantity.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="additionalInformation">
+                Additional Information
+              </Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter Additional Information"
+                    {...field}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="name"
+                    placeholder="Enter Name"
+                    {...field}
+                    className={errors.name ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="email"
+                    placeholder="Enter Email"
+                    {...field}
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="mobile">Mobile</Label>
+              <Controller
+                name="mobile"
+                control={control}
+                render={({ field }) => (
+                  <PhoneInput
+                    id="mobile"
+                    type="tel"
+                    placeholder="Enter mobile number"
+                    defaultCountry="in"
+                    inputStyle={{ minWidth: "15.5rem" }}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {errors.mobile && (
+                <span className="text-red-500">{errors.mobile.message}</span>
+              )}
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
