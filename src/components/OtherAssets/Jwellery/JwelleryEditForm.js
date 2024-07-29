@@ -90,7 +90,7 @@ const OtherLoansEditForm = () => {
         },
       }
     );
-    let data = response.data.data.OtherAsset;
+    let data = response.data.data.Jewellery;
     if (
       data.jewelleryType !== "bracelet" &&
       data.jewelleryType !== "necklace" &&
@@ -127,7 +127,7 @@ const OtherLoansEditForm = () => {
     setValue("name", data.name);
     setValue("email", data.email);
     setValue("mobile", data.mobile);
-    return response.data.data.OtherAsset;
+    return response.data.data.Jewellery;
   };
 
   const { data, isLoading, isError } = useQuery({
@@ -155,11 +155,11 @@ const OtherLoansEditForm = () => {
           },
         }
       );
-      return response.data.data.Vehicle;
+      return response.data.data.Jewellery;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
-      toast.success("Vehicle updated successfully!");
+      toast.success("Jewellery updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -194,7 +194,7 @@ const OtherLoansEditForm = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading loan data</div>;
+  if (isError) return <div>Error loading Jewellery data</div>;
 
   return (
     <div className="w-full">
@@ -203,10 +203,10 @@ const OtherLoansEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
+                Edit Jewellery Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the loan details.
+                Update the form to edit the Jewellery details.
               </CardDescription>
             </div>
           </div>
@@ -237,9 +237,13 @@ const OtherLoansEditForm = () => {
                         <SelectValue placeholder="Select insurance company" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
+                        <SelectItem value="necklace">Necklace</SelectItem>
+                        <SelectItem value="earrings">Earrings</SelectItem>
+                        <SelectItem value="bracelet">Bracelet</SelectItem>
+                        <SelectItem value="bangles">Bangles</SelectItem>
+                        <SelectItem value="cuffLinks">Cuff Links</SelectItem>
+                        <SelectItem value="chain">Chain</SelectItem>
+                        <SelectItem value="ring">Ring</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -298,6 +302,8 @@ const OtherLoansEditForm = () => {
                         <SelectItem value="gold">Gold</SelectItem>
                         <SelectItem value="silver">Silver</SelectItem>
                         <SelectItem value="copper">Copper</SelectItem>
+                        <SelectItem value="whiteGold">White Gold</SelectItem>
+                        <SelectItem value="diamond">Diamond</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>

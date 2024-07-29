@@ -74,11 +74,11 @@ const RecoverableOtherForm = () => {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Recoverable;
+      return response.data.data.HUF;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");
-      toast.success("Recoverable added successfully!");
+      toast.success("HUF added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -111,9 +111,9 @@ const RecoverableOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Recoverable</CardTitle>
+              <CardTitle className="text-2xl font-bold">HUF</CardTitle>
               <CardDescription>
-                Fill out the form to add a new Recoverable.
+                Fill out the form to add a new HUF.
               </CardDescription>
             </div>
           </div>

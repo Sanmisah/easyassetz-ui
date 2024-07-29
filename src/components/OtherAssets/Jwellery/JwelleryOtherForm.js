@@ -47,7 +47,7 @@ const schema = z.object({
   mobile: z.string().optional(),
 });
 
-const RecoverableOtherForm = () => {
+const JewelleryOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -69,7 +69,6 @@ const RecoverableOtherForm = () => {
       vehicleType: "",
       fourWheeler: "",
       company: "",
-
       model: "",
       duration: "",
       yearOfManufacture: "",
@@ -84,11 +83,11 @@ const RecoverableOtherForm = () => {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Recoverable;
+      return response.data.data.Jewellery;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");
-      toast.success("Recoverable added successfully!");
+      toast.success("Jewellery added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -130,9 +129,9 @@ const RecoverableOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Recoverable</CardTitle>
+              <CardTitle className="text-2xl font-bold">Jewellery</CardTitle>
               <CardDescription>
-                Fill out the form to add a new Recoverable.
+                Fill out the form to add a new Jewellery.
               </CardDescription>
             </div>
           </div>
@@ -163,9 +162,13 @@ const RecoverableOtherForm = () => {
                         <SelectValue placeholder="Select insurance company" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
+                        <SelectItem value="necklace">Necklace</SelectItem>
+                        <SelectItem value="earrings">Earrings</SelectItem>
+                        <SelectItem value="bracelet">Bracelet</SelectItem>
+                        <SelectItem value="bangles">Bangles</SelectItem>
+                        <SelectItem value="cuffLinks">Cuff Links</SelectItem>
+                        <SelectItem value="chain">Chain</SelectItem>
+                        <SelectItem value="ring">Ring</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -224,6 +227,8 @@ const RecoverableOtherForm = () => {
                         <SelectItem value="gold">Gold</SelectItem>
                         <SelectItem value="silver">Silver</SelectItem>
                         <SelectItem value="copper">Copper</SelectItem>
+                        <SelectItem value="whiteGold">White Gold</SelectItem>
+                        <SelectItem value="diamond">Diamond</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -447,4 +452,4 @@ const RecoverableOtherForm = () => {
   );
 };
 
-export default RecoverableOtherForm;
+export default JewelleryOtherForm;
