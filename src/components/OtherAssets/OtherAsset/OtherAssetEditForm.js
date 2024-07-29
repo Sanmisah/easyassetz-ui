@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -18,29 +18,40 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { useSelector } from "react-redux";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@com/ui/select";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 
+const FocusableSelectTrigger = forwardRef((props, ref) => (
+  <SelectTrigger ref={ref} {...props} />
+));
+
 const schema = z.object({
-  nameOfAsset: z
-    .string()
-    .nonempty({ message: "Bank/Institution Name is required" }),
-  assetDescription: z
-    .string()
-    .nonempty({ message: "Loan Account Number is required" }),
-  additionalInformation: z
-    .string()
-    .nonempty({ message: "Guarantor Name is required" }),
-  name: z.any().optional(),
-  mobile: z.any().optional(),
-  email: z.any().optional(),
+  nameOfAsset: z.string().optional(),
+  assetDescription: z.string().optional(),
+  // hufShare: z.string().optional(),
+  additionalInformation: z.string().optional(),
+  name: z.string().optional(),
+  email: z.string().optional(),
+  mobile: z.string().optional(),
+  type: z.any().optional(),
 });
 
-const RecoverableEditForm = () => {
+const OtherAssetEditForm = () => {
   const navigate = useNavigate();
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
+  const [showOtherMetalType, setShowOtherMetalType] = useState(false);
+  const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
 
   const {
     handleSubmit,
@@ -52,44 +63,48 @@ const RecoverableEditForm = () => {
     defaultValues: {
       nameOfAsset: "",
       assetDescription: "",
+      // hufShare: "",
       additionalInformation: "",
       name: "",
-      mobile: "",
       email: "",
+      mobile: "",
+      type: "otherAsset",
     },
   });
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/other-assets/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    let data = response.data.data.OtherAsset;
+    setValue("nameOfAsset", data.nameOfAsset);
+    setValue("assetDescription", data.assetDescription);
+    // setValue("hufShare", data.hufShare);
+    setValue("additionalInformation", data.additionalInformation);
+    setValue("name", data.name);
+    setValue("email", data.email);
+    setValue("mobile", data.mobile);
+    return response.data.data.OtherAsset;
+  };
 
-  const {
-    data: loanData,
-    isLoading,
-    isError,
-  } = useQuery(
-    ["loanData", id],
-    async () => {
-      const response = await axios.get(
-        `/api/other-assets/${lifeInsuranceEditId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
-      return response.data.data.OtherAsset;
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["vehicleData", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      setInitialData(data);
+      reset(data);
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching loan data:", error);
-        toast.error("Failed to fetch loan data");
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
+    },
+  });
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
@@ -106,7 +121,7 @@ const RecoverableEditForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
-      toast.success("Loan updated successfully!");
+      toast.success("Other Asset updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -114,24 +129,25 @@ const RecoverableEditForm = () => {
       toast.error("Failed to update loan");
     },
   });
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
 
   const onSubmit = (data) => {
     console.log(data);
-    // const formatDate = (date) => {
-    //   const d = new Date(date);
-    //   const month = String(d.getMonth() + 1).padStart(2, "0");
-    //   const day = String(d.getDate()).padStart(2, "0");
-    //   const year = d.getFullYear();
-    //   return `${month}/${day}/${year}`;
-    // };
-
-    // data.dueDate = formatDate(data.dueDate);
-
+    // data.type = "huf";
+    // data.emiDate = formatDate(data.emiDate);
+    // data.startDate = formatDate(data.startDate);
+    // data.type = "vehicle";
     loanMutate.mutate(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading data</div>;
+  if (isError) return <div>Error loading loan data</div>;
 
   return (
     <div className="w-full">
@@ -155,14 +171,14 @@ const RecoverableEditForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="nameOfAsset">Name of Assets</Label>
+                <Label htmlFor="nameOfAsset">Name of Asset</Label>
                 <Controller
                   name="nameOfAsset"
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="nameOfAsset"
-                      placeholder="Enter Name of Assets"
+                      placeholder="Enter Name of Asset"
                       {...field}
                       className={errors.nameOfAsset ? "border-red-500" : ""}
                     />
@@ -174,6 +190,7 @@ const RecoverableEditForm = () => {
                   </span>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="assetDescription">Asset Description</Label>
                 <Controller
@@ -197,11 +214,26 @@ const RecoverableEditForm = () => {
                 )}
               </div>
             </div>
-
+            {/* <div className="space-y-2">
+              <Label htmlFor="hufShare">Share of Huf</Label>
+              <Controller
+                name="hufShare"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="hufShare"
+                    placeholder="Enter Share of Huf"
+                    {...field}
+                    className={errors.hufShare ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.hufShare && (
+                <span className="text-red-500">{errors.hufShare.message}</span>
+              )}
+            </div> */}
             <div className="space-y-2">
-              <Label htmlFor="additionalInformation">
-                Additional Information
-              </Label>
+              <Label>Additional Information</Label>
               <Controller
                 name="additionalInformation"
                 control={control}
@@ -240,27 +272,7 @@ const RecoverableEditForm = () => {
                 <span className="text-red-500">{errors.name.message}</span>
               )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="mobile">Mobile</Label>
-              <Controller
-                name="mobile"
-                control={control}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="mobile"
-                    type="tel"
-                    placeholder="Enter Mobile"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    {...field}
-                    className={errors.mobile ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.mobile && (
-                <span className="text-red-500">{errors.mobile.message}</span>
-              )}
-            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Controller
@@ -279,6 +291,27 @@ const RecoverableEditForm = () => {
                 <span className="text-red-500">{errors.email.message}</span>
               )}
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="mobile">Mobile</Label>
+              <Controller
+                name="mobile"
+                control={control}
+                render={({ field }) => (
+                  <PhoneInput
+                    id="mobile"
+                    type="tel"
+                    placeholder="Enter mobile number"
+                    defaultCountry="in"
+                    inputStyle={{ minWidth: "15.5rem" }}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {errors.mobile && (
+                <span className="text-red-500">{errors.mobile.message}</span>
+              )}
+            </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
@@ -290,4 +323,4 @@ const RecoverableEditForm = () => {
   );
 };
 
-export default RecoverableEditForm;
+export default OtherAssetEditForm;

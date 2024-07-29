@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useEffect } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import {
   Card,
   CardHeader,
@@ -17,7 +17,6 @@ import {
 } from "@com/ui/select";
 import { Button } from "@com/ui/button";
 import { Input } from "@com/ui/input";
-import { Textarea } from "@com/ui/textarea";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -26,35 +25,36 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
-
-const schema = z.object({
-  typeOfArtifacts: z
-    .string()
-    .nonempty({ message: "Type of Artifacts is required" }),
-  otherMetalType: z.string().optional(),
-  numberOfArticles: z
-    .string()
-    .nonempty({ message: "Number of Article Details is required" }),
-});
+import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
 ));
 
-FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
+const schema = z.object({
+  typeOfArtifacts: z.string().optional(),
+  othertypeOfArtifacts: z.string().optional(),
+  otherPaintings: z.string().optional(),
+  numberOfArticles: z.string().optional(),
+  // hufShare: z.string().optional(),
+  // additionalInformation: z.string().optional(),
+  // name: z.string().optional(),
+  // email: z.string().optional(),
+  // mobile: z.string().optional(),
+  type: z.any().optional(),
+});
 
-const BullionForm = () => {
+const ArtifactsOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
+  const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
-  const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
-  const [selectedNommie, setSelectedNommie] = useState([]);
-  const [nomineeerror, setNomineeError] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobile, setPhone] = useState("");
+  const [showOthertypeOfArtifacts, setShowOthertypeOfArtifacts] =
+    useState(false);
+  const [showOtherPaintings, setShowOtherPaintings] = useState(false);
   const {
     handleSubmit,
     control,
@@ -64,66 +64,57 @@ const BullionForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       typeOfArtifacts: "",
-      otherMetalType: "",
+      othertypeOfArtifacts: "",
+      otherPaintings: "",
       numberOfArticles: "",
+      // hufShare: "",
+      // additionalInformation: "",
+      // name: "",
+      // email: "",
+      // mobile: "",
+      type: "artifact",
     },
   });
 
-  const lifeInsuranceMutate = useMutation({
+  const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const Formdata = new FormData();
-      Formdata.append("bullionFile", data.bullionFile);
-
-      for (const [key, value] of Object.entries(data)) {
-        Formdata.append(key, value);
-      }
-
-      const response = await axios.post(
-        `/api/other-assets`,
-
-        Formdata,
-
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
-
-      return response.data.data.Artifacts;
+      const response = await axios.post(`/api/other-assets`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
+      return response.data.data.Watch;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("LifeInsuranceData");
+      queryClient.invalidateQueries("LoanData");
       toast.success("Artifacts added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile");
+      console.error("Error submitting loan:", error);
+      toast.error("Failed to submit loan");
     },
   });
 
-  // useEffect(() => {
-  //   if (selectedNommie.length > 0) {
-  //     setNomineeError(false);
-  //   }
-  // }, [selectedNommie]);
-
   const onSubmit = (data) => {
-    console.log(data);
-    if (data.metalType === "other") {
-      data.metalType = data.otherMetalType;
-    }
-    // if (data.articleDetails === "other") {
-    //   data.articleDetails = data.otherArticleDetails;
-    // }
-    // data.name = name;
-    // data.email = email;
-    // data.mobile = mobile;
-    delete data.otherMetalType;
-    // delete data.otherArticleDetails;
+    // console.log(data);
+    // const date = new Date(data.yearOfManufacture);
+    // const month = String(date.getMonth() + 1).padStart(2, "0");
+    // const day = String(date.getDate()).padStart(2, "0");
+    // const year = date.getFullYear();
+    // const newdate = `${month}/${day}/${year}`;
+    // data.yearOfManufacture = newdate;
 
-    lifeInsuranceMutate.mutate(data);
+    // if (data.paintings === "paintings") {
+    //   data.paintings = data.otherPaintings;
+    // }
+    if (data.typeOfArtifacts === "other") {
+      data.typeOfArtifacts = data.othertypeOfArtifacts;
+    }
+    delete data.othertypeOfArtifacts;
+    delete data.otherPaintings;
+    // data.type = "vehicle";
+    loanMutate.mutate(data);
   };
 
   return (
@@ -132,9 +123,7 @@ const BullionForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Artifacts Details
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold">Artifacts</CardTitle>
               <CardDescription>
                 Fill out the form to add a new Artifacts.
               </CardDescription>
@@ -148,40 +137,42 @@ const BullionForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="metalType">Metal Type</Label>
+                <Label htmlFor="typeOfArtifacts">Type Of Artifact</Label>
                 <Controller
-                  name="metalType"
+                  name="typeOfArtifacts"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="metalType"
+                      id="typeOfArtifacts"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherMetalType(value === "other");
+                        setShowOthertypeOfArtifacts(value);
+                        setShowOtherPaintings(value);
                       }}
-                      className={errors.metalType ? "border-red-500" : ""}
+                      className={errors.typeOfArtifacts ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
+                        <SelectValue placeholder="Select Artifact Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
+                        <SelectItem value="pots">Pots</SelectItem>
+                        <SelectItem value="metal">Metal</SelectItem>
+                        <SelectItem value="objects">Objects</SelectItem>
+                        <SelectItem value="paintings">Paintings</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
-                {showOtherMetalType && (
+                {showOthertypeOfArtifacts === "other" && (
                   <Controller
-                    name="otherMetalType"
+                    name="othertypeOfArtifacts"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Metal Type"
+                        placeholder="Specify Artifact Type"
                         className="mt-2"
                         value={field.value || ""}
                         onChange={field.onChange}
@@ -189,26 +180,46 @@ const BullionForm = () => {
                     )}
                   />
                 )}
-                {errors.metalType && (
+                {errors.typeOfArtifacts && (
                   <span className="text-red-500">
-                    {errors.metalType.message}
+                    {errors.typeOfArtifacts.message}
+                  </span>
+                )}
+                {showOtherPaintings === "paintings" && (
+                  <>
+                    <Controller
+                      name="paintings"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Specify Painting Name"
+                          className="mt-2"
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </>
+                )}
+                {errors.typeOfArtifacts && (
+                  <span className="text-red-500">
+                    {errors.typeOfArtifacts.message}
                   </span>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="numberOfArticles">Number Of Article</Label>
+              <Label htmlFor="numberOfArticles">Number Of Articles</Label>
               <Controller
                 name="numberOfArticles"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="numberOfArticles"
-                    placeholder="Enter Number Of Article"
+                    placeholder="Enter Number Of Articles"
                     {...field}
-                    value={field.value || ""}
-                    onChange={field.onChange}
                     className={errors.numberOfArticles ? "border-red-500" : ""}
                   />
                 )}
@@ -219,6 +230,104 @@ const BullionForm = () => {
                 </span>
               )}
             </div>
+            {/* <div className="space-y-2">
+              <Label htmlFor="hufShare">Share of Huf</Label>
+              <Controller
+                name="hufShare"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="hufShare"
+                    placeholder="Enter Share of Huf"
+                    {...field}
+                    className={errors.hufShare ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.hufShare && (
+                <span className="text-red-500">{errors.hufShare.message}</span>
+              )}
+            </div> */}
+            {/* <div className="space-y-2">
+              <Label>Additional Information</Label>
+              <Controller
+                name="additionalInformation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="additionalInformation"
+                    placeholder="Enter Additional Information"
+                    {...field}
+                    className={
+                      errors.additionalInformation ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.additionalInformation && (
+                <span className="text-red-500">
+                  {errors.additionalInformation.message}
+                </span>
+              )}
+            </div> */}
+            {/* <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="name"
+                    placeholder="Enter Name"
+                    {...field}
+                    className={errors.name ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
+              )}
+            </div> */}
+
+            {/* <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="email"
+                    placeholder="Enter Email"
+                    {...field}
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
+              )}
+            </div> */}
+            {/* <div className="space-y-2">
+              <Label htmlFor="mobile">Mobile</Label>
+              <Controller
+                name="mobile"
+                control={control}
+                render={({ field }) => (
+                  <PhoneInput
+                    id="mobile"
+                    type="tel"
+                    placeholder="Enter mobile number"
+                    defaultCountry="in"
+                    inputStyle={{ minWidth: "15.5rem" }}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {errors.mobile && (
+                <span className="text-red-500">{errors.mobile.message}</span>
+              )}
+            </div> */}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
@@ -230,4 +339,4 @@ const BullionForm = () => {
   );
 };
 
-export default BullionForm;
+export default ArtifactsOtherForm;

@@ -42,7 +42,7 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().min(1, { message: "Policy Number is required" }),
-  maturityDate: z.date().optional(),
+  maturityDate: z.any().optional(),
   premium: z.string().min(3, { message: "Premium is required" }),
   sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
   policyHolderName: z
@@ -192,7 +192,7 @@ const EditFormGeneral = () => {
         lifeInsuranceEditId
       );
 
-      toast.success("Other Insurance added successfully!");
+      toast.success("General Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
