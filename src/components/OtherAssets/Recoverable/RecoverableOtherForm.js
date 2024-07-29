@@ -28,6 +28,7 @@ import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
+
 const schema = z.object({
   nameOfBorrower: z
     .string()
@@ -40,6 +41,7 @@ const schema = z.object({
   additionalInformation: z
     .string()
     .nonempty({ message: "Guarantor Name is required" }),
+  type: z.any().optional(),
 });
 
 const RecoverableOtherForm = () => {
@@ -62,6 +64,7 @@ const RecoverableOtherForm = () => {
       duration: "",
       dueDate: "",
       additionalInformation: "",
+      type: "recoverable",
     },
   });
 
@@ -93,6 +96,7 @@ const RecoverableOtherForm = () => {
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
     data.dueDate = newdate;
+    data.type = "recoverable";
     loanMutate.mutate(data);
   };
 

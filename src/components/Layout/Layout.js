@@ -156,6 +156,15 @@ import OtherAssetsContentForm from "@/components/OtherAssets/otherAssetsContents
 import RecoverableMainForm from "@/components/OtherAssets/Recoverable/RecoverableMainForm";
 import RecoverableOtherForm from "@/components/OtherAssets/Recoverable/RecoverableOtherForm";
 import RecoverableEditForm from "@/components/OtherAssets/Recoverable/RecoverableEditForm";
+import OtherAssetMainForm from "@/components/OtherAssets/OtherAsset/OtherAssetMainForm";
+import OtherAssetOtherForm from "@/components/OtherAssets/OtherAsset/OtherAssetOtherForm";
+import OtherAssetEditForm from "@/components/OtherAssets/OtherAsset/OtherAssetEditForm";
+import WatchMainForm from "@/components/OtherAssets/Watch/WatchMainForm";
+import WatchOtherForm from "@/components/OtherAssets/Watch/WatchOtherForm";
+import WatchEditForm from "@/components/OtherAssets/Watch/WatchEditForm";
+import ArtifactsMainForm from "@/components/OtherAssets/Artifacts/ArtifactsMainForm";
+import ArtifactsOtherForm from "@/components/OtherAssets/Artifacts/ArtifactsOtherForm";
+import ArtifactsEditForm from "@/components/OtherAssets/Artifacts/ArtifactsEditForm";
 import VehicleMainForm from "@/components/OtherAssets/Vehicle/VehicleMainForm";
 import VehicleOtherForm from "@/components/OtherAssets/Vehicle/VehicleOtherForm";
 import VehicleEditForm from "@/components/OtherAssets/Vehicle/VehicleEditForm";
@@ -467,9 +476,10 @@ const Layout = () => {
       {location.pathname === "/digitalassets/edit" && <DigitalAssetEditForm />}
       {location.pathname === "/watch" && <WatchMainForm />}
       {location.pathname === "/watch/add" && <WatchOtherForm />}
-      {location.pathname === "/watch/edit" && <WatchEdit />}
+      {location.pathname === "/watch/edit" && <WatchEditForm />}
       {location.pathname === "/artifacts" && <ArtifactsMainForm />}
       {location.pathname === "/artifacts/add" && <ArtifactsOtherForm />}
+      {location.pathname === "/artifacts/edit" && <ArtifactsEditForm />}
       {location.pathname === "/liabilities" && <Liabilities />}
       {location.pathname === "/homeloans" && <HomeLoanForm />}
       {location.pathname === "/homeloans/add" && <HomeLoanOtherForm />}
@@ -514,7 +524,7 @@ const Layout = () => {
       {location.pathname === "/fixdeposit/add" && <FixDepositsForm />}
       {location.pathname === "/fixdeposit/edit" && <FixDepositsEditForm />}
       {location.pathname === "/other-asset" && <OtherAssetMainForm />}
-      {location.pathname === "/other-asset/add" && <OtherAssetForm />}
+      {location.pathname === "/other-asset/add" && <OtherAssetOtherForm />}
       {location.pathname === "/other-asset/edit" && <OtherAssetEditForm />}
       {location.pathname === "/other-deposits" && <OtherDepositsMainForm />}
       {location.pathname === "/other-deposits/add" && <OtherDepositsForm />}
