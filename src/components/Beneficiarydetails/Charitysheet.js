@@ -65,8 +65,8 @@ const charitySchema = z.object({
   charityCity: z.string().nonempty("City is required"),
   charityState: z.string().nonempty("State is required"),
   charityNumber: z.string().optional(),
-  charityEmail: z.string().email("Invalid charityEmail address"),
-  contactName: z.string().nonempty("Contact person name is required"),
+  charityEmail: z.string().email("Invalid Charity Email address"),
+  contactName: z.string().nonempty("Contact Person Name is Required"),
   charityWebsite: z.any().optional(),
   charitySpecificInstruction: z.string().optional(),
 });
@@ -278,7 +278,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               </Label>
               <Textarea
                 id="charitySpecificInstruction"
-                placeholder="Enter any specific instructions"
+                placeholder="Enter any Specific Instructions"
                 {...register("charitySpecificInstruction")}
                 className="w-full"
               />
