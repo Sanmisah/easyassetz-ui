@@ -142,20 +142,20 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     setValue("guardianNationality", "");
   };
 
-  // const handlePincodeChange = async (pincode) => {
-  //   try {
-  //     setValue("pincode", pincode);
-  //     const response = await axios.get(
-  //       `https://api.postalpincode.in/pincode/${pincode}`
-  //     );
-  //     const { Block, State, Country } = response.data[0].PostOffice[0];
-  //     setValue("permanentCity", Block);
-  //     setValue("permanentState", State);
-  //     setValue("permanentCountry", Country);
-  //   } catch (error) {
-  //     console.error("Failed to fetch pincode details:", error);
-  //   }
-  // };
+  const handlePincodeChange = async (pincode) => {
+    try {
+      setValue("pincode", pincode);
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      const { Block, State, Country } = response.data[0].PostOffice[0];
+      setValue("city", Block);
+      setValue("state", State);
+      setValue("country", Country);
+    } catch (error) {
+      console.error("Failed to fetch pincode details:", error);
+    }
+  };
 
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
@@ -585,7 +585,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Input
                           id="guardian-pincode"
                           placeholder="Enter Pincode"
-                          {...register("pincode")}
+                          onChange={(e) => handlePincodeChange(e.target.value)}
                         />
                         {errors.pincode && (
                           <p className="text-red-500">
