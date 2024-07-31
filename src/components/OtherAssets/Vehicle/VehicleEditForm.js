@@ -66,15 +66,13 @@ const OtherLoansEditForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      bankName: "",
-      loanAccountNo: "",
-      branch: "",
-      emiDate: "",
-      startDate: "",
+      vehicleType: "",
+      fourWheeler: "",
+      company: "",
+      model: "",
       duration: "",
-      guarantorName: "",
-      guarantorMobile: "",
-      guarantorEmail: "",
+      dueDate: "",
+      location: "",
     },
   });
   const getPersonalData = async () => {

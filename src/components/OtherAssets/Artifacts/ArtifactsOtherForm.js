@@ -35,7 +35,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 const schema = z.object({
   typeOfArtifacts: z.string().optional(),
   othertypeOfArtifacts: z.string().optional(),
-  otherPaintings: z.string().optional(),
+  // otherPaintings: z.string().optional(),
   numberOfArticles: z.string().optional(),
   // hufShare: z.string().optional(),
   // additionalInformation: z.string().optional(),
@@ -54,7 +54,7 @@ const ArtifactsOtherForm = () => {
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [showOthertypeOfArtifacts, setShowOthertypeOfArtifacts] =
     useState(false);
-  const [showOtherPaintings, setShowOtherPaintings] = useState(false);
+  // const [showOtherPaintings, setShowOtherPaintings] = useState(false);
   const {
     handleSubmit,
     control,
@@ -65,7 +65,7 @@ const ArtifactsOtherForm = () => {
     defaultValues: {
       typeOfArtifacts: "",
       othertypeOfArtifacts: "",
-      otherPaintings: "",
+      // otherPaintings: "",
       numberOfArticles: "",
       // hufShare: "",
       // additionalInformation: "",
@@ -112,7 +112,7 @@ const ArtifactsOtherForm = () => {
       data.typeOfArtifacts = data.othertypeOfArtifacts;
     }
     delete data.othertypeOfArtifacts;
-    delete data.otherPaintings;
+    // delete data.otherPaintings;
     // data.type = "vehicle";
     loanMutate.mutate(data);
   };
@@ -148,7 +148,7 @@ const ArtifactsOtherForm = () => {
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOthertypeOfArtifacts(value);
-                        setShowOtherPaintings(value);
+                        // setShowOtherPaintings(value);
                       }}
                       className={errors.typeOfArtifacts ? "border-red-500" : ""}
                     >
@@ -185,7 +185,7 @@ const ArtifactsOtherForm = () => {
                     {errors.typeOfArtifacts.message}
                   </span>
                 )}
-                {showOtherPaintings === "paintings" && (
+                {/* {showOtherPaintings === "paintings" && (
                   <>
                     <Controller
                       name="paintings"
@@ -206,7 +206,7 @@ const ArtifactsOtherForm = () => {
                   <span className="text-red-500">
                     {errors.typeOfArtifacts.message}
                   </span>
-                )}
+                )} */}
               </div>
             </div>
 

@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const ArtifactsMainFrom = () => {
+const ArtifactsMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -37,7 +37,7 @@ const ArtifactsMainFrom = () => {
       },
     });
 
-    return response.data.data.Artifacts;
+    return response.data.data.Vehicle;
   };
 
   const {
@@ -76,7 +76,7 @@ const ArtifactsMainFrom = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Artifacts</h1>
           <Button onMouseDown={() => navigate("/artifacts/add")}>
-            Add Artifacts
+            Add Artifact
           </Button>
           {alertDialog && (
             <DeleteAlert
@@ -136,4 +136,4 @@ const ArtifactsMainFrom = () => {
   );
 };
 
-export default ArtifactsMainFrom;
+export default ArtifactsMainForm;

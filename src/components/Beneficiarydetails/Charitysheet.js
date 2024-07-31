@@ -246,7 +246,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               </Label>
               <Input
                 id="contact-name"
-                placeholder="Enter full legal name"
+                placeholder="Enter Full Legal Name"
                 {...register("contactName")}
                 className="w-full"
               />
