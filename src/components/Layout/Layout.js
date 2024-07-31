@@ -175,6 +175,8 @@ import JwelleryMainForm from "@/components/OtherAssets/Jwellery/JwelleryMainForm
 import JwelleryOtherForm from "@/components/OtherAssets/Jwellery/JwelleryOtherForm";
 import JwelleryEditForm from "@/components/OtherAssets/Jwellery/JwelleryEditForm";
 import AssetDistribution from "@/components/Assetdistribution/AssetDistribution";
+import AssetAllocation from "@/components/Assetdistribution/AssetAllocation";
+import Summery from "@/components/Assetdistribution/Summery";
 
 const Layout = () => {
   const location = useLocation();
@@ -612,6 +614,8 @@ const Layout = () => {
       {location.pathname === "/jwellery/add" && <JwelleryOtherForm />}
       {location.pathname === "/jwellery/edit" && <JwelleryEditForm />}
       {location.pathname === "/assetdistribution" && <AssetDistribution />}
+      {location.pathname === "/assetallocation" && <AssetAllocation />}
+      {location.pathname === "/summery" && <Summery />}
     </div>
   );
 };
