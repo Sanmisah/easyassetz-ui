@@ -174,6 +174,7 @@ import HufEditForm from "@/components/OtherAssets/Huf/HufEditForm";
 import JwelleryMainForm from "@/components/OtherAssets/Jwellery/JwelleryMainForm";
 import JwelleryOtherForm from "@/components/OtherAssets/Jwellery/JwelleryOtherForm";
 import JwelleryEditForm from "@/components/OtherAssets/Jwellery/JwelleryEditForm";
+import AssetDistribution from "@/components/Assetdistribution/AssetDistribution";
 
 const Layout = () => {
   const location = useLocation();
@@ -610,6 +611,7 @@ const Layout = () => {
       {location.pathname === "/jwellery" && <JwelleryMainForm />}
       {location.pathname === "/jwellery/add" && <JwelleryOtherForm />}
       {location.pathname === "/jwellery/edit" && <JwelleryEditForm />}
+      {location.pathname === "/assetdistribution" && <AssetDistribution />}
     </div>
   );
 };

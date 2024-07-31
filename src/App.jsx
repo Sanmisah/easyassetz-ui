@@ -180,6 +180,7 @@ function App() {
         <Route path="/jwellery" element={<Personalpage />} />
         <Route path="/jwellery/add" element={<Personalpage />} />
         <Route path="/jwellery/edit" element={<Personalpage />} />
+        <Route path="/assetdistribution" element={<Personalpage />} />
       </Routes>
     </div>
   );
