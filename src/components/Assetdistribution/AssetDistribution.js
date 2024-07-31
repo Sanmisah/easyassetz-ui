@@ -73,7 +73,7 @@ const AssetDistribution = () => {
         {
           name: "huf",
           totalAssets: otherassets?.HUF?.map((huf) => ({
-            var1: huf.registrationNumber,
+            var1: huf.hufName,
             var2: huf.hufType,
             data: huf,
           })),
