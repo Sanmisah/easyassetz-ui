@@ -111,6 +111,9 @@ const ArtifactsOtherForm = () => {
     if (data.typeOfArtifacts === "other") {
       data.typeOfArtifacts = data.othertypeOfArtifacts;
     }
+    if (data.typeOfArtifacts === "paintings") {
+      data.typeOfArtifacts = data.otherPaintings;
+    }
     delete data.othertypeOfArtifacts;
     // delete data.otherPaintings;
     // data.type = "vehicle";
@@ -188,7 +191,7 @@ const ArtifactsOtherForm = () => {
                 {/* {showOtherPaintings === "paintings" && (
                   <>
                     <Controller
-                      name="paintings"
+                      name="otherPaintings"
                       control={control}
                       render={({ field }) => (
                         <Input

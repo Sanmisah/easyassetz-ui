@@ -142,7 +142,6 @@ const OtherLoansEditForm = () => {
     data.type = "huf";
     data.emiDate = formatDate(data.emiDate);
     data.startDate = formatDate(data.startDate);
-    data.type = "vehicle";
     loanMutate.mutate(data);
   };
 
