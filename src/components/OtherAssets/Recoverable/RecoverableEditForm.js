@@ -72,7 +72,7 @@ const RecoverableEditForm = () => {
       amount: "",
       dueDate: "",
       additionalInformation: "",
-      type: "otherAsset",
+      type: "recoverable",
       // assetDescription: "",
       // hufShare: "",
       // name: "",

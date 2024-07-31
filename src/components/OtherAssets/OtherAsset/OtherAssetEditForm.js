@@ -38,8 +38,8 @@ const schema = z.object({
   assetDescription: z.string().optional(),
   // hufShare: z.string().optional(),
   additionalInformation: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().optional(),
+  name: z.any().optional(),
+  email: z.any  ().optional(),
   mobile: z.string().optional(),
   type: z.any().optional(),
 });
