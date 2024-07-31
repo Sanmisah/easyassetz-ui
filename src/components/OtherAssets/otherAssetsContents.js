@@ -9,7 +9,7 @@ const OtherAssetsContentForm = () => {
   const [hufData, setHufData] = useState([]);
   const [jewelleryData, setJewelleryData] = useState([]);
   const [watchData, setWatchData] = useState([]);
-  const [artifactsData, setArtifactsData] = useState([]);
+  // const [artifactsData, setArtifactsData] = useState([]);
   const [otherAssetData, setOtherAssetData] = useState([]);
   const [recoverableData, setRecoverableData] = useState([]);
 
@@ -76,21 +76,21 @@ const OtherAssetsContentForm = () => {
         console.error("Error fetching data", error);
       }
     };
-    const fetchDataArtifacts = async () => {
-      const getitem = localStorage.getItem("user");
-      const user = JSON.parse(getitem);
+    // const fetchDataArtifacts = async () => {
+    //   const getitem = localStorage.getItem("user");
+    //   const user = JSON.parse(getitem);
 
-      try {
-        const response = await axios.get(`/api/other-assets`, {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        });
-        setArtifactsData(response?.data?.data?.Artifacts);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
+    //   try {
+    //     const response = await axios.get(`/api/other-assets`, {
+    //       headers: {
+    //         Authorization: `Bearer ${user.data.token}`,
+    //       },
+    //     });
+    //     setArtifactsData(response?.data?.data?.Artifacts);
+    //   } catch (error) {
+    //     console.error("Error fetching data", error);
+    //   }
+    // };
     const fetchDataOtherAsset = async () => {
       const getitem = localStorage.getItem("user");
       const user = JSON.parse(getitem);
@@ -126,7 +126,7 @@ const OtherAssetsContentForm = () => {
     fetchDataHuf();
     fetchDataJewellery();
     fetchDataWatch();
-    fetchDataArtifacts();
+    // fetchDataArtifacts();
     fetchDataOtherAsset();
     fetchDataRecoverable();
   }, []);
@@ -204,7 +204,7 @@ const OtherAssetsContentForm = () => {
             )}
           </div>
         </div>
-        <div
+        {/* <div
           onMouseDown={() => navigate("/artifacts")}
           className="flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
         >
@@ -219,7 +219,7 @@ const OtherAssetsContentForm = () => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
         <div
           onClick={() => navigate("/other-asset")}
           className=" flex cursor-pointer items-center gap-8 bg-gray-100 p-4 rounded-lg"
