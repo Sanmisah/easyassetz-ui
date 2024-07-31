@@ -115,9 +115,9 @@ const BeneficiaryForm = ({
         `https://api.postalpincode.in/pincode/${pincode}`
       );
       const { Block, State, Country } = response.data[0].PostOffice[0];
-      setValue("permanentCity", Block);
-      setValue("permanentState", State);
-      setValue("permanentCountry", Country);
+      setValue("city", Block);
+      setValue("state", State);
+      setValue("country", Country);
     } catch (error) {
       console.error("Failed to fetch pincode details:", error);
     }
@@ -689,9 +689,7 @@ const BeneficiaryForm = ({
                           placeholder="Enter pincode"
                           defaultValue={defaultData?.pincode}
                           // {...register("pincode")}
-                          onChange={(e) => {
-                            handlePincodeChange(e.target.value);
-                          }}
+                          onChange={(e) => handlePincodeChange(e.target.value)}
                         />
                         {errors.pincode && (
                           <p className="text-red-500">

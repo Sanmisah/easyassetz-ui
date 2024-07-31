@@ -102,6 +102,10 @@ const Personaldetail = () => {
     if (response.data.data.profile?.aadharNumber) {
       setShowAdharFields(true);
     }
+    setValue(
+      "passportExpiryDate",
+      response.data.data.profile?.passportExpiryDate
+    );
 
     return response.data.data.profile || {};
   };
@@ -1377,7 +1381,7 @@ const Personaldetail = () => {
                     <Controller
                       name="drivingLicenceExpiryDate"
                       control={control}
-                      defaultValue={defaultData?.drivingLicenceExpiryDate}
+                      defaultValue={defaultData?.drivingLicenceExpiryDate || ""}
                       render={({ field }) => (
                         <Datepicker
                           value={field.value}
@@ -1568,14 +1572,14 @@ const Personaldetail = () => {
                     <Controller
                       name="passportExpiryDate"
                       control={control}
-                      defaultValue={defaultData?.passportExpiryDate}
+                      defaultValue={defaultData?.passportExpiryDate || ""}
                       render={({ field }) => (
                         <Datepicker
-                          value={field.value}
-                          onChange={field.onChange}
                           defaultValue={
                             new Date(defaultData?.passportExpiryDate) || ""
                           }
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       )}
                     />
