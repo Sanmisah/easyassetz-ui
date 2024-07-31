@@ -27,7 +27,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@com/ui/select";
-import Datepicker from "../../Beneficiarydetails/Datepicker";
+// import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -46,6 +46,7 @@ const schema = z.object({
   name: z.string().optional(),
   email: z.string().email().optional(),
   mobile: z.string().optional(),
+  type: z.any().optional(),
 });
 
 const OtherLoansEditForm = () => {
@@ -69,15 +70,19 @@ const OtherLoansEditForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      bankName: "",
-      loanAccountNo: "",
-      branch: "",
-      emiDate: "",
-      startDate: "",
-      duration: "",
-      guarantorName: "",
-      guarantorMobile: "",
-      guarantorEmail: "",
+      jewelleryType: "",
+      otherJewellery: "",
+      metal: "",
+      otherMetal: "",
+      preciousStone: "",
+      otherPreciousStone: "",
+      weightPerJewellery: "",
+      quantity: "",
+      additionalInformation: "",
+      name: "",
+      email: "",
+      mobile: "",
+      type: "jewellery",
     },
   });
   const getPersonalData = async () => {
@@ -90,10 +95,14 @@ const OtherLoansEditForm = () => {
         },
       }
     );
-    let data = response.data.data.Jewellery;
+    let data = response.data.data.OtherAsset;
     if (
-      data.jewelleryType !== "bracelet" &&
       data.jewelleryType !== "necklace" &&
+      data.jewelleryType !== "earrings" &&
+      data.jewelleryType !== "bracelet" &&
+      data.jewelleryType !== "bangles" &&
+      data.jewelleryType !== "cuffLinks" &&
+      data.jewelleryType !== "chain" &&
       data.jewelleryType !== "ring" &&
       data.jewelleryType !== "other"
     ) {
@@ -105,6 +114,8 @@ const OtherLoansEditForm = () => {
       data.metal !== "gold" &&
       data.metal !== "silver" &&
       data.metal !== "copper" &&
+      data.metal !== "whiteGold" &&
+      data.metal !== "diamond" &&
       data.metal !== "other"
     ) {
       setValue("otherMetal", data.metal);
@@ -127,7 +138,7 @@ const OtherLoansEditForm = () => {
     setValue("name", data.name);
     setValue("email", data.email);
     setValue("mobile", data.mobile);
-    return response.data.data.Jewellery;
+    return response.data.data.OtherAsset;
   };
 
   const { data, isLoading, isError } = useQuery({
@@ -167,19 +178,19 @@ const OtherLoansEditForm = () => {
       toast.error("Failed to update loan");
     },
   });
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const year = d.getFullYear();
-    return `${month}/${day}/${year}`;
-  };
+  // const formatDate = (date) => {
+  //   const d = new Date(date);
+  //   const month = String(d.getMonth() + 1).padStart(2, "0");
+  //   const day = String(d.getDate()).padStart(2, "0");
+  //   const year = d.getFullYear();
+  //   return `${month}/${day}/${year}`;
+  // };
 
   const onSubmit = (data) => {
     console.log(data);
     data.type = "huf";
-    data.emiDate = formatDate(data.emiDate);
-    data.startDate = formatDate(data.startDate);
+    // data.emiDate = formatDate(data.emiDate);
+    // data.startDate = formatDate(data.startDate);
     data.type = "jewellery";
     if (data.jewelleryType === "other") {
       data.jewelleryType = data.otherJewellery;

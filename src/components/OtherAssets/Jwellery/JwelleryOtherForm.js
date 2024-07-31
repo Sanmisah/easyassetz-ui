@@ -25,7 +25,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
-import Datepicker from "../../Beneficiarydetails/Datepicker";
+// import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -45,6 +45,7 @@ const schema = z.object({
   name: z.string().optional(),
   email: z.string().email().optional(),
   mobile: z.string().optional(),
+  type: z.any().optional(),
 });
 
 const JewelleryOtherForm = () => {
@@ -66,13 +67,19 @@ const JewelleryOtherForm = () => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      vehicleType: "",
-      fourWheeler: "",
-      company: "",
-      model: "",
-      duration: "",
-      yearOfManufacture: "",
-      location: "",
+      jewelleryType: "",
+      otherJewellery: "",
+      metal: "",
+      otherMetal: "",
+      preciousStone: "",
+      otherPreciousStone: "",
+      weightPerJewellery: "",
+      quantity: "",
+      additionalInformation: "",
+      name: "",
+      email: "",
+      mobile: "",
+      type: "jewellery",
     },
   });
 
@@ -98,19 +105,19 @@ const JewelleryOtherForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    const date = new Date(data.yearOfManufacture);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
+    // const date = new Date(data.yearOfManufacture);
+    // const month = String(date.getMonth() + 1).padStart(2, "0");
+    // const day = String(date.getDate()).padStart(2, "0");
+    // const year = date.getFullYear();
+    // const newdate = `${month}/${day}/${year}`;
     data.type = "jewellery";
-    data.yearOfManufacture = newdate;
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.otherVehicleType;
-    }
-    if (data.fourWheeler === "other") {
-      data.fourWheeler = data.otherFourWheeler;
-    }
+    // data.yearOfManufacture = newdate;
+    // if (data.vehicleType === "other") {
+    //   data.vehicleType = data.otherVehicleType;
+    // }
+    // if (data.fourWheeler === "other") {
+    //   data.fourWheeler = data.otherFourWheeler;
+    // }
     if (data.jewelleryType === "other") {
       data.jewelleryType = data.otherJewellery;
     }

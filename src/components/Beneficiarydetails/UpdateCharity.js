@@ -63,11 +63,11 @@ const charitySchema = z.object({
   charityAddress1: z.string().nonempty("Address 1 is required"),
   charityAddress2: z.string().optional(),
   charityCity: z.string().nonempty("City is required"),
-  charityState: z.string().nonempty("State is required"),
-  charityNumber: z.string().optional(),
+  charityState: z.string().optional(),
+  charityNumber: z.string().nonempty("State is required"),
   charityEmail: z.string().email("Invalid charityEmail address"),
   contactName: z.string().nonempty("Contact person name is required"),
-  charityWebsite: z.string().url("Invalid URL").optional(),
+  charityWebsite: z.any().optional(),
   charitySpecificInstruction: z.string().optional(),
 });
 
@@ -178,7 +178,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               </Label>
               <Input
                 id="org-name"
-                placeholder="Enter organization name"
+                placeholder="Enter Organization Name"
                 {...register("charityName")}
                 defaultValue={Charitydata?.charityName}
                 className="w-full"
@@ -193,7 +193,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               </Label>
               <Input
                 id="address-1"
-                placeholder="Enter address"
+                placeholder="Enter Address"
                 {...register("charityAddress1")}
                 defaultValue={Charitydata?.charityAddress1}
                 className="w-full"
@@ -208,7 +208,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               </Label>
               <Input
                 id="address-2"
-                placeholder="Enter address"
+                placeholder="Enter Address"
                 {...register("charityAddress2")}
                 defaultValue={Charitydata?.charityAddress2}
                 className="w-full"
@@ -220,7 +220,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               </Label>
               <Input
                 id="charityCity"
-                placeholder="Enter charityCity"
+                placeholder="Enter City"
                 defaultValue={Charitydata?.charityCity}
                 {...register("charityCity")}
                 className="w-full"
@@ -291,7 +291,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="charityEmail"
                 type="charityEmail"
-                placeholder="Enter charityEmail"
+                placeholder="Enter Charity Email"
                 defaultValue={Charitydata?.charityEmail}
                 {...register("charityEmail")}
                 className="w-full"
@@ -306,7 +306,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               </Label>
               <Input
                 id="contact-name"
-                placeholder="Enter full legal name"
+                placeholder="Enter Full Legal Name"
                 defaultValue={Charitydata?.contactName}
                 {...register("contactName")}
                 className="w-full"
@@ -322,7 +322,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Input
                 id="charityWebsite"
                 type="url"
-                placeholder="Enter charityWebsite"
+                placeholder="Enter Charity Website"
                 defaultValue={Charitydata?.charityWebsite}
                 {...register("charityWebsite")}
                 className="w-full"
@@ -340,7 +340,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               </Label>
               <Textarea
                 id="charitySpecificInstruction"
-                placeholder="Enter any specific charitySpecificInstruction"
+                placeholder="Enter any Specific Instructions"
                 defaultValue={Charitydata?.charitySpecificInstruction}
                 {...register("charitySpecificInstruction")}
                 className="w-full"

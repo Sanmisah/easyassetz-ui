@@ -24,7 +24,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { PhoneInput } from "react-international-phone";
+// import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
@@ -65,7 +65,7 @@ const RecoverableOtherForm = () => {
       fourWheeler: "",
       company: "",
       model: "",
-      duration: "",
+      registrationNumber: "",
       yearOfManufacture: "",
       location: "",
     },
@@ -201,7 +201,7 @@ const RecoverableOtherForm = () => {
                       <SelectContent>
                         <SelectItem value="car">Car</SelectItem>
                         <SelectItem value="truck">Truck</SelectItem>
-                        <SelectItem value="van">Van</SelectItem>
+                        <SelectItem value="tempo">Tempo</SelectItem>
                         <SelectItem value="bus">Bus</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
@@ -229,17 +229,14 @@ const RecoverableOtherForm = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company">Contact Number</Label>
+              <Label htmlFor="company">Company</Label>
               <Controller
                 name="company"
                 control={control}
                 render={({ field }) => (
-                  <PhoneInput
+                  <Input
                     id="company"
-                    type="tel"
-                    placeholder="Enter Contact Number"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
+                    placeholder="Enter Company"
                     {...field}
                     className={errors.company ? "border-red-500" : ""}
                   />
@@ -249,31 +246,19 @@ const RecoverableOtherForm = () => {
                 <span className="text-red-500">{errors.company.message}</span>
               )}
             </div>
-            <div className="space-y-4 flex flex-col">
-              <Label className="text-lg font-bold">Mode of Loan</Label>
+            <div className="space-y-2">
+              <Label className="text-lg font-bold">Model</Label>
               <Controller
                 name="model"
                 defaultValues="Cash"
                 control={control}
                 render={({ field }) => (
-                  <RadioGroup
+                  <Input
+                    id="model"
+                    placeholder="Enter Model"
                     {...field}
-                    defaultValue="Cash"
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // setShowOtherJointName(value === "joint");
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem id="Cash" value="Cash" />
-                      <Label htmlFor="Cash">Cash</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem id="Cheque" value="Cheque" />
-                      <Label htmlFor="Cheque">Cheque</Label>
-                    </div>
-                  </RadioGroup>
+                    className={errors.model ? "border-red-500" : ""}
+                  />
                 )}
               />
               {errors.model && (
@@ -281,7 +266,7 @@ const RecoverableOtherForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="registrationNumber">registrationNumber</Label>
+              <Label htmlFor="registrationNumber">Registration Number</Label>
               <Controller
                 name="registrationNumber"
                 control={control}
@@ -304,7 +289,7 @@ const RecoverableOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="yearOfManufacture">Due Date</Label>
+              <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
               <Controller
                 name="yearOfManufacture"
                 control={control}
@@ -320,14 +305,14 @@ const RecoverableOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Additional Information</Label>
+              <Label htmlFor="location">Location</Label>
               <Controller
                 name="location"
                 control={control}
                 render={({ field }) => (
                   <Input
                     id="location"
-                    placeholder="Enter Additional Information"
+                    placeholder="Enter Location"
                     {...field}
                     className={errors.location ? "border-red-500" : ""}
                   />
