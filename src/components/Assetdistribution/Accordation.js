@@ -23,9 +23,9 @@ const Accordation = () => {
               </div>
             </AccordionTrigger>
             <AccordionContent className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2  mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2  mt-8">
                 {data.assets.map((asset, index) => (
-                  <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[150px]">
+                  <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[150px] ">
                     <div className="flex  p-4 gap-4   pl-2 pr-2 items-center rounded-lg col-span-full">
                       <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                       <h1 className="font-bold  text-lg ">{asset.name}</h1>
