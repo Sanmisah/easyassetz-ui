@@ -41,7 +41,7 @@ const AssetAllocation = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        setDisplaynominie(response?.data?.data?.Beneficiaries);
+        // setDisplaynominie(response?.data?.data?.Beneficiaries);
       } catch (error) {
         console.error("Error fetching nominees:", error);
       }
@@ -178,7 +178,7 @@ const AssetAllocation = () => {
         </h1>
         <div>
           <div className="flex flex-col gap-4 mt-4  p-4 ">
-            {selectedNommie.length > 0 && (
+            {selectedNommie.length > 1 && (
               <div className="flex items-center space-x-2  justify-end ">
                 <Label htmlFor="airplane-mode">Split Equally</Label>
                 <Switch id="airplane-mode" onCheckedChange={setSelectedsplit} />
