@@ -35,7 +35,7 @@ import axios from "axios";
 import Datepicker from "./Datepicker";
 import { PhoneInput } from "react-international-phone";
 import { toast } from "sonner";
-
+import DropdownData from "../Personaldetail/value.json";
 const beneficiarySchema = z
   .object({
     fullLegalName: z.string().nonempty("Full Legal Name is required"),
@@ -607,10 +607,42 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-nationality">
                           Nationality
                         </Label>
-                        <Input
-                          id="guardian-nationality"
-                          placeholder="Enter Nationality"
-                          {...register("nationality")}
+                        <Controller
+                          name="nationality"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              id="guardian-nationality"
+                              value={field.value}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select nationality">
+                                  {field.value || "Select nationality"}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {DropdownData.specificNationalities?.map(
+                                  (nationality) => (
+                                    <SelectItem
+                                      key={nationality}
+                                      value={nationality}
+                                    >
+                                      {nationality
+                                        .split("-")
+                                        .map(
+                                          (word) =>
+                                            word.charAt(0) + word.slice(1)
+                                        )
+                                        .join(" ")}
+                                    </SelectItem>
+                                  )
+                                )}
+                              </SelectContent>
+                            </Select>
+                          )}
                         />
                         {errors.guardianNationality && (
                           <p className="text-red-500">

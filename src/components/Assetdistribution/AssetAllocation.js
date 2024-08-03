@@ -31,6 +31,24 @@ const AssetAllocation = () => {
   const inputRefs = useRef([]);
   let totalPercentage = 100;
 
+  useEffect(() => {
+    const response = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+      try {
+        const response = await axios.get(`/api/beneficiaries`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setDisplaynominie(response?.data?.data?.Beneficiaries);
+      } catch (error) {
+        console.error("Error fetching nominees:", error);
+      }
+    };
+    response();
+  }, []);
+
   function splitPercentage() {
     const numberOfPeople = selectedNommie.length;
     if (numberOfPeople <= 0) {
@@ -160,10 +178,13 @@ const AssetAllocation = () => {
         </h1>
         <div>
           <div className="flex flex-col gap-4 mt-4  p-4 ">
-            <div className="flex items-center space-x-2  justify-end ">
-              <Label htmlFor="airplane-mode">Split Equally</Label>
-              <Switch id="airplane-mode" onCheckedChange={setSelectedsplit} />
-            </div>
+            {selectedNommie.length > 0 && (
+              <div className="flex items-center space-x-2  justify-end ">
+                <Label htmlFor="airplane-mode">Split Equally</Label>
+                <Switch id="airplane-mode" onCheckedChange={setSelectedsplit} />
+              </div>
+            )}
+
             <div>
               <div className="flex items-center justify-between gap-2 mt-2 mb-4">
                 <Label>My people</Label>
