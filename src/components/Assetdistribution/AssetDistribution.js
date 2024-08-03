@@ -61,7 +61,7 @@ const AssetDistribution = () => {
           <p className="text-green-500">Complete</p>
         </div>
         <div className="min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full">
-          <h1> tertiary</h1>
+          <h1> Tertiary</h1>
           <p className="text-green-500">Complete</p>
         </div>
       </div>
