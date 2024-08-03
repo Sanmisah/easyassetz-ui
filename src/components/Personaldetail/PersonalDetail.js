@@ -83,7 +83,7 @@ const Personaldetail = () => {
       setValue(
         "drivingLicenceExpiryDate",
 
-        new Date(profile.drivingLicenceExpiryDate)
+        new Date(response.data.data.profile?.drivingLicenceExpiryDate)
       );
     }
 
@@ -1381,15 +1381,20 @@ const Personaldetail = () => {
                     <Controller
                       name="drivingLicenceExpiryDate"
                       control={control}
-                      defaultValue={defaultData?.drivingLicenceExpiryDate || ""}
+                      defaultValue={
+                        defaultData?.drivingLicenceExpiryDate
+                          ? new Date(defaultData?.drivingLicenceExpiryDate)
+                          : null
+                      }
                       render={({ field }) => (
                         <Datepicker
                           value={field.value}
-                          onChange={(date) => field.onChange(date)}
-                          // defaultValue={
-                          //   new Date(defaultData?.drivingLicenceExpiryDate) ||
-                          //   ""
-                          // }
+                          onChange={field.onChange}
+                          defaultValues={
+                            defaultData?.drivingLicenceExpiryDate
+                              ? new Date(defaultData?.drivingLicenceExpiryDate)
+                              : null
+                          }
                         />
                       )}
                     />
@@ -1567,6 +1572,7 @@ const Personaldetail = () => {
                       </span>
                     )}
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="pp-expiry">Expiry Date</Label>
                     <Controller
@@ -1575,7 +1581,7 @@ const Personaldetail = () => {
                       defaultValue={defaultData?.passportExpiryDate || ""}
                       render={({ field }) => (
                         <Datepicker
-                          defaultValue={
+                          defaultValues={
                             new Date(defaultData?.passportExpiryDate) || ""
                           }
                           value={field.value}
@@ -1589,6 +1595,7 @@ const Personaldetail = () => {
                       </span>
                     )}
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="pp-place">Place of issue</Label>
                     <Input

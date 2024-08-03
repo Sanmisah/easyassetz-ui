@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,10 +21,105 @@ import { Label } from "@com/ui/label";
 import { Switch } from "@com/ui/switch";
 import { Input } from "@/shadcncomponents/ui/input";
 import AddNominee from "./AddNominee";
+import { toast } from "sonner";
 
 const AssetAllocation = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [selectedNommie, setSelectedNommie] = useState([]);
+  const [totalsplit, setTotalsplit] = useState([]);
+  const [Selectedsplit, setSelectedsplit] = useState(false);
+  const inputRefs = useRef([]);
+  let totalPercentage = 100;
+
+  useEffect(() => {
+    const response = async () => {
+      const getitem = localStorage.getItem("user");
+      const user = JSON.parse(getitem);
+      try {
+        const response = await axios.get(`/api/beneficiaries`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        });
+        setDisplaynominie(response?.data?.data?.Beneficiaries);
+      } catch (error) {
+        console.error("Error fetching nominees:", error);
+      }
+    };
+    response();
+  }, []);
+
+  function splitPercentage() {
+    const numberOfPeople = selectedNommie.length;
+    if (numberOfPeople <= 0) {
+      return;
+    }
+
+    let share = totalPercentage / numberOfPeople;
+    let result = Array(numberOfPeople).fill(share);
+
+    // Adjust the last person's share to ensure the total percentage is accurate
+    let sum = result.reduce((acc, val) => acc + val, 0);
+    result[numberOfPeople - 1] += totalPercentage - sum;
+
+    return result.map((v) => parseFloat(v).toFixed(2));
+  }
+
+  useEffect(() => {
+    if (Selectedsplit) {
+      const result = splitPercentage();
+      selectedNommie.forEach((_, index) => {
+        if (inputRefs.current[index]) {
+          inputRefs.current[index].value = result[index];
+        }
+      });
+      setTotalsplit(result);
+    } else {
+      setTotalsplit([]);
+      selectedNommie.forEach((_, index) => {
+        if (inputRefs.current[index]) {
+          inputRefs.current[index].value = "";
+        }
+      });
+    }
+  }, [Selectedsplit, selectedNommie]);
+
+  const handleInputChange = (index, value) => {
+    const newTotalsplit = [...totalsplit];
+    newTotalsplit[index] = value;
+    setTotalsplit(newTotalsplit);
+  };
+
+  const handleSubmit = async () => {
+    const sumOfPercentages = totalsplit.reduce(
+      (acc, value) => acc + parseFloat(value),
+      0
+    );
+
+    if (sumOfPercentages > 100) {
+      toast.error("Sum of percentages must be less than or equal to 100");
+      return;
+    }
+    totalsplit.forEach((value, index) => {
+      if (value === "") {
+        toast.error("Please fill in all fields");
+        return;
+      }
+    });
+
+    const data = displaynominie.map((nominee, index) => ({
+      nomineeId: nominee.id,
+      percentage: totalsplit[index] || 0,
+    }));
+    // Send data to backend
+    try {
+      await axios.post("/api/submit", data);
+      console.log("Data submitted successfully");
+    } catch (error) {
+      console.error("Error submitting data", error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center gap-2 rounded-md  px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700 h-10 w-full">
@@ -36,7 +131,6 @@ const AssetAllocation = () => {
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-
             <BreadcrumbItem>
               <BreadcrumbPage>Selected Distribution</BreadcrumbPage>
             </BreadcrumbItem>
@@ -84,45 +178,70 @@ const AssetAllocation = () => {
         </h1>
         <div>
           <div className="flex flex-col gap-4 mt-4  p-4 ">
-            <div className="flex items-center space-x-2  justify-end ">
-              <Label htmlFor="airplane-mode">Split Equally</Label>
-              <Switch id="airplane-mode" />
-            </div>
+            {selectedNommie.length > 0 && (
+              <div className="flex items-center space-x-2  justify-end ">
+                <Label htmlFor="airplane-mode">Split Equally</Label>
+                <Switch id="airplane-mode" onCheckedChange={setSelectedsplit} />
+              </div>
+            )}
+
             <div>
               <div className="flex items-center justify-between gap-2 mt-2 mb-4">
                 <Label>My people</Label>
                 <Label>Will Recieve</Label>
               </div>
-              <div className="flex items-center justify-between gap-2 mt-2 border-b-2 border-input     pb-4">
-                <div className="flex flex-col ">
-                  <Label className="text-md font-bold">Name</Label>
-                  <Label className="text-sm font-medium text-gray-500">
-                    RelationShip
-                  </Label>
+
+              {displaynominie && displaynominie.length > 0 && (
+                <div className="space-y-2">
+                  <div className="grid gap-4 py-4">
+                    {displaynominie.map((nominee, index) => (
+                      <div
+                        className="flex items-center justify-between gap-2 mt-2 border-b-2 border-input pb-4"
+                        key={nominee.id}
+                      >
+                        <div className="flex flex-col ">
+                          <Label className="text-md font-bold">
+                            {nominee?.fullLegalName || nominee?.charityName}
+                          </Label>
+                          <Label className="text-sm font-medium text-gray-500">
+                            {nominee?.relationship}
+                          </Label>
+                        </div>
+                        <div className="flex items-center gap-2 ">
+                          <Input
+                            ref={(el) => (inputRefs.current[index] = el)}
+                            className="w-[5rem] placeholder:align-right"
+                            placeholder="%"
+                            onChange={(e) =>
+                              handleInputChange(index, e.target.value)
+                            }
+                          />
+                          <Button
+                            onClick={() => {
+                              setDisplaynominie(
+                                displaynominie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                              setSelectedNommie(
+                                selectedNommie.filter(
+                                  (item) => item.id !== nominee.id
+                                )
+                              );
+                              inputRefs.current.splice(index, 1);
+                              setTotalsplit((prev) =>
+                                prev.filter((_, i) => i !== index)
+                              );
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 ">
-                  <Input
-                    className="w-[5rem] placeholder:align-right"
-                    placeholder="%"
-                  />
-                  <Button>Remove</Button>
-                </div>
-              </div>
-              <div className="flex items-center justify-between gap-2 mt-2 border-b-2 border-input     pb-4">
-                <div className="flex flex-col ">
-                  <Label className="text-md font-bold">Name</Label>
-                  <Label className="text-sm font-medium text-gray-500">
-                    RelationShip
-                  </Label>
-                </div>
-                <div className="flex items-center gap-2 ">
-                  <Input
-                    className="w-[5rem] placeholder:align-right"
-                    placeholder="%"
-                  />
-                  <Button>Remove</Button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
           <div className="flex items-center justify-center gap-2 mt-4">
@@ -133,6 +252,9 @@ const AssetAllocation = () => {
             />
           </div>
         </div>
+      </div>
+      <div className="flex justify-end mt-4">
+        <Button onClick={handleSubmit}>Submit</Button>
       </div>
     </div>
   );

@@ -27,6 +27,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@com/ui/sheet";
+import DropdownData from "../Personaldetail/value.json";
 import { ScrollArea } from "@com/ui/scroll-area";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -394,7 +395,7 @@ const BeneficiaryForm = ({
                                 <Datepicker
                                   value={field.value}
                                   onChange={field.onChange}
-                                  defaultValue={defaultData?.dob}
+                                  defaultValues={defaultData?.dob}
                                   className="min-w-[190rem]"
                                 />
                               )}
@@ -611,14 +612,32 @@ const BeneficiaryForm = ({
                       )}
                       <div className="space-y-2">
                         <Label htmlFor="religion">Religion</Label>
-                        <Input
-                          id="religion"
-                          placeholder="Enter religion"
-                          {...register("religion", {
-                            required:
-                              !defaultData?.religion && "Religion is required",
-                          })}
+                        <Controller
+                          name="religion"
+                          control={control}
                           defaultValue={defaultData?.religion}
+                          render={({ field }) => (
+                            <Select
+                              id="religion"
+                              value={field.value}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select religion">
+                                  {field.value || "Select religion"}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {DropdownData.religions?.map((religion) => (
+                                  <SelectItem key={religion} value={religion}>
+                                    {religion.charAt(0) + religion.slice(1)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
                         />
                         {errors.religion && (
                           <p className="text-red-500">
@@ -628,11 +647,43 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="nationality">Nationality</Label>
-                        <Input
-                          id="nationality"
-                          placeholder="Enter nationality"
+                        <Controller
+                          name="nationality"
+                          control={control}
                           defaultValue={defaultData?.nationality}
-                          {...register("nationality")}
+                          render={({ field }) => (
+                            <Select
+                              id="nationality"
+                              value={field.value}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select nationality">
+                                  {field.value || "Select nationality"}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {DropdownData.specificNationalities?.map(
+                                  (nationality) => (
+                                    <SelectItem
+                                      key={nationality}
+                                      value={nationality}
+                                    >
+                                      {nationality
+                                        .split("-")
+                                        .map(
+                                          (word) =>
+                                            word.charAt(0) + word.slice(1)
+                                        )
+                                        .join(" ")}
+                                    </SelectItem>
+                                  )
+                                )}
+                              </SelectContent>
+                            </Select>
+                          )}
                         />
                         {errors.nationality && (
                           <p className="text-red-500">

@@ -138,14 +138,13 @@
     "Peruvian",
     "Polish",
     "Portuguese",
-
     "Other"
   ],
   "countries": [
     "United states",
     "Canada",
     "United kingdom",
-     "Other",
+    "Other",
     "Afghanistan",
     "Albania",
     "Algeria",
@@ -176,7 +175,7 @@
     "Burundi",
     "Cambodia",
     "Cameroon",
-     "Cape Verde",
+    "Cape Verde",
     "Central African Republic",
     "Chad",
     "Chile",

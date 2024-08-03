@@ -57,7 +57,12 @@ const AddNominee = ({
     setSelectedNominees(selectedIds);
   }, [displaynominie]);
 
-  const handleCheckboxChange = (id, fullLegalName, charityName) => {
+  const handleCheckboxChange = (
+    id,
+    fullLegalName,
+    charityName,
+    relationship
+  ) => {
     setSelectedNominees((prevSelectedNominees) =>
       prevSelectedNominees.includes(id)
         ? prevSelectedNominees.filter((nomineeId) => nomineeId !== id)
@@ -68,7 +73,7 @@ const AddNominee = ({
       setDisplaynominie((prevDisplayNominees) =>
         prevDisplayNominees.some((nominee) => nominee.id === id)
           ? prevDisplayNominees.filter((nominee) => nominee.id !== id)
-          : [...prevDisplayNominees, { id, fullLegalName }]
+          : [...prevDisplayNominees, { id, fullLegalName, relationship }]
       );
     } else if (charityName) {
       setDisplaynominie((prevDisplayNominees) =>
@@ -112,7 +117,8 @@ const AddNominee = ({
                     handleCheckboxChange(
                       nominee.id,
                       nominee.fullLegalName,
-                      null
+                      null,
+                      nominee.relationship
                     )
                   }
                 />
