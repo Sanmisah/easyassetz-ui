@@ -180,7 +180,9 @@ function App() {
         <Route path="/jwellery" element={<Personalpage />} />
         <Route path="/jwellery/add" element={<Personalpage />} />
         <Route path="/jwellery/edit" element={<Personalpage />} />
-        <Route path="/assetdistribution" element={<Personalpage />} />
+        <Route path="/assetdistribution/Primary" element={<Personalpage />} />
+        <Route path="/assetdistribution/Secondary" element={<Personalpage />} />
+        <Route path="/assetdistribution/Tertiary" element={<Personalpage />} />
         <Route path="/assetallocation" element={<Personalpage />} />
         <Route path="/summery" element={<Personalpage />} />
       </Routes>

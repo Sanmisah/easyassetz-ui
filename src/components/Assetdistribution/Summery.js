@@ -18,8 +18,9 @@ import { Button } from "@com/ui/button";
 import lifeInsurance from "@/components/image/LifeInsurance.png";
 import { useSelector } from "react-redux";
 import axios from "axios";
-
+import { setLevel } from "@/Redux/sessionSlice";
 const Summery = () => {
+  const { level } = useSelector((state) => state.counterSlice);
   const User = localStorage.getItem("user");
   const user = JSON.parse(User);
   const { BenificiaryAllocation } = useSelector((state) => state.counterSlice);
@@ -27,7 +28,7 @@ const Summery = () => {
     beneficiary_id: data.nomineeId,
     asset_id: BenificiaryAllocation.SelectedAsset.assets[0].totalAssets[0].id,
     asset_type: BenificiaryAllocation.SelectedAsset.assetName,
-    level: "Primary",
+    level: level,
     allocation: data.percentage,
   }));
   const handleSubmit = async () => {
