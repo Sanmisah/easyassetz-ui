@@ -5,6 +5,7 @@ const initialState = {
   lifeInsuranceDeleteId: "",
   SelectedAsset: [],
   BenificiaryAllocation: [],
+  level: "",
 };
 
 const counterSlice = createSlice({
@@ -26,6 +27,10 @@ const counterSlice = createSlice({
       state.BenificiaryAllocation = action.payload;
       console.log("BenificiaryAllocation:", state.BenificiaryAllocation);
     },
+    setLevel(state, action) {
+      state.level = action.payload;
+      console.log("level:", state.level);
+    },
   },
 });
 
@@ -35,6 +40,7 @@ export const {
   setlifeInsuranceDeleteId,
   setSelectedAsset,
   setBenificiaryAllocation,
+  setLevel,
 } = counterSlice.actions;
 
 const store = configureStore({

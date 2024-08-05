@@ -11,11 +11,14 @@ import cross from "@/components/image/close.png";
 import lifeInsurance from "@/components/image/LifeInsurance.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedAsset } from "@/Redux/sessionSlice";
+import { setSelectedAsset, setLevel } from "@/Redux/sessionSlice";
+import { useLocation } from "react-router-dom";
 
 const AssetDistribution = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { level } = useSelector((state) => state.counterSlice);
+  const location = useLocation();
   const [otherassets, setOtherassets] = useState([]);
   useEffect(() => {
     const fetchDataVehicle = async () => {
@@ -49,21 +52,54 @@ const AssetDistribution = () => {
       setOtherassets(otherassets);
     }
   }, [otherassets]);
+
+  useEffect(() => {
+    if (location.pathname === "/assetdistribution/Primary") {
+      dispatch(setLevel("Primary"));
+    }
+    if (location.pathname === "/assetdistribution/Secondary") {
+      dispatch(setLevel("Secondary"));
+    }
+    if (location.pathname === "/assetdistribution/Tertiary") {
+      dispatch(setLevel("Tertiary"));
+    }
+  }, [location.pathname]);
   return (
     <div className="flex flex-col gap-4 space-y-4">
       <div className="flex items-center gap-2 rounded-md  px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700 h-10 w-full">
         <h1 className="text-2xl font-bold ">Asset Distribution</h1>
       </div>
       <div className="flex flex-row items-center gap-4 py-2  max-md:flex-wrap ">
-        <div className="min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full">
+        <div
+          onClick={() => navigate("/assetdistribution/Primary")}
+          className={
+            level === "Primary"
+              ? "bg-[#262626] text-white min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full"
+              : "min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full"
+          }
+        >
           <h1 className="text-lg">Primary</h1>
           <p className="text-green-500">Complete</p>
         </div>
-        <div className="min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full">
+        <div
+          onClick={() => navigate("/assetdistribution/Secondary")}
+          className={
+            level === "Secondary"
+              ? "bg-[#262626] text-white min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full"
+              : "min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full"
+          }
+        >
           <h1 className="text-lg">Secondary</h1>
           <p className="text-green-500">Complete</p>
         </div>
-        <div className="min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full">
+        <div
+          onClick={() => navigate("/assetdistribution/Tertiary")}
+          className={
+            level === "Tertiary"
+              ? "bg-[#262626] text-white min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full"
+              : "min-w-[100px] min-h-[70px] flex flex-col items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:border-input dark:bg-background dark:hover:bg-gray-800 dark:focus:bg-gray-800 h-10 w-full"
+          }
+        >
           <h1 className="text-lg"> Tertiary</h1>
           <p className="text-green-500">Complete</p>
         </div>
