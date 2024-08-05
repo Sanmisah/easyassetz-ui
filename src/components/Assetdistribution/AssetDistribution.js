@@ -10,9 +10,12 @@ import axios from "axios";
 import cross from "@/components/image/close.png";
 import lifeInsurance from "@/components/image/LifeInsurance.png";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedAsset } from "@/Redux/sessionSlice";
 
 const AssetDistribution = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [otherassets, setOtherassets] = useState([]);
   useEffect(() => {
     const fetchDataVehicle = async () => {
@@ -76,6 +79,9 @@ const AssetDistribution = () => {
                 type="single"
                 collapsible
                 className="w-full mt-4  bg-background p-4 justify-between pl-4 pr-4 items-center rounded-md drop-shadow-md"
+                onClick={() => {
+                  dispatch(setSelectedAsset(data));
+                }}
               >
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="p-2   p-4 justify-between pl-4 pr-4 items-center rounded-md ">
