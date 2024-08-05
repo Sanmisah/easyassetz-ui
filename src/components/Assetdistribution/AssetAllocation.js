@@ -181,7 +181,7 @@ const AssetAllocation = () => {
             {selectedNommie.length > 1 && (
               <div className="flex items-center space-x-2  justify-end ">
                 <Label htmlFor="airplane-mode">Split Equally</Label>
-                <Switch id="airplane-mode" onCheckedChange={setSelectedsplit} />
+                <Button onClick={setSelectedsplit}>Split Equally</Button>
               </div>
             )}
 

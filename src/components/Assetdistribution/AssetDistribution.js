@@ -88,42 +88,46 @@ const AssetDistribution = () => {
                   </AccordionTrigger>
                   <AccordionContent className="p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2  mt-4">
-                      {data?.assets?.map((asset, index) => (
-                        <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[150px]">
-                          <div className="flex  p-4 gap-4   pl-2 pr-2 items-center rounded-lg col-span-full">
-                            <div className="w-2 h-2 bg-[#0097b0] "></div>
-                            <h1 className="font-bold  text-lg ">
-                              {capitalizeFirstLetter(asset.name)}
-                            </h1>
-                          </div>
-                          {asset?.totalAssets?.map((asset, index) => (
-                            <div className="flex flex justify-between  pl-2 pr-2 items-center rounded-lg col-span-full mb-2">
-                              <div className="flex flex-col">
-                                <div className="flex gap-2  ">
-                                  <h1 className="font-medium text-[1rem]">
-                                    {index + 1}.
-                                  </h1>
-                                  <h1 className="font-semibold text-[1rem]">
-                                    {asset.var1}
-                                  </h1>
-                                </div>{" "}
-                                <div>
-                                  <p className="ml-2 text-md ml-[1rem] text-light-gray">
-                                    {asset?.var2}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center justify-center gap-2 ">
-                                <Button
-                                  onClick={() => navigate("/assetallocation")}
-                                >
-                                  Distribute
-                                </Button>
-                              </div>
+                      {data?.assets &&
+                        data?.assets?.map((asset, index) => (
+                          <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[150px]">
+                            <div className="flex  p-4 gap-4   pl-2 pr-2 items-center rounded-lg col-span-full">
+                              <div className="w-2 h-2 bg-[#0097b0] "></div>
+                              <h1 className="font-bold  text-lg ">
+                                {capitalizeFirstLetter(asset.name)}
+                              </h1>
                             </div>
-                          ))}
-                        </div>
-                      ))}
+                            {asset &&
+                              asset?.totalAssets?.map((asset, index) => (
+                                <div className="flex flex justify-between  pl-2 pr-2 items-center rounded-lg col-span-full mb-2">
+                                  <div className="flex flex-col">
+                                    <div className="flex gap-2  ">
+                                      <h1 className="font-medium text-[1rem]">
+                                        {index + 1}.
+                                      </h1>
+                                      <h1 className="font-semibold text-[1rem]">
+                                        {asset.var1}
+                                      </h1>
+                                    </div>{" "}
+                                    <div>
+                                      <p className="ml-2 text-md ml-[1rem] text-light-gray">
+                                        {asset?.var2}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center justify-center gap-2 ">
+                                    <Button
+                                      onClick={() =>
+                                        navigate("/assetallocation")
+                                      }
+                                    >
+                                      Distribute
+                                    </Button>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        ))}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
