@@ -22,13 +22,19 @@ import { Switch } from "@com/ui/switch";
 import { Input } from "@/shadcncomponents/ui/input";
 import AddNominee from "./AddNominee";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { setBenificiaryAllocation } from "@/Redux/sessionSlice";
+import { useNavigate } from "react-router-dom";
 
-const AssetAllocation = () => {
+export default function AssetAllocation() {
+  const { SelectedAsset } = useSelector((state) => state.counterSlice);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [totalsplit, setTotalsplit] = useState([]);
   const [Selectedsplit, setSelectedsplit] = useState(false);
   const inputRefs = useRef([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   let totalPercentage = 100;
 
   useEffect(() => {
@@ -109,16 +115,29 @@ const AssetAllocation = () => {
 
     const data = displaynominie.map((nominee, index) => ({
       nomineeId: nominee.id,
+      fullLegalName: nominee.fullLegalName,
+      relationship: nominee.relationship,
       percentage: totalsplit[index] || 0,
     }));
+    dispatch(
+      setBenificiaryAllocation({
+        Benificiaries: data,
+        SelectedAsset: SelectedAsset,
+      })
+    );
     // Send data to backend
-    try {
-      await axios.post("/api/submit", data);
-      console.log("Data submitted successfully");
-    } catch (error) {
-      console.error("Error submitting data", error);
-    }
+    // try {
+    //   await axios.post("/api/submit", data);
+    //   console.log("Data submitted successfully");
+    // } catch (error) {
+    //   console.error("Error submitting data", error);
+    // }
+    navigate("/summery");
   };
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -147,26 +166,43 @@ const AssetAllocation = () => {
             <AccordionTrigger className="p-2   p-4 justify-between pl-4 pr-4 items-center rounded-md ">
               <div className="flex items-center gap-2 rounded-md    text-sm font-medium           h-10 w-full">
                 <img src={lifeInsurance} className="w-6 ml-2" />
-                <h1 className="text-xl font-bold ml-2">Other asset</h1>
+                <h1 className="text-xl font-bold ml-2">
+                  {SelectedAsset.assetName}
+                </h1>
               </div>
             </AccordionTrigger>
             <AccordionContent className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2  mt-8">
-                <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[150px] ">
-                  <div className="flex  p-4 gap-4   pl-2 pr-2 items-center rounded-lg col-span-full">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <h1 className="font-bold  text-lg ">Firt Asset</h1>
-                  </div>
-                  <div className="flex flex-col   pl-2 pr-2 items-start rounded-lg col-span-full mb-2">
-                    <div className="flex gap-2 ml-6 ">
-                      <h1 className="font-semibold text-[1rem]">1.</h1>
-                      <h1 className="font-semibold text-[1rem]">Abdc23a</h1>
-                    </div>{" "}
-                    <div>
-                      <p className="ml-2 text-md ml-10">Asda</p>
+              <div className="grid grid-cols-1 md:grid-cols-2  mt-4">
+                {SelectedAsset?.assets?.map((asset, index) => (
+                  <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[150px]">
+                    <div className="flex  p-4 gap-4   pl-2 pr-2 items-center rounded-lg col-span-full">
+                      <div className="w-2 h-2 bg-[#0097b0] "></div>
+                      <h1 className="font-bold  text-lg ">
+                        {capitalizeFirstLetter(asset.name)}
+                      </h1>
                     </div>
+                    {asset &&
+                      asset?.totalAssets?.map((asset, index) => (
+                        <div className="flex flex justify-between  pl-2 pr-2 items-center rounded-lg col-span-full mb-2">
+                          <div className="flex flex-col">
+                            <div className="flex gap-2  ">
+                              <h1 className="font-medium text-[1rem]">
+                                {index + 1}.
+                              </h1>
+                              <h1 className="font-semibold text-[1rem]">
+                                {asset.var1}
+                              </h1>
+                            </div>{" "}
+                            <div>
+                              <p className="ml-2 text-md ml-[1rem] text-light-gray">
+                                {asset?.var2}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                   </div>
-                </div>
+                ))}
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -258,6 +294,4 @@ const AssetAllocation = () => {
       </div>
     </div>
   );
-};
-
-export default AssetAllocation;
+}
