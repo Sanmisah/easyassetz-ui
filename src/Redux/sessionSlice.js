@@ -6,6 +6,7 @@ const initialState = {
   SelectedAsset: [],
   BenificiaryAllocation: [],
   level: "",
+  subSelectedAsset: [],
 };
 
 const counterSlice = createSlice({
@@ -30,6 +31,10 @@ const counterSlice = createSlice({
       state.level = action.payload;
       console.log("level:", state.level);
     },
+    setSubSelectedAsset(state, action) {
+      state.subSelectedAsset = action.payload;
+      console.log("subSelectedAsset:", state.subSelectedAsset);
+    },
   },
 });
 
@@ -40,6 +45,7 @@ export const {
   setSelectedAsset,
   setBenificiaryAllocation,
   setLevel,
+  setSubSelectedAsset,
 } = counterSlice.actions;
 
 const store = configureStore({
