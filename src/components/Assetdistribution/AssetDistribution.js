@@ -11,7 +11,11 @@ import cross from "@/components/image/close.png";
 import lifeInsurance from "@/components/image/LifeInsurance.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedAsset, setLevel } from "@/Redux/sessionSlice";
+import {
+  setSelectedAsset,
+  setLevel,
+  setSubSelectedAsset,
+} from "@/Redux/sessionSlice";
 import { useLocation } from "react-router-dom";
 
 const AssetDistribution = () => {
@@ -68,6 +72,7 @@ const AssetDistribution = () => {
   // }, [location.pathname]);
 
   const handleSelect = (asset) => {
+    dispatch(setSubSelectedAsset(asset));
     console.log(asset);
     if (asset.primary === false) {
       dispatch(setLevel("Primary"));
