@@ -326,6 +326,8 @@ const Personaldetail = () => {
           >
             <div className="space-y-2 col-span-2 min-w-[300px]">
               <Label htmlFor="full-name">Full Legal Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
+
               <Input
                 id="full-name"
                 placeholder="John Doe"
@@ -345,6 +347,7 @@ const Personaldetail = () => {
             </div>
             <div className="space-y-2 max-md:col-span-2 min-w-[300px]">
               <Label htmlFor="gender">Gender</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="gender"
                 control={control}
@@ -380,6 +383,7 @@ const Personaldetail = () => {
 
             <div className="space-y-2 mb-2 min-w-[300px]">
               <Label htmlFor="dob">Date of Birth</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="dob"
                 defaultValue={defaultDate}
@@ -398,6 +402,7 @@ const Personaldetail = () => {
             </div>
             <div className="space-y-2 max-md:col-span-2 col-span-full">
               <Label htmlFor="nationality">Nationality</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <div className="flex flex-col gap-4">
                 <Controller
                   name="nationality"
@@ -486,6 +491,7 @@ const Personaldetail = () => {
 
             <div className="space-y-2 min-w-[300px] max-md:col-span-2">
               <Label htmlFor="country">Country of Residence</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="countryOfResidence"
                 control={control}
@@ -524,6 +530,7 @@ const Personaldetail = () => {
             </div>
             <div className="space-y-2 max-md:col-span-2">
               <Label htmlFor="religion">Religion</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="religion"
                 control={control}
@@ -667,9 +674,12 @@ const Personaldetail = () => {
               <h2 className="text-2xl font-bold mt-4">Address Details</h2>
               <h2 className="text-lg font-medium">Permanent Address</h2>
               <div className="space-y-2 min-w-[300px]">
-                <Label htmlFor="permanent-house-flat-no">
-                  House / Flat No.
-                </Label>
+                <div>
+                  <Label htmlFor="permanent-house-flat-no">
+                    House / Flat No.
+                  </Label>
+                  <Label style={{ color: "red" }}>*</Label>
+                </div>
                 <Input
                   id="permanent-house-flat-no"
                   placeholder="House / Flat No."
@@ -690,6 +700,7 @@ const Personaldetail = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="permanent-address-line-1">Address Line 1</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Input
                   id="permanent-address-line-1"
                   placeholder="Address Line 1"
@@ -728,6 +739,7 @@ const Personaldetail = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="permanent-pincode">Pincode</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Input
                   id="permanent-pincode"
                   placeholder="Pincode"
@@ -747,6 +759,7 @@ const Personaldetail = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="permanent-city">City</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Input
                   id="permanent-city"
                   defaultValue={defaultData?.permanentCity}
@@ -822,6 +835,7 @@ const Personaldetail = () => {
                     <Label htmlFor="current-house-flat-no">
                       House / Flat No.
                     </Label>
+                    <Label style={{ color: "red" }}>*</Label>
                     <Input
                       id="currentHouseFlatNo"
                       placeholder="House / Flat No."
@@ -843,6 +857,7 @@ const Personaldetail = () => {
                     <Label htmlFor="current-address-line-1">
                       Address Line 1
                     </Label>
+                    <Label style={{ color: "red" }}>*</Label>
                     <Input
                       id="currentAddressLine1"
                       placeholder="Address Line 1"
@@ -870,9 +885,9 @@ const Personaldetail = () => {
                       defaultValue={defaultData?.currentAddressLine2}
                       type="text"
                       {...register("currentAddressLine2", {
-                        required:
-                          !defaultData?.currentAddressLine2 &&
-                          "Address Line 2 is required",
+                        // required:
+                        //   !defaultData?.currentAddressLine2 &&
+                        //   "Address Line 2 is required",
                       })}
                     />
                     {errors.currentAddressLine2 && (
@@ -883,6 +898,7 @@ const Personaldetail = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="current-pincode">Pincode</Label>
+                    <Label style={{ color: "red" }}>*</Label>
                     <Input
                       id="currentPincode"
                       placeholder="Pincode"
@@ -962,6 +978,7 @@ const Personaldetail = () => {
                 Identification(KYC) Details
               </h2>
               <h2 className="text-2xl font-medium">Aadhar</h2>
+
               <div className="col-span-full space-y-4 min-w-[300px]">
                 <Label htmlFor="adhar">Do you have an Adhar?</Label>
                 <Controller
@@ -1018,6 +1035,7 @@ const Personaldetail = () => {
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="aadhar-number">Aadhar Number</Label>
+                    <Label style={{ color: "red" }}>*</Label>
                     <Controller
                       name="aadharNumber"
                       control={control}
@@ -1057,6 +1075,7 @@ const Personaldetail = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="adhar-name">Name as per Adhar</Label>
+                    <Label style={{ color: "red" }}>*</Label>
                     <Input
                       id="adhar-name"
                       placeholder="Name as per Adhar"
@@ -1164,6 +1183,7 @@ const Personaldetail = () => {
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="pan-number">PAN Number</Label>
+                    <Label style={{ color: "red" }}>*</Label>
                     <Controller
                       name="panNumber"
                       control={control}
@@ -1203,6 +1223,7 @@ const Personaldetail = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="pan-name">Name as per PAN</Label>
+                    <Label style={{ color: "red" }}>*</Label>
                     <Input
                       id="pan-name"
                       defaultValue={defaultData?.panName}
