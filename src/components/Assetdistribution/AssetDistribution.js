@@ -18,8 +18,10 @@ const AssetDistribution = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { level } = useSelector((state) => state.counterSlice);
+  const { SelectedAsset } = useSelector((state) => state.counterSlice);
   const location = useLocation();
   const [otherassets, setOtherassets] = useState([]);
+  const [CurrentAsset, setCurrentAsset] = useState([]);
   useEffect(() => {
     const fetchDataVehicle = async () => {
       const getitem = localStorage.getItem("user");
@@ -31,8 +33,8 @@ const AssetDistribution = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
-        console.log("data", response?.data.data);
-        setOtherassets(response?.data.data);
+        console.log("data", response?.data);
+        setOtherassets(response?.data);
       } catch (error) {
         console.error("Error fetching  data", error);
       }
@@ -53,17 +55,35 @@ const AssetDistribution = () => {
     }
   }, [otherassets]);
 
-  useEffect(() => {
-    if (location.pathname === "/assetdistribution/Primary") {
+  // useEffect(() => {
+  //   if (location.pathname === "/assetdistribution/Primary") {
+  //     dispatch(setLevel("Primary"));
+  //   }
+  //   if (location.pathname === "/assetdistribution/Secondary") {
+  //     dispatch(setLevel("Secondary"));
+  //   }
+  //   if (location.pathname === "/assetdistribution/Tertiary") {
+  //     dispatch(setLevel("Tertiary"));
+  //   }
+  // }, [location.pathname]);
+
+  const handleSelect = (asset) => {
+    console.log(asset);
+    if (asset.primary === false) {
       dispatch(setLevel("Primary"));
     }
-    if (location.pathname === "/assetdistribution/Secondary") {
+    if (asset.primary === true && asset.secondary === false) {
       dispatch(setLevel("Secondary"));
     }
-    if (location.pathname === "/assetdistribution/Tertiary") {
+    if (
+      asset.primary === true &&
+      asset.secondary === true &&
+      asset.tertiary === false
+    ) {
       dispatch(setLevel("Tertiary"));
     }
-  }, [location.pathname]);
+    navigate("/assetallocation");
+  };
   return (
     <div className="flex flex-col gap-4 space-y-4">
       <div className="flex items-center gap-2 rounded-md  px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200 focus:bg-gray-200 focus:outline-none dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700 h-10 w-full">
@@ -158,11 +178,7 @@ const AssetDistribution = () => {
                                     </div>
                                   </div>
                                   <div className="flex items-center justify-center gap-2 ">
-                                    <Button
-                                      onClick={() =>
-                                        navigate("/assetallocation")
-                                      }
-                                    >
+                                    <Button onClick={() => handleSelect(asset)}>
                                       Distribute
                                     </Button>
                                   </div>
