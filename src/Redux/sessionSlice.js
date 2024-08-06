@@ -21,7 +21,6 @@ const counterSlice = createSlice({
     },
     setSelectedAsset(state, action) {
       state.SelectedAsset = action.payload;
-      console.log("SelectedAsset:", state.SelectedAsset);
     },
     setBenificiaryAllocation(state, action) {
       state.BenificiaryAllocation = action.payload;
