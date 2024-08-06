@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { setLevel } from "@/Redux/sessionSlice";
 const Summery = () => {
+  const { subSelectedAsset } = useSelector((state) => state.counterSlice);
   const { level } = useSelector((state) => state.counterSlice);
   const User = localStorage.getItem("user");
   const user = JSON.parse(User);
@@ -27,7 +28,7 @@ const Summery = () => {
   const ArrayToSubmit = BenificiaryAllocation.Benificiaries.map((data) => ({
     beneficiary_id: data.nomineeId,
     asset_id: BenificiaryAllocation.SelectedAsset.assets[0].totalAssets[0].id,
-    asset_type: BenificiaryAllocation.SelectedAsset.assetName,
+    asset_type: subSelectedAsset.type,
     level: level,
     allocation: data.percentage,
   }));
