@@ -885,9 +885,9 @@ const Personaldetail = () => {
                       defaultValue={defaultData?.currentAddressLine2}
                       type="text"
                       {...register("currentAddressLine2", {
-                        // required:
-                        //   !defaultData?.currentAddressLine2 &&
-                        //   "Address Line 2 is required",
+                        required:
+                          !defaultData?.currentAddressLine2 &&
+                          "Address Line 2 is required",
                       })}
                     />
                     {errors.currentAddressLine2 && (
