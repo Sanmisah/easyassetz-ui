@@ -52,11 +52,11 @@ const schema = z
     modeOfPurchase: z
       .string()
       .nonempty({ message: "Mode of Purchase is required" }),
-    contactPerson: z.string().optional(),
-    contactNumber: z.string().optional(),
+    contactPerson: z.any().optional(),
+    contactNumber: z.any().optional(),
     email: z.string().email({ message: "Invalid email address" }).optional(),
-    registeredMobile: z.string().optional(),
-    registeredEmail: z.string().optional(),
+    registeredMobile: z.any().optional(),
+    registeredEmail: z.any().optional(),
     brokerName: z.string().optional(),
   })
   .refine(
