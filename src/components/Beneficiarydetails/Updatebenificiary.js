@@ -274,6 +274,7 @@ const BeneficiaryForm = ({
                         <div className="grid grid-cols-1 gap-6 mt-4">
                           <div className="space-y-2">
                             <Label htmlFor="full-name">Full Legal Name</Label>
+                            <Label className="text-red-500">*</Label>
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
@@ -288,6 +289,7 @@ const BeneficiaryForm = ({
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="relationship">Relationship</Label>
+                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="relationship"
                               control={control}
@@ -353,6 +355,7 @@ const BeneficiaryForm = ({
                           )}
                           <div className="space-y-2">
                             <Label htmlFor="gender">Gender</Label>
+                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="gender"
                               defaultValue={defaultData?.gender}
@@ -408,6 +411,7 @@ const BeneficiaryForm = ({
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
+                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="mobile"
                               defaultValue={defaultData?.mobile}
@@ -460,6 +464,7 @@ const BeneficiaryForm = ({
                               <Label htmlFor="guardian-name">
                                 Full Legal Name
                               </Label>
+                              <Label className="text-red-500">*</Label>
                               <Input
                                 id="guardian-name"
                                 placeholder="Enter guardian's full legal name"
@@ -476,6 +481,7 @@ const BeneficiaryForm = ({
                               <Label htmlFor="guardian-mobile">
                                 Mobile Number
                               </Label>
+                              <Label className="text-red-500">*</Label>
                               <Controller
                                 name="guardianMobile"
                                 defaultValue={defaultData?.guardianMobile}
@@ -515,7 +521,8 @@ const BeneficiaryForm = ({
                               )}
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="guardian-city">City</Label>
+                              <Label htmlFor="guardian-city">City</Label>3
+                              <Label className="text-red-500">*</Label>
                               <Input
                                 id="guardian-city"
                                 defaultValue={defaultData?.guardianCity}
@@ -530,6 +537,7 @@ const BeneficiaryForm = ({
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="guardian-state">State</Label>
+                              <Label className="text-red-500">*</Label>
                               <Input
                                 id="guardian-state"
                                 defaultValue={defaultData?.guardianState}
@@ -693,6 +701,7 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="house-no">House/Flat No.</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="house-no"
                           placeholder="Enter house/flat number"
@@ -707,6 +716,7 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="address-line1">Address Line 1</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="address-line1"
                           placeholder="Enter address line 1"
@@ -735,6 +745,7 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="pincode">Pincode</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="pincode"
                           placeholder="Enter pincode"
@@ -765,6 +776,7 @@ const BeneficiaryForm = ({
 
                       <div className="space-y-2">
                         <Label htmlFor="city">City</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="city"
                           placeholder="Enter city"
@@ -777,6 +789,7 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="state">State</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="state"
                           placeholder="Enter state"

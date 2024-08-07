@@ -43,8 +43,8 @@ const beneficiarySchema = z
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
     dob: z.any().optional(),
-    guardianName: z.string().optional(),
-    guardianMobile: z.string().optional(),
+    guardianName: z.string().nonempty("Name is required"),
+    guardianMobile: z.string().nonempty("Mobile is required"),
     guardianEmail: z.string().optional(),
     guardianCity: z.string().optional(),
     guardianState: z.string().optional(),
@@ -241,6 +241,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <div className="grid grid-cols-1 gap-6 mt-4">
                           <div className="space-y-2">
                             <Label htmlFor="full-name">Full Legal Name</Label>
+                            <Label className="text-red-500">*</Label>
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
@@ -254,6 +255,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="relationship">Relationship</Label>
+                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="relationship"
                               control={control}
@@ -315,6 +317,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           )}
                           <div className="space-y-2">
                             <Label htmlFor="gender">Gender</Label>
+                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="gender"
                               control={control}
@@ -366,6 +369,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
+                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="mobile"
                               control={control}
@@ -571,6 +575,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-house-no">
                           House/Flat No.
                         </Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="guardian-house-no"
                           placeholder="Enter House/Flat Number"
@@ -586,6 +591,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <Label htmlFor="guardian-address1">
                           Address Line 1
                         </Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="guardian-address1"
                           placeholder="Enter Address line 1"
@@ -614,6 +620,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="guardian-pincode">Pincode</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="guardian-pincode"
                           placeholder="Enter Pincode"
@@ -641,6 +648,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
                       <div className="space-y-2">
                         <Label htmlFor="guardian-city">City</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="guardian-city"
                           placeholder="Enter City"
@@ -652,6 +660,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="guardian-state">State</Label>
+                        <Label className="text-red-500">*</Label>
                         <Input
                           id="guardian-state"
                           placeholder="Enter State"
@@ -671,6 +680,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Label htmlFor="guardian-name">
                                 Full Legal Name
                               </Label>
+                              <Label className="text-red-500">*</Label>
                               <Input
                                 id="guardian-name"
                                 placeholder="Enter Full Legal Name"
@@ -686,6 +696,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Label htmlFor="guardian-mobile">
                                 Mobile Number
                               </Label>
+                              <Label className="text-red-500">*</Label>
                               <Controller
                                 name="guardianMobile"
                                 control={control}
@@ -723,6 +734,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="guardian-city">City</Label>
+                              <Label className="text-red-500">*</Label>
                               <Input
                                 id="guardian-city"
                                 placeholder="Enter City"
@@ -736,6 +748,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="guardian-state">State</Label>
+                              <Label className="text-red-500">*</Label>
+
                               <Input
                                 id="guardian-state"
                                 placeholder="Enter State"
