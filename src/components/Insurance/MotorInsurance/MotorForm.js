@@ -50,7 +50,7 @@ const schema = z.object({
   modeOfPurchase: z.string().optional(),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }).optional(),
+  email: z.any().optional(),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
