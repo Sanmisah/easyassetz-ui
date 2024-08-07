@@ -142,6 +142,7 @@ const HealthForm = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         });
+
         setFamilyMembersCovered(response?.data?.data?.Beneficiaries);
       } catch (error) {
         console.error("Error fetching family members covered:", error);
@@ -377,8 +378,8 @@ const HealthForm = () => {
                   render={({ field }) => (
                     <Datepicker
                       {...field}
+                      value={field.value}
                       onChange={(date) => field.onChange(date)}
-                      selected={field.value}
                     />
                   )}
                 />
