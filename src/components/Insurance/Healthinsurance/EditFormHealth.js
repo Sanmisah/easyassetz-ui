@@ -132,6 +132,7 @@ const EditFormHealth = () => {
       }
     );
     let data = response.data.data.HealthInsurance;
+    setValue("maturityDate", data.maturityDate);
     if (
       data.companyName !== "company1" &&
       data.companyName !== "company2" &&

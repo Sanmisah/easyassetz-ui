@@ -141,28 +141,7 @@ const EditMotorForm = () => {
       setHideRegisteredFields(true);
     }
     setValue("maturityDate", response.data.data.LifeInsurance?.maturityDate);
-    if (
-      ["company1", "company2", "company3"].includes(
-        response.data.data.LifeInsurance?.relationship
-      )
-    ) {
-      setShowOtherInsuranceCompany(false);
-      setValue("relationship", response.data.data.LifeInsurance?.relationship);
-    } else {
-      setShowOtherInsuranceCompany(true);
-      setValue("relationship", "other");
-      const insuranceCompany = response.data.data.LifeInsurance?.companyName;
-      if (
-        insuranceCompany !== "company1" ||
-        insuranceCompany !== "company2" ||
-        insuranceCompany !== "company3"
-      ) {
-        setValue(
-          "otherInsuranceCompany",
-          response.data.data.LifeInsurance?.companyName
-        );
-      }
-    }
+
     if (
       ["spouse", "child", "parent", "sibling", "self"].includes(
         response.data.data.LifeInsurance?.relationship
@@ -231,9 +210,6 @@ const EditMotorForm = () => {
       for (const key in data) {
         setValue(key, data[key]);
       }
-
-      setShowOtherInsuranceCompany(data.companyName === "other");
-      setShowOtherRelationship(data.relationship === "other");
 
       console.log(data);
     },

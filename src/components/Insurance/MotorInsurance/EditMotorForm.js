@@ -265,7 +265,7 @@ const EditMotorForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("motorinsurance added successfully!");
+      toast.success("Motor Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
