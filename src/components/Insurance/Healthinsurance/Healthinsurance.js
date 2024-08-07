@@ -71,7 +71,7 @@ const Heathinsurance = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Health Insurance deleted successfully!");
   };
 
   return (

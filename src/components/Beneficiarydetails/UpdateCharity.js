@@ -60,12 +60,12 @@ const States = [
 
 const charitySchema = z.object({
   charityName: z.string().nonempty("Organization name is required"),
-  charityAddress1: z.string().nonempty("Address 1 is required"),
-  charityAddress2: z.string().optional(),
+  charityAddress1: z.any().optional(),
+  charityAddress2: z.any().optional(),
   charityCity: z.string().nonempty("City is required"),
-  charityState: z.string().optional(),
+  charityState: z.any().optional(),
   charityNumber: z.string().nonempty("State is required"),
-  charityEmail: z.string().email("Invalid charityEmail address"),
+  charityEmail: z.string().email("Invalid Charity Email address"),
   contactName: z.string().nonempty("Contact person name is required"),
   charityWebsite: z.any().optional(),
   charitySpecificInstruction: z.string().optional(),
@@ -176,6 +176,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Label htmlFor="org-name" className="text-base font-medium">
                 Name of Charitable Organization
               </Label>
+              <Label className="text-red-500">*</Label>
               <Input
                 id="org-name"
                 placeholder="Enter Organization Name"
@@ -218,6 +219,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Label htmlFor="charityCity" className="text-base font-medium">
                 City
               </Label>
+              <Label className="text-red-500">*</Label>
               <Input
                 id="charityCity"
                 placeholder="Enter City"
@@ -265,6 +267,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Label htmlFor="contactName" className="text-base font-medium">
                 Phone Number
               </Label>
+              <Label className="text-red-500">*</Label>
               <Controller
                 name="contactName"
                 control={control}
@@ -304,6 +307,7 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               <Label htmlFor="contact-name" className="text-base font-medium">
                 Contact Person
               </Label>
+              <Label className="text-red-500">*</Label>
               <Input
                 id="contact-name"
                 placeholder="Enter Full Legal Name"

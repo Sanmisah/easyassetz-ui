@@ -63,7 +63,7 @@ const LifeInsurance = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/lifeinsurances/${lifeInsuranceDeleteId}`,
+      `/api/life-insurances/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -71,7 +71,7 @@ const LifeInsurance = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Beneficiary deleted successfully!");
+    toast.success("Life Insurance deleted successfully!");
   };
 
   return (

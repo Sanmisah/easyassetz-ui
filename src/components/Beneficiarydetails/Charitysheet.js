@@ -59,11 +59,11 @@ const States = [
   "Uttarakhand",
 ];
 const charitySchema = z.object({
-  charityName: z.any().optional(),
+  charityName: z.string().nonempty("Organization name is required"),
   charityAddress1: z.any().optional(),
   charityAddress2: z.string().optional(),
   charityCity: z.string().nonempty("City is required"),
-  charityState: z.string().nonempty("State is required"),
+  charityState: z.any().optional(),
   charityNumber: z.string().optional(),
   charityEmail: z.string().email("Invalid Charity Email address"),
   contactName: z.string().nonempty("Contact Person Name is Required"),
@@ -133,6 +133,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Label htmlFor="org-name" className="text-base font-medium">
                 Name of Charitable Organization
               </Label>
+              <Label className="text-red-500">*</Label>
               <Input
                 id="org-name"
                 placeholder="Enter organization name"
@@ -172,6 +173,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Label htmlFor="charityCity" className="text-base font-medium">
                 City
               </Label>
+              <Label className="text-red-500">*</Label>
               <Input
                 id="charityCity"
                 placeholder="Enter City"
@@ -212,6 +214,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Label htmlFor="charityNumber" className="text-base font-medium">
                 Phone Number
               </Label>
+              <Label className="text-red-500">*</Label>
               <PhoneInput
                 id="charityNumber"
                 type="tel"
@@ -244,6 +247,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Label htmlFor="contact-name" className="text-base font-medium">
                 Contact Person
               </Label>
+              <Label className="text-red-500">*</Label>
               <Input
                 id="contact-name"
                 placeholder="Enter Full Legal Name"

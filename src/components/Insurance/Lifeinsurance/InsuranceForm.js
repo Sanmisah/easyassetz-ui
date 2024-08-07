@@ -137,7 +137,7 @@ const InsuranceForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("lifeinsurance added successfully!");
+      toast.success("Life Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
