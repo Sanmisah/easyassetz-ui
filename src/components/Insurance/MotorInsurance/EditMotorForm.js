@@ -29,65 +29,59 @@ import { toast } from "sonner";
 import { setlifeInsuranceEditId } from "@/Redux/sessionSlice";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import Addnominee from "@/components/Nominee/EditNominee";
+import Editnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
+import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z.object({
-  companyName: z
-    .string()
-    .nonempty({ message: "Insurance Company is required" }),
-  otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  maturityDate: z.any().optional(),
-  premium: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  policyHolderName: z
-    .string()
-    .nonempty({ message: "Policy Holder Name is required" }),
-  relationship: z.string().nonempty({ message: "Relationship is required" }),
-  otherRelationship: z.string().optional(),
-  modeOfPurchase: z.any().optional(),
-  contactPerson: z.string().optional(),
-  contactNumber: z.string().optional(),
-  email: z.string().optional(),
-  registeredMobile: z.string().optional(),
-  registeredEmail: z.any().optional(),
-  additionalDetails: z.string().optional(),
-  brokerName: z.string().optional(),
-  previousPolicyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Previous Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-});
+const schema = z
+  .object({
+    companyName: z
+      .string()
+      .nonempty({ message: "Insurance Company is required" }),
+    otherInsuranceCompany: z.string().optional(),
+    insuranceType: z
+      .string()
+      .nonempty({ message: "Insurance Sub Type is required" }),
+    policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+    expiryDate: z.date().optional(),
+    premium: z.string().min(3, { message: "Premium is required" }),
+    // sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+    insurerName: z
+      .string()
+      .nonempty({ message: "Policy Holder Name is required" }),
+    vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
+    specificVehicalType: z.string().optional(),
+    modeOfPurchase: z.string().optional(),
+    contactPerson: z.string().optional(),
+    contactNumber: z.string().optional(),
+    email: z.string().optional(),
+    registeredMobile: z.string().optional(),
+    registeredEmail: z.any().optional(),
+    additionalDetails: z.string().optional(),
+    brokerName: z.string().optional(),
+    image: z.any().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.modeOfPurchase === "broker") {
+        return (
+          !!data.brokerName &&
+          !!data.contactPerson &&
+          !!data.contactNumber &&
+          !!data.email
+        );
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        return !!data.registeredMobile && !!data.registeredEmail;
+      }
+      return true;
+    },
+    {
+      message: "Required fields are missing",
+      path: ["modeOfPurchase"],
+    }
+  );
 
 const EditMotorForm = () => {
   const navigate = useNavigate();
@@ -125,42 +119,58 @@ const EditMotorForm = () => {
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(
-      `/api/life-insurances/${lifeInsuranceEditId}`,
+      `/api/motor-insurances/${lifeInsuranceEditId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       }
     );
-    if (response.data.data.LifeInsurance?.modeOfPurchase === "broker") {
+    let data = response.data.data.MotorInsurance;
+    if (data.modeOfPurchase === "e-insurance") {
+      setValue("modeOfPurchase", data.e - insurance);
+    }
+    if (data.modeOfPurchase === "broker") {
+      setValue("modeOfPurchase", data.broker);
+    }
+    if (
+      data.companyName !== "company1" &&
+      data.companyName !== "company2" &&
+      data.companyName !== "company3"
+    ) {
+      setShowOtherInsuranceCompany(true);
+      setValue("companyName", "other");
+      setValue("otherInsuranceCompany", data.companyName);
+    }
+    if (response.data.data.MotorInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
     }
-    if (response.data.data.LifeInsurance?.modeOfPurchase === "e-insurance") {
+    if (response.data.data.MotorInsurance?.modeOfPurchase === "e-insurance") {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
-    setValue("maturityDate", response.data.data.LifeInsurance?.maturityDate);
-
-    if (
-      ["spouse", "child", "parent", "sibling", "self"].includes(
-        response.data.data.LifeInsurance?.relationship
-      )
-    ) {
-      setShowOtherRelationship(false);
-      setValue("relationship", response.data.data.LifeInsurance?.relationship);
-    } else {
-      setShowOtherRelationship(true);
-      setValue("relationship", "other");
-      setValue(
-        "otherRelationship",
-        response.data.data.LifeInsurance?.relationship
-      );
-    }
-    setSelectedNommie(
-      response.data.data.LifeInsurance?.nominees?.map((nominee) => nominee.id)
+    setValue(
+      "registeredEmail",
+      response.data.data.MotorInsurance?.registeredEmail
     );
-    return response.data.data.LifeInsurance;
+    if (
+      response.data.data.MotorInsurance?.vehicleType !== "twowheeler" &&
+      response.data.data.MotorInsurance?.vehicleType !== "threewheeler" &&
+      response.data.data.MotorInsurance?.vehicleType !== "fourwheeler"
+    ) {
+      setShowOtherRelationship(true);
+      setValue("vehicleType", "other");
+    }
+    setValue(
+      "expiryDate",
+      new Date(response.data.data.MotorInsurance?.expiryDate)
+    );
+    setSelectedNommie(
+      response.data.data.MotorInsurance?.nominees?.map((nominee) => nominee.id)
+    );
+    console.log(typeof response.data.data.MotorInsurance?.premium);
+    return response.data.data.MotorInsurance;
   };
 
   const {
@@ -172,6 +182,15 @@ const EditMotorForm = () => {
     queryFn: getPersonalData,
 
     onSuccess: (data) => {
+      // if (
+      //   data.vehicleType !== "twowheeler" ||
+      //   data.vehicleType !== "threewheeler" ||
+      //   data.vehicleType !== "fourwheeler"
+      // ) {
+      //   console.log("SP SASA");
+      //   setShowOtherRelationship(true);
+      //   setValue("vehicleType", "other");
+      // }
       if (data.modeOfPurchase === "broker") {
         setBrokerSelected(true);
         setHideRegisteredFields(false);
@@ -180,26 +199,25 @@ const EditMotorForm = () => {
         setBrokerSelected(false);
         setHideRegisteredFields(true);
       }
+
       setDefaultValues(data);
       reset(data);
       setValue(data);
-      setValue("relationship", data.relationship);
-      setValue("otherRelationship", data.otherRelationship);
+      setValue("vehicleType", data.vehicleType);
+      setValue("specificVehicalType", data.specificVehicalType);
       setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("policyNumber", data.policyNumber);
-      setValue("maturityDate", data.maturityDate);
+      setValue("expiryDate", new Date(data.expiryDate));
       setValue("premium", data.premium);
-      setValue("sumInsured", data.sumInsured);
-      setValue("policyHolderName", data.policyHolderName);
+      // setValue("sumInsured", data.sumInsured);
+      setValue("insurerName", data.insurerName);
       setValue("modeOfPurchase", data.modeOfPurchase);
       setValue("contactPerson", data.contactPerson);
       setValue("contactNumber", data.contactNumber);
       setValue("email", data.email);
       setValue("registeredMobile", data.registeredMobile);
-      setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
       setValue("previousPolicyNumber", data.previousPolicyNumber);
       setValue("brokerName", data.brokerName);
@@ -211,6 +229,9 @@ const EditMotorForm = () => {
         setValue(key, data[key]);
       }
 
+      setShowOtherInsuranceCompany(data.companyName === "other");
+      setShowOtherRelationship(data.vehicleType === "other");
+
       console.log(data);
     },
     onError: (error) => {
@@ -221,23 +242,30 @@ const EditMotorForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
-        `/api/life-insurances/${lifeInsuranceEditId}`,
-        data,
+      console.log("data:", data);
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
+      formData.append("_method", "put");
+
+      const response = await axios.post(
+        `/api/motor-insurances/${lifeInsuranceEditId}`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
           },
         }
       );
-      return response.data.data.LifeInsurance;
+      return response.data.data.MotorInsurances;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("lifeinsurance added successfully!");
+      toast.success("Motor Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -249,14 +277,21 @@ const EditMotorForm = () => {
     console.log("Form values:", control._formValues);
   }, [control._formValues]);
 
-  useEffect(() => {
-    if (Benifyciary?.nominees) {
-      setDisplaynominie(Benifyciary?.nominees);
-    }
-  }, [Benifyciary?.nominees]);
+  // useEffect(() => {
+  //   if (Benifyciary) {
+  //     const defaultValues = {
+  //       ...Benifyciary,
+  //       expiryDate: new Date(Benifyciary.expiryDate)
+  //     };
+  //     reset(defaultValues);
+  //     setShowOtherInsuranceCompany(Benifyciary.companyName === "other");
+  //     setShowOtherRelationship(Benifyciary.vehicleType === "other");
+  //   }
+  // }, [Benifyciary, reset]);
+
   const onSubmit = (data) => {
-    if (data.relationship === "other") {
-      data.relationship = data.otherRelationship;
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
     }
     if (data.modeOfPurchase === "broker") {
       data.registeredMobile = null;
@@ -268,16 +303,26 @@ const EditMotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    const date = new Date(data.maturityDate);
+    const date = new Date(data.expiryDate);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
-    data.nominees = selectedNommie;
+    data.expiryDate = newdate;
+    if (data.vehicleType === "other") {
+      data.vehicleType = data.specificVehicalType;
+    }
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
     lifeInsuranceMutate.mutate(data);
   };
 
+  const handleUploadFile = () => {
+    window.open(
+      `/storage/motorinsurance/aadharFile/${Benifyciary?.aadharFile}`
+    );
+  };
   useEffect(() => {
     console.log(Benifyciary);
   }, [Benifyciary]);
@@ -290,10 +335,10 @@ const EditMotorForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Life Insurance Policy Details
+                Motor Insurance Policy Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the Life Insurance Policy Details.
+                Edit the form to update the Motor Insurance policy details.
               </CardDescription>
             </div>
           </div>
@@ -357,20 +402,22 @@ const EditMotorForm = () => {
               </div>
               {console.log(Benifyciary)}
               <div className="space-y-2">
-                <Label htmlFor="insuranceType">Insurance Sub Type</Label>
+                <Label htmlFor="insuranceType">Insurance Type</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
                   defaultValue={Benifyciary?.insuranceType || ""}
                   render={({ field }) => (
-                    <Input
-                      id="insuranceType"
-                      placeholder="Enter sub type"
-                      value={field.value}
-                      {...field}
-                      className={errors.insuranceType ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.insuranceType || ""}
-                    />
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="comprehensive"
+                        defaultChecked={Benifyciary?.insuranceType}
+                        // checked={field.value === "comprehensive"}
+                        value="comprehensive"
+                        onCheckedChange={() => field.onChange("comprehensive")}
+                      />
+                      <Label htmlFor="comprehensive">Comprehensive</Label>
+                    </div>
                   )}
                 />
                 {errors.insuranceType && (
@@ -405,23 +452,23 @@ const EditMotorForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label htmlFor="expiryDate">Expiry Date</Label>
                 <Controller
-                  name="maturityDate"
-                  defaultValues={new Date(Benifyciary?.maturityDate) || ""}
+                  name="expiryDate"
+                  defaultValues={new Date(Benifyciary?.expiryDate) || ""}
                   control={control}
                   render={({ field }) => (
                     <Datepicker
                       {...field}
-                      onChange={(date) => field.onChange(date)}
+                      defaultValues={new Date(Benifyciary?.expiryDate) || ""}
                       value={field.value}
-                      defaultValues={new Date(Benifyciary?.maturityDate) || ""}
+                      onChange={(date) => field.onChange(date)}
                     />
                   )}
                 />
-                {errors.maturityDate && (
+                {errors.expiryDate && (
                   <span className="text-red-500">
-                    {errors.maturityDate.message}
+                    {errors.expiryDate.message}
                   </span>
                 )}
               </div>
@@ -447,7 +494,7 @@ const EditMotorForm = () => {
                   <span className="text-red-500">{errors.premium.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="sum-insured">Sum Insured</Label>
                 <Controller
                   name="sumInsured"
@@ -468,58 +515,59 @@ const EditMotorForm = () => {
                     {errors.sumInsured.message}
                   </span>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label htmlFor="policy-holder">Insurer Name</Label>
                 <Controller
-                  name="policyHolderName"
+                  name="insurerName"
                   control={control}
-                  defaultValue={Benifyciary?.policyHolderName || ""}
+                  defaultValue={Benifyciary?.insurerName || ""}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
                       placeholder="Enter policy holder name"
                       {...field}
-                      className={
-                        errors.policyHolderName ? "border-red-500" : ""
-                      }
-                      defaultValue={Benifyciary?.policyHolderName || ""}
+                      className={errors.insurerName ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.insurerName || ""}
                     />
                   )}
                 />
-                {errors.policyHolderName && (
+                {errors.insurerName && (
                   <span className="text-red-500">
-                    {errors.policyHolderName.message}
+                    {errors.insurerName.message}
                   </span>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="relationship">Relationship</Label>
+                <Label htmlFor="vehicleType">Vehical Type</Label>
                 <Controller
-                  name="relationship"
-                  defaultValue={Benifyciary?.relationship || ""}
+                  name="vehicleType"
+                  defaultValue={Benifyciary?.vehicleType || ""}
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="relationship"
+                      id="vehicleType"
                       {...field}
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherRelationship(value === "other");
                       }}
-                      className={errors.relationship ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.relationship || ""}
+                      className={errors.vehicleType ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.vehicleType || ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select relationship" />
+                        <SelectValue placeholder="Select vehicleType" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="self">Self</SelectItem>
-                        <SelectItem value="spouse">Spouse</SelectItem>
-                        <SelectItem value="parent">Parent</SelectItem>
-                        <SelectItem value="child">Child</SelectItem>
+                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
+                        <SelectItem value="threewheeler">
+                          Three Wheeler
+                        </SelectItem>
+                        <SelectItem value="fourwheeler">
+                          Four Wheeler
+                        </SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -527,60 +575,27 @@ const EditMotorForm = () => {
                 />
                 {showOtherRelationship && (
                   <Controller
-                    name="otherRelationship"
+                    name="specificVehicalType"
                     control={control}
-                    defaultValue={Benifyciary?.relationship || ""}
+                    defaultValue={Benifyciary?.vehicleType || ""}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        placeholder="Specify Relationship"
+                        placeholder="Specify Vehical Type"
                         className="mt-2"
-                        defaultValue={Benifyciary?.relationship || ""}
+                        defaultValue={Benifyciary?.vehicleType || ""}
                       />
                     )}
                   />
                 )}
-                {errors.relationship && (
+                {errors.vehicleType && (
                   <span className="text-red-500">
-                    {errors.relationship.message}
+                    {errors.vehicleType.message}
                   </span>
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="previous-policy">Previous Policy Number</Label>
-                <Controller
-                  name="previousPolicyNumber"
-                  control={control}
-                  defaultValue={Benifyciary?.previousPolicyNumber || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="previousPolicyNumber"
-                      placeholder="Enter previous policy number"
-                      {...field}
-                      defaultValue={Benifyciary?.previousPolicyNumber || ""}
-                    />
-                  )}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="additional-details">Additional Details</Label>
-                <Controller
-                  name="additionalDetails"
-                  control={control}
-                  defaultValue={Benifyciary?.additionalDetails || ""}
-                  render={({ field }) => (
-                    <Textarea
-                      id="additional-details"
-                      placeholder="Enter additional details"
-                      {...field}
-                      defaultValue={Benifyciary?.additionalDetails || ""}
-                    />
-                  )}
-                />
-              </div>
-            </div>
+
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
@@ -617,7 +632,7 @@ const EditMotorForm = () => {
             <div className="space-y-2">
               <Label htmlFor="registered-mobile">Add nominee</Label>
               {console.log(Benifyciary?.nominees)}
-              <Addnominee
+              <Editnominee
                 setSelectedNommie={setSelectedNommie}
                 AllNominees={Benifyciary?.nominees}
                 selectedNommie={selectedNommie}
@@ -683,21 +698,28 @@ const EditMotorForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="registered-email">Registered Email ID</Label>
+                  <Label htmlFor="registeredEmail">Registered Email ID</Label>
                   <Controller
                     name="registeredEmail"
                     defaultValue={Benifyciary?.registeredEmail || ""}
                     control={control}
                     render={({ field }) => (
                       <Input
-                        id="registered-email"
+                        id="registeredEmail"
                         placeholder="Enter registered email"
                         type="email"
                         {...field}
+                        value={field.value}
+                        onChange={field.onChange}
                         defaultValue={Benifyciary?.registeredEmail || ""}
                       />
                     )}
                   />
+                  {errors.registeredEmail && (
+                    <span className="text-red-500">
+                      {errors.registeredEmail.message}
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -809,16 +831,39 @@ const EditMotorForm = () => {
               </>
             )}
             <div className="space-y-2">
-              <Label htmlFor="image-upload">Image Upload</Label>
+              <Label htmlFor="aadharFile">Upload Your image File</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
-                defaultValue={Benifyciary?.imageUpload || ""}
                 render={({ field }) => (
-                  <Input id="image-upload" type="file" {...field} />
+                  <Input
+                    id="image"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.panFile ? "border-red-500" : ""}
+                  />
                 )}
               />
+              {errors.panFile && (
+                <span className="text-red-500">{errors.panFile.message}</span>
+              )}
             </div>
+            {Benifyciary?.panFile && (
+              <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
+                <Button
+                  variant="ghost"
+                  onClick={handleUploadFile}
+                  className="color-green-500"
+                >
+                  View Uploaded Aadhar File
+                </Button>
+              </div>
+            )}
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>
