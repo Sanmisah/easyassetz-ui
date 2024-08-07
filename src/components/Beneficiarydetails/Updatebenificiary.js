@@ -53,13 +53,13 @@ const beneficiarySchema = z.object({
   guardianReligion: z.string().optional(),
   guardianNationality: z.string().optional(),
   addressLine1: z.string().nonempty("Address Line 1 is required"),
-  addressLine2: z.any().optional(),
-  pincode: z.any().optional(),
-  country: z.any().optional(),
+  addressLine2: z.string().nonempty("Address Line 2 is required"),
+  pincode: z.string().nonempty("Pincode is required"),
+  country: z.string().nonempty("Country is required"),
   mobile: z.string().nonempty("Mobile is required"),
   email: z.string().email("Invalid email").nonempty("Email is required"),
   city: z.string().nonempty("City is required"),
-  state: z.any().optional(),
+  state: z.string().nonempty("State is required"),
   houseNo: z.string().nonempty("House No is required"),
   religion: z.string().nonempty("Religion is required"),
   nationality: z.string().nonempty("Nationality is required"),
@@ -92,12 +92,15 @@ const BeneficiaryForm = ({
   const watchDOB = watch("dob", null);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-
+  //asd
   useEffect(() => {
     if (watchDOB) {
       const age = calculateAge(watchDOB);
       if (age >= 18) {
         clearGuardianFields();
+      }
+      if (age < 18) {
+        toast.warning("You are a minorsa");
       }
     }
   }, [watchDOB]);
@@ -274,7 +277,6 @@ const BeneficiaryForm = ({
                         <div className="grid grid-cols-1 gap-6 mt-4">
                           <div className="space-y-2">
                             <Label htmlFor="full-name">Full Legal Name</Label>
-                            <Label className="text-red-500">*</Label>
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
@@ -289,7 +291,6 @@ const BeneficiaryForm = ({
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="relationship">Relationship</Label>
-                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="relationship"
                               control={control}
@@ -355,7 +356,6 @@ const BeneficiaryForm = ({
                           )}
                           <div className="space-y-2">
                             <Label htmlFor="gender">Gender</Label>
-                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="gender"
                               defaultValue={defaultData?.gender}
@@ -411,7 +411,6 @@ const BeneficiaryForm = ({
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
-                            <Label className="text-red-500">*</Label>
                             <Controller
                               name="mobile"
                               defaultValue={defaultData?.mobile}
@@ -454,105 +453,7 @@ const BeneficiaryForm = ({
                           </div>
                         </div>
                       </div>
-                      {isMinor && (
-                        <div>
-                          <h3 className="text-lg font-medium">
-                            Guardian Details
-                          </h3>
-                          <div className="grid grid-cols-1 gap-6 mt-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-name">
-                                Full Legal Name
-                              </Label>
-                              <Label className="text-red-500">*</Label>
-                              <Input
-                                id="guardian-name"
-                                placeholder="Enter guardian's full legal name"
-                                defaultValue={defaultData?.guardianName}
-                                {...register("guardianName")}
-                              />
-                              {errors.guardianName && (
-                                <p className="text-red-500">
-                                  {errors.guardianName.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-mobile">
-                                Mobile Number
-                              </Label>
-                              <Label className="text-red-500">*</Label>
-                              <Controller
-                                name="guardianMobile"
-                                defaultValue={defaultData?.guardianMobile}
-                                control={control}
-                                render={({ field }) => (
-                                  <PhoneInput
-                                    id="guardian-mobile"
-                                    type="tel"
-                                    placeholder="Enter guardian's mobile number"
-                                    defaultCountry="in"
-                                    defaultValue={defaultData?.guardianMobile}
-                                    value={field.value || ""}
-                                    inputStyle={{ minWidth: "15.5rem" }}
-                                    onChange={field.onChange}
-                                  />
-                                )}
-                              />
-                              {errors.guardianMobile && (
-                                <p className="text-red-500">
-                                  {errors.guardianMobile.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-email">Email</Label>
-                              <Input
-                                id="guardian-email"
-                                type="email"
-                                defaultValue={defaultData?.guardianEmail}
-                                placeholder="Enter guardian's email"
-                                {...register("guardianEmail")}
-                              />
-                              {errors.guardianEmail && (
-                                <p className="text-red-500">
-                                  {errors.guardianEmail.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-city">City</Label>3
-                              <Label className="text-red-500">*</Label>
-                              <Input
-                                id="guardian-city"
-                                defaultValue={defaultData?.guardianCity}
-                                placeholder="Enter guardian's city"
-                                {...register("guardianCity")}
-                              />
-                              {errors.guardianCity && (
-                                <p className="text-red-500">
-                                  {errors.guardianCity.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-state">State</Label>
-                              <Label className="text-red-500">*</Label>
-                              <Input
-                                id="guardian-state"
-                                defaultValue={defaultData?.guardianState}
-                                placeholder="Enter guardian's state"
-                                {...register("guardianState")}
-                              />
-                              {errors.guardianState && (
-                                <p className="text-red-500">
-                                  {errors.guardianState.message}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
+
                       <div className="space-y-2">
                         <Label htmlFor="document">
                           Identification Document
@@ -701,7 +602,6 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="house-no">House/Flat No.</Label>
-                        <Label className="text-red-500">*</Label>
                         <Input
                           id="house-no"
                           placeholder="Enter house/flat number"
@@ -716,7 +616,6 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="address-line1">Address Line 1</Label>
-                        <Label className="text-red-500">*</Label>
                         <Input
                           id="address-line1"
                           placeholder="Enter address line 1"
@@ -745,7 +644,6 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="pincode">Pincode</Label>
-                        <Label className="text-red-500">*</Label>
                         <Input
                           id="pincode"
                           placeholder="Enter pincode"
@@ -776,7 +674,6 @@ const BeneficiaryForm = ({
 
                       <div className="space-y-2">
                         <Label htmlFor="city">City</Label>
-                        <Label className="text-red-500">*</Label>
                         <Input
                           id="city"
                           placeholder="Enter city"
@@ -789,7 +686,6 @@ const BeneficiaryForm = ({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="state">State</Label>
-                        <Label className="text-red-500">*</Label>
                         <Input
                           id="state"
                           placeholder="Enter state"
@@ -800,6 +696,101 @@ const BeneficiaryForm = ({
                           <p className="text-red-500">{errors.state.message}</p>
                         )}
                       </div>
+                      {isMinor && (
+                        <div>
+                          <h3 className="text-lg font-medium">
+                            Guardian Details
+                          </h3>
+                          <div className="grid grid-cols-1 gap-6 mt-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-name">
+                                Full Legal Name
+                              </Label>
+                              <Input
+                                id="guardian-name"
+                                placeholder="Enter guardian's full legal name"
+                                defaultValue={defaultData?.guardianName}
+                                {...register("guardianName")}
+                              />
+                              {errors.guardianName && (
+                                <p className="text-red-500">
+                                  {errors.guardianName.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-mobile">
+                                Mobile Number
+                              </Label>
+                              <Controller
+                                name="guardianMobile"
+                                defaultValue={defaultData?.guardianMobile}
+                                control={control}
+                                render={({ field }) => (
+                                  <PhoneInput
+                                    id="guardian-mobile"
+                                    type="tel"
+                                    placeholder="Enter guardian's mobile number"
+                                    defaultCountry="in"
+                                    defaultValue={defaultData?.guardianMobile}
+                                    value={field.value || ""}
+                                    inputStyle={{ minWidth: "15.5rem" }}
+                                    onChange={field.onChange}
+                                  />
+                                )}
+                              />
+                              {errors.guardianMobile && (
+                                <p className="text-red-500">
+                                  {errors.guardianMobile.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-email">Email</Label>
+                              <Input
+                                id="guardian-email"
+                                type="email"
+                                defaultValue={defaultData?.guardianEmail}
+                                placeholder="Enter guardian's email"
+                                {...register("guardianEmail")}
+                              />
+                              {errors.guardianEmail && (
+                                <p className="text-red-500">
+                                  {errors.guardianEmail.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-city">City</Label>
+                              <Input
+                                id="guardian-city"
+                                defaultValue={defaultData?.guardianCity}
+                                placeholder="Enter guardian's city"
+                                {...register("guardianCity")}
+                              />
+                              {errors.guardianCity && (
+                                <p className="text-red-500">
+                                  {errors.guardianCity.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="guardian-state">State</Label>
+                              <Input
+                                id="guardian-state"
+                                defaultValue={defaultData?.guardianState}
+                                placeholder="Enter guardian's state"
+                                {...register("guardianState")}
+                              />
+                              {errors.guardianState && (
+                                <p className="text-red-500">
+                                  {errors.guardianState.message}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
                       <Button type="submit">Submit</Button>
