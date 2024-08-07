@@ -92,7 +92,7 @@ const BeneficiaryForm = ({
   const watchDOB = watch("dob", null);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-
+  //asd
   useEffect(() => {
     if (watchDOB) {
       const age = calculateAge(watchDOB);
