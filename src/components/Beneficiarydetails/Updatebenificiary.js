@@ -99,6 +99,9 @@ const BeneficiaryForm = ({
       if (age >= 18) {
         clearGuardianFields();
       }
+      if (age < 18) {
+        toast.warning("You are a minorsa");
+      }
     }
   }, [watchDOB]);
 
