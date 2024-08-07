@@ -557,17 +557,14 @@ const Personaldetail = () => {
             </div>
             <div className="space-y-2 min-w-[300px] max-md:col-span-2">
               <Label htmlFor="<Marital-status">Marital Status</Label>
+
               <Controller
                 name="maritalStatus"
                 control={control}
-                rules={{
-                  required:
-                    !defaultData?.maritalStatus && "Marital Status is required",
-                }}
                 render={({ field }) => (
                   <Select
-                    {...field}
-                    value={defaultData?.maritalStatus}
+                    id="maritalStatus"
+                    value={field.value}
                     onValueChange={(value) => {
                       if (value === "Bachelor") {
                         setMarriedUnderAct(false);
@@ -584,14 +581,12 @@ const Personaldetail = () => {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Marital status">
-                        {field.value || "Select Marital status"}
-                      </SelectValue>{" "}
+                      <SelectValue placeholder="Select Marital status" />
                     </SelectTrigger>
                     <SelectContent>
                       {dropdownData.maritalStatuses?.map((status) => (
                         <SelectItem key={status} value={status}>
-                          {status.charAt(0) + status.slice(1)}
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
