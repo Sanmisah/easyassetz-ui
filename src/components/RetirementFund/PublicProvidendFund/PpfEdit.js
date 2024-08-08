@@ -29,6 +29,7 @@ import { useSelector } from "react-redux";
 import Editnominee from "@/components/Nominee/EditNominee";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import cross from "@/components/image/close.png";
+import Nominee from "../Nominee";
 
 const schema = z.object({
   bankName: z.any().optional(),
@@ -64,7 +65,8 @@ const PpfEditForm = ({}) => {
   const [phone, setPhone] = useState("");
   const [nomineeError, setNomineeError] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
-
+  const [selectedFamilyMembers, setSelectedFamilyMembers] = useState([]);
+  const [displayFamilyMembers, setDisplayFamilyMembers] = useState([]);
   const {
     handleSubmit,
     control,
@@ -337,45 +339,53 @@ const PpfEditForm = ({}) => {
             </div>
 
             {showJointHolderName && (
-              <div className="space-y-2">
-                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                <Controller
-                  name="jointHolderName"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="jointHolderName"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className={errors.jointHolderName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Joint Holder Name" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="family_member_1">
-                          Family Member 1
-                        </SelectItem>
-                        <SelectItem value="family_member_2">
-                          Family Member 2
-                        </SelectItem>
-                        <SelectItem value="other_contact_1">
-                          Other Contact 1
-                        </SelectItem>
-                        <SelectItem value="other_contact_2">
-                          Other Contact 2
-                        </SelectItem>
-                        {/* Add more options as needed */}
-                      </SelectContent>
-                    </Select>
+              <>
+                <div>
+                  {displayFamilyMembers && displayFamilyMembers.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="grid gap-4 py-4">
+                        <Label className="text-lg font-bold">
+                          Selected Nominees
+                        </Label>
+                        {displayFamilyMembers &&
+                          displayFamilyMembers.map((nominee) => (
+                            <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                              <Label htmlFor={`nominee-${nominee?.id}`}>
+                                {nominee?.fullLegalName || nominee?.charityName}
+                              </Label>
+                              <img
+                                className="w-4 h-4 cursor-pointer"
+                                onClick={() => {
+                                  setDisplayFamilyMembers(
+                                    displayFamilyMembers.filter(
+                                      (item) => item.id !== nominee.id
+                                    )
+                                  );
+                                  setSelectedFamilyMembers(
+                                    selectedFamilyMembers.filter(
+                                      (item) => item.id !== nominee.id
+                                    )
+                                  );
+                                }}
+                                src={cross}
+                                alt=""
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    </div>
                   )}
-                />
-                {errors.jointHolderName && (
-                  <span className="text-red-500">
-                    {errors.jointHolderName.message}
-                  </span>
-                )}
-              </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="registered-phone">Add Family Members</Label>
+                  <Nominee
+                    setSelectedNommie={setSelectedFamilyMembers}
+                    selectedNommie={selectedFamilyMembers}
+                    displaynominie={displayFamilyMembers}
+                    setDisplaynominie={setDisplayFamilyMembers}
+                  />{" "}
+                </div>
+              </>
             )}
 
             <div className="space-y-2">

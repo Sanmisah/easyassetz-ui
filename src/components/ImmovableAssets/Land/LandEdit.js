@@ -123,11 +123,14 @@ const ResidentialEditForm = () => {
     setValue("firstHoldersPan", data.firstHoldersPan);
     setValue("joinHoldersName", data.joinHoldersName);
     setValue("joinHoldersRelation", data.joinHoldersRelation);
-    setValue("joinHoldersPan", data.joinHoldersPan);
+    setValue("jointHoldersPan", data.jointHoldersPan);
     setValue("anyLoanLitigation", data.anyLoanLitigation);
     setValue("name", data.name);
     setValue("mobile", data.mobile);
     setValue("email", data.email);
+    if (data.ownershipType === "joint") {
+      setJoinholder(true);
+    }
     if (data.anyLoanLitigation === "yes") {
       setValue("anyLoanLitigation", data.anyLoanLitigation);
       setLitigation(true);
@@ -159,14 +162,15 @@ const ResidentialEditForm = () => {
       setValue("firstHoldersRelation", data.firstHoldersRelation);
       setValue("firstHoldersAadhar", data.firstHoldersAadhar);
       setValue("firstHoldersPan", data.firstHoldersPan);
-      setValue("joinHoldersName", data.joinHoldersName);
-      setValue("joinHoldersRelation", data.joinHoldersRelation);
-      setValue("joinHoldersPan", data.joinHoldersPan);
+      setValue("jointHoldersName", data.jointHoldersName);
+      setValue("jointHoldersRelation", data.jointHoldersRelation);
+      setValue("jointHoldersPan", data.jointHoldersPan);
       setValue("anyLoanLitigation", data.anyLoanLitigation);
       setValue("litigationFile", data.litigationFile);
       setValue("name", data.name);
       setValue("mobile", data.mobile);
       setValue("email", data.email);
+
       // Set fetched values to the form
       for (const key in data) {
         setValue(key, data[key]);
@@ -473,6 +477,8 @@ const ResidentialEditForm = () => {
                       // }}
                       render={({ field }) => (
                         <Input
+                          defaultValue={Benifyciary?.firstHoldersName || ""}
+                          id="firstHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           className={
@@ -529,20 +535,20 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label>First Joint Holder PAN</Label>
                     <Controller
-                      name="joinHoldersName"
+                      name="firstHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="firstHoldersPan"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.firstHoldersPan ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.firstHoldersPan && (
                       <span className="text-red-500">
                         {errors.joinHoldersName.message}
                       </span>
@@ -579,22 +585,22 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Name</Label>
                     <Controller
-                      name="joinHoldersName"
+                      name="jointHoldersName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -603,17 +609,17 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Relation</Label>
                     <Controller
-                      name="joinHoldersRelation"
+                      name="jointHoldersRelation"
                       control={control}
                       render={({ field }) => (
                         <Select
-                          id="joinHoldersRelation"
+                          id="jointHoldersRelation"
                           value={field.value}
                           onValueChange={(value) => {
                             field.onChange(value);
                           }}
                           className={
-                            errors.joinHoldersRelation ? "border-red-500" : ""
+                            errors.jointHoldersRelation ? "border-red-500" : ""
                           }
                         >
                           <SelectTrigger>
@@ -629,36 +635,60 @@ const ResidentialEditForm = () => {
                         </Select>
                       )}
                     />
-                    {errors.joinHoldersRelation && (
+                    {errors.jointHoldersRelation && (
                       <span className="text-red-500">
-                        {errors.joinHoldersRelation.message}
+                        {errors.jointHoldersRelation.message}
                       </span>
                     )}
                   </div>
                 )}
                 {Joinholder && (
-                  <div className="space-y-2 wrap col-span-full">
-                    <Label> Second Joint Holder Pan</Label>
-                    <Controller
-                      name="joinHoldersAadhar"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="joinHoldersName"
-                          placeholder="Enter Joint Holder Aadhar"
-                          {...field}
-                          className={
-                            errors.joinHoldersName ? "border-red-500" : ""
-                          }
-                        />
+                  <>
+                    <div className="space-y-2 wrap col-span-full">
+                      <Label> Second Joint Holder Pan</Label>
+                      <Controller
+                        name="jointHoldersPan"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="joinHoldersName"
+                            placeholder="Enter Joint Holder Aadhar"
+                            {...field}
+                            className={
+                              errors.joinHoldersName ? "border-red-500" : ""
+                            }
+                          />
+                        )}
+                      />
+                      {errors.joinHoldersName && (
+                        <span className="text-red-500">
+                          {errors.joinHoldersName.message}
+                        </span>
                       )}
-                    />
-                    {errors.joinHoldersName && (
-                      <span className="text-red-500">
-                        {errors.joinHoldersName.message}
-                      </span>
-                    )}
-                  </div>
+                    </div>
+                    <div className="space-y-2 wrap col-span-full">
+                      <Label> Second Joint Holder Aadhar</Label>
+                      <Controller
+                        name="jointHoldersAadhar"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="jointHoldersAadhar"
+                            placeholder="Enter Joint Holder Aadhar"
+                            {...field}
+                            className={
+                              errors.jointHoldersAadhar ? "border-red-500" : ""
+                            }
+                          />
+                        )}
+                      />
+                      {errors.jointHoldersAadhar && (
+                        <span className="text-red-500">
+                          {errors.jointHoldersAadhar.message}
+                        </span>
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
               {displaynominie && displaynominie.length > 0 && (
