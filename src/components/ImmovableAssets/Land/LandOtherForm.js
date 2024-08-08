@@ -474,7 +474,7 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label>First Joint Holder PAN</Label>
                     <Controller
-                      name="joinHoldersPan"
+                      name="firstHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -528,7 +528,7 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Name</Label>
                     <Controller
-                      name="joinHoldersName"
+                      name="jointHoldersName"
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -554,11 +554,11 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Relation</Label>
                     <Controller
-                      name="joinHoldersRelation"
+                      name="jointHoldersRelation"
                       control={control}
                       render={({ field }) => (
                         <Select
-                          id="joinHoldersRelation"
+                          id="jointHoldersRelation"
                           value={field.value}
                           onValueChange={field.onChange}
                           className={
@@ -589,7 +589,7 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Pan</Label>
                     <Controller
-                      name="joinHoldersAadhar"
+                      name="jointHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -615,7 +615,7 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Aadhar</Label>
                     <Controller
-                      name="joinHoldersAadhar"
+                      name="jointHoldersAadhar"
                       control={control}
                       render={({ field }) => (
                         <Input

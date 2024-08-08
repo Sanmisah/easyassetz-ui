@@ -29,6 +29,7 @@ import { PhoneInput } from "react-international-phone";
 import Addnominee from "@/components/Nominee/addNominee";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import cross from "@/components/image/close.png";
+import Nominee from "../Nominee";
 
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Bank Name is required" }),
@@ -75,13 +76,9 @@ const ppfForm = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState(null);
   const [displaynominie, setDisplaynominie] = useState([]);
-  const [showOtherRegistrationNumber, setShowOtherRegistrationNumber] =
-    useState(false);
-  const [otherFirmRegistrationNumber, setOtherFirmRegistrationNumber] =
-    useState("");
-  const [otherFirmName, setOtherFirmName] = useState("");
-  const [showOtherJointHolderName, setShowOtherJointHolderName] =
-    useState(false);
+
+  const [selectedFamilyMembers, setSelectedFamilyMembers] = useState([]);
+  const [displayFamilyMembers, setDisplayFamilyMembers] = useState([]);
 
   const [showOtherJointName, setShowOtherJointName] = useState(false);
   const {
@@ -145,15 +142,16 @@ const ppfForm = () => {
     // if (data.typeOfInvestment === "other") {
     //   data.typeOfInvestment = data.specifyInvestment;
     // }
-    // if (selectedNommie.length > 0) {
-    //   data.nominees = selectedNommie;
-    // }
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
     data.type = "company";
 
     data.mobile = phone;
     // if (data) {
     //   data.firmName = data.otherFirmName;
     // }
+    data.jointHoldersName = selectedFamilyMembers;
 
     lifeInsuranceMutate.mutate(data);
   };
@@ -294,36 +292,84 @@ const ppfForm = () => {
             </div>
 
             {showOtherJointName && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="jointHolderName">Joint Holder Name</Label>
-                  <Input
-                    id="jointHolderName"
-                    placeholder="Enter Joint Holder Name"
-                    {...register("jointHolderName")}
-                    className={errors.jointHolderName ? "border-red-500" : ""}
-                  />
-                  {errors.jointHolderName && (
-                    <span className="text-red-500">
-                      {errors.jointHolderName.message}
-                    </span>
+              // <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              //   <div className="space-y-2">
+              //     <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+              //     <Input
+              //       id="jointHolderName"
+              //       placeholder="Enter Joint Holder Name"
+              //       {...register("jointHolderName")}
+              //       className={errors.jointHolderName ? "border-red-500" : ""}
+              //     />
+              //     {errors.jointHolderName && (
+              //       <span className="text-red-500">
+              //         {errors.jointHolderName.message}
+              //       </span>
+              //     )}
+              //   </div>
+              //   <div className="space-y-2">
+              //     <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
+              //     <Input
+              //       id="jointHolderPan"
+              //       placeholder="Enter Joint Holder PAN"
+              //       {...register("jointHolderPan")}
+              //       className={errors.jointHolderPan ? "border-red-500" : ""}
+              //     />
+              //     {errors.jointHolderPan && (
+              //       <span className="text-red-500">
+              //         {errors.jointHolderPan.message}
+              //       </span>
+              //     )}
+              //   </div>
+              // </div>
+
+              <>
+                <div>
+                  {displayFamilyMembers && displayFamilyMembers.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="grid gap-4 py-4">
+                        <Label className="text-lg font-bold">
+                          Selected Nominees
+                        </Label>
+                        {displayFamilyMembers &&
+                          displayFamilyMembers.map((nominee) => (
+                            <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                              <Label htmlFor={`nominee-${nominee?.id}`}>
+                                {nominee?.fullLegalName || nominee?.charityName}
+                              </Label>
+                              <img
+                                className="w-4 h-4 cursor-pointer"
+                                onClick={() => {
+                                  setDisplayFamilyMembers(
+                                    displayFamilyMembers.filter(
+                                      (item) => item.id !== nominee.id
+                                    )
+                                  );
+                                  setSelectedFamilyMembers(
+                                    selectedFamilyMembers.filter(
+                                      (item) => item.id !== nominee.id
+                                    )
+                                  );
+                                }}
+                                src={cross}
+                                alt=""
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    </div>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Input
-                    id="jointHolderPan"
-                    placeholder="Enter Joint Holder PAN"
-                    {...register("jointHolderPan")}
-                    className={errors.jointHolderPan ? "border-red-500" : ""}
-                  />
-                  {errors.jointHolderPan && (
-                    <span className="text-red-500">
-                      {errors.jointHolderPan.message}
-                    </span>
-                  )}
+                  <Label htmlFor="registered-phone">Add Family Members</Label>
+                  <Nominee
+                    setSelectedNommie={setSelectedFamilyMembers}
+                    selectedNommie={selectedFamilyMembers}
+                    displaynominie={displayFamilyMembers}
+                    setDisplaynominie={setDisplayFamilyMembers}
+                  />{" "}
                 </div>
-              </div>
+              </>
             )}
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
