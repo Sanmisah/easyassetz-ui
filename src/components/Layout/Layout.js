@@ -85,7 +85,7 @@ import PersonalLoanOtherForm from "@/components/Liabilities/PersonalLoans/Person
 import PersonalLoanEdit from "@/components/Liabilities/PersonalLoans/PersonalLoanEdit";
 import OtherLoanMainForm from "@/components/Liabilities/OtherLoans/OtherLoanMainForm";
 import OtherLoanOtherForm from "@/components/Liabilities/OtherLoans/OtherLoanOtherForm";
-import OtherLoanEdit from "@/components/Liabilities/OtherLoans/OtherLoanMainForm";
+import OtherLoanEdit from "@/components/Liabilities/OtherLoans/OtherLoansEditForm";
 import RetirementFundMainForm from "@/components/RetirementFund/RetirementFundsMainForm";
 import BankContentForm from "@/components/Bank&Post/contents";
 import BankAccountMainForm from "@/components/Bank&Post/BankAccounts/BankAccountMainForm";

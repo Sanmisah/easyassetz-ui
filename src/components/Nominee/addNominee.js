@@ -100,8 +100,8 @@ const AddNominee = ({
               <p>Select nominee to add to your insurance policy</p>
             </SheetDescription>
           </SheetHeader>
-          <div className="grid gap-4 py-4">
-            <ScrollArea className="w-full h-[76vh] rounded-md">
+          <ScrollArea className="w-full h-[76vh] rounded-md">
+            <div className="grid gap-4 py-4">
               <h2 className="font-bold">Beneficiaries</h2>
               {nominees.Beneficiaries?.map((nominee) => (
                 <div
@@ -147,8 +147,8 @@ const AddNominee = ({
                   />
                 </div>
               ))}
-            </ScrollArea>
-          </div>
+            </div>
+          </ScrollArea>
           <SheetFooter>
             <Button onClick={addNominee}>Add Nominee</Button>
             <SheetClose asChild>

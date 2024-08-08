@@ -90,7 +90,11 @@ const MembershipEdit = () => {
       setShowOtherMembershipType(true);
       setValue("otherMembersipType", othertype);
     }
-
+    setValue("membershipType", response.data.data.Membership?.membershipType);
+    setValue(
+      "membershipPaymentDate",
+      response.data.data.Membership?.membershipPaymentDate
+    );
     console.log(typeof response.data.data.Membership?.premium);
     return response.data.data.Membership;
   };
