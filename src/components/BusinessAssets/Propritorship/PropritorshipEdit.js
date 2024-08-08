@@ -43,8 +43,8 @@ const schema = z.object({
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
-  name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  name: z.any().optional(),
+  email: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -138,7 +138,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("BusinessAsset added successfully!");
+      toast.success("Propritoriship added successfully!");
       navigate("/propritership");
     },
     onError: (error) => {
@@ -191,6 +191,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmName"> Firm Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmName"
                   defaultValue={Benifyciary?.firmName}
@@ -226,6 +227,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                   {" "}
                   Registration Address{" "}
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="registeredAddress"
                   control={control}
@@ -258,6 +260,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                 <Label htmlFor="firmsRegistrationNumberType">
                   Firm Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumberType"
                   control={control}
@@ -296,7 +299,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                       <Input
                         id="firmsRegistrationNumber"
                         className="mt-2"
-                        value={field.value || ""}
+                        value={field.value?.toUpperCase() || ""}
                         defaultValue={
                           Benifyciary?.firmsRegistrationNumber || ""
                         }
@@ -311,6 +314,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                   {" "}
                   Additional Information
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="additionalInformation"
                   control={control}

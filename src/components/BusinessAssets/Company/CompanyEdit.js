@@ -34,22 +34,18 @@ import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
-  companyAddress: z
-    .string()
-    .nonempty({ message: "Company Address is required" }),
+  companyAddress: z.any().optional(),
   firmsRegistrationNumberType: z.string().optional(),
   firmsRegistrationNumber: z.string().optional(),
-
-  myStatus: z.string().nonempty({ message: "My Status is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  myStatus: z.any().optional(),
+  holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
-
   additionalInformation: z.string().optional(),
   typeOfInvestment: z.string().optional(),
-  name: z.string().nonempty({ message: "Name is required" }),
-  mobile: z.string().nonempty({ message: "Mobile is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (

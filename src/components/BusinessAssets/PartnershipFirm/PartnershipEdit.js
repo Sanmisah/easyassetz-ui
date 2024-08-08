@@ -40,9 +40,7 @@ const schema = z.object({
   holdingPercentage: z
     .string()
     .nonempty({ message: "Holding Percentage is required" }),
-  additionalInformation: z
-    .string()
-    .min(1, { message: "Additional Information is Required" }),
+  additionalInformation: z.any().optional(),
   firmsRegistrationNumberType: z.string().optional(),
   email: z.string().email({ message: "Invalid email address" }),
   name: z.string().nonempty({ message: "Name is required" }),
@@ -171,7 +169,7 @@ const PartnershipEdit = () => {
         "partnershipDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Partnership details updated successfully!");
+      toast.success("Partnership Firm details updated successfully!");
       navigate("/partnershipfirm");
     },
     onError: (error) => {
@@ -188,7 +186,7 @@ const PartnershipEdit = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    // data.nominees = selectedNommie;
+    data.nominees = selectedNommie;
     data.mobile = mobile;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
@@ -209,7 +207,7 @@ const PartnershipEdit = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Partnership Details
+                Edit Partnership Details
               </CardTitle>
               <CardDescription>
                 Edit the form to update the partnership details.
@@ -222,6 +220,7 @@ const PartnershipEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmName">Firm Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmName"
                   control={control}
@@ -244,6 +243,7 @@ const PartnershipEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="registeredAddress">Registered Address</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="registeredAddress"
                   control={control}
@@ -268,6 +268,7 @@ const PartnershipEdit = () => {
                 <Label htmlFor="firmsRegistrationNumberType">
                   Firm Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumberType"
                   control={control}
@@ -301,6 +302,7 @@ const PartnershipEdit = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
+                        value={field.value?.toUpperCase() || ""}
                         placeholder="Specify Registration Number"
                         className="mt-2"
                       />
@@ -316,6 +318,7 @@ const PartnershipEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="holdingPercentage">Holding Percentage</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="holdingPercentage"
                   control={control}

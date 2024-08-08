@@ -47,12 +47,10 @@ const schema = z.object({
       message: "Sum Insured must be a number",
     })
     .transform((value) => (value === null ? null : Number(value))),
-  additionalInformation: z
-    .string()
-    .min(3, { message: "Additional Information is required" }),
-  name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  mobile: z.string().nonempty({ message: "Mobile is required" }),
+  additionalInformation: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -129,9 +127,9 @@ const PropritershipForm = () => {
     data.firmsRegistrationNumberType = showOtherRegistrationNumber;
     data.firmsRegistrationNumber = data.otherRegistrationNumber;
 
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
-    }
+    // if (selectedNommie.length > 0) {
+    //   data.nominees = selectedNommie;
+    // }
 
     data.type = "partnershipFirm";
     console.log(data.name, name);
@@ -165,6 +163,7 @@ const PropritershipForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmName">Firm Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmName"
                   control={control}
@@ -202,6 +201,7 @@ const PropritershipForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="registeredAddress">Regitration Address </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="registeredAddress"
                 control={control}
@@ -243,6 +243,7 @@ const PropritershipForm = () => {
                 <Label htmlFor="firmsRegistrationNumber">
                   Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumber"
                   control={control}
@@ -276,14 +277,13 @@ const PropritershipForm = () => {
                     render={({ field }) => (
                       <Input
                         id="otherRegistrationNumber"
-                        value={field.value}
+                        value={field.value?.toUpperCase() || ""}
                         onChange={field.onChange}
                         className={
                           errors.firmsRegistrationNumber
                             ? "border-red-500 mt-2"
                             : "mt-2"
                         }
-                        {...field}
                         placeholder="Specify Registration Number"
                       />
                     )}
@@ -302,6 +302,7 @@ const PropritershipForm = () => {
                 <Label htmlFor="additionalInformation">
                   Holding Percentage
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="holdingPercentage"
                   control={control}
