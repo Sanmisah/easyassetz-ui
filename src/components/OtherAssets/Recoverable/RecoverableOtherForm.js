@@ -28,13 +28,12 @@ import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
-
 const schema = z.object({
   nameOfBorrower: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
   address: z.string().nonempty({ message: "Loan Account Number is required" }),
-  contactNumber: z.string().optional(),
+  contactNumber: z.string().min(1, { message: "Contact Number is required" }),
   modeOfLoan: z.any().optional(),
   amount: z.any().optional(),
   dueDate: z.any().optional(),
@@ -42,12 +41,18 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Guarantor Name is required" }),
   type: z.any().optional(),
+  chequeNumber: z.string().min(1, { message: "Cheque Number is required" }),
+  chequeIssuingBank: z
+    .string()
+    .min(1, { message: "Cheque issuing bank is required" }),
 });
 
 const RecoverableOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
+  const [contactNumber, setContactNumber] = useState("");
+  const [ShowCheckfields, setShowCheckfields] = useState(false);
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -194,6 +199,7 @@ const RecoverableOtherForm = () => {
                     onValueChange={(value) => {
                       field.onChange(value);
                       // setShowOtherJointName(value === "joint");
+                      setShowCheckfields(value === "cheque");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -202,8 +208,8 @@ const RecoverableOtherForm = () => {
                       <Label htmlFor="Cash">Cash</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <RadioGroupItem id="Cheque" value="Cheque" />
-                      <Label htmlFor="Cheque">Cheque</Label>
+                      <RadioGroupItem id="cheque" value="cheque" />
+                      <Label htmlFor="cheque">Cheque</Label>
                     </div>
                   </RadioGroup>
                 )}
@@ -214,6 +220,52 @@ const RecoverableOtherForm = () => {
                 </span>
               )}
             </div>
+            {ShowCheckfields && (
+              <>
+                <div className="space-y-2">
+                  <Label>Cheque Number</Label>
+                  <Controller
+                    name="chequeNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeNumber"
+                        placeholder="Enter cheque number"
+                        {...field}
+                        className={errors.chequeNumber ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.chequeNumber && (
+                    <span className="text-red-500">
+                      {errors.chequeNumber.message}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Label>Cheque issuing Bank</Label>
+                  <Controller
+                    name="chequeIssuingBank"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeIssuingBank"
+                        placeholder="Enter cheque issuing bank"
+                        {...field}
+                        className={
+                          errors.chequeIssuingBank ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.chequeIssuingBank && (
+                    <span className="text-red-500">
+                      {errors.chequeIssuingBank.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
               <Controller

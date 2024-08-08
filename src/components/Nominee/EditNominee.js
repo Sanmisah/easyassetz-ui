@@ -14,7 +14,7 @@ import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
 import cross from "@/components/image/close.png";
-import { ScrollArea } from "@com/ui/scroll-area";
+import { ScrollArea } from "../../shadcncomponents/ui/scroll-area";
 
 const AddNominee = ({
   setSelectedNommie,
@@ -97,11 +97,12 @@ const AddNominee = ({
               <p>Select nominee to add to your insurance policy</p>
             </SheetDescription>
           </SheetHeader>
-          <div className="grid gap-4 py-4">
-            <h2 className="font-bold">Beneficiaries</h2>
-            <ScrollArea className="flex flex-col gap-2rounded-md ">
-              {console.log(AllNominees)}
-              {/* {displaynominie && displaynominie.length > 0 && (
+          <div className="grid gap-4 py-4 overflow-y-auto">
+            <div className="grid gap-4 py-4 ovwerflow-y-auto">
+              <ScrollArea className="flex flex-col y-visible rounded-md ">
+                <h2 className="font-bold">Beneficiaries</h2>
+                {console.log(AllNominees)}
+                {/* {displaynominie && displaynominie.length > 0 && (
                 <div className="space-y-2">
                   <div className="grid gap-4 py-4">
                     {console.log(displaynominie)}
@@ -133,52 +134,53 @@ const AddNominee = ({
                   </div>
                 </div>
               )} */}
-              {nominees.Beneficiaries?.map((nominee) => (
-                <div
-                  key={nominee.id}
-                  className="flex mb-4 space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-                >
-                  <Label htmlFor={`nominee-${nominee.id}`}>
-                    {nominee.fullLegalName}
-                  </Label>
-                  <Checkbox
-                    id={`nominee-${nominee.id}`}
-                    checked={selectedNominees.includes(nominee.id)}
-                    onCheckedChange={() =>
-                      handleCheckboxChange(
-                        nominee.id,
-                        nominee.fullLegalName,
-                        null
-                      )
-                    }
-                  />
-                </div>
-              ))}
+                {nominees.Beneficiaries?.map((nominee) => (
+                  <div
+                    key={nominee.id}
+                    className="flex mb-4 space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                  >
+                    <Label htmlFor={`nominee-${nominee.id}`}>
+                      {nominee.fullLegalName}
+                    </Label>
+                    <Checkbox
+                      id={`nominee-${nominee.id}`}
+                      checked={selectedNominees.includes(nominee.id)}
+                      onCheckedChange={() =>
+                        handleCheckboxChange(
+                          nominee.id,
+                          nominee.fullLegalName,
+                          null
+                        )
+                      }
+                    />
+                  </div>
+                ))}
 
-              <h2 className="font-bold">Charities</h2>
-              {nominees.Charities?.map((nominee) => (
-                <div
-                  key={nominee.id}
-                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-                >
-                  <Label htmlFor={`nominee-${nominee.id}`}>
-                    {nominee.charityName}
-                  </Label>
-                  <Checkbox
-                    id={`nominee-${nominee.id}`}
-                    checked={selectedNominees.includes(nominee.id)}
-                    onCheckedChange={() =>
-                      handleCheckboxChange(
-                        nominee.id,
-                        nominee.fullLegalName,
+                <h2 className="font-bold">Charities</h2>
+                {nominees.Charities?.map((nominee) => (
+                  <div
+                    key={nominee.id}
+                    className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                  >
+                    <Label htmlFor={`nominee-${nominee.id}`}>
+                      {nominee.charityName}
+                    </Label>
+                    <Checkbox
+                      id={`nominee-${nominee.id}`}
+                      checked={selectedNominees.includes(nominee.id)}
+                      onCheckedChange={() =>
+                        handleCheckboxChange(
+                          nominee.id,
+                          nominee.fullLegalName,
 
-                        nominee.charityName
-                      )
-                    }
-                  />
-                </div>
-              ))}
-            </ScrollArea>
+                          nominee.charityName
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+              </ScrollArea>
+            </div>
           </div>
           <SheetFooter>
             <SheetClose asChild>

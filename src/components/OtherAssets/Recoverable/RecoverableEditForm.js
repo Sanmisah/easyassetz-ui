@@ -43,6 +43,8 @@ const schema = z.object({
   dueDate: z.any().optional(),
   additionalInformation: z.string().optional(),
   type: z.any().optional(),
+  chequeNumber: z.string().optional(),
+  chequeIssuingBank: z.string().optional(),
   // hufShare: z.string().optional(),
   // name: z.string().optional(),
   // email: z.string().optional(),
@@ -53,6 +55,7 @@ const RecoverableEditForm = () => {
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
+  const [showChequefields, setShowChequefields] = useState(false);
   const queryClient = useQueryClient();
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
@@ -101,6 +104,11 @@ const RecoverableEditForm = () => {
     // setValue("name", data.name);
     // setValue("email", data.email);
     setValue("contactNumber", data.contactNumber);
+    setValue("chequeNumber", data.chequeNumber);
+    setValue("chequeIssuingBank", data.chequeIssuingBank);
+    if (data.modeOfLoan === "cheque") {
+      setShowChequefields(true);
+    }
     return response.data.data.OtherAsset;
   };
 
@@ -261,7 +269,7 @@ const RecoverableEditForm = () => {
                     defaultValue={Benifyciary?.modeOfLoan || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      setShowOtherArticleDetails(value === "other");
+                      setShowChequefields(value === "Cheque");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -290,6 +298,53 @@ const RecoverableEditForm = () => {
                 </span>
               )}
             </div>
+            {showChequefields && (
+              <>
+                <div className="space-y-2">
+                  <Label>Cheque Number</Label>
+                  <Controller
+                    name="chequeNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeNumber"
+                        placeholder="Enter cheque number"
+                        {...field}
+                        className={errors.chequeNumber ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.chequeNumber && (
+                    <span className="text-red-500">
+                      {errors.chequeNumber.message}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Label>Cheque issuing Bank</Label>
+                  <Controller
+                    name="chequeIssuingBank"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeIssuingBank"
+                        placeholder="Enter cheque issuing bank"
+                        {...field}
+                        className={
+                          errors.chequeIssuingBank ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.chequeIssuingBank && (
+                    <span className="text-red-500">
+                      {errors.chequeIssuingBank.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
               <Controller

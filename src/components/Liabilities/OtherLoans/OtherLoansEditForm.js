@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
   bankName: z
@@ -28,8 +29,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.string().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
   duration: z.string().nonempty({ message: "Duration is required" }),
   guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
   guarantorMobile: z
@@ -47,7 +48,6 @@ const OtherLoansEditForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-
   const {
     handleSubmit,
     control,
@@ -67,38 +67,72 @@ const OtherLoansEditForm = () => {
       guarantorEmail: "",
     },
   });
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/other-loans/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    let othertype = response.data.data.OtherLoan?.guarantorName;
+    if (othertype === "other") {
+      setShowOtherGuarantor(true);
+    }
+    const data = response.data.data.OtherLoan;
+    setValue("bankName", data.bankName);
+    setValue("loanAccountNo", data.loanAccountNo);
+    setValue("branch", data.branch);
+    setValue("emiDate", data.emiDate);
+    setValue("startDate", data.startDate);
+    setValue("duration", data.duration);
+    setValue("guarantorName", data.guarantorName);
+    setValue("guarantorMobile", data.guarantorMobile);
+    setValue("guarantorEmail", data.guarantorEmail);
+    return response.data.data.OtherLoan;
+  };
 
   const {
-    data: loanData,
+    data: Benifyciary,
     isLoading,
     isError,
-  } = useQuery(
-    ["loanData", id],
-    async () => {
-      const response = await axios.get(
-        `/api/other-loans/${lifeInsuranceEditId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
-      return response.data.data.OtherLoan;
+  } = useQuery({
+    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      setDefaultValues(data);
+      reset(data);
+      setValue(data);
+      setValue("bankName", data.bankName);
+      setValue("loanAccountNo", data.loanAccountNo);
+      setValue("branch", data.branch);
+      setValue("emiDate", data.emiDate);
+      setValue("startDate", data.startDate);
+      setValue("duration", data.duration);
+      setValue("guarantorName", data.guarantorName);
+      setValue("guarantorMobile", data.guarantorMobile);
+      setValue("guarantorEmail", data.guarantorEmail);
+      if (data.guarantorName === "other") {
+        setShowOtherGuarantor(true);
+      }
+      if (data.guarantorMobile === "other") {
+        setShowOtherGuarantor(true);
+      }
+      if (data.guarantorEmail === "other") {
+        setShowOtherGuarantor(true);
+      }
+      if (data.guarantorName === "other") {
+        setShowOtherGuarantor(true);
+      }
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching loan data:", error);
-        toast.error("Failed to fetch loan data");
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch data");
+    },
+  });
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
