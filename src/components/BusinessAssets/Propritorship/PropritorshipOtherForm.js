@@ -95,7 +95,7 @@ const PropritershipForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Other Insurance added successfully!");
+      toast.success("Propritoriship added successfully!");
       navigate("/propritership");
     },
     onError: (error) => {
@@ -144,6 +144,7 @@ const PropritershipForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmName">Firm Name </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmName"
                   control={control}
@@ -191,6 +192,7 @@ const PropritershipForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="registeredAddress">Registration Address</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="registeredAddress"
                 control={control}
@@ -218,6 +220,7 @@ const PropritershipForm = () => {
                 <Label htmlFor="firmsRegistrationNumber">
                   Firm Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumber"
                   control={control}
@@ -253,7 +256,7 @@ const PropritershipForm = () => {
                         {...field}
                         placeholder="Specify Firm's Registration Number"
                         className="mt-2"
-                        value={field.value || ""}
+                        value={field.value?.toUpperCase() || ""}
                         onChange={field.onChange}
                       />
                     )}
@@ -272,6 +275,7 @@ const PropritershipForm = () => {
                 <Label htmlFor="additionalInformation">
                   Additional Information
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="additionalInformation"
                   control={control}
