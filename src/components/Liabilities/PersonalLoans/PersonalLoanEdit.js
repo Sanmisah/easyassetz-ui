@@ -27,18 +27,14 @@ const schema = z.object({
   loanAccountNumber: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  branch: z.string().optional(),
+  branch: z.any().optional(),
   emiDate: z.date({ message: "EMI Date is required" }),
   startDate: z.date({ message: "Start Date is required" }),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+
+  guarantorEmail: z.any().optional(),
 });
 
 const PersonalLoanEdit = () => {

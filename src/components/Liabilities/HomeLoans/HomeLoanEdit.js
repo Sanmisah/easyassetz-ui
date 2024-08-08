@@ -28,18 +28,13 @@ const schema = z.object({
   loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  branch: z.string().optional(),
-  emiDate: z.any().optional(),
-  startDate: z.any().optional(),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  branch: z.any().optional(),
+  emiDate: z.string().nonempty({ message: "EMI Date is required" }),
+  startDate: z.string().nonempty({ message: "Start Date is required" }),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+  guarantorEmail: z.any().optional(),
 });
 
 const HomeLoanEditForm = () => {
@@ -162,10 +157,10 @@ const HomeLoanEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
+                Edit Home Loan Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the loan details.
+                Update the form to edit the home loan details.
               </CardDescription>
             </div>
           </div>

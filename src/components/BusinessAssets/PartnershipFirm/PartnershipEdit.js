@@ -183,7 +183,8 @@ const PartnershipEdit = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
- 
+    // data.nominees = selectedNommie;
+
     data.mobile = mobile;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;

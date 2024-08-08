@@ -28,10 +28,9 @@ import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  litigationType: z
-    .string()
-    .nonempty({ message: "Type of Litigation is required" }),
-  otherLitigationType: z.string().optional(),
+  litigationType: z.any().optional(),
+
+  otherLitigationType: z.any().optional(),
   courtName: z.string().nonempty({ message: "Court/Forum Name is required" }),
   city: z.string().nonempty({ message: "City is required" }),
   caseRegistrationNumber: z
@@ -159,6 +158,8 @@ const LitigationForm = () => {
                     <SelectContent>
                       <SelectItem value="court">Court/Tribunal Case</SelectItem>
                       <SelectItem value="criminal">Criminal</SelectItem>
+                      <SelectItem value="civilSuit">Civil Suit</SelectItem>
+
                       <SelectItem value="arbitration">Arbitration</SelectItem>
                       <SelectItem value="employment">
                         Employment Litigation

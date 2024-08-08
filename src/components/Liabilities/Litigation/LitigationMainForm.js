@@ -67,7 +67,7 @@ const VehicleLoanMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Litigation deleted successfully!");
   };
 
   return (

@@ -34,18 +34,13 @@ const schema = z.object({
   loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  branch: z.string().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  branch: z.any().optional(),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+  guarantorEmail: z.any().optional(),
 });
 
 const HomeLoanOtherForm = () => {
@@ -84,7 +79,7 @@ const HomeLoanOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");
-      toast.success("Loan added successfully!");
+      toast.success("Home Loan added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -116,9 +111,11 @@ const HomeLoanOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Loan Details</CardTitle>
+              <CardTitle className="text-2xl font-bold">
+                Home Loan Details
+              </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Loan.
+                Fill out the form to add a new Home Loan.
               </CardDescription>
             </div>
           </div>

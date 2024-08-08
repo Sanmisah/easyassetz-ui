@@ -28,18 +28,13 @@ const schema = z.object({
   loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  bankName: z.string().optional(),
+  bankName: z.any().optional(),
   emiDate: z.any().optional(),
   startDate: z.any().optional(),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+  guarantorEmail: z.any().optional(),
 });
 
 const VehicleLoanEdit = () => {
@@ -117,7 +112,7 @@ const VehicleLoanEdit = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
-      toast.success("Loan updated successfully!");
+      toast.success("Vehicle Loan updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -152,10 +147,10 @@ const VehicleLoanEdit = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
+                Edit Vehicle Loan Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the loan details.
+                Update the form to edit the vehicle loan details.
               </CardDescription>
             </div>
           </div>
