@@ -67,7 +67,7 @@ const HomeLoanMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Home Loan deleted successfully!");
   };
 
   return (

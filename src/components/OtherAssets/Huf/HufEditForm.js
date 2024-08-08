@@ -34,13 +34,13 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  hufName: z.string().optional(),
-  panNumber: z.string().optional(),
-  hufShare: z.string().optional(),
-  additionalInformation: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().optional(),
-  mobile: z.string().optional(),
+  hufName: z.string().nonempty({ message: "HUF Name is required" }),
+  panNumber: z.string().nonempty({ message: "PAN Number is required" }),
+  hufShare: z.any().optional(),
+  additionalInformation: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
 });
 
 const OtherLoansEditForm = () => {
@@ -198,6 +198,7 @@ const OtherLoansEditForm = () => {
                       id="panNumber"
                       placeholder="Enter PAN Number"
                       {...field}
+                      value={field.value?.toUpperCase() || ""}
                       className={errors.panNumber ? "border-red-500" : ""}
                     />
                   )}
