@@ -179,14 +179,11 @@ const PartnershipEdit = () => {
 
   const onSubmit = (data) => {
     data.type = "partnershipFirm";
-    if (selectedNommie.length < 1) {
-      toast.error("Please select atleast one nominee");
-      return;
-    }
+
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    data.nominees = selectedNommie;
+    // data.nominees = selectedNommie;
     data.mobile = mobile;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
@@ -233,7 +230,6 @@ const PartnershipEdit = () => {
                     />
                   )}
                 />
-
                 {errors.firmName && (
                   <span className="text-red-500">
                     {errors.firmName.message}
@@ -363,37 +359,31 @@ const PartnershipEdit = () => {
                 )}
               </div>
               {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2 col-span-full">
+                <div className="space-y-2 col-span-full mt-4">
                   <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
+                    {displaynominie.map((nominee) => (
+                      <div
+                        key={nominee.id}
+                        className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                      >
+                        <Label htmlFor={`nominee-${nominee.id}`}>
+                          {nominee.fullLegalName || nominee.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie((prev) =>
+                              prev.filter((item) => item.id !== nominee.id)
+                            );
+                            setSelectedNommie((prev) =>
+                              prev.filter((item) => item !== nominee.id)
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
