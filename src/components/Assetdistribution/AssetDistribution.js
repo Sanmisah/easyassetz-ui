@@ -174,6 +174,9 @@ const AssetDistribution = () => {
                                           <BreadcrumbLink
                                             onClick={() => {
                                               dispatch(setLevel("Primary"));
+                                              dispatch(
+                                                setSubSelectedAsset(asset)
+                                              );
                                               navigate("/assetallocation");
                                             }}
                                           >
@@ -187,6 +190,9 @@ const AssetDistribution = () => {
                                             <BreadcrumbLink
                                               onClick={() => {
                                                 dispatch(setLevel("Secondary"));
+                                                dispatch(
+                                                  setSubSelectedAsset(asset)
+                                                );
                                                 navigate("/assetallocation");
                                               }}
                                             >
@@ -203,6 +209,9 @@ const AssetDistribution = () => {
                                                   onClick={() => {
                                                     dispatch(
                                                       setLevel("Tertiary")
+                                                    );
+                                                    dispatch(
+                                                      setSubSelectedAsset(asset)
                                                     );
                                                     navigate(
                                                       "/assetallocation"
