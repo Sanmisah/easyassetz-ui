@@ -217,10 +217,9 @@ const HealthForm = () => {
       <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
               <Button onClick={() => navigate("/healthinsurance")}>Back</Button>
               <div>
-                {" "}
                 <CardTitle className="text-2xl font-bold">
                   Health Insurance Policy Details
                 </CardTitle>

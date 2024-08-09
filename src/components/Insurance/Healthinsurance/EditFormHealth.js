@@ -287,17 +287,17 @@ const EditFormHealth = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
               <Button onClick={() => navigate("/healthinsurance")}>Back</Button>
-              <>
-                {" "}
+              <div>
                 <CardTitle className="text-2xl font-bold">
-                  Health Insurance Policy Details
+                  Edit Health Insurance Policy Details
                 </CardTitle>
                 <CardDescription>
-                  Edit the form to update the Health Insurance Policy Details.
+                  Fill out the form to update the Health Insurance Policy
+                  Details.
                 </CardDescription>
-              </>
+              </div>
             </div>
           </div>
         </CardHeader>
