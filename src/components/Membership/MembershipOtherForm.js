@@ -36,7 +36,7 @@ const schema = z.object({
     .nonempty({ message: "Organization Name is required" }),
   membershipId: z.string().nonempty({ message: "Membership id is required" }),
   membershipType: z.string().optional(),
-  membershipPaymentDate: z.date().optional(),
+  membershipPaymentDate: z.any().optional(),
   email: z.string().optional(),
 });
 
@@ -147,6 +147,7 @@ const MembershipForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="organizationName">Organization Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="organizationName"
                   control={control}
@@ -172,6 +173,7 @@ const MembershipForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="membershipId">Membership Id</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="membershipId"
                 control={control}
@@ -244,6 +246,7 @@ const MembershipForm = () => {
                 <Label htmlFor="membershipPaymentDate">
                   Membership Payment Date
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="membershipPaymentDate"
                   control={control}

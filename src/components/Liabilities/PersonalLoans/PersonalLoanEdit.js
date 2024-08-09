@@ -71,12 +71,12 @@ const PersonalLoanEdit = () => {
   } = useQuery(
     ["loanData", id],
     async () => {
-      const response = await axios.get(`/api/loans/${id}`, {
+      const response = await axios.get(`/api/personal-loans/${id}`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Loan;
+      return response.data.data.PersonalLoan;
     },
     {
       onSuccess: (data) => {
@@ -95,12 +95,12 @@ const PersonalLoanEdit = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/loans/${id}`, data, {
+      const response = await axios.put(`/api/personal-loans/${id}`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
-      return response.data.data.Loan;
+      return response.data.data.PersonalLoan;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
@@ -155,6 +155,7 @@ const PersonalLoanEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank/Institution</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -175,6 +176,7 @@ const PersonalLoanEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="loanAccountNumber"
                   control={control}
@@ -219,6 +221,7 @@ const PersonalLoanEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -232,6 +235,7 @@ const PersonalLoanEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

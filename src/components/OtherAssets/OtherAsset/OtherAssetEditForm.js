@@ -34,13 +34,13 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  nameOfAsset: z.string().optional(),
-  assetDescription: z.string().optional(),
+  nameOfAsset: z.string().nonempty("Name of Asset is required"),
+  assetDescription: z.string().nonempty("Asset Description is required"),
   // hufShare: z.string().optional(),
-  additionalInformation: z.string().optional(),
+  additionalInformation: z.any().optional(),
   name: z.any().optional(),
-  email: z.any  ().optional(),
-  mobile: z.string().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
   type: z.any().optional(),
 });
 
@@ -172,6 +172,7 @@ const OtherAssetEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nameOfAsset">Name of Asset</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="nameOfAsset"
                   control={control}
@@ -193,6 +194,7 @@ const OtherAssetEditForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="assetDescription">Asset Description</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="assetDescription"
                   control={control}

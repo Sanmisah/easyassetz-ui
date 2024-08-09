@@ -34,19 +34,15 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  vehicleType: z
-    .string()
-    .nonempty({ message: "Bank/Institution Name is required" }),
-  otherVehicleType: z.string().optional(),
-  fourWheeler: z
-    .string()
-    .nonempty({ message: "Loan Account Number is required" }),
+  vehicleType: z.any().optional(),
+  otherVehicleType: z.any().optional(),
+  fourWheeler: z.any().optional(),
   otherFourWheeler: z.string().optional(),
-  company: z.string().optional(),
-  model: z.any().optional(),
+  company: z.string().nonempty({ message: "Company Name is required" }),
+  model: z.string().nonempty({ message: "Model is required" }),
   registrationNumber: z.any().optional(),
   yearOfManufacture: z.any().optional(),
-  location: z.string().nonempty({ message: "Guarantor Name is required" }),
+  location: z.any().optional(),
 });
 
 const OtherLoansEditForm = () => {
@@ -67,11 +63,13 @@ const OtherLoansEditForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       vehicleType: "",
+      otherVehicleType: "",
       fourWheeler: "",
+      otherFourWheeler: "",
       company: "",
       model: "",
-      duration: "",
-      dueDate: "",
+      registrationNumber: "",
+      yearOfManufacture: "",
       location: "",
     },
   });
@@ -85,7 +83,7 @@ const OtherLoansEditForm = () => {
         },
       }
     );
-    let data = response.data.data.OtherAsset;
+    let data = response.data.data.Vehicle;
     setValue("vehicleType", data.vehicleType);
     setValue("fourWheeler", data.fourWheeler);
     setValue("company", data.company);
@@ -93,7 +91,7 @@ const OtherLoansEditForm = () => {
     setValue("registrationNumber", data.registrationNumber);
     setValue("yearOfManufacture", data.yearOfManufacture);
     setValue("location", data.location);
-    return response.data.data.OtherAsset;
+    return response.data.data.Vehicle;
   };
 
   const { data, isLoading, isError } = useQuery({
@@ -151,7 +149,7 @@ const OtherLoansEditForm = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading loan data</div>;
+  if (isError) return <div>Error loading vehicle data</div>;
 
   return (
     <div className="w-full">
@@ -163,7 +161,7 @@ const OtherLoansEditForm = () => {
                 Edit Vehicle Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the vehicle details.
+                Update the form to edit the Vehicle details.
               </CardDescription>
             </div>
           </div>
@@ -276,6 +274,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="company"
                   control={control}
@@ -296,6 +295,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="model">Model</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="model"
                   control={control}

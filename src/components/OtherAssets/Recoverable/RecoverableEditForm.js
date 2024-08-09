@@ -35,16 +35,18 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  nameOfBorrower: z.string().optional(),
-  address: z.string().optional(),
-  contactNumber: z.string().optional(),
+  nameOfBorrower: z
+    .string()
+    .nonempty({ message: "Bank/Institution Name is required" }),
+  address: z.string().nonempty({ message: "Loan Account Number is required" }),
+  contactNumber: z.string().min(1, { message: "Contact Number is required" }),
   modeOfLoan: z.any().optional(),
   amount: z.any().optional(),
   dueDate: z.any().optional(),
-  additionalInformation: z.string().optional(),
+  additionalInformation: z.any().optional(),
   type: z.any().optional(),
-  chequeNumber: z.string().optional(),
-  chequeIssuingBank: z.string().optional(),
+  chequeNumber: z.any().optional(),
+  chequeIssuingBank: z.any().optional(),
   // hufShare: z.string().optional(),
   // name: z.string().optional(),
   // email: z.string().optional(),
@@ -196,6 +198,7 @@ const RecoverableEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nameOfBorrower">Name of Borrower</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="nameOfBorrower"
                   control={control}
@@ -217,6 +220,7 @@ const RecoverableEditForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="address">Address</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address"
                   control={control}
@@ -236,6 +240,7 @@ const RecoverableEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="contactNumber">Contact Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="contactNumber"
                 control={control}

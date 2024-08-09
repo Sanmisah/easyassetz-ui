@@ -68,7 +68,7 @@ const IntellectualPropertyMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("   Intellectual Property deleted successfully!");
+    toast.success("Intellectual Property deleted successfully!");
   };
 
   return (
