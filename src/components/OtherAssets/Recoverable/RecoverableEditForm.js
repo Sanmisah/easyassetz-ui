@@ -274,7 +274,7 @@ const RecoverableEditForm = () => {
                     defaultValue={Benifyciary?.modeOfLoan || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      setShowChequefields(value === "Cheque");
+                      setShowChequefields(value === "cheque");
                     }}
                     className="flex items-center gap-2"
                   >

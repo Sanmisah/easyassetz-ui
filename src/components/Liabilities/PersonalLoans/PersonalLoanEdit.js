@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
   bankName: z
@@ -28,8 +29,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.any().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
   duration: z.any().optional(),
   guarantorName: z.any().optional(),
   guarantorMobile: z.any().optional(),
@@ -40,6 +41,7 @@ const schema = z.object({
 const PersonalLoanEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
@@ -64,43 +66,64 @@ const PersonalLoanEdit = () => {
     },
   });
 
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/personal-loans/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    setValue("bankName", response.data.data.PersonalLoan?.bankName);
+    setValue("loanAccountNo", response.data.data.PersonalLoan?.loanAccountNo);
+    setValue("branch", response.data.data.PersonalLoan?.branch);
+    setValue("emiDate", response.data.data.PersonalLoan?.emiDate);
+    setValue("startDate", response.data.data.PersonalLoan?.startDate);
+    setValue("duration", response.data.data.PersonalLoan?.duration);
+    setValue("guarantorName", response.data.data.PersonalLoan?.guarantorName);
+    setValue(
+      "guarantorMobile",
+      response.data.data.PersonalLoan?.guarantorMobile
+    );
+    setValue("guarantorEmail", response.data.data.PersonalLoan?.guarantorEmail);
+    return response.data.data.PersonalLoan;
+  };
+
   const {
     data: loanData,
     isLoading,
     isError,
-  } = useQuery(
-    ["loanData", id],
-    async () => {
-      const response = await axios.get(`/api/personal-loans/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.PersonalLoan;
+   } = useQuery({
+    queryKey: ["loanData", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      setDefaultData(data);
+      reset(data);
+ 
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching loan data:", error);
-        toast.error("Failed to fetch loan data");
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
+    },
+  });
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/personal-loans/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.PersonalLoan;
+       const response = await axios.put(
+        `/api/personal-loans/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
+      return response.data.data.Loan;
+ 
+ 
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
