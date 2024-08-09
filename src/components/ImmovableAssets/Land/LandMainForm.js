@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DeleteAlert from "./ConfirmDelete";
 
-const ResidentialMainForm = () => {
+const LandMainForm = () => {
   const [alertDialog, setAlertDialog] = useState(false);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -64,7 +64,7 @@ const ResidentialMainForm = () => {
       },
     });
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("ResidentialProperty deleted successfully!");
+    toast.success("Land deleted successfully!");
   };
 
   return (
@@ -133,4 +133,4 @@ const ResidentialMainForm = () => {
   );
 };
 
-export default ResidentialMainForm;
+export default LandMainForm;

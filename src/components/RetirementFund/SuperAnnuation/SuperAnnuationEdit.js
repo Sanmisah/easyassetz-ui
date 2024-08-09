@@ -218,6 +218,7 @@ const SuperAnnuationEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="companyName">Company Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   defaultValue={Benifyciary?.companyName || ""}
@@ -240,6 +241,7 @@ const SuperAnnuationEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="masterPolicyNumber"
                   defaultValue={Benifyciary?.masterPolicyNumber || ""}
@@ -264,6 +266,7 @@ const SuperAnnuationEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="empNo">Employee ID</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="empNo"
                   defaultValue={Benifyciary?.empNo || ""}

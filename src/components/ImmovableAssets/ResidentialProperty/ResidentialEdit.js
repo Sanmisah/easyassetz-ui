@@ -34,12 +34,12 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
 ));
 const schema = z.object({
-  propertyType: z.string().nonempty({ message: "Property Type is required" }),
+  propertyType: z.any().optional(),
   houseNumber: z.string().nonempty({ message: "House Number is required" }),
   address1: z.string().nonempty({ message: "Address Line 1 is required" }),
   pincode: z.string().nonempty({ message: "Pincode is required" }),
   area: z.string().nonempty({ message: "Area is required" }),
-  city: z.string().nonempty({ message: "City is required" }),
+  city: z.string().optional(),
   state: z.string().nonempty({ message: "State is required" }),
   propertyStatus: z
     .string()
@@ -230,10 +230,10 @@ const ResidentialEditForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
               <CardTitle className="text-2xl font-bold">
-                ResidentialProperty Details
+                Residential Property Details
               </CardTitle>
               <CardDescription>
-                Edit the form to update the bullion details.
+                Edit the form to update the Residential Property details.
               </CardDescription>
             </div>
           </div>
@@ -285,6 +285,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="houseNumber">House Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="houseNumber"
                   control={control}
@@ -305,6 +306,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address1">Address Line 1</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address1"
                   control={control}
@@ -325,6 +327,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pincode">Pincode</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="pincode"
                   control={control}
@@ -344,6 +347,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="area">Area</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="area"
                   control={control}
@@ -403,6 +407,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="propertyStatus">Property Status</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="propertyStatus"
                   control={control}
@@ -443,6 +448,7 @@ const ResidentialEditForm = () => {
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipByVirtueOf"
                   control={control}
@@ -485,6 +491,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2 wrap col-span-full">
                 <Label htmlFor="ownershipByVirtueOf">Ownership Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipType"
                   control={control}
@@ -590,6 +597,7 @@ const ResidentialEditForm = () => {
                           id="firstHoldersPan"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value?.toUpperCase() || ""}
                           className={
                             errors.firstHoldersPan ? "border-red-500" : ""
                           }
@@ -640,6 +648,7 @@ const ResidentialEditForm = () => {
                           id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value || ""}
                           className={
                             errors.jointHoldersName ? "border-red-500" : ""
                           }
@@ -701,6 +710,7 @@ const ResidentialEditForm = () => {
                           id="jointHoldersName"
                           placeholder="Enter Joint Holder Aadhar"
                           {...field}
+                          value={field.value?.toUpperCase() || ""}
                           className={
                             errors.jointHoldersName ? "border-red-500" : ""
                           }

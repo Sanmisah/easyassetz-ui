@@ -60,7 +60,7 @@ const IntellectualPropertyMainForm = () => {
 
   const confirmDelete = async (id) => {
     const response = await axios.delete(
-      `/api/intellectual-properties/${lifeInsuranceDeleteId}`,
+      `/api/business-assets/${lifeInsuranceDeleteId}`,
       {
         headers: {
           Authorization: `Bearer ${user.data.token}`,

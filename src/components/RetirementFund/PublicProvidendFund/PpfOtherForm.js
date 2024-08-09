@@ -36,7 +36,7 @@ const schema = z.object({
   ppfAccountNo: z.string().nonempty({ message: "Company Address is required" }),
   branch: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
-  natureOfHolding: z.string().nonempty({ message: "Holding Type is required" }),
+  natureOfHolding: z.any().optional(),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z
@@ -178,6 +178,7 @@ const ppfForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="bankName">Post/Bank name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="bankName"
                 control={control}
@@ -200,6 +201,7 @@ const ppfForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="ppfAccountNo">PPF Account Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="ppfAccountNo"
                 control={control}

@@ -35,10 +35,10 @@ import { PhoneInput } from "react-international-phone";
 const schema = z.object({
   employerName: z.string().nonempty({ message: "Employer Name is required" }),
   employerId: z.string().nonempty({ message: "Employee id is required" }),
-  additionalDetails: z.string().optional(),
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z.string().optional(),
+  additionalDetails: z.any().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -183,6 +183,7 @@ const GratuityEditForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="employerName">Employer Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="employerName"
                 control={control}
@@ -204,6 +205,7 @@ const GratuityEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="employerId">Employer Id</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="employerId"
                 control={control}

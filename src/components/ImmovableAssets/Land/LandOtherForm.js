@@ -31,12 +31,12 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 const schema = z.object({
-  propertyType: z.string().nonempty({ message: "Property Type is required" }),
-  surveyNumber: z.string().nonempty({ message: "Survey Number is required" }),
-  address: z.string().nonempty({ message: "Address is required" }),
+  propertyType: z.any().optional(),
+  surveyNumber: z.any().optional(),
+  address: z.any().optional(),
   villageName: z.string().nonempty({ message: "Village Name is required" }),
   district: z.string().nonempty({ message: "District is required" }),
-  taluka: z.string().nonempty({ message: "Taluka is required" }),
+  taluka: z.any().optional(),
   ownershipByVirtueOf: z
     .string()
     .nonempty({ message: "Ownership By Virtue Of is required" }),
@@ -63,7 +63,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const ResidentialOtherform = () => {
+const LandOtherform = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -138,7 +138,7 @@ const ResidentialOtherform = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Other Insurance added successfully!");
+      toast.success("Land added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -268,6 +268,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="villageName">Village Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="villageName"
                   control={control}
@@ -290,6 +291,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="district">District</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="district"
                   control={control}
@@ -341,6 +343,7 @@ const ResidentialOtherform = () => {
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipByVirtueOf"
                   control={control}
@@ -385,6 +388,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2 wrap col-span-full">
                 <Label htmlFor="ownershipByVirtueOf">Ownership Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipType"
                   control={control}
@@ -494,7 +498,7 @@ const ResidentialOtherform = () => {
                           id="joinHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
                           className={
                             errors.joinHoldersName ? "border-red-500" : ""
@@ -609,7 +613,7 @@ const ResidentialOtherform = () => {
                           id="joinHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
                           className={
                             errors.joinHoldersName ? "border-red-500" : ""
@@ -788,4 +792,4 @@ const ResidentialOtherform = () => {
   );
 };
 
-export default ResidentialOtherform;
+export default LandOtherform;

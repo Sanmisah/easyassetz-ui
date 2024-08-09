@@ -31,13 +31,13 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 const schema = z.object({
-  propertyType: z.string().nonempty({ message: "Property Type is required" }),
+  propertyType: z.string().optional(),
   houseNumber: z.string().nonempty({ message: "House Number is required" }),
   address1: z.string().nonempty({ message: "Address Line 1 is required" }),
   pincode: z.string().nonempty({ message: "Pincode is required" }),
   area: z.string().nonempty({ message: "Area is required" }),
-  city: z.string().nonempty({ message: "City is required" }),
-  state: z.string().nonempty({ message: "State is required" }),
+  city: z.string().optional(),
+  state: z.string().optional(),
   propertyStatus: z
     .string()
     .nonempty({ message: "Property Status is required" }),
@@ -138,7 +138,7 @@ const ResidentialOtherform = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Other Insurance added successfully!");
+      toast.success("Residential Property added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -230,7 +230,8 @@ const ResidentialOtherform = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="houseNumber">House Number</Label>
+                <Label htmlFor="houseNumber">House Number</Label>.
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="houseNumber"
                   control={control}
@@ -253,6 +254,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address1">Address Line 1</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address1"
                   control={control}
@@ -275,6 +277,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pincode">Pincode</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="pincode"
                   control={control}
@@ -293,6 +296,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="area">Area</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="area"
                   control={control}
@@ -358,6 +362,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="propertyStatus">Property Status</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="propertyStatus"
                   control={control}
@@ -397,6 +402,7 @@ const ResidentialOtherform = () => {
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipByVirtueOf"
                   control={control}
@@ -441,6 +447,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2 wrap col-span-full">
                 <Label htmlFor="ownershipByVirtueOf">Ownership Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipType"
                   control={control}
@@ -550,7 +557,7 @@ const ResidentialOtherform = () => {
                           id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
                           className={
                             errors.jointHoldersName ? "border-red-500" : ""
@@ -604,7 +611,7 @@ const ResidentialOtherform = () => {
                           id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
                           className={
                             errors.jointHoldersName ? "border-red-500" : ""

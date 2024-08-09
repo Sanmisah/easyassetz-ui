@@ -31,13 +31,13 @@ import Editnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  employerName: z.string().optional(),
-  uanNumber: z.string().optional(),
+  employerName: z.string().nonempty({ message: "Employer Name is required" }),
+  uanNumber: z.string().nonempty({ message: "UAN Number is required" }),
   branch: z.string().optional(),
-  bankName: z.string().optional(),
+  bankName: z.string().nonempty({ message: "Bank Name is required" }),
   branch: z.string().optional(),
   bankAccountNumber: z.string().optional(),
-  additionalDetails: z.string().optional(),
+  additionalDetails: z.any().optional(),
   name: z.any().optional(),
   mobile: z.any().optional(),
   email: z

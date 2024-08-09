@@ -251,6 +251,7 @@ const LitigationEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="courtName">Court/Forum Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="courtName"
                 control={control}
@@ -270,6 +271,7 @@ const LitigationEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="city"
                 control={control}
@@ -303,6 +305,7 @@ const LitigationEditForm = () => {
               <Label htmlFor="caseRegistrationNumber">
                 Case Registration Number
               </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="caseRegistrationNumber"
                 control={control}
@@ -326,6 +329,7 @@ const LitigationEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="myStatus">My Status</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="myStatus"
                 control={control}
@@ -379,6 +383,7 @@ const LitigationEditForm = () => {
               <Label htmlFor="otherPartyAddress">
                 Other Party (Name & Address)
               </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="otherPartyAddress"
                 control={control}
@@ -400,6 +405,7 @@ const LitigationEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="lawyerName">Lawyer's Name on Record</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="lawyerName"
                 control={control}
@@ -421,6 +427,7 @@ const LitigationEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="lawyerContact">Lawyer's Contact Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="lawyerContact"
                 control={control}
@@ -445,6 +452,7 @@ const LitigationEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="caseFillingDate">Date of Filing the Case</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="caseFillingDate"
                 control={control}
