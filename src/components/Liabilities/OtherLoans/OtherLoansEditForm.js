@@ -31,8 +31,8 @@ const schema = z.object({
   branch: z.string().optional(),
   emiDate: z.any().optional(),
   startDate: z.any().optional(),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
   guarantorMobile: z
     .string()
     .nonempty({ message: "Guarantor Mobile is required" }),
@@ -149,7 +149,7 @@ const OtherLoansEditForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
-      toast.success("Loan updated successfully!");
+      toast.success("Other Loans updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -175,21 +175,22 @@ const OtherLoansEditForm = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading loan data</div>;
+  if (isError) return <div>Error loading Other Loans data</div>;
 
   return (
     <div className="w-full">
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+
             <div className="flex items-center gap-2">
               <Button onClick={() => navigate("/loan")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Edit Loan Details
+                  Edit Other Loan Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the loan details.
+                  Update the form to edit the other loan details.
                 </CardDescription>
               </div>
             </div>

@@ -172,14 +172,24 @@ const CommercialOtherForm = () => {
     <div className="w-full">
       <Card className="w-full">
         <CardHeader>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Commercial Property Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Commercial Property.
-              </CardDescription>
+          <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+            <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+              <Button
+                onClick={() => {
+                  navigate("/commercialproperty");
+                }}
+                className="text-sm"
+              >
+                Back
+              </Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Commercial Property Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Commercial Property.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

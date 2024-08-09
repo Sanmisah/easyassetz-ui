@@ -227,14 +227,24 @@ const ResidentialEditForm = () => {
     <div className="w-full">
       <Card>
         <CardHeader>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Residential Property Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Residential Property details.
-              </CardDescription>
+          <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+            <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+              <Button
+                onClick={() => {
+                  navigate("/residentialproperty");
+                }}
+                className="text-sm"
+              >
+                Back
+              </Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Residential Property Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Residential Property Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
