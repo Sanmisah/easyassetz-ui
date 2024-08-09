@@ -142,13 +142,15 @@ const BankLockerForm = () => {
     if (data.bankName === "other") {
       data.bankName = data.otherBankName;
     }
+    if (data.rentDueDate) {
+      const date = new Date(data.rentDueDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.rentDueDate = newdate;
+    }
 
-    const date = new Date(data.rentDueDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.rentDueDate = newdate;
     if (data.accountType === "other") {
       data.accountType = data.otherAccountType;
     }
