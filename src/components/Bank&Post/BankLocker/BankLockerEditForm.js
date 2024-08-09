@@ -180,13 +180,14 @@ const EditMotorForm = () => {
     if (data.bankName === "other") {
       data.bankName = data.otherBankName;
     }
-
-    const date = new Date(data.rentDueDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.rentDueDate = newdate;
+    if (data.rentDueDate) {
+      const date = new Date(data.rentDueDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.rentDueDate = newdate;
+    }
 
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
