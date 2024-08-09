@@ -28,22 +28,17 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  digitalAsset: z.string().nonempty({ message: "Digital Assets is required" }),
-  otherDigitalAsset: z.string().optional(),
+  digitalAsset: z.any().optional(),
+  otherDigitalAsset: z.any().optional(),
   account: z.string().nonempty({ message: "Account is required" }),
   linkedMobileNumber: z
     .string()
     .min(2, { message: "Mobile Number is required" }),
-  description: z.string().nonempty({ message: "Description is required" }),
-  additionalInformation: z
-    .string()
-    .min(3, { message: "Additional Information is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .transform((value) => (value === null ? null : Number(value))),
-  name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email" }),
-  mobile: z.string().nonempty({ message: "Mobile number is required" }),
+  description: z.any().optional(),
+  additionalInformation: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  phone: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -190,6 +185,7 @@ const DigitalAssetOtherForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="account">Account/ID</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="account"
                   control={control}
@@ -210,6 +206,7 @@ const DigitalAssetOtherForm = () => {
               </div>
               <div className="space-y-2  ">
                 <Label htmlFor="linkedMobileNumber"> Mobile Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="linkedMobileNumber"
                   control={control}
@@ -290,8 +287,8 @@ const DigitalAssetOtherForm = () => {
                   <Label className="text-lg font-bold mt-4 mb-4 ">
                     Point Of Contact
                   </Label>
-                  <div className="mt-2  flex item-center  gap-2 justify-between">
-                    <div className="w-[40%] space-y-2 item-center">
+                  <div className="w-full grid grid-cols-1 gap-4 mt-4">
+                    <div className="space-y-2">
                       <Label htmlFor="name">Name</Label>
                       <Controller
                         name="name"
@@ -311,7 +308,7 @@ const DigitalAssetOtherForm = () => {
                         </span>
                       )}
                     </div>
-                    <div className="w-[40%] space-y-2">
+                    <div className="w-[80%] space-y-2">
                       <Label htmlFor="email">Email</Label>
                       <Controller
                         name="email"

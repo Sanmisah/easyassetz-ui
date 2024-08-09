@@ -171,6 +171,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="hufName">Name of HUF</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="hufName"
                   control={control}
@@ -190,6 +191,7 @@ const OtherLoansEditForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="panNumber">PAN Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="panNumber"
                   control={control}
