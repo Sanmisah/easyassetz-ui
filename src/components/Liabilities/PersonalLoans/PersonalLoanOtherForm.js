@@ -110,13 +110,16 @@ const PersonalLoanOtherForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Personal Loan Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Personal Loan.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/personalloan")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Personal Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Personal Loan.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

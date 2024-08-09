@@ -145,13 +145,16 @@ const PropritershipForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Partnership Firm Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Partnership Firm.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/partnershipfirm")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Partnership Firm Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Partnership Firm.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

@@ -37,9 +37,7 @@ const schema = z.object({
   //   .nonempty({ message: "Bank Service Provider is required" }),
   companyName: z.string().nonempty({ message: "Company Name is required" }),
   unitsGranted: z.string().optional(),
-  esopsVested: z
-    .string()
-    .nonempty({ message: "No of Debentures is required" }),
+  esopsVested: z.string().nonempty({ message: "No of Debentures is required" }),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
@@ -190,13 +188,16 @@ const MutualFundOtherForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                ESOPS Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new ESOPS Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/esop")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  ESOPS Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new ESOPS Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

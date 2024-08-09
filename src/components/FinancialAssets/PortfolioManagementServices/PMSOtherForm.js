@@ -127,15 +127,11 @@ const MutualFundOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(
-        `/api/portfolio-managements`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
+      const response = await axios.post(`/api/portfolio-managements`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
 
       return response.data.data.PortfolioManagement;
     },
@@ -194,14 +190,17 @@ const MutualFundOtherForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Alternate Portfolio Management Service Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Alternate Portfolio Management Service
-                Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/pms")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Alternate Portfolio Management Service Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Alternate Portfolio Management
+                  Service Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
