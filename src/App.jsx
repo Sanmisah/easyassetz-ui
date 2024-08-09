@@ -187,6 +187,9 @@ function App() {
         <Route path="/assetallocation" element={<Personalpage />} />
         <Route path="/summery" element={<Personalpage />} />
         <Route path="/forgetpasswordEmail" element={<ForgetPasswordEmail />} />
+        <Route path="/other-deposits" element={<Personalpage />} />
+        <Route path="/other-deposits/add" element={<Personalpage />} />
+        <Route path="/other-deposits/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );
