@@ -186,10 +186,10 @@ const OtherLoansEditForm = () => {
               <Button onClick={() => navigate("/loan")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Edit Loan Details
+                  Edit Other Loan Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the loan details.
+                  Update the form to edit the other loan details.
                 </CardDescription>
               </div>
             </div>
