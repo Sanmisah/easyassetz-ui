@@ -121,9 +121,10 @@ const ResidentialEditForm = () => {
     setValue("firstHoldersRelation", data.firstHoldersRelation);
     setValue("firstHoldersAadhar", data.firstHoldersAadhar);
     setValue("firstHoldersPan", data.firstHoldersPan);
-    setValue("joinHoldersName", data.joinHoldersName);
+    setValue("jointHoldersName", data.jointHoldersName);
     setValue("joinHoldersRelation", data.joinHoldersRelation);
     setValue("jointHoldersPan", data.jointHoldersPan);
+    setValue("jointHoldersAadhar", data.jointHoldersAadhar);
     setValue("anyLoanLitigation", data.anyLoanLitigation);
     setValue("name", data.name);
     setValue("mobile", data.mobile);
@@ -165,6 +166,7 @@ const ResidentialEditForm = () => {
       setValue("jointHoldersName", data.jointHoldersName);
       setValue("jointHoldersRelation", data.jointHoldersRelation);
       setValue("jointHoldersPan", data.jointHoldersPan);
+      setValue("jointHoldersAadhar", data.jointHoldersAadhar);
       setValue("anyLoanLitigation", data.anyLoanLitigation);
       setValue("litigationFile", data.litigationFile);
       setValue("name", data.name);
@@ -204,7 +206,7 @@ const ResidentialEditForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("bullionDataUpdate", lifeInsuranceEditId);
-      toast.success("ResidentialProperty updated successfully!");
+      toast.success("Land  updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -224,7 +226,7 @@ const ResidentialEditForm = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading bullion data</div>;
+  if (isError) return <div>Error loading Land data</div>;
 
   return (
     <div className="w-full">
@@ -232,11 +234,9 @@ const ResidentialEditForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                ResidentialProperty Details
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold">Land Details</CardTitle>
               <CardDescription>
-                Edit the form to update the bullion details.
+                Edit the form to update the Land details.
               </CardDescription>
             </div>
           </div>
@@ -325,7 +325,7 @@ const ResidentialEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="villageName">Pincode</Label>
+                <Label htmlFor="villageName">Village Name</Label>
                 <Controller
                   name="villageName"
                   control={control}

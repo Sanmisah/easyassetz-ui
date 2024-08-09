@@ -98,6 +98,21 @@ const ResidentialOtherform = () => {
     },
   });
 
+  const handlePincodeChange = async (pincode) => {
+    try {
+      setValue("pincode", pincode);
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      const { Block, State, Country } = response.data[0].PostOffice[0];
+      setValue("city", Block);
+      setValue("state", State);
+      setValue("country", Country);
+    } catch (error) {
+      console.error("Failed to fetch pincode details:", error);
+    }
+  };
+
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       const Formdata = new FormData();
@@ -161,11 +176,9 @@ const ResidentialOtherform = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Bullion Details
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold">Land Details</CardTitle>
               <CardDescription>
-                Fill out the form to add a new Bullion.
+                Fill out the form to add a new Land.
               </CardDescription>
             </div>
           </div>

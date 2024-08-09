@@ -90,16 +90,16 @@ const AddNominee = ({
             <h1 className="ml-2 font-bold">Add Nominee</h1>
           </div>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Add Nominee</SheetTitle>
             <SheetDescription>
               <p>Select nominee to add to your insurance policy</p>
             </SheetDescription>
           </SheetHeader>
-          <div className="grid gap-4 py-4 overflow-y-auto">
-            <div className="grid gap-4 py-4 ovwerflow-y-auto">
-              <ScrollArea className="flex flex-col y-visible rounded-md ">
+          <ScrollArea className="flex flex-col y-visible rounded-md ">
+            <div className="grid gap-4 py-4 overflow-y-auto">
+              <div className="grid  py-4 ovwerflow-y-auto">
                 <h2 className="font-bold">Beneficiaries</h2>
                 {console.log(AllNominees)}
                 {/* {displaynominie && displaynominie.length > 0 && (
@@ -179,16 +179,16 @@ const AddNominee = ({
                     />
                   </div>
                 ))}
-              </ScrollArea>
+              </div>
             </div>
-          </div>
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button onClick={handleSubmit} type="submit">
-                Save changes
-              </Button>
-            </SheetClose>
-          </SheetFooter>
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button onClick={handleSubmit} type="submit">
+                  Save changes
+                </Button>
+              </SheetClose>
+            </SheetFooter>
+          </ScrollArea>
         </SheetContent>
       </Sheet>
     </div>
