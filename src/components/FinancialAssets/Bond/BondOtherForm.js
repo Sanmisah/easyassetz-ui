@@ -191,10 +191,15 @@ const MutualFundOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">Bond Details</CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Bond Details.
-              </CardDescription>
+              <Button onClick={() => navigate("/bond")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Bond Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Bond Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

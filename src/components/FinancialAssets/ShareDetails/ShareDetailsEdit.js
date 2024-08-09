@@ -251,13 +251,16 @@ const PSSEditForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Share Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Share Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/share-details")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Share Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the Share Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -551,48 +554,48 @@ const PSSEditForm = () => {
                 )}
               </div>
 
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Controller
-                name="email"
-                control={control}
-                defaultValue={Benifyciary?.email || ""}
-                render={({ field }) => (
-                  <Input
-                    id="email"
-                    placeholder="Enter Email"
-                    {...field}
-                    className={errors.email ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.email || ""}
-                  />
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue={Benifyciary?.email || ""}
+                  render={({ field }) => (
+                    <Input
+                      id="email"
+                      placeholder="Enter Email"
+                      {...field}
+                      className={errors.email ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.email || ""}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
                 )}
-              />
-              {errors.email && (
-                <span className="text-red-500">{errors.email.message}</span>
-              )}
-            </div>
-            <div className="w-[40%] space-y-2">
-              <Label htmlFor="mobile">Phone</Label>
-              <Controller
-                name="mobile"
-                control={control}
-                defaultValue={Benifyciary?.mobile || ""}
-                render={({ field }) => (
-                  <PhoneInput
-                    id="mobile"
-                    type="tel"
-                    {...field}
-                    placeholder="Enter mobile number"
-                    defaultCountry="in"
-                    inputStyle={{ minWidth: "15.5rem" }}
-                    defaultValue={Benifyciary?.mobile || ""}
-                  />
+              </div>
+              <div className="w-[40%] space-y-2">
+                <Label htmlFor="mobile">Phone</Label>
+                <Controller
+                  name="mobile"
+                  control={control}
+                  defaultValue={Benifyciary?.mobile || ""}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="mobile"
+                      type="tel"
+                      {...field}
+                      placeholder="Enter mobile number"
+                      defaultCountry="in"
+                      inputStyle={{ minWidth: "15.5rem" }}
+                      defaultValue={Benifyciary?.mobile || ""}
+                    />
+                  )}
+                />
+                {errors.mobile && (
+                  <span className="text-red-500">{errors.mobile.message}</span>
                 )}
-              />
-              {errors.mobile && (
-                <span className="text-red-500">{errors.mobile.message}</span>
-              )}
-            </div>
+              </div>
             </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">

@@ -289,12 +289,15 @@ const EditMotorForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Life Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Life Insurance Policy Details.
-              </CardDescription>
+              <Button onClick={() => navigate("/lifeinsurance")}>Back</Button>
+              <>
+                <CardTitle className="text-2xl font-bold">
+                  Life Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the Life Insurance Policy Details.
+                </CardDescription>
+              </>
             </div>
           </div>
         </CardHeader>

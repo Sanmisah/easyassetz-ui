@@ -255,13 +255,16 @@ const PSSEditForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Debenture Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Debenture Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/debentures")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Debenture Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the Debenture Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

@@ -126,13 +126,16 @@ const PropritershipForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Propritership Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Propritership.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/propritership")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Proprtieship Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Proprtieship.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

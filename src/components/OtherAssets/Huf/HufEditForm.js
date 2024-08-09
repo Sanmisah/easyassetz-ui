@@ -153,13 +153,16 @@ const OtherLoansEditForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit HUF Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the huf details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/huf")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit HUF Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the huf details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

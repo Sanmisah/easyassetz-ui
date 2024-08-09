@@ -108,10 +108,15 @@ const NPSOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">NPS Details</CardTitle>
-              <CardDescription>
-                Fill out the form to add new NPS Details.
-              </CardDescription>
+              <Button onMouseDown={() => navigate("/nps")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  NPS Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add new NPS Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

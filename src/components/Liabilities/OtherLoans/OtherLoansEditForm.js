@@ -182,13 +182,16 @@ const OtherLoansEditForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Other Loans Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the Other Loans details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/loan")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the loan details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

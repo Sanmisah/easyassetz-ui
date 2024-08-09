@@ -95,14 +95,13 @@ const PersonalLoanEdit = () => {
     data: loanData,
     isLoading,
     isError,
-   } = useQuery({
+  } = useQuery({
     queryKey: ["loanData", lifeInsuranceEditId],
     queryFn: getPersonalData,
     onSuccess: (data) => {
       console.log("Data:", data);
       setDefaultData(data);
       reset(data);
- 
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -112,7 +111,7 @@ const PersonalLoanEdit = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-       const response = await axios.put(
+      const response = await axios.put(
         `/api/personal-loans/${lifeInsuranceEditId}`,
         data,
         {
@@ -122,8 +121,6 @@ const PersonalLoanEdit = () => {
         }
       );
       return response.data.data.Loan;
- 
- 
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
@@ -160,13 +157,16 @@ const PersonalLoanEdit = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the loan details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/loan")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the loan details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

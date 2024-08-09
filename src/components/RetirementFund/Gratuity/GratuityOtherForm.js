@@ -131,9 +131,12 @@ const GratuityMainForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Gratuity Details
-              </CardTitle>
+              <Button onClick={() => navigate("/gratuity")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Gratuity Details
+                </CardTitle>
+              </div>
             </div>
           </div>
         </CardHeader>
