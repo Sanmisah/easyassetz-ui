@@ -34,7 +34,7 @@ const schema = z.object({
   masterPolicyNumber: z
     .string()
     .nonempty({ message: "Master Policy Number is required" }),
-  empNo: z.string().optional(),
+  empNo: z.string().nonempty({ message: "Employee ID is required" }),
   address: z.string().optional(),
   annuityAmount: z.string().optional(),
   additionalDetails: z.string().optional(),
@@ -153,6 +153,7 @@ const SuperAnnuationOtherForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="companyName"
                 control={control}
@@ -175,6 +176,7 @@ const SuperAnnuationOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="masterPolicyNumber"
                 control={control}
@@ -199,6 +201,7 @@ const SuperAnnuationOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="empNo">Employee ID</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="empNo"
                 control={control}

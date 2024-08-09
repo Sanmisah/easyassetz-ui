@@ -35,7 +35,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
 ));
 const schema = z.object({
-  propertyType: z.string().nonempty({ message: "Property Type is required" }),
+  propertyType: z.any().optional(),
   surveyNumber: z.string().nonempty({ message: "Survey Number is required" }),
   address: z.string().nonempty({ message: "Address is required" }),
   villageName: z.string().nonempty({ message: "Village Name is required" }),
@@ -45,7 +45,6 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Ownership By Virtue Of is required" }),
   ownershipType: z.string().nonempty({ message: "Ownership Type is required" }),
-
   firstHoldersName: z.any().optional(),
   firstHoldersRelation: z.any().optional(),
   firstHoldersPan: z.any().optional(),
@@ -54,12 +53,10 @@ const schema = z.object({
   jointHoldersRelation: z.any().optional(),
   jointHoldersPan: z.any().optional(),
   jointHoldersAadhar: z.any().optional(),
-
   anyLoanLitigation: z.string().optional(),
-
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z.string().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
 });
 
 const ResidentialEditForm = () => {
@@ -326,6 +323,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="villageName">Village Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="villageName"
                   control={control}
@@ -346,6 +344,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="district">District</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="district"
                   control={control}
@@ -393,6 +392,7 @@ const ResidentialEditForm = () => {
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipByVirtueOf"
                   control={control}
@@ -435,6 +435,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2 ">
                 <Label htmlFor="ownershipByVirtueOf">Ownership Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipType"
                   control={control}
@@ -542,6 +543,7 @@ const ResidentialEditForm = () => {
                           id="firstHoldersPan"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value?.toUpperCase() || ""}
                           className={
                             errors.firstHoldersPan ? "border-red-500" : ""
                           }
@@ -654,6 +656,7 @@ const ResidentialEditForm = () => {
                             id="joinHoldersName"
                             placeholder="Enter Joint Holder Aadhar"
                             {...field}
+                            value={field.value?.toUpperCase() || ""}
                             className={
                               errors.joinHoldersName ? "border-red-500" : ""
                             }

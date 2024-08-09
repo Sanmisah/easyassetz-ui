@@ -34,7 +34,7 @@ const schema = z.object({
   uanNumber: z
     .string()
     .nonempty({ message: "Master Policy Number is required" }),
-  bankName: z.string().optional(),
+  bankName: z.string().nonempty({ message: "Bank Name is required" }),
   branch: z.string().optional(),
   bankAccountNumber: z.string().optional(),
   additionalDetails: z.string().optional(),
@@ -95,7 +95,7 @@ const ProvidentFundOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Super Annuation Details added successfully!");
+      toast.success("Provident Fund details added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -152,6 +152,7 @@ const ProvidentFundOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="employerName">Employer Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="employerName"
                   control={control}
@@ -175,6 +176,7 @@ const ProvidentFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="uanNumber">UAN Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="uanNumber"
                 control={control}
@@ -195,6 +197,7 @@ const ProvidentFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="bankName">Bank Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="bankName"
                 control={control}
