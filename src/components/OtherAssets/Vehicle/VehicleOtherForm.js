@@ -33,17 +33,15 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  vehicleType: z
-    .string()
-    .nonempty({ message: "Bank/Institution Name is required" }),
-  fourWheeler: z
-    .string()
-    .nonempty({ message: "Loan Account Number is required" }),
-  company: z.string().optional(),
-  model: z.any().optional(),
+  vehicleType: z.any().optional(),
+  otherVehicleType: z.any().optional(),
+  fourWheeler: z.any().optional(),
+  otherFourWheeler: z.string().optional(),
+  company: z.string().nonempty({ message: "Company Name is required" }),
+  model: z.string().nonempty({ message: "Model is required" }),
   registrationNumber: z.any().optional(),
   yearOfManufacture: z.any().optional(),
-  location: z.string().nonempty({ message: "Guarantor Name is required" }),
+  location: z.any().optional(),
 });
 
 const RecoverableOtherForm = () => {
@@ -82,7 +80,7 @@ const RecoverableOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");
-      toast.success("Recoverable added successfully!");
+      toast.success("Vehicle added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {

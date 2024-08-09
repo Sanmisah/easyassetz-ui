@@ -37,14 +37,10 @@ const schema = z.object({
   modeOfLoan: z.any().optional(),
   amount: z.any().optional(),
   dueDate: z.any().optional(),
-  additionalInformation: z
-    .string()
-    .nonempty({ message: "Guarantor Name is required" }),
+  additionalInformation: z.any().optional(),
   type: z.any().optional(),
-  chequeNumber: z.string().min(1, { message: "Cheque Number is required" }),
-  chequeIssuingBank: z
-    .string()
-    .min(1, { message: "Cheque issuing bank is required" }),
+  chequeNumber: z.any().optional(),
+  chequeIssuingBank: z.any().optional(),
 });
 
 const RecoverableOtherForm = () => {
@@ -126,6 +122,7 @@ const RecoverableOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nameOfBorrower">Name of Borrower</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="nameOfBorrower"
                   control={control}
@@ -146,6 +143,7 @@ const RecoverableOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address">Address</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address"
                   control={control}
@@ -165,6 +163,7 @@ const RecoverableOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="contactNumber">Contact Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="contactNumber"
                 control={control}

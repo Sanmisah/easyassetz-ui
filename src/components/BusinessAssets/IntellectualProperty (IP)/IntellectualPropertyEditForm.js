@@ -243,6 +243,7 @@ const IntellectualPropertyOtherForm = () => {
                 <Label htmlFor="firmsRegistrationNumber">
                   Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumber"
                   control={control}

@@ -42,8 +42,8 @@ const schema = z.object({
     .nonempty({ message: "Holding Percentage is required" }),
   additionalInformation: z.any().optional(),
   firmsRegistrationNumberType: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }),
-  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.any().optional(),
+  name: z.any().optional(),
 });
 
 const PartnershipEdit = () => {

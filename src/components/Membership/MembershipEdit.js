@@ -228,6 +228,7 @@ const MembershipEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="organizationName">Organization Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="organizationName"
                   defaultValue={Benifyciary?.organizationName || ""}
@@ -252,6 +253,7 @@ const MembershipEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="membershipId">Membership ID </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="membershipId"
                   defaultValue={Benifyciary?.membershipId || ""}
@@ -328,6 +330,7 @@ const MembershipEdit = () => {
                 <Label htmlFor="membershipPaymentDate">
                   Membership Payment Date
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="membershipPaymentDate"
                   defaultValue={

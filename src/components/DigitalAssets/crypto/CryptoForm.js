@@ -32,28 +32,26 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  cryptoWalletType: z
-    .string()
-    .nonempty({ message: "Wallet type is required required" }),
-  otherCryptoWalletType: z.string().optional(),
+  cryptoWalletType: z.any().optional(),
+  otherCryptoWalletType: z.any().optional(),
   cryptoWalletAddress: z
     .string()
     .nonempty({ message: "Crypto Wallet Address is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
-  exchange: z.string().nonempty({ message: "exchange is required required" }),
-  otherExchange: z.string().optional(),
+  holdingType: z.any().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
+  exchange: z.any().optional(),
+  otherExchange: z.any().optional(),
   tradingAccount: z
     .string()
     .nonempty({ message: "Trading Account is required" }),
-  typeOfCurrency: z.string().optional(),
-  otherTypeOfCurrency: z.string().optional(),
-  holdingQty: z.string().optional(),
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z.string().optional(),
-  additionalDetails: z.string().optional(),
+  typeOfCurrency: z.any().optional(),
+  otherTypeOfCurrency: z.any().optional(),
+  holdingQty: z.any().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
+  additionalDetails: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
