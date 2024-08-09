@@ -178,13 +178,16 @@ const CryptoForm = () => {
       <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Crypto Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Crypto Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/crypto")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Crypto Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Crypto Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

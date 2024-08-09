@@ -245,13 +245,16 @@ const EditOtherForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Other Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Other Insurance Policy Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/otherinsurance")}>Back</Button>
+              <>
+                <CardTitle className="text-2xl font-bold">
+                  Other Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the Other Insurance Policy Details.
+                </CardDescription>
+              </>
             </div>
           </div>
         </CardHeader>
