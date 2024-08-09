@@ -175,6 +175,7 @@ const CompanyForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="companyName"
                 control={control}

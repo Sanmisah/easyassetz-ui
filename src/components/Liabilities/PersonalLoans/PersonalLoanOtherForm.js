@@ -128,6 +128,7 @@ const PersonalLoanOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank/Institution</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -148,6 +149,7 @@ const PersonalLoanOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="loanAccountNumber"
                   control={control}
@@ -192,6 +194,7 @@ const PersonalLoanOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -205,6 +208,7 @@ const PersonalLoanOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}
