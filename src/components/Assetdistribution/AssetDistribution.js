@@ -12,6 +12,21 @@ import lifeInsurance from "@/components/image/LifeInsurance.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@com/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@com/ui/dropdown-menu";
+import {
   setSelectedAsset,
   setLevel,
   setSubSelectedAsset,
@@ -152,31 +167,55 @@ const AssetDistribution = () => {
                                     {/* <Button onClick={() => handleSelect(asset)}>
                                       Distribute
                                     </Button> */}
-                                    <Button
-                                      onClick={() => {
-                                        dispatch(setLevel("Primary"));
-                                        navigate("/assetallocation");
-                                      }}
-                                    >
-                                      Primary
-                                    </Button>
-                                    <Button
-                                      onClick={() => {
-                                        dispatch(setLevel("Secondary"));
 
-                                        navigate("/assetallocation");
-                                      }}
-                                    >
-                                      Secondary
-                                    </Button>
-                                    <Button
-                                      onClick={() => {
-                                        dispatch(setLevel("Tertiary"));
-                                        navigate("/assetallocation");
-                                      }}
-                                    >
-                                      Tertiary
-                                    </Button>
+                                    <Breadcrumb>
+                                      <BreadcrumbList>
+                                        <BreadcrumbItem>
+                                          <BreadcrumbLink
+                                            onClick={() => {
+                                              dispatch(setLevel("Primary"));
+                                              navigate("/assetallocation");
+                                            }}
+                                          >
+                                            Primary
+                                          </BreadcrumbLink>
+                                        </BreadcrumbItem>
+                                        <BreadcrumbSeparator />
+
+                                        {asset.primary === true && (
+                                          <BreadcrumbItem>
+                                            <BreadcrumbLink
+                                              onClick={() => {
+                                                dispatch(setLevel("Secondary"));
+                                                navigate("/assetallocation");
+                                              }}
+                                            >
+                                              Secondary
+                                            </BreadcrumbLink>
+                                          </BreadcrumbItem>
+                                        )}
+                                        {asset.primary === true &&
+                                          asset.secondary === true && (
+                                            <>
+                                              <BreadcrumbSeparator />
+                                              <BreadcrumbItem>
+                                                <BreadcrumbLink
+                                                  onClick={() => {
+                                                    dispatch(
+                                                      setLevel("Tertiary")
+                                                    );
+                                                    navigate(
+                                                      "/assetallocation"
+                                                    );
+                                                  }}
+                                                >
+                                                  Tertiary
+                                                </BreadcrumbLink>
+                                              </BreadcrumbItem>
+                                            </>
+                                          )}
+                                      </BreadcrumbList>
+                                    </Breadcrumb>
                                   </div>
                                 </div>
                               ))}

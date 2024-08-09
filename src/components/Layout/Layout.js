@@ -177,6 +177,7 @@ import JwelleryEditForm from "@/components/OtherAssets/Jwellery/JwelleryEditForm
 import AssetDistribution from "@/components/Assetdistribution/AssetDistribution";
 import AssetAllocation from "@/components/Assetdistribution/AssetAllocation";
 import Summery from "@/components/Assetdistribution/Summery";
+import ForgetPassword from "@/components/Forgetpassword/ForgetPassword";
 
 const Layout = () => {
   const location = useLocation();
