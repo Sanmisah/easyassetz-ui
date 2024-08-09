@@ -155,13 +155,16 @@ const HomeLoanEditForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Home Loan Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the home loan details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/homeloans")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Home Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the home loan details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

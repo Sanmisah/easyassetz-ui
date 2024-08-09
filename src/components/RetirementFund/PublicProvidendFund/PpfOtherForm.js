@@ -162,12 +162,16 @@ const ppfForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Public Providend Fund
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Public Providend Fund.
-              </CardDescription>
+              {" "}
+              <Button onMouseDown={() => navigate("/ppf")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Public Providend Fund
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Public Providend Fund.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

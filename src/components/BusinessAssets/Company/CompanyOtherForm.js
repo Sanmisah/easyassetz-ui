@@ -40,7 +40,7 @@ const schema = z.object({
     .min(2, { message: " Company Registration is required" }),
 
   myStatus: z.string().nonempty({ message: "My Status is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  holdingType: z.string().optional(),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z
@@ -162,13 +162,16 @@ const CompanyForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Company Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Company.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/businessasset")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Company Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Company.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

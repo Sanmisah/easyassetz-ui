@@ -200,13 +200,16 @@ const SuperAnnuationEditForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Super Annuation Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Super Annuation Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/superannuation")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Super Annuation Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the Super Annuation Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
