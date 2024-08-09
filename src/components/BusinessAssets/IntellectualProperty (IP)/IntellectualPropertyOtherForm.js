@@ -37,11 +37,9 @@ const schema = z.object({
     .string()
     .min(3, { message: "Registration Number is required" }),
   whetherAssigned: z.string().optional(),
-  nameOfAssignee: z
-    .string()
-    .nonempty({ message: "Name of assignee is required" }),
+  nameOfAssignee: z.string().optional(),
   expiryDate: z.date().optional(),
-  dateOfAssignment: z.date().optional(),
+  dateOfAssignment: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -122,7 +120,9 @@ const IntellectualPropertyOtherForm = () => {
   const onSubmit = (data) => {
     console.log(data);
     data.expiryDate = ConverDate(data.expiryDate);
-    data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+    if (data.dateOfAssignment) {
+      data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+    }
     data.type = "intellectualProperty";
     // data.name = name;
     // data.email = email;

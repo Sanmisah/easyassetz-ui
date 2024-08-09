@@ -32,20 +32,25 @@ import cross from "@/components/image/close.png";
 
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
-  companyAddress: z.any().optional(),
+  companyAddress: z
+    .string()
+    .nonempty({ message: "Company Address is required" }),
   firmsRegistrationNumber: z
     .string()
-    .min(2, { message: "Firm Registration is required" }),
-  otherFirmRegistrationNumber: z.any().optional(),
-  myStatus: z.any().optional(),
-  holdingType: z.any().optional(),
+    .min(2, { message: " Company Registration is required" }),
+
+  myStatus: z.string().nonempty({ message: "My Status is required" }),
+  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
+  // documentAvailability: z
+  //   .string()
+  //   .nonempty({ message: "Document Availability is required" }),
   additionalInformation: z.string().optional(),
   typeOfInvestment: z.string().optional(),
-  name: z.any().optional(),
-  mobile: z.any().optional(),
-  email: z.any().optional(),
+  name: z.string().nonempty({ message: "Name is required" }),
+  mobile: z.string().nonempty({ message: "Mobile is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -129,7 +134,6 @@ const CompanyForm = () => {
   const onSubmit = (data) => {
     console.log(data);
     data.firmsRegistrationNumberType = showOtherCompanyRegistration;
-    data.otherFirmRegistrationNumber = data.otherFirmRegistrationNumber;
 
     // if (selectedNommie.length < 1) {
     //   toast.error("Please select atleast one nominee");
@@ -238,26 +242,25 @@ const CompanyForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmsRegistrationNumber">
-                  Registration Number
+                  Company Registration
                 </Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
-                  name="firmsRegistrationNumber"
+                  name="firmsRegistrationNumberType"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmsRegistrationNumber"
+                      id="firmsRegistrationNumberType"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherRegistrationNumber(value);
+                        setShowOtherCompanyRegistration(value);
                       }}
                       className={
                         errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select  Registration Number" />
+                        <SelectValue placeholder="Select Company Registration" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="CIN">CIN</SelectItem>
@@ -267,21 +270,16 @@ const CompanyForm = () => {
                     </Select>
                   )}
                 />
-                {showOtherRegistrationNumber && (
+                {showOtherCompanyRegistration && (
                   <Controller
-                    name="otherFirmRegistrationNumber"
+                    name="firmsRegistrationNumber"
                     control={control}
                     render={({ field }) => (
                       <Input
-                        id="otherFirmRegistrationNumber"
-                        value={field.value?.toUpperCase() || ""}
+                        {...field}
+                        className="mt-2"
+                        value={field.value || ""}
                         onChange={field.onChange}
-                        className={
-                          errors.firmsRegistrationNumber
-                            ? "border-red-500 mt-2"
-                            : "mt-2"
-                        }
-                        placeholder="Specify Registration Number"
                       />
                     )}
                   />
@@ -293,6 +291,7 @@ const CompanyForm = () => {
                 )}
               </div>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="myStatus">My Status</Label>
