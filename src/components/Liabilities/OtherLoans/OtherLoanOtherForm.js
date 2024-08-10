@@ -90,18 +90,22 @@ const OtherLoanOtherForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    const date = new Date(data.emiDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.emiDate = newdate;
-    const date1 = new Date(data.startDate);
-    const month1 = String(date1.getMonth() + 1).padStart(2, "0");
-    const day1 = String(date1.getDate()).padStart(2, "0");
-    const year1 = date1.getFullYear();
-    const newdate1 = `${month1}/${day1}/${year1}`;
-    data.startDate = newdate1;
+    if (data.emiDate) {
+      const date = new Date(data.emiDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.emiDate = newdate;
+    }
+    if (data.startDate) {
+      const date1 = new Date(data.startDate);
+      const month1 = String(date1.getMonth() + 1).padStart(2, "0");
+      const day1 = String(date1.getDate()).padStart(2, "0");
+      const year1 = date1.getFullYear();
+      const newdate1 = `${month1}/${day1}/${year1}`;
+      data.startDate = newdate1;
+    }
     loanMutate.mutate(data);
   };
 

@@ -141,8 +141,12 @@ const HomeLoanEditForm = () => {
       return `${month}/${day}/${year}`;
     };
 
-    data.emiDate = formatDate(data.emiDate);
-    data.startDate = formatDate(data.startDate);
+    if (data.emiDate) {
+      data.emiDate = formatDate(data.emiDate);
+    }
+    if (data.startDate) {
+      data.startDate = formatDate(data.startDate);
+    }
 
     loanMutate.mutate(data);
   };
