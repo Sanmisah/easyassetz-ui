@@ -243,6 +243,26 @@ const SuperAnnuationEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
+                <Label htmlFor="address">Head Office Address</Label>
+                <Controller
+                  name="address"
+                  defaultValue={Benifyciary?.address || ""}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="address"
+                      placeholder="Enter Address"
+                      {...field}
+                      className={errors.address ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.address || ""}
+                    />
+                  )}
+                />
+                {errors.address && (
+                  <span className="text-red-500">{errors.address.message}</span>
+                )}
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
@@ -288,26 +308,7 @@ const SuperAnnuationEditForm = () => {
                   <span className="text-red-500">{errors.empNo.message}</span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
-                <Controller
-                  name="address"
-                  defaultValue={Benifyciary?.address || ""}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="address"
-                      placeholder="Enter Address"
-                      {...field}
-                      className={errors.address ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.address || ""}
-                    />
-                  )}
-                />
-                {errors.address && (
-                  <span className="text-red-500">{errors.address.message}</span>
-                )}
-              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="annuityAmount">Annuity Amount</Label>
                 <Controller

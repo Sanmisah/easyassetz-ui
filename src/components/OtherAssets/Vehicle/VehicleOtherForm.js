@@ -247,7 +247,7 @@ const RecoverableOtherForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company">Company</Label>
+              <Label htmlFor="company">Make</Label>
               <Controller
                 name="company"
                 control={control}
@@ -265,7 +265,7 @@ const RecoverableOtherForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label className="text-lg font-bold">Model</Label>
+              <Label htmlFor="model">Model</Label>
               <Controller
                 name="model"
                 defaultValues="Cash"
@@ -284,7 +284,9 @@ const RecoverableOtherForm = () => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="registrationNumber">Registration Number</Label>
+              <Label htmlFor="registrationNumber">
+                Registration/Vehicle Number
+              </Label>
               <Controller
                 name="registrationNumber"
                 control={control}
@@ -307,7 +309,7 @@ const RecoverableOtherForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
+              <Label htmlFor="yearOfManufacture">Year Of Registration</Label>
               <Controller
                 name="yearOfManufacture"
                 control={control}

@@ -178,6 +178,26 @@ const SuperAnnuationOtherForm = () => {
               )}
             </div>
             <div className="space-y-2">
+              <Label htmlFor="address">Head Office Address</Label>
+              <Controller
+                name="address"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="address"
+                    placeholder="Enter Address"
+                    {...field}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className={errors.address ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.address && (
+                <span className="text-red-500">{errors.address.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
               <Label style={{ color: "red" }}>*</Label>
               <Controller
@@ -223,26 +243,7 @@ const SuperAnnuationOtherForm = () => {
                 <span className="text-red-500">{errors.empNo.message}</span>
               )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Controller
-                name="address"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="address"
-                    placeholder="Enter Address"
-                    {...field}
-                    value={field.value || ""}
-                    onChange={field.onChange}
-                    className={errors.address ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.address && (
-                <span className="text-red-500">{errors.address.message}</span>
-              )}
-            </div>
+
             <div className="space-y-2">
               <Label htmlFor="annuityAmount">Annuity Amount</Label>
               <Controller
