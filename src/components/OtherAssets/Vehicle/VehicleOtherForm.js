@@ -42,6 +42,7 @@ const schema = z.object({
   registrationNumber: z.any().optional(),
   yearOfManufacture: z.any().optional(),
   location: z.any().optional(),
+  yearOfExpiry: z.any().optional(),
 });
 
 const RecoverableOtherForm = () => {
@@ -51,6 +52,7 @@ const RecoverableOtherForm = () => {
   const queryClient = useQueryClient();
   const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
+  const [showVehicleType, setShowVehicleType] = useState(false);
   const {
     handleSubmit,
     control,
@@ -91,12 +93,22 @@ const RecoverableOtherForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    const date = new Date(data.yearOfManufacture);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.yearOfManufacture = newdate;
+    if (data.yearOfExpiry) {
+      const date = new Date(data.yearOfExpiry);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.yearOfExpiry = newdate;
+    }
+    if (data.yearOfManufacture) {
+      const date = new Date(data.yearOfManufacture);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.yearOfManufacture = newdate;
+    }
     if (data.vehicleType === "other") {
       data.vehicleType = data.otherVehicleType;
     }
@@ -141,6 +153,7 @@ const RecoverableOtherForm = () => {
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherMetalType(value === "other");
+                        setShowVehicleType(value === "fourwheeler");
                       }}
                       className={errors.vehicleType ? "border-red-500" : ""}
                     >
@@ -152,7 +165,9 @@ const RecoverableOtherForm = () => {
                         <SelectItem value="threewheeler">
                           Three Wheeler
                         </SelectItem>
-
+                        <SelectItem value="fourwheeler">
+                          Four Wheeler
+                        </SelectItem>
                         <SelectItem value="tractor">Tractor</SelectItem>
                         <SelectItem value="bulldozer">Bulldozer</SelectItem>
                         <SelectItem value="crane">Crane</SelectItem>
@@ -181,53 +196,55 @@ const RecoverableOtherForm = () => {
                   </span>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="fourWheeler">Four Wheeler</Label>
-                <Controller
-                  name="fourWheeler"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="fourWheeler"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setfourWheelerStatus(value === "other");
-                      }}
-                      className={errors.fourWheeler ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Vehicle Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="car">Car</SelectItem>
-                        <SelectItem value="truck">Truck</SelectItem>
-                        <SelectItem value="tempo">Tempo</SelectItem>
-                        <SelectItem value="bus">Bus</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {fourWheelerStatus && (
+              {showVehicleType && (
+                <div className="space-y-2">
+                  <Label htmlFor="fourWheeler">Four Wheeler</Label>
                   <Controller
-                    name="otherFourWheeler"
+                    name="fourWheeler"
                     control={control}
                     render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Vehicle Type"
-                        className="mt-2"
-                      />
+                      <Select
+                        id="fourWheeler"
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setfourWheelerStatus(value === "other");
+                        }}
+                        className={errors.fourWheeler ? "border-red-500" : ""}
+                      >
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select Vehicle Type" />
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="car">Car</SelectItem>
+                          <SelectItem value="truck">Truck</SelectItem>
+                          <SelectItem value="tempo">Tempo</SelectItem>
+                          <SelectItem value="bus">Bus</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     )}
                   />
-                )}
-                {errors.fourWheeler && (
-                  <span className="text-red-500">
-                    {errors.fourWheeler.message}
-                  </span>
-                )}
-              </div>
+                  {fourWheelerStatus && (
+                    <Controller
+                      name="otherFourWheeler"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Specify Vehicle Type"
+                          className="mt-2"
+                        />
+                      )}
+                    />
+                  )}
+                  {errors.fourWheeler && (
+                    <span className="text-red-500">
+                      {errors.fourWheeler.message}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="company">Company</Label>
@@ -301,6 +318,21 @@ const RecoverableOtherForm = () => {
               {errors.yearOfManufacture && (
                 <span className="text-red-500">
                   {errors.yearOfManufacture.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="yearOfExpiry">Year Of Expiry</Label>
+              <Controller
+                name="yearOfExpiry"
+                control={control}
+                render={({ field }) => (
+                  <Datepicker value={field.value} onChange={field.onChange} />
+                )}
+              />
+              {errors.yearOfExpiry && (
+                <span className="text-red-500">
+                  {errors.yearOfExpiry.message}
                 </span>
               )}
             </div>
