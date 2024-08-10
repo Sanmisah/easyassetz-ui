@@ -43,7 +43,7 @@ const schema = z.object({
   quantity: z.string().optional(),
   additionalInformation: z.string().optional(),
   name: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.string().optional(),
   mobile: z.string().optional(),
   type: z.any().optional(),
 });

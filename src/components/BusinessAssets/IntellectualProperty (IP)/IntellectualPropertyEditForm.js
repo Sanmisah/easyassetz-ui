@@ -31,16 +31,12 @@ import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  typeOfIp: z
-    .string()
-    .min(3, { message: "Intellectual Property Type is required" }),
+  typeOfIp: z.any().optional(),
   firmsRegistrationNumber: z
     .string()
     .min(3, { message: "Registration Number is required" }),
   whetherAssigned: z.string().optional(),
-  nameOfAssignee: z
-    .string()
-    .nonempty({ message: "Name of assignee is required" }),
+  nameOfAssignee: z.any().optional(),
 });
 
 const IntellectualPropertyOtherForm = () => {
@@ -149,7 +145,7 @@ const IntellectualPropertyOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Propritership added successfully!");
+      toast.success("Intellectual Property added successfully!");
       navigate("/intellectualproperty");
     },
     onError: (error) => {
@@ -279,6 +275,7 @@ const IntellectualPropertyOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="expiryDate"
                   control={control}

@@ -43,8 +43,8 @@ const schema = z.object({
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().min(1, { message: "Policy Number is required" }),
   maturityDate: z.any().optional(),
-  premium: z.string().min(3, { message: "Premium is required" }),
-  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  premium: z.string().optional(),
+  sumInsured: z.string().optional(),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
@@ -272,6 +272,7 @@ const EditFormGeneral = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -324,6 +325,7 @@ const EditFormGeneral = () => {
               {console.log(Benifyciary)}
               <div className="space-y-2">
                 <Label htmlFor="insuranceType">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -350,6 +352,7 @@ const EditFormGeneral = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -373,6 +376,7 @@ const EditFormGeneral = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   control={control}
@@ -439,6 +443,7 @@ const EditFormGeneral = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyHolderName"
                   control={control}

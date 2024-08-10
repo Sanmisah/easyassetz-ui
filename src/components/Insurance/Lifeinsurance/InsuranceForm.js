@@ -40,25 +40,9 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
-  maturityDate: z.date().optional(),
-  premium: z
-    .string()
-    .min(3, { message: "Premium is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .min(3, { message: "Sum Insured is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  maturityDate: z.any().optional(),
+  premium: z.string().optional(),
+  sumInsured: z.string().optional(),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
@@ -194,18 +178,17 @@ const InsuranceForm = () => {
     <div className="w-full">
       <Card className="w-full ">
         <CardHeader>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
+          <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+            <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
               <Button onClick={() => navigate("/lifeinsurance")}>Back</Button>
-
-              <>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Life Insurance Policy Details
                 </CardTitle>
                 <CardDescription>
                   Fill out the form to add a new Life Insurance Policy Details.
                 </CardDescription>
-              </>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -217,6 +200,7 @@ const InsuranceForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -255,7 +239,7 @@ const InsuranceForm = () => {
                     )}
                   />
                 )}
-                {errors.insuranceCompany && (
+                {errors.companyName && (
                   <span className="text-red-500">
                     {errors.companyName.message}
                   </span>
@@ -263,6 +247,7 @@ const InsuranceForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -285,6 +270,7 @@ const InsuranceForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -305,6 +291,7 @@ const InsuranceForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   control={control}
@@ -366,6 +353,7 @@ const InsuranceForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyHolderName"
                   control={control}
@@ -388,6 +376,7 @@ const InsuranceForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="relationship">Relationship</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="relationship"
                   control={control}

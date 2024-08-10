@@ -274,6 +274,7 @@ const DigitalAssetEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="account">Account/ID</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="account"
                 control={control}
@@ -294,6 +295,7 @@ const DigitalAssetEditForm = () => {
             </div>
             <div className="space-y-2  ">
               <Label htmlFor="linkedMobileNumber"> Mobile Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="linkedMobileNumber"
                 control={control}

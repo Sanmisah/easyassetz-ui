@@ -224,7 +224,8 @@ const MotorForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label htmlFor="insurance-company">Insurance Company</Label>.
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -271,6 +272,7 @@ const MotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -297,6 +299,7 @@ const MotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -317,6 +320,7 @@ const MotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="expiryDate"
                   control={control}
@@ -337,6 +341,7 @@ const MotorForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="premium">Premium</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="premium"
                 control={control}
@@ -357,6 +362,7 @@ const MotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Insurer Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insurerName"
                   control={control}
@@ -377,6 +383,7 @@ const MotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vehicleType">Vehical Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="vehicleType"
                   control={control}

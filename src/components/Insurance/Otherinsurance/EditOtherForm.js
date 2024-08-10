@@ -43,14 +43,12 @@ const schema = z.object({
     .nonempty({ message: "Insurance Sub Type is required" }),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
   maturityDate: z.date().optional(),
-  premium: z.string().min(3, { message: "Premium is required" }),
-  sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  premium: z.string().optional(),
+  sumInsured: z.string().optional(),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
-  modeOfPurchase: z
-    .string()
-    .nonempty({ message: "Mode of Purchase is required" }),
+  modeOfPurchase: z.string().optional(),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
   email: z.string().optional(),
@@ -249,14 +247,14 @@ const EditOtherForm = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Button onClick={() => navigate("/otherinsurance")}>Back</Button>
-              <>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Other Insurance Policy Details
                 </CardTitle>
                 <CardDescription>
                   Edit the form to update the Other Insurance Policy Details.
                 </CardDescription>
-              </>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -268,6 +266,7 @@ const EditOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -320,6 +319,7 @@ const EditOtherForm = () => {
               {console.log(Benifyciary)}
               <div className="space-y-2">
                 <Label htmlFor="insuranceType">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -346,6 +346,7 @@ const EditOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -369,6 +370,7 @@ const EditOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   defaultValue={new Date(Benifyciary?.maturityDate) || ""}
@@ -436,6 +438,7 @@ const EditOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyHolderName"
                   control={control}

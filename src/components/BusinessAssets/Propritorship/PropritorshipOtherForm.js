@@ -36,7 +36,9 @@ const schema = z.object({
   firmsRegistrationNumber: z
     .string()
     .min(2, { message: "Firm Registration Number is required" }),
-  otherFirmsRegistrationNumber: z.string().optional(),
+  otherFirmsRegistrationNumber: z
+    .string()
+    .nonempty({ message: "Firm Registration Number is required" }),
   additionalInformation: z
     .string()
     .min(3, { message: "Additional Information is required" }),
@@ -130,7 +132,7 @@ const PropritershipForm = () => {
               <Button onClick={() => navigate("/propritership")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Proprtieship Details
+                  Proprtiership Details
                 </CardTitle>
                 <CardDescription>
                   Fill out the form to add a new Proprtieship.

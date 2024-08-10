@@ -253,6 +253,7 @@ const CryptoForm = () => {
                 <Label htmlFor="cryptoWalletAddress">
                   Crypto Wallet Address
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="cryptoWalletAddress"
                   control={control}
@@ -329,6 +330,7 @@ const CryptoForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="tradingAccount">Trading Account</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="tradingAccount"
                   control={control}

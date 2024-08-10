@@ -34,8 +34,8 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  company: z.string().optional(),
-  model: z.string().optional(),
+  company: z.string().nonempty({ message: "Company is required" }),
+  model: z.string().nonempty({ message: "Model is required" }),
   // hufShare: z.string().optional(),
   // additionalInformation: z.string().optional(),
   name: z.string().optional(),
