@@ -36,18 +36,16 @@ const schema = z.object({
   //   .string()
   //   .nonempty({ message: "Bank Service Provider is required" }),
   companyName: z.string().nonempty({ message: "Company Name is required" }),
-  unitsGranted: z.string().optional(),
-  esopsVested: z.string().nonempty({ message: "No of Debentures is required" }),
+  unitsGranted: z.any().optional(),
+  esopsVested: z.string().optional(),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
   // faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
-  natureOfHolding: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  natureOfHolding: z.any().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
