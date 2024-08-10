@@ -161,12 +161,14 @@ const LitigationEditForm = () => {
       data.litigationType = data.otherLitigationType;
     }
     delete data.otherLitigationType;
-    const date = new Date(data.caseFillingDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.caseFillingDate = newdate;
+    if (data.caseFillingDate) {
+      const date = new Date(data.caseFillingDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.caseFillingDate = newdate;
+    }
     litigationMutate.mutate(data);
   };
 

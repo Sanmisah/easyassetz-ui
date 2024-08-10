@@ -166,7 +166,9 @@ const RecoverableEditForm = () => {
   const onSubmit = (data) => {
     console.log(data);
     // data.type = "huf";
-    data.dueDate = formatDate(data.dueDate);
+    if (data.dueDate) {
+      data.dueDate = formatDate(data.dueDate);
+    }
     // data.startDate = formatDate(data.startDate);
     // data.type = "vehicle";
     loanMutate.mutate(data);

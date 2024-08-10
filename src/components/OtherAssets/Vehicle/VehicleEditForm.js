@@ -83,7 +83,7 @@ const OtherLoansEditForm = () => {
         },
       }
     );
-    let data = response.data.data.Vehicle;
+    let data = response.data.data.OtherAsset;
     setValue("vehicleType", data.vehicleType);
     setValue("fourWheeler", data.fourWheeler);
     setValue("company", data.company);
@@ -91,7 +91,7 @@ const OtherLoansEditForm = () => {
     setValue("registrationNumber", data.registrationNumber);
     setValue("yearOfManufacture", data.yearOfManufacture);
     setValue("location", data.location);
-    return response.data.data.Vehicle;
+    return response.data.data.OtherAsset;
   };
 
   const { data, isLoading, isError } = useQuery({
@@ -119,7 +119,7 @@ const OtherLoansEditForm = () => {
           },
         }
       );
-      return response.data.data.Vehicle;
+      return response.data.data.OtherAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
