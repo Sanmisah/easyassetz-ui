@@ -176,8 +176,6 @@ const BankEditForm = () => {
       );
       toast.success("Fix Deposit added successfully!");
 
-
-      
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -201,12 +199,14 @@ const BankEditForm = () => {
     }
 
     console.log(data);
-    const date = new Date(data.maturityDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
+    if (data.maturityDate) {
+      const date = new Date(data.maturityDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.maturityDate = newdate;
+    }
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }

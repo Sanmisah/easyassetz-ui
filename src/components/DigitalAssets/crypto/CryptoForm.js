@@ -32,28 +32,26 @@ import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  cryptoWalletType: z
-    .string()
-    .nonempty({ message: "Wallet type is required required" }),
-  otherCryptoWalletType: z.string().optional(),
+  cryptoWalletType: z.any().optional(),
+  otherCryptoWalletType: z.any().optional(),
   cryptoWalletAddress: z
     .string()
     .nonempty({ message: "Crypto Wallet Address is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
-  exchange: z.string().nonempty({ message: "exchange is required required" }),
-  otherExchange: z.string().optional(),
+  holdingType: z.any().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
+  exchange: z.any().optional(),
+  otherExchange: z.any().optional(),
   tradingAccount: z
     .string()
     .nonempty({ message: "Trading Account is required" }),
-  typeOfCurrency: z.string().optional(),
-  otherTypeOfCurrency: z.string().optional(),
-  holdingQty: z.string().optional(),
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z.string().optional(),
-  additionalDetails: z.string().optional(),
+  typeOfCurrency: z.any().optional(),
+  otherTypeOfCurrency: z.any().optional(),
+  holdingQty: z.any().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
+  additionalDetails: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -180,13 +178,16 @@ const CryptoForm = () => {
       <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Crypto Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Crypto Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/crypto")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Crypto Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Crypto Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -252,6 +253,7 @@ const CryptoForm = () => {
                 <Label htmlFor="cryptoWalletAddress">
                   Crypto Wallet Address
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="cryptoWalletAddress"
                   control={control}
@@ -328,6 +330,7 @@ const CryptoForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="tradingAccount">Trading Account</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="tradingAccount"
                   control={control}

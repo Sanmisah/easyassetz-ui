@@ -43,8 +43,8 @@ const schema = z.object({
   additionalInformation: z
     .string()
     .min(1, { message: "Additional Information is Required" }),
-  name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  name: z.any().optional(),
+  email: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -138,7 +138,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("BusinessAsset added successfully!");
+      toast.success("Propritoriship added successfully!");
       navigate("/propritership");
     },
     onError: (error) => {
@@ -173,13 +173,16 @@ const PropritorshipEdit = ({ benificiaryId }) => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Propritership Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the propritorship details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/propritership")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Proprtieship Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the propritorship details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -191,6 +194,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmName"> Firm Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmName"
                   defaultValue={Benifyciary?.firmName}
@@ -226,6 +230,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                   {" "}
                   Registration Address{" "}
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="registeredAddress"
                   control={control}
@@ -258,6 +263,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                 <Label htmlFor="firmsRegistrationNumberType">
                   Firm Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumberType"
                   control={control}
@@ -296,7 +302,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                       <Input
                         id="firmsRegistrationNumber"
                         className="mt-2"
-                        value={field.value || ""}
+                        value={field.value?.toUpperCase() || ""}
                         defaultValue={
                           Benifyciary?.firmsRegistrationNumber || ""
                         }
@@ -311,6 +317,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                   {" "}
                   Additional Information
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="additionalInformation"
                   control={control}

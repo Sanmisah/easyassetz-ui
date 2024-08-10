@@ -34,19 +34,15 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  vehicleType: z
-    .string()
-    .nonempty({ message: "Bank/Institution Name is required" }),
-  otherVehicleType: z.string().optional(),
-  fourWheeler: z
-    .string()
-    .nonempty({ message: "Loan Account Number is required" }),
+  vehicleType: z.any().optional(),
+  otherVehicleType: z.any().optional(),
+  fourWheeler: z.any().optional(),
   otherFourWheeler: z.string().optional(),
-  company: z.string().optional(),
-  model: z.any().optional(),
+  company: z.string().nonempty({ message: "Company Name is required" }),
+  model: z.string().nonempty({ message: "Model is required" }),
   registrationNumber: z.any().optional(),
   yearOfManufacture: z.any().optional(),
-  location: z.string().nonempty({ message: "Guarantor Name is required" }),
+  location: z.any().optional(),
 });
 
 const OtherLoansEditForm = () => {
@@ -67,11 +63,13 @@ const OtherLoansEditForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       vehicleType: "",
+      otherVehicleType: "",
       fourWheeler: "",
+      otherFourWheeler: "",
       company: "",
       model: "",
-      duration: "",
-      dueDate: "",
+      registrationNumber: "",
+      yearOfManufacture: "",
       location: "",
     },
   });
@@ -121,7 +119,7 @@ const OtherLoansEditForm = () => {
           },
         }
       );
-      return response.data.data.Vehicle;
+      return response.data.data.OtherAsset;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
@@ -151,20 +149,23 @@ const OtherLoansEditForm = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading loan data</div>;
+  if (isError) return <div>Error loading vehicle data</div>;
 
   return (
     <div className="w-full">
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Vehicle Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the vehicle details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/vehicle")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Vehicle Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the Vehicle details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -276,6 +277,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="company"
                   control={control}
@@ -296,6 +298,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="model">Model</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="model"
                   control={control}

@@ -31,54 +31,30 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 
-const schema = z
-  .object({
-    companyName: z
-      .string()
-      .nonempty({ message: "Insurance Company is required" }),
-    otherInsuranceCompany: z.string().optional(),
-    insuranceType: z
-      .string()
-      .nonempty({ message: "Insurance Sub Type is required" }),
-    policyNumber: z.string().min(2, { message: "Policy Number is required" }),
-    maturityDate: z.date().optional(),
-    premium: z.string().min(3, { message: "Premium is required" }),
-    sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
-    policyHolderName: z
-      .string()
-      .nonempty({ message: "Policy Holder Name is required" }),
-    additionalDetails: z.string().optional(),
-    modeOfPurchase: z
-      .string()
-      .nonempty({ message: "Mode of Purchase is required" }),
-    contactPerson: z.string().optional(),
-    contactNumber: z.string().optional(),
-    email: z.string().email({ message: "Invalid email address" }).optional(),
-    registeredMobile: z.string().optional(),
-    registeredEmail: z.string().optional(),
-    previousPolicyNumber: z.string().optional(),
-    brokerName: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.modeOfPurchase === "broker") {
-        return (
-          !!data.brokerName &&
-          !!data.contactPerson &&
-          !!data.contactNumber &&
-          !!data.email
-        );
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        return !!data.registeredMobile && !!data.registeredEmail;
-      }
-      return true;
-    },
-    {
-      message: "Required fields are missing",
-      path: ["modeOfPurchase"],
-    }
-  );
+const schema = z.object({
+  companyName: z
+    .string()
+    .nonempty({ message: "Insurance Company is required" }),
+  otherInsuranceCompany: z.string().optional(),
+  insuranceType: z
+    .string()
+    .nonempty({ message: "Insurance Sub Type is required" }),
+  policyNumber: z.string().min(2, { message: "Policy Number is required" }),
+  maturityDate: z.any().optional(),
+  premium: z.string().optional(),
+  sumInsured: z.string().optional(),
+  policyHolderName: z
+    .string()
+    .nonempty({ message: "Policy Holder Name is required" }),
+  modeOfPurchase: z.string().optional(),
+  contactPerson: z.string().optional(),
+  contactNumber: z.string().optional(),
+  email: z.string().optional(),
+  registeredMobile: z.string().optional(),
+  registeredEmail: z.any().optional(),
+  additionalDetails: z.string().optional(),
+  brokerName: z.string().optional(),
+});
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -170,20 +146,16 @@ const OtherForm = () => {
       data.email = null;
     }
     console.log(data);
-    const date = new Date(data.maturityDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
-
-    console.log("Nomiee:", selectedNommie.length < 1);
-    if (selectedNommie.length < 1) {
-      console.log("Nomiee:", selectedNommie.length < 1);
-
-      setnomineeerror(true);
-      return;
+    if (data.maturityDate) {
+      const date = new Date(data.maturityDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.maturityDate = newdate;
     }
+    console.log("Nomiee:", selectedNommie.length < 1);
+
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
@@ -202,13 +174,16 @@ const OtherForm = () => {
       <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Other Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Other Insurance Policy Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/otherinsurance")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Other Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Other Insurance Policy Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -220,6 +195,7 @@ const OtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -266,6 +242,7 @@ const OtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -289,6 +266,7 @@ const OtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -309,6 +287,7 @@ const OtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   control={control}
@@ -370,6 +349,7 @@ const OtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyHolderName"
                   control={control}

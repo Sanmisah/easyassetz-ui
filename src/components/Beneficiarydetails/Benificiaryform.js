@@ -60,9 +60,9 @@ const beneficiarySchema = z
     email: z.any().optional(),
     city: z.string().nonempty("City is required"),
     state: z.string().optional(),
-    houseNo: z.string().nonempty("House No is required"),
+    houseNo: z.string().optional(),
     nationality: z.string().optional(),
-    addressLine1: z.string().nonempty("Address Line 1 is required"),
+    addressLine1: z.string().optional(),
     addressLine2: z.string().optional(),
   })
   .refine(
@@ -239,6 +239,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         <div className="grid grid-cols-1 gap-6 mt-4">
                           <div className="space-y-2">
                             <Label htmlFor="full-name">Full Legal Name</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
@@ -252,6 +253,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="relationship">Relationship</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="relationship"
                               control={control}
@@ -313,6 +315,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           )}
                           <div className="space-y-2">
                             <Label htmlFor="gender">Gender</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="gender"
                               control={control}
@@ -364,6 +367,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="mobile"
                               control={control}
@@ -639,6 +643,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
                       <div className="space-y-2">
                         <Label htmlFor="guardian-city">City</Label>
+                        <Label style={{ color: "red" }}>*</Label>
                         <Input
                           id="guardian-city"
                           placeholder="Enter City"

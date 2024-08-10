@@ -200,13 +200,16 @@ const SuperAnnuationEditForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Super Annuation Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Super Annuation Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/superannuation")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Super Annuation Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the Super Annuation Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -218,6 +221,7 @@ const SuperAnnuationEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="companyName">Company Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   defaultValue={Benifyciary?.companyName || ""}
@@ -240,6 +244,7 @@ const SuperAnnuationEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="masterPolicyNumber">Master Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="masterPolicyNumber"
                   defaultValue={Benifyciary?.masterPolicyNumber || ""}
@@ -264,6 +269,7 @@ const SuperAnnuationEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="empNo">Employee ID</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="empNo"
                   defaultValue={Benifyciary?.empNo || ""}

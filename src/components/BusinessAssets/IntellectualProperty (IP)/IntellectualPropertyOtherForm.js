@@ -30,18 +30,14 @@ import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import { useDispatch, useSelector } from "react-redux";
 const schema = z.object({
-  typeOfIp: z
-    .string()
-    .min(3, { message: "Intellectual Property Type is required" }),
+  typeOfIp: z.string().optional(),
   firmsRegistrationNumber: z
     .string()
     .min(3, { message: "Registration Number is required" }),
   whetherAssigned: z.string().optional(),
-  nameOfAssignee: z
-    .string()
-    .nonempty({ message: "Name of assignee is required" }),
-  expiryDate: z.date().optional(),
-  dateOfAssignment: z.date().optional(),
+  nameOfAssignee: z.string().optional(),
+  expiryDate: z.any().optional(),
+  dateOfAssignment: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -57,6 +53,7 @@ const IntellectualPropertyOtherForm = () => {
   const queryClient = useQueryClient();
   const [showIntellectualProperty, setShowIntellectualProperty] =
     useState(false);
+  const [weather, setWeather] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [nomineeerror, setNomineeError] = useState(false);
@@ -121,7 +118,9 @@ const IntellectualPropertyOtherForm = () => {
   const onSubmit = (data) => {
     console.log(data);
     data.expiryDate = ConverDate(data.expiryDate);
-    data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+    if (data.dateOfAssignment) {
+      data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+    }
     data.type = "intellectualProperty";
     // data.name = name;
     // data.email = email;
@@ -142,13 +141,18 @@ const IntellectualPropertyOtherForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Intellectual Property Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Intellectual Property.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/intellectualproperty")}>
+                Back
+              </Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Intellectual Property Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Intellectual Property.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -214,6 +218,7 @@ const IntellectualPropertyOtherForm = () => {
                 <Label htmlFor=" firmsRegistrationNumber">
                   Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumber"
                   control={control}
@@ -240,6 +245,7 @@ const IntellectualPropertyOtherForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="expiryDate">Expiry Date</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="expiryDate"
                 control={control}
@@ -268,6 +274,7 @@ const IntellectualPropertyOtherForm = () => {
                     {...field}
                     onValueChange={(value) => {
                       field.onChange(value);
+                      setWeather(value === "yes");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -288,50 +295,56 @@ const IntellectualPropertyOtherForm = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor=" nameOfAssignee">Name OF Assignee</Label>
-                <Controller
-                  name="nameOfAssignee"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="nameOfAssignee"
-                      placeholder="Enter Name OF Assignee "
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className={errors.nameOfAssignee ? "border-red-500" : ""}
+            {weather && (
+              <>
+                {" "}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor=" nameOfAssignee">Name OF Assignee</Label>
+                    <Controller
+                      name="nameOfAssignee"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="nameOfAssignee"
+                          placeholder="Enter Name OF Assignee "
+                          {...field}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          className={
+                            errors.nameOfAssignee ? "border-red-500" : ""
+                          }
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors.nameOfAssignee && (
-                  <span className="text-red-500">
-                    {errors.nameOfAssignee.message}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="dateOfAssignment">Date of Assignment</Label>
-              <Controller
-                name="dateOfAssignment"
-                control={control}
-                render={({ field }) => (
-                  <Datepicker
-                    {...field}
-                    onChange={(date) => field.onChange(date)}
-                    selected={field.value}
+                    {errors.nameOfAssignee && (
+                      <span className="text-red-500">
+                        {errors.nameOfAssignee.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dateOfAssignment">Date of Assignment</Label>
+                  <Controller
+                    name="dateOfAssignment"
+                    control={control}
+                    render={({ field }) => (
+                      <Datepicker
+                        {...field}
+                        onChange={(date) => field.onChange(date)}
+                        selected={field.value}
+                      />
+                    )}
                   />
-                )}
-              />
-              {errors.dateOfAssignment && (
-                <span className="text-red-500 mt-5">
-                  {errors.dateOfAssignment.message}
-                </span>
-              )}
-            </div>
+                  {errors.dateOfAssignment && (
+                    <span className="text-red-500 mt-5">
+                      {errors.dateOfAssignment.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

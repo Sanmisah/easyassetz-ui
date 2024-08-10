@@ -28,10 +28,9 @@ import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  litigationType: z
-    .string()
-    .nonempty({ message: "Type of Litigation is required" }),
-  otherLitigationType: z.string().optional(),
+  litigationType: z.any().optional(),
+
+  otherLitigationType: z.any().optional(),
   courtName: z.string().nonempty({ message: "Court/Forum Name is required" }),
   city: z.string().nonempty({ message: "City is required" }),
   caseRegistrationNumber: z
@@ -107,12 +106,14 @@ const LitigationForm = () => {
     if (data.litigationType === "other") {
       data.litigationType = data.otherLitigationType;
     }
-    const date = new Date(data.caseFillingDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.caseFillingDate = newdate;
+    if (data.caseFillingDate) {
+      const date = new Date(data.caseFillingDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.caseFillingDate = newdate;
+    }
     delete data.otherLitigationType;
 
     litigationMutate.mutate(data);
@@ -123,13 +124,16 @@ const LitigationForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Litigation Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add new litigation details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/litigation")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Litigation Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add new litigation details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -159,6 +163,8 @@ const LitigationForm = () => {
                     <SelectContent>
                       <SelectItem value="court">Court/Tribunal Case</SelectItem>
                       <SelectItem value="criminal">Criminal</SelectItem>
+                      <SelectItem value="civilSuit">Civil Suit</SelectItem>
+
                       <SelectItem value="arbitration">Arbitration</SelectItem>
                       <SelectItem value="employment">
                         Employment Litigation
@@ -195,6 +201,7 @@ const LitigationForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="courtName">Court/Forum Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="courtName"
                 control={control}
@@ -214,6 +221,7 @@ const LitigationForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="city"
                 control={control}
@@ -247,6 +255,7 @@ const LitigationForm = () => {
               <Label htmlFor="caseRegistrationNumber">
                 Case Registration Number
               </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="caseRegistrationNumber"
                 control={control}
@@ -270,6 +279,7 @@ const LitigationForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="myStatus">My Status</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="myStatus"
                 control={control}
@@ -299,6 +309,7 @@ const LitigationForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="otherPartyName">Other Party Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="otherPartyName"
                 control={control}
@@ -319,6 +330,7 @@ const LitigationForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="otherPartyAddress">Other Party Address</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="otherPartyAddress"
                 control={control}
@@ -340,6 +352,7 @@ const LitigationForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="lawyerName">Lawyer's Name on Record</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="lawyerName"
                 control={control}
@@ -361,6 +374,7 @@ const LitigationForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="lawyerContact">Lawyer's Contact Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="lawyerContact"
                 control={control}
@@ -385,6 +399,7 @@ const LitigationForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="caseFillingDate">Date of Filing the Case</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="caseFillingDate"
                 control={control}

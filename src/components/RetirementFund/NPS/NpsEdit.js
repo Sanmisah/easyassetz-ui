@@ -31,15 +31,13 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  PRAN: z.string().optional(),
-  natureOfHolding: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z
-    .string()
-    // .email({ message: "Invalid Email" })
-    .optional(),
+  PRAN: z.string().nonempty({ message: "PRAN is required" }),
+  natureOfHolding: z.any().optional(),
+  jointHolderName: z.string().optional(),
+  additionalDetails: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
 });
 // .refine((data) => {
 //   if (data.natureOfHolding === "joint") {
@@ -196,6 +194,7 @@ const NPSEditForm = ({}) => {
               <Label htmlFor="PRAN">
                 Permanent Retirement Account Number (PRAN)
               </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="PRAN"
                 control={control}

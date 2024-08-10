@@ -28,18 +28,13 @@ const schema = z.object({
   loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  branch: z.string().optional(),
-  emiDate: z.any().optional(),
-  startDate: z.any().optional(),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  branch: z.any().optional(),
+  emiDate: z.string().nonempty({ message: "EMI Date is required" }),
+  startDate: z.string().nonempty({ message: "Start Date is required" }),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+  guarantorEmail: z.any().optional(),
 });
 
 const HomeLoanEditForm = () => {
@@ -146,8 +141,12 @@ const HomeLoanEditForm = () => {
       return `${month}/${day}/${year}`;
     };
 
-    data.emiDate = formatDate(data.emiDate);
-    data.startDate = formatDate(data.startDate);
+    if (data.emiDate) {
+      data.emiDate = formatDate(data.emiDate);
+    }
+    if (data.startDate) {
+      data.startDate = formatDate(data.startDate);
+    }
 
     loanMutate.mutate(data);
   };
@@ -160,13 +159,16 @@ const HomeLoanEditForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the loan details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/homeloans")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Home Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the home loan details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -178,6 +180,7 @@ const HomeLoanEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank/Institution</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -198,6 +201,7 @@ const HomeLoanEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="loanAccountNo">Loan Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="loanAccountNo"
                   control={control}
@@ -240,6 +244,7 @@ const HomeLoanEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -253,6 +258,7 @@ const HomeLoanEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

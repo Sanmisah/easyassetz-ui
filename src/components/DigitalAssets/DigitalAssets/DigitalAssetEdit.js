@@ -33,22 +33,17 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  digitalAsset: z.string().nonempty({ message: "Digital Assets is required" }),
-  otherDigitalAsset: z.string().optional(),
+  digitalAsset: z.any().optional(),
+  otherDigitalAsset: z.any().optional(),
   account: z.string().nonempty({ message: "Account is required" }),
   linkedMobileNumber: z
     .string()
     .min(2, { message: "Mobile Number is required" }),
-  description: z.string().nonempty({ message: "Description is required" }),
-  additionalInformation: z
-    .string()
-    .min(3, { message: "Additional Information is required" })
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .transform((value) => (value === null ? null : Number(value))),
-  name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email" }),
-  mobile: z.string().nonempty({ message: "Mobile number is required" }),
+  description: z.any().optional(),
+  additionalInformation: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  phone: z.any().optional(),
 });
 
 const DigitalAssetEditForm = () => {
@@ -209,10 +204,13 @@ const DigitalAssetEditForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Digital Asset Details
-              </CardTitle>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/digitalassets")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Digital Asset Details
+                </CardTitle>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -276,6 +274,7 @@ const DigitalAssetEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="account">Account/ID</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="account"
                 control={control}
@@ -296,6 +295,7 @@ const DigitalAssetEditForm = () => {
             </div>
             <div className="space-y-2  ">
               <Label htmlFor="linkedMobileNumber"> Mobile Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="linkedMobileNumber"
                 control={control}

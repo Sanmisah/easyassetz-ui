@@ -69,7 +69,7 @@ const PartnershipFirmMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("   Intellectual Property deleted successfully!");
+    toast.success("Partnership Firm deleted successfully!");
   };
 
   return (

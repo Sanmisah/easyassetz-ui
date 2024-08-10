@@ -34,13 +34,13 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  hufName: z.string().optional(),
-  panNumber: z.string().optional(),
-  hufShare: z.string().optional(),
-  additionalInformation: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().optional(),
-  mobile: z.string().optional(),
+  hufName: z.string().nonempty({ message: "HUF Name is required" }),
+  panNumber: z.string().nonempty({ message: "PAN Number is required" }),
+  hufShare: z.any().optional(),
+  additionalInformation: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
 });
 
 const OtherLoansEditForm = () => {
@@ -153,13 +153,16 @@ const OtherLoansEditForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit HUF Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the huf details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/huf")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit HUF Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the huf details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -171,6 +174,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="hufName">Name of HUF</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="hufName"
                   control={control}
@@ -190,6 +194,7 @@ const OtherLoansEditForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="panNumber">PAN Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="panNumber"
                   control={control}
@@ -198,6 +203,7 @@ const OtherLoansEditForm = () => {
                       id="panNumber"
                       placeholder="Enter PAN Number"
                       {...field}
+                      value={field.value?.toUpperCase() || ""}
                       className={errors.panNumber ? "border-red-500" : ""}
                     />
                   )}

@@ -31,13 +31,13 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 const schema = z.object({
-  propertyType: z.string().nonempty({ message: "Property Type is required" }),
+  propertyType: z.string().optional(),
   houseNumber: z.string().nonempty({ message: "House Number is required" }),
   address1: z.string().nonempty({ message: "Address Line 1 is required" }),
   pincode: z.string().nonempty({ message: "Pincode is required" }),
   area: z.string().nonempty({ message: "Area is required" }),
-  city: z.string().nonempty({ message: "City is required" }),
-  state: z.string().nonempty({ message: "State is required" }),
+  city: z.string().optional(),
+  state: z.string().optional(),
   propertyStatus: z
     .string()
     .nonempty({ message: "Property Status is required" }),
@@ -45,12 +45,13 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Ownership By Virtue Of is required" }),
   ownershipType: z.string().nonempty({ message: "Ownership Type is required" }),
+  firstHoldersName: z.string().optional(),
   firstHoldersRelation: z.string().optional(),
   firstHoldersAadhar: z.string().optional(),
   firstHoldersPan: z.string().optional(),
-  joinHoldersName: z.string().optional(),
-  joinHoldersRelation: z.string().optional(),
-  joinHoldersPan: z.string().optional(),
+  jointHoldersName: z.string().optional(),
+  jointHoldersRelation: z.string().optional(),
+  jointHoldersPan: z.string().optional(),
   anyLoanLitigation: z.string().optional(),
   litigationFile: z.string().optional(),
 });
@@ -78,6 +79,7 @@ const ResidentialOtherform = () => {
   const {
     handleSubmit,
     control,
+    setValue,
     register,
     formState: { errors },
   } = useForm({
@@ -95,6 +97,21 @@ const ResidentialOtherform = () => {
       mobile: "",
     },
   });
+  const handlePincodeChange = async (pincode) => {
+    try {
+      console.log("pincode:", pincode);
+      setValue("pincode", pincode);
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      const { Block, State, Country } = response.data[0].PostOffice[0];
+      setValue("city", Block);
+      setValue("state", State);
+      setValue("country", Country);
+    } catch (error) {
+      console.error("Failed to fetch pincode details:", error);
+    }
+  };
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
@@ -121,7 +138,7 @@ const ResidentialOtherform = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Other Insurance added successfully!");
+      toast.success("Residential Property added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -157,14 +174,24 @@ const ResidentialOtherform = () => {
     <div className="w-full">
       <Card className="w-full">
         <CardHeader>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Bullion Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Bullion.
-              </CardDescription>
+          <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+            <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+              <Button
+                onClick={() => {
+                  navigate("/residentialproperty");
+                }}
+                className="text-sm"
+              >
+                Back
+              </Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Residential Property Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Residential Property Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -213,7 +240,8 @@ const ResidentialOtherform = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="houseNumber">House Number</Label>
+                <Label htmlFor="houseNumber">House Number</Label>.
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="houseNumber"
                   control={control}
@@ -236,6 +264,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address1">Address Line 1</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address1"
                   control={control}
@@ -258,6 +287,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pincode">Pincode</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="pincode"
                   control={control}
@@ -265,9 +295,7 @@ const ResidentialOtherform = () => {
                     <Input
                       id="pincode"
                       placeholder="Enter Pincode"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
+                      onChange={(e) => handlePincodeChange(e.target.value)}
                       className={errors.pincode ? "border-red-500" : ""}
                     />
                   )}
@@ -278,6 +306,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="area">Area</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="area"
                   control={control}
@@ -343,6 +372,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="propertyStatus">Property Status</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="propertyStatus"
                   control={control}
@@ -382,6 +412,7 @@ const ResidentialOtherform = () => {
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipByVirtueOf"
                   control={control}
@@ -426,6 +457,7 @@ const ResidentialOtherform = () => {
               </div>
               <div className="space-y-2 wrap col-span-full">
                 <Label htmlFor="ownershipByVirtueOf">Ownership Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipType"
                   control={control}
@@ -467,11 +499,11 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> First Joint Holder Name</Label>
                     <Controller
-                      name="firstHolderName"
+                      name="firstHoldersName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="firstHoldersAadhar"
+                          id="firstHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           value={field.value || ""}
@@ -528,24 +560,24 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label>First Joint Holder PAN</Label>
                     <Controller
-                      name="joinHoldersPan"
+                      name="firstHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -564,14 +596,14 @@ const ResidentialOtherform = () => {
                           value={field.value || ""}
                           onChange={field.onChange}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -582,24 +614,24 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Name</Label>
                     <Controller
-                      name="joinHoldersName"
+                      name="jointHoldersName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -608,15 +640,15 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Relation</Label>
                     <Controller
-                      name="joinHoldersRelation"
+                      name="jointHoldersRelation"
                       control={control}
                       render={({ field }) => (
                         <Select
-                          id="joinHoldersRelation"
+                          id="jointHoldersRelation"
                           value={field.value}
                           onValueChange={field.onChange}
                           className={
-                            errors.joinHoldersRelation ? "border-red-500" : ""
+                            errors.jointHoldersRelation ? "border-red-500" : ""
                           }
                         >
                           <SelectTrigger>
@@ -632,9 +664,9 @@ const ResidentialOtherform = () => {
                         </Select>
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -643,24 +675,24 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Pan</Label>
                     <Controller
-                      name="joinHoldersAadhar"
+                      name="jointHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           value={field.value || ""}
                           onChange={field.onChange}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -669,24 +701,24 @@ const ResidentialOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Aadhar</Label>
                     <Controller
-                      name="joinHoldersAadhar"
+                      name="jointHoldersAadhar"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           value={field.value || ""}
                           onChange={field.onChange}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>

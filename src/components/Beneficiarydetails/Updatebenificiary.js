@@ -266,9 +266,9 @@ const BeneficiaryForm = ({
                 <form onSubmit={handleSubmit(onSubmit)} className="scrollable">
                   <Card className="w-full max-w-3xl">
                     <CardHeader>
-                      <CardTitle>Beneficiary Form</CardTitle>
+                      <CardTitle>Edit Beneficiary Form</CardTitle>
                       <CardDescription>
-                        Please fill out the following details.
+                        Kindly review and edit the following beneficiary details
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8">
@@ -277,6 +277,7 @@ const BeneficiaryForm = ({
                         <div className="grid grid-cols-1 gap-6 mt-4">
                           <div className="space-y-2">
                             <Label htmlFor="full-name">Full Legal Name</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
@@ -291,6 +292,7 @@ const BeneficiaryForm = ({
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="relationship">Relationship</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="relationship"
                               control={control}
@@ -356,6 +358,7 @@ const BeneficiaryForm = ({
                           )}
                           <div className="space-y-2">
                             <Label htmlFor="gender">Gender</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="gender"
                               defaultValue={defaultData?.gender}
@@ -411,6 +414,7 @@ const BeneficiaryForm = ({
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
+                            <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="mobile"
                               defaultValue={defaultData?.mobile}
@@ -674,6 +678,7 @@ const BeneficiaryForm = ({
 
                       <div className="space-y-2">
                         <Label htmlFor="city">City</Label>
+                        <Label style={{ color: "red" }}>*</Label>
                         <Input
                           id="city"
                           placeholder="Enter city"

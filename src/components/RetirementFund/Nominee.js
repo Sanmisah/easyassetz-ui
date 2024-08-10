@@ -90,12 +90,12 @@ const AddNominee = ({
       <Sheet>
         <SheetTrigger asChild>
           <div className="cursor-pointer flex border border-input bg-background p-4 justify-between pl-2 pr-2 items-center rounded-lg">
-            <h1 className="ml-2 font-bold">Add Nominee</h1>
+            <h1 className="ml-2 font-bold">Add Family Members</h1>
           </div>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Add Nominee</SheetTitle>
+            <SheetTitle>Add Family Members</SheetTitle>
             <SheetDescription>
               <p>Select nominee to add to your insurance policy</p>
             </SheetDescription>
@@ -150,7 +150,7 @@ const AddNominee = ({
             </div>
           </ScrollArea>
           <SheetFooter>
-            <Button onClick={addNominee}>Add Nominee</Button>
+            <Button onClick={addNominee}>Add Family Members</Button>
             <SheetClose asChild>
               <Button onClick={handleSubmit} type="submit">
                 Save changes

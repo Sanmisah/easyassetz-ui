@@ -303,12 +303,14 @@ const EditMotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    const date = new Date(data.expiryDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.expiryDate = newdate;
+    if (data.expiryDate) {
+      const date = new Date(data.expiryDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.expiryDate = newdate;
+    }
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
@@ -333,13 +335,16 @@ const EditMotorForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Motor Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Motor Insurance policy details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/motorinsurance")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Motor Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Motor Insurance Policy.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -351,6 +356,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -403,6 +409,7 @@ const EditMotorForm = () => {
               {console.log(Benifyciary)}
               <div className="space-y-2">
                 <Label htmlFor="insuranceType">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -430,6 +437,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -453,6 +461,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="expiryDate"
                   defaultValues={new Date(Benifyciary?.expiryDate) || ""}
@@ -476,6 +485,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="premium">Premium</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="premium"
                   control={control}
@@ -520,6 +530,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Insurer Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insurerName"
                   control={control}
@@ -542,6 +553,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vehicleType">Vehical Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="vehicleType"
                   defaultValue={Benifyciary?.vehicleType || ""}

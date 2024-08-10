@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
   bankName: z
@@ -27,23 +28,20 @@ const schema = z.object({
   loanAccountNumber: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  branch: z.string().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  branch: z.any().optional(),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+
+  guarantorEmail: z.any().optional(),
 });
 
 const PersonalLoanEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
@@ -68,42 +66,60 @@ const PersonalLoanEdit = () => {
     },
   });
 
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/personal-loans/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    setValue("bankName", response.data.data.PersonalLoan?.bankName);
+    setValue("loanAccountNo", response.data.data.PersonalLoan?.loanAccountNo);
+    setValue("branch", response.data.data.PersonalLoan?.branch);
+    setValue("emiDate", response.data.data.PersonalLoan?.emiDate);
+    setValue("startDate", response.data.data.PersonalLoan?.startDate);
+    setValue("duration", response.data.data.PersonalLoan?.duration);
+    setValue("guarantorName", response.data.data.PersonalLoan?.guarantorName);
+    setValue(
+      "guarantorMobile",
+      response.data.data.PersonalLoan?.guarantorMobile
+    );
+    setValue("guarantorEmail", response.data.data.PersonalLoan?.guarantorEmail);
+    return response.data.data.PersonalLoan;
+  };
+
   const {
     data: loanData,
     isLoading,
     isError,
-  } = useQuery(
-    ["loanData", id],
-    async () => {
-      const response = await axios.get(`/api/loans/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
-      return response.data.data.Loan;
+  } = useQuery({
+    queryKey: ["loanData", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      setDefaultData(data);
+      reset(data);
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching loan data:", error);
-        toast.error("Failed to fetch loan data");
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
+    },
+  });
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/loans/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.put(
+        `/api/personal-loans/${lifeInsuranceEditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
       return response.data.data.Loan;
     },
     onSuccess: () => {
@@ -127,8 +143,12 @@ const PersonalLoanEdit = () => {
       return `${month}/${day}/${year}`;
     };
 
-    data.emiDate = formatDate(data.emiDate);
-    data.startDate = formatDate(data.startDate);
+    if (data.emiDate) {
+      data.emiDate = formatDate(data.emiDate);
+    }
+    if (data.startDate) {
+      data.startDate = formatDate(data.startDate);
+    }
 
     loanMutate.mutate(data);
   };
@@ -141,13 +161,16 @@ const PersonalLoanEdit = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the loan details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/loan")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the loan details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -159,6 +182,7 @@ const PersonalLoanEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank/Institution</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -179,6 +203,7 @@ const PersonalLoanEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="loanAccountNumber"
                   control={control}
@@ -223,6 +248,7 @@ const PersonalLoanEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -236,6 +262,7 @@ const PersonalLoanEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

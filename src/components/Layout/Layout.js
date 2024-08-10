@@ -85,7 +85,7 @@ import PersonalLoanOtherForm from "@/components/Liabilities/PersonalLoans/Person
 import PersonalLoanEdit from "@/components/Liabilities/PersonalLoans/PersonalLoanEdit";
 import OtherLoanMainForm from "@/components/Liabilities/OtherLoans/OtherLoanMainForm";
 import OtherLoanOtherForm from "@/components/Liabilities/OtherLoans/OtherLoanOtherForm";
-import OtherLoanEdit from "@/components/Liabilities/OtherLoans/OtherLoanMainForm";
+import OtherLoanEdit from "@/components/Liabilities/OtherLoans/OtherLoansEditForm";
 import RetirementFundMainForm from "@/components/RetirementFund/RetirementFundsMainForm";
 import BankContentForm from "@/components/Bank&Post/contents";
 import BankAccountMainForm from "@/components/Bank&Post/BankAccounts/BankAccountMainForm";
@@ -177,6 +177,7 @@ import JwelleryEditForm from "@/components/OtherAssets/Jwellery/JwelleryEditForm
 import AssetDistribution from "@/components/Assetdistribution/AssetDistribution";
 import AssetAllocation from "@/components/Assetdistribution/AssetAllocation";
 import Summery from "@/components/Assetdistribution/Summery";
+import ForgetPassword from "@/components/Forgetpassword/ForgetPassword";
 
 const Layout = () => {
   const location = useLocation();

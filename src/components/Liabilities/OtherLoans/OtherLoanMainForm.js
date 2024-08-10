@@ -112,7 +112,7 @@ const OtherLoanMainForm = () => {
                         onClick={() => {
                           console.log("data.id:", data.id);
                           dispatch(setlifeInsuranceEditId(data.id));
-                          navigate("/homeloans/edit");
+                          navigate("/otherloan/edit");
                         }}
                       >
                         Edit

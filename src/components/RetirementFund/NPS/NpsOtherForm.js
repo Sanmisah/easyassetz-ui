@@ -31,19 +31,12 @@ import cross from "@/components/image/close.png";
 
 const schema = z.object({
   PRAN: z.string().nonempty({ message: "PRAN is required" }),
-  natureOfHolding: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
+  natureOfHolding: z.any().optional(),
   jointHolderName: z.string().optional(),
-  additionalDetails: z.string().optional(),
-  name: z.string().nonempty({ message: "Point of Contact Name is required" }),
-  mobile: z
-    .string()
-    .nonempty({ message: "Point of Contact Mobile is required" }),
-  email: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Point of Contact Email is required" }),
+  additionalDetails: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
 });
 
 const NPSOtherForm = () => {
@@ -115,10 +108,15 @@ const NPSOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">NPS Details</CardTitle>
-              <CardDescription>
-                Fill out the form to add new NPS Details.
-              </CardDescription>
+              <Button onMouseDown={() => navigate("/nps")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  NPS Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add new NPS Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -131,6 +129,7 @@ const NPSOtherForm = () => {
               <Label htmlFor="PRAN">
                 Permanent Retirement Account Number (PRAN)
               </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="PRAN"
                 control={control}

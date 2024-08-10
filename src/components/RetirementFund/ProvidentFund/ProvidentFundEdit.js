@@ -31,13 +31,13 @@ import Editnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 
 const schema = z.object({
-  employerName: z.string().optional(),
-  uanNumber: z.string().optional(),
+  employerName: z.string().nonempty({ message: "Employer Name is required" }),
+  uanNumber: z.string().nonempty({ message: "UAN Number is required" }),
   branch: z.string().optional(),
-  bankName: z.string().optional(),
+  bankName: z.string().nonempty({ message: "Bank Name is required" }),
   branch: z.string().optional(),
   bankAccountNumber: z.string().optional(),
-  additionalDetails: z.string().optional(),
+  additionalDetails: z.any().optional(),
   name: z.any().optional(),
   mobile: z.any().optional(),
   email: z
@@ -184,12 +184,21 @@ const ProvidentFundEditForm = ({}) => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Providend Fund Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the Providend Fund details.
-              </CardDescription>
+              <Button
+                onClick={() => {
+                  navigate("/providentfund");
+                }}
+              >
+                Back
+              </Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Providend Fund Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the Providend Fund details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

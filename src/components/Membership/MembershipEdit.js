@@ -36,8 +36,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Organization Name is required" }),
   membershipId: z.string().nonempty({ message: "Membership id is required" }),
-  membershipType: z.string().optional(),
-  membershipPaymentDate: z.date().optional(),
+  membershipType: z.any().optional(),
+  membershipPaymentDate: z.any().optional(),
 });
 
 const MembershipEdit = () => {
@@ -90,7 +90,11 @@ const MembershipEdit = () => {
       setShowOtherMembershipType(true);
       setValue("otherMembersipType", othertype);
     }
-
+    setValue("membershipType", response.data.data.Membership?.membershipType);
+    setValue(
+      "membershipPaymentDate",
+      response.data.data.Membership?.membershipPaymentDate
+    );
     console.log(typeof response.data.data.Membership?.premium);
     return response.data.data.Membership;
   };
@@ -224,6 +228,7 @@ const MembershipEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="organizationName">Organization Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="organizationName"
                   defaultValue={Benifyciary?.organizationName || ""}
@@ -248,6 +253,7 @@ const MembershipEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="membershipId">Membership ID </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="membershipId"
                   defaultValue={Benifyciary?.membershipId || ""}
@@ -324,6 +330,7 @@ const MembershipEdit = () => {
                 <Label htmlFor="membershipPaymentDate">
                   Membership Payment Date
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="membershipPaymentDate"
                   defaultValue={

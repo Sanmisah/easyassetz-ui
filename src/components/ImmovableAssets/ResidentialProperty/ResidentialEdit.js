@@ -34,12 +34,12 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
 ));
 const schema = z.object({
-  propertyType: z.string().nonempty({ message: "Property Type is required" }),
+  propertyType: z.any().optional(),
   houseNumber: z.string().nonempty({ message: "House Number is required" }),
   address1: z.string().nonempty({ message: "Address Line 1 is required" }),
   pincode: z.string().nonempty({ message: "Pincode is required" }),
   area: z.string().nonempty({ message: "Area is required" }),
-  city: z.string().nonempty({ message: "City is required" }),
+  city: z.string().optional(),
   state: z.string().nonempty({ message: "State is required" }),
   propertyStatus: z
     .string()
@@ -52,9 +52,9 @@ const schema = z.object({
   firstHoldersRelation: z.any().optional(),
   firstHoldersAadhar: z.any().optional(),
   firstHoldersPan: z.any().optional(),
-  joinHoldersName: z.any().optional(),
-  joinHoldersRelation: z.any().optional(),
-  joinHoldersPan: z.any().optional(),
+  jointHoldersName: z.any().optional(),
+  jointHoldersRelation: z.any().optional(),
+  jointHoldersPan: z.any().optional(),
   anyLoanLitigation: z.any().optional(),
 });
 
@@ -105,6 +105,9 @@ const ResidentialEditForm = () => {
     );
     const data = response.data.data.ResidentialProperty;
     // console.log("bullion:", bullion);
+    if (data.ownershipType === "joint") {
+      setJoinholder(true);
+    }
     setValue("propertyType", data.propertyType);
     setValue("houseNumber", data.houseNumber);
     setValue("address1", data.address1);
@@ -119,9 +122,9 @@ const ResidentialEditForm = () => {
     setValue("firstHoldersRelation", data.firstHoldersRelation);
     setValue("firstHoldersAadhar", data.firstHoldersAadhar);
     setValue("firstHoldersPan", data.firstHoldersPan);
-    setValue("joinHoldersName", data.joinHoldersName);
-    setValue("joinHoldersRelation", data.joinHoldersRelation);
-    setValue("joinHoldersPan", data.joinHoldersPan);
+    setValue("jointHoldersName", data.jointHoldersName);
+    setValue("jointHoldersRelation", data.jointHoldersRelation);
+    setValue("jointHoldersPan", data.jointHoldersPan);
     setValue("anyLoanLitigation", data.anyLoanLitigation);
     return response.data.data.ResidentialProperty;
   };
@@ -150,9 +153,9 @@ const ResidentialEditForm = () => {
       setValue("firstHoldersRelation", data.firstHoldersRelation);
       setValue("firstHoldersAadhar", data.firstHoldersAadhar);
       setValue("firstHoldersPan", data.firstHoldersPan);
-      setValue("joinHoldersName", data.joinHoldersName);
-      setValue("joinHoldersRelation", data.joinHoldersRelation);
-      setValue("joinHoldersPan", data.joinHoldersPan);
+      setValue("jointHoldersName", data.jointHoldersName);
+      setValue("jointHoldersRelation", data.jointHoldersRelation);
+      setValue("jointHoldersPan", data.jointHoldersPan);
       setValue("anyLoanLitigation", data.anyLoanLitigation);
       setValue("litigationFile", data.litigationFile);
       // Set fetched values to the form
@@ -165,6 +168,20 @@ const ResidentialEditForm = () => {
       toast.error("Failed to fetch profile");
     },
   });
+  const handlePincodeChange = async (pincode) => {
+    try {
+      setValue("pincode", pincode);
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      const { Block, State, Country } = response.data[0].PostOffice[0];
+      setValue("city", Block);
+      setValue("state", State);
+      setValue("country", Country);
+    } catch (error) {
+      console.error("Failed to fetch pincode details:", error);
+    }
+  };
 
   const bullionMutate = useMutation({
     mutationFn: async (data) => {
@@ -210,14 +227,24 @@ const ResidentialEditForm = () => {
     <div className="w-full">
       <Card>
         <CardHeader>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                ResidentialProperty Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the bullion details.
-              </CardDescription>
+          <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+            <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
+              <Button
+                onClick={() => {
+                  navigate("/residentialproperty");
+                }}
+                className="text-sm"
+              >
+                Back
+              </Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Residential Property Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Residential Property Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -268,6 +295,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="houseNumber">House Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="houseNumber"
                   control={control}
@@ -288,6 +316,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address1">Address Line 1</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address1"
                   control={control}
@@ -308,6 +337,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pincode">Pincode</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="pincode"
                   control={control}
@@ -315,7 +345,8 @@ const ResidentialEditForm = () => {
                     <Input
                       id="pincode"
                       placeholder="Enter Pincode"
-                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) => handlePincodeChange(e.target.value)}
                       className={errors.pincode ? "border-red-500" : ""}
                     />
                   )}
@@ -326,6 +357,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="area">Area</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="area"
                   control={control}
@@ -385,6 +417,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="propertyStatus">Property Status</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="propertyStatus"
                   control={control}
@@ -425,6 +458,7 @@ const ResidentialEditForm = () => {
                 <Label htmlFor="ownershipByVirtueOf">
                   Ownership By Virtue Of
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipByVirtueOf"
                   control={control}
@@ -467,6 +501,7 @@ const ResidentialEditForm = () => {
               </div>
               <div className="space-y-2 wrap col-span-full">
                 <Label htmlFor="ownershipByVirtueOf">Ownership Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="ownershipType"
                   control={control}
@@ -565,22 +600,23 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label>First Joint Holder PAN</Label>
                     <Controller
-                      name="joinHoldersName"
+                      name="firstHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="firstHoldersPan"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value?.toUpperCase() || ""}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.firstHoldersPan ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -597,14 +633,14 @@ const ResidentialEditForm = () => {
                           placeholder="Enter Joint Holder Aadhar"
                           {...field}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -615,22 +651,23 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Name</Label>
                     <Controller
-                      name="joinHoldersName"
+                      name="jointHoldersName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="jointHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value || ""}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>
@@ -639,17 +676,17 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Relation</Label>
                     <Controller
-                      name="joinHoldersRelation"
+                      name="jointHoldersRelation"
                       control={control}
                       render={({ field }) => (
                         <Select
-                          id="joinHoldersRelation"
+                          id="jointHoldersRelation"
                           value={field.value}
                           onValueChange={(value) => {
                             field.onChange(value);
                           }}
                           className={
-                            errors.joinHoldersRelation ? "border-red-500" : ""
+                            errors.jointHoldersRelation ? "border-red-500" : ""
                           }
                         >
                           <SelectTrigger>
@@ -665,9 +702,9 @@ const ResidentialEditForm = () => {
                         </Select>
                       )}
                     />
-                    {errors.joinHoldersRelation && (
+                    {errors.jointHoldersRelation && (
                       <span className="text-red-500">
-                        {errors.joinHoldersRelation.message}
+                        {errors.jointHoldersRelation.message}
                       </span>
                     )}
                   </div>
@@ -676,22 +713,23 @@ const ResidentialEditForm = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> Second Joint Holder Pan</Label>
                     <Controller
-                      name="joinHoldersAadhar"
+                      name="jointHoldersPan"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="joinHoldersName"
+                          id="jointHoldersName"
                           placeholder="Enter Joint Holder Aadhar"
                           {...field}
+                          value={field.value?.toUpperCase() || ""}
                           className={
-                            errors.joinHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersName ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.joinHoldersName && (
+                    {errors.jointHoldersName && (
                       <span className="text-red-500">
-                        {errors.joinHoldersName.message}
+                        {errors.jointHoldersName.message}
                       </span>
                     )}
                   </div>

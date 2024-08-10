@@ -28,22 +28,16 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  metalType: z.string().nonempty({ message: "Metal Name is required" }),
-  otherMetalType: z.string().optional(),
-  articleDetails: z
-    .string()
-    .nonempty({ message: "Article Detail is required" }),
-  otherArticleDetails: z.string().optional(),
-  numberOfArticles: z.string().optional(),
-  weightPerArticle: z
-    .string()
-    .min(1, { message: "Weight Per Article is required" }),
-  additionalInformation: z
-    .string()
-    .min(1, { message: "Additional Information is required" }),
-  name: z.string().nonempty({ message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email" }),
-  mobile: z.string().nonempty({ message: "Mobile number is required" }),
+  metalType: z.any().optional(),
+  otherMetalType: z.any().optional(),
+  articleDetails: z.any().optional(),
+  otherArticleDetails: z.any().optional(),
+  numberOfArticles: z.any().optional(),
+  weightPerArticle: z.any().optional(),
+  additionalInformation: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
   bullionFile: z.any().optional(),
 });
 
@@ -210,13 +204,16 @@ const BullionEdit = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Bullion Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the bullion details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/bullion")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Bullion Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the bullion details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

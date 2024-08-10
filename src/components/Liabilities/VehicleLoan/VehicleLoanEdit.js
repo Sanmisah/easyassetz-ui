@@ -28,18 +28,13 @@ const schema = z.object({
   loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  bankName: z.string().optional(),
+  bankName: z.any().optional(),
   emiDate: z.any().optional(),
   startDate: z.any().optional(),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+  guarantorEmail: z.any().optional(),
 });
 
 const VehicleLoanEdit = () => {
@@ -117,7 +112,7 @@ const VehicleLoanEdit = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
-      toast.success("Loan updated successfully!");
+      toast.success("Vehicle Loan updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -136,8 +131,12 @@ const VehicleLoanEdit = () => {
       return `${month}/${day}/${year}`;
     };
 
-    data.emiDate = formatDate(data.emiDate);
-    data.startDate = formatDate(data.startDate);
+    if (data.emiDate) {
+      data.emiDate = formatDate(data.emiDate);
+    }
+    if (data.startDate) {
+      data.startDate = formatDate(data.startDate);
+    }
 
     loanMutate.mutate(data);
   };
@@ -150,13 +149,16 @@ const VehicleLoanEdit = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the loan details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/vehicleloan")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Vehicle Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the vehicle loan details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -168,6 +170,7 @@ const VehicleLoanEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank/Institution</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -188,6 +191,7 @@ const VehicleLoanEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="loanAccountNo">Loan Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="loanAccountNo"
                   control={control}
@@ -230,6 +234,7 @@ const VehicleLoanEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -243,6 +248,7 @@ const VehicleLoanEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

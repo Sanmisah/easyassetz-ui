@@ -40,12 +40,10 @@ const schema = z.object({
   holdingPercentage: z
     .string()
     .nonempty({ message: "Holding Percentage is required" }),
-  additionalInformation: z
-    .string()
-    .min(1, { message: "Additional Information is Required" }),
+  additionalInformation: z.any().optional(),
   firmsRegistrationNumberType: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }),
-  name: z.string().nonempty({ message: "Name is required" }),
+  email: z.any().optional(),
+  name: z.any().optional(),
 });
 
 const PartnershipEdit = () => {
@@ -171,7 +169,7 @@ const PartnershipEdit = () => {
         "partnershipDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Partnership details updated successfully!");
+      toast.success("Partnership Firm details updated successfully!");
       navigate("/partnershipfirm");
     },
     onError: (error) => {
@@ -181,14 +179,12 @@ const PartnershipEdit = () => {
 
   const onSubmit = (data) => {
     data.type = "partnershipFirm";
-    if (selectedNommie.length < 1) {
-      toast.error("Please select atleast one nominee");
-      return;
-    }
+
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
     // data.nominees = selectedNommie;
+
     data.mobile = mobile;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
@@ -207,13 +203,16 @@ const PartnershipEdit = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Partnership Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the partnership details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/partnershipfirm")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Partnership Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the partnership details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -222,6 +221,7 @@ const PartnershipEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmName">Firm Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmName"
                   control={control}
@@ -234,7 +234,6 @@ const PartnershipEdit = () => {
                     />
                   )}
                 />
-
                 {errors.firmName && (
                   <span className="text-red-500">
                     {errors.firmName.message}
@@ -244,6 +243,7 @@ const PartnershipEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="registeredAddress">Registered Address</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="registeredAddress"
                   control={control}
@@ -268,6 +268,7 @@ const PartnershipEdit = () => {
                 <Label htmlFor="firmsRegistrationNumberType">
                   Firm Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumberType"
                   control={control}
@@ -301,6 +302,7 @@ const PartnershipEdit = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
+                        value={field.value?.toUpperCase() || ""}
                         placeholder="Specify Registration Number"
                         className="mt-2"
                       />
@@ -316,6 +318,7 @@ const PartnershipEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="holdingPercentage">Holding Percentage</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="holdingPercentage"
                   control={control}
@@ -360,37 +363,31 @@ const PartnershipEdit = () => {
                 )}
               </div>
               {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2 col-span-full">
+                <div className="space-y-2 col-span-full mt-4">
                   <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
+                    {displaynominie.map((nominee) => (
+                      <div
+                        key={nominee.id}
+                        className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                      >
+                        <Label htmlFor={`nominee-${nominee.id}`}>
+                          {nominee.fullLegalName || nominee.charityName}
+                        </Label>
+                        <img
+                          className="w-4 h-4 cursor-pointer"
+                          onClick={() => {
+                            setDisplaynominie((prev) =>
+                              prev.filter((item) => item.id !== nominee.id)
+                            );
+                            setSelectedNommie((prev) =>
+                              prev.filter((item) => item !== nominee.id)
+                            );
+                          }}
+                          src={cross}
+                          alt=""
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}

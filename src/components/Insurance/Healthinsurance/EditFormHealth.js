@@ -32,53 +32,32 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
-const schema = z
-  .object({
-    companyName: z
-      .string()
-      .nonempty({ message: "Insurance Company is required" }),
-    otherInsuranceCompany: z.string().optional(),
-    insuranceType: z
-      .string()
-      .nonempty({ message: "Insurance Sub Type is required" }),
-    policyNumber: z.string().min(1, { message: "Policy Number is required" }),
-    maturityDate: z.any().optional(),
-    premium: z.string().min(1, { message: "Premium is required" }),
-    sumInsured: z.string().min(1, { message: "Sum Insured is required" }),
-    policyHolderName: z
-      .string()
-      .nonempty({ message: "Policy Holder Name is required" }),
-    additionalDetails: z.string().optional(),
-    modeOfPurchase: z
-      .string()
-      .nonempty({ message: "Mode of Purchase is required" }),
-    contactPerson: z.string().optional(),
-    contactNumber: z.string().optional(),
-    email: z.string().email({ message: "Invalid email address" }).optional(),
-    registeredMobile: z.string().optional(),
-    registeredEmail: z.string().optional(),
-    brokerName: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.modeOfPurchase === "broker") {
-        return (
-          !!data.brokerName &&
-          !!data.contactPerson &&
-          !!data.contactNumber &&
-          !!data.email
-        );
-      }
-      if (data.modeOfPurchase === "e-insurance") {
-        return !!data.registeredMobile && !!data.registeredEmail;
-      }
-      return true;
-    },
-    {
-      message: "Required fields are missing",
-      path: ["modeOfPurchase"],
-    }
-  );
+const schema = z.object({
+  companyName: z
+    .string()
+    .nonempty({ message: "Insurance Company is required" }),
+  otherInsuranceCompany: z.string().optional(),
+  insuranceType: z
+    .string()
+    .nonempty({ message: "Insurance Sub Type is required" }),
+  policyNumber: z.string().min(1, { message: "Policy Number is required" }),
+  maturityDate: z.any().optional(),
+  premium: z.string().min(1, { message: "Premium is required" }),
+  sumInsured: z.string().min(1, { message: "Sum Insured is required" }),
+  policyHolderName: z
+    .string()
+    .nonempty({ message: "Policy Holder Name is required" }),
+  additionalDetails: z.string().optional(),
+  modeOfPurchase: z
+    .string()
+    .nonempty({ message: "Mode of Purchase is required" }),
+  contactPerson: z.string().optional(),
+  contactNumber: z.string().optional(),
+  email: z.string().email({ message: "Invalid email address" }).optional(),
+  registeredMobile: z.string().optional(),
+  registeredEmail: z.string().optional(),
+  brokerName: z.string().optional(),
+});
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -308,13 +287,17 @@ const EditFormHealth = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Health Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Health Insurance Policy Details.
-              </CardDescription>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+              <Button onClick={() => navigate("/healthinsurance")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Health Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to update the Health Insurance Policy
+                  Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -326,6 +309,7 @@ const EditFormHealth = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -378,6 +362,7 @@ const EditFormHealth = () => {
               {console.log(Benifyciary)}
               <div className="space-y-2">
                 <Label htmlFor="insuranceType">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -431,6 +416,7 @@ const EditFormHealth = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -454,6 +440,7 @@ const EditFormHealth = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   control={control}
@@ -476,6 +463,7 @@ const EditFormHealth = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="premium">Premium</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="premium"
                   control={control}
@@ -496,6 +484,7 @@ const EditFormHealth = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="sum-insured">Sum Insured</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="sumInsured"
                   control={control}
@@ -520,6 +509,7 @@ const EditFormHealth = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyHolderName"
                   control={control}

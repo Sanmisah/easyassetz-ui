@@ -34,8 +34,8 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  company: z.string().optional(),
-  model: z.string().optional(),
+  company: z.string().nonempty({ message: "Company is required" }),
+  model: z.string().nonempty({ message: "Model is required" }),
   // hufShare: z.string().optional(),
   // additionalInformation: z.string().optional(),
   name: z.string().optional(),
@@ -172,6 +172,7 @@ const WatchEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="company">Name of Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="company"
                   control={control}
@@ -191,6 +192,7 @@ const WatchEditForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="model">Model</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="model"
                   control={control}

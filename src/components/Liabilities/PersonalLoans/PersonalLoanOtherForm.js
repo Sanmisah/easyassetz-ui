@@ -34,18 +34,13 @@ const schema = z.object({
   loanAccountNumber: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  branch: z.string().optional(),
+  branch: z.any().optional(),
   emiDate: z.date({ message: "EMI Date is required" }),
   startDate: z.date({ message: "Start Date is required" }),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
-  guarantorMobile: z
-    .string()
-    .nonempty({ message: "Guarantor Mobile is required" }),
-  guarantorEmail: z
-    .string()
-    .email({ message: "Invalid Email" })
-    .nonempty({ message: "Guarantor Email is required" }),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
+  guarantorMobile: z.any().optional(),
+  guarantorEmail: z.any().optional(),
 });
 
 const PersonalLoanOtherForm = () => {
@@ -84,7 +79,7 @@ const PersonalLoanOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");
-      toast.success("Loan added successfully!");
+      toast.success("Personal Loan added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -95,18 +90,22 @@ const PersonalLoanOtherForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    const date = new Date(data.emiDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.emiDate = newdate;
-    const date1 = new Date(data.startDate);
-    const month1 = String(date1.getMonth() + 1).padStart(2, "0");
-    const day1 = String(date1.getDate()).padStart(2, "0");
-    const year1 = date1.getFullYear();
-    const newdate1 = `${month1}/${day1}/${year1}`;
-    data.startDate = newdate1;
+    if (data.emiDate) {
+      const date = new Date(data.emiDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.emiDate = newdate;
+    }
+    if (data.startDate) {
+      const date1 = new Date(data.startDate);
+      const month1 = String(date1.getMonth() + 1).padStart(2, "0");
+      const day1 = String(date1.getDate()).padStart(2, "0");
+      const year1 = date1.getFullYear();
+      const newdate1 = `${month1}/${day1}/${year1}`;
+      data.startDate = newdate1;
+    }
     loanMutate.mutate(data);
   };
 
@@ -115,11 +114,16 @@ const PersonalLoanOtherForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">Loan Details</CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Loan.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/personalloan")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Personal Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Personal Loan.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -131,6 +135,7 @@ const PersonalLoanOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank/Institution</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -151,6 +156,7 @@ const PersonalLoanOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="loanAccountNumber"
                   control={control}
@@ -195,6 +201,7 @@ const PersonalLoanOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -208,6 +215,7 @@ const PersonalLoanOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

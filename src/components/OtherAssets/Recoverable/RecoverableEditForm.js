@@ -35,14 +35,18 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  nameOfBorrower: z.string().optional(),
-  address: z.string().optional(),
-  contactNumber: z.string().optional(),
+  nameOfBorrower: z
+    .string()
+    .nonempty({ message: "Bank/Institution Name is required" }),
+  address: z.string().nonempty({ message: "Loan Account Number is required" }),
+  contactNumber: z.string().min(1, { message: "Contact Number is required" }),
   modeOfLoan: z.any().optional(),
   amount: z.any().optional(),
   dueDate: z.any().optional(),
-  additionalInformation: z.string().optional(),
+  additionalInformation: z.any().optional(),
   type: z.any().optional(),
+  chequeNumber: z.any().optional(),
+  chequeIssuingBank: z.any().optional(),
   // hufShare: z.string().optional(),
   // name: z.string().optional(),
   // email: z.string().optional(),
@@ -53,6 +57,7 @@ const RecoverableEditForm = () => {
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
+  const [showChequefields, setShowChequefields] = useState(false);
   const queryClient = useQueryClient();
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
@@ -101,6 +106,11 @@ const RecoverableEditForm = () => {
     // setValue("name", data.name);
     // setValue("email", data.email);
     setValue("contactNumber", data.contactNumber);
+    setValue("chequeNumber", data.chequeNumber);
+    setValue("chequeIssuingBank", data.chequeIssuingBank);
+    if (data.modeOfLoan === "cheque") {
+      setShowChequefields(true);
+    }
     return response.data.data.OtherAsset;
   };
 
@@ -156,7 +166,9 @@ const RecoverableEditForm = () => {
   const onSubmit = (data) => {
     console.log(data);
     // data.type = "huf";
-    data.dueDate = formatDate(data.dueDate);
+    if (data.dueDate) {
+      data.dueDate = formatDate(data.dueDate);
+    }
     // data.startDate = formatDate(data.startDate);
     // data.type = "vehicle";
     loanMutate.mutate(data);
@@ -170,13 +182,16 @@ const RecoverableEditForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Recoverable Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the Recoverable details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/recoverable")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Recoverable Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the Recoverable details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -188,6 +203,7 @@ const RecoverableEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nameOfBorrower">Name of Borrower</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="nameOfBorrower"
                   control={control}
@@ -209,6 +225,7 @@ const RecoverableEditForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="address">Address</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address"
                   control={control}
@@ -228,6 +245,7 @@ const RecoverableEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="contactNumber">Contact Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="contactNumber"
                 control={control}
@@ -261,7 +279,7 @@ const RecoverableEditForm = () => {
                     defaultValue={Benifyciary?.modeOfLoan || ""}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      setShowOtherArticleDetails(value === "other");
+                      setShowChequefields(value === "cheque");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -290,6 +308,53 @@ const RecoverableEditForm = () => {
                 </span>
               )}
             </div>
+            {showChequefields && (
+              <>
+                <div className="space-y-2">
+                  <Label>Cheque Number</Label>
+                  <Controller
+                    name="chequeNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeNumber"
+                        placeholder="Enter cheque number"
+                        {...field}
+                        className={errors.chequeNumber ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.chequeNumber && (
+                    <span className="text-red-500">
+                      {errors.chequeNumber.message}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Label>Cheque issuing Bank</Label>
+                  <Controller
+                    name="chequeIssuingBank"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeIssuingBank"
+                        placeholder="Enter cheque issuing bank"
+                        {...field}
+                        className={
+                          errors.chequeIssuingBank ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.chequeIssuingBank && (
+                    <span className="text-red-500">
+                      {errors.chequeIssuingBank.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
               <Controller

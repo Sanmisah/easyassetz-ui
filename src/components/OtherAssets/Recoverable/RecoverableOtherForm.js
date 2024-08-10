@@ -28,26 +28,27 @@ import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 
-
 const schema = z.object({
   nameOfBorrower: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
   address: z.string().nonempty({ message: "Loan Account Number is required" }),
-  contactNumber: z.string().optional(),
+  contactNumber: z.string().min(1, { message: "Contact Number is required" }),
   modeOfLoan: z.any().optional(),
   amount: z.any().optional(),
   dueDate: z.any().optional(),
-  additionalInformation: z
-    .string()
-    .nonempty({ message: "Guarantor Name is required" }),
+  additionalInformation: z.any().optional(),
   type: z.any().optional(),
+  chequeNumber: z.any().optional(),
+  chequeIssuingBank: z.any().optional(),
 });
 
 const RecoverableOtherForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
+  const [contactNumber, setContactNumber] = useState("");
+  const [ShowCheckfields, setShowCheckfields] = useState(false);
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -90,12 +91,14 @@ const RecoverableOtherForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    const date = new Date(data.dueDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.dueDate = newdate;
+    if (data.dueDate) {
+      const date = new Date(data.dueDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.dueDate = newdate;
+    }
     data.type = "recoverable";
     loanMutate.mutate(data);
   };
@@ -105,11 +108,16 @@ const RecoverableOtherForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">Recoverable</CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Recoverable.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/recoverable")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Recoverable
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Recoverable.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -121,6 +129,7 @@ const RecoverableOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nameOfBorrower">Name of Borrower</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="nameOfBorrower"
                   control={control}
@@ -141,6 +150,7 @@ const RecoverableOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address">Address</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address"
                   control={control}
@@ -160,6 +170,7 @@ const RecoverableOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="contactNumber">Contact Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="contactNumber"
                 control={control}
@@ -194,6 +205,7 @@ const RecoverableOtherForm = () => {
                     onValueChange={(value) => {
                       field.onChange(value);
                       // setShowOtherJointName(value === "joint");
+                      setShowCheckfields(value === "cheque");
                     }}
                     className="flex items-center gap-2"
                   >
@@ -202,8 +214,8 @@ const RecoverableOtherForm = () => {
                       <Label htmlFor="Cash">Cash</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <RadioGroupItem id="Cheque" value="Cheque" />
-                      <Label htmlFor="Cheque">Cheque</Label>
+                      <RadioGroupItem id="cheque" value="cheque" />
+                      <Label htmlFor="cheque">Cheque</Label>
                     </div>
                   </RadioGroup>
                 )}
@@ -214,6 +226,52 @@ const RecoverableOtherForm = () => {
                 </span>
               )}
             </div>
+            {ShowCheckfields && (
+              <>
+                <div className="space-y-2">
+                  <Label>Cheque Number</Label>
+                  <Controller
+                    name="chequeNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeNumber"
+                        placeholder="Enter cheque number"
+                        {...field}
+                        className={errors.chequeNumber ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.chequeNumber && (
+                    <span className="text-red-500">
+                      {errors.chequeNumber.message}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Label>Cheque issuing Bank</Label>
+                  <Controller
+                    name="chequeIssuingBank"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="chequeIssuingBank"
+                        placeholder="Enter cheque issuing bank"
+                        {...field}
+                        className={
+                          errors.chequeIssuingBank ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  />
+                  {errors.chequeIssuingBank && (
+                    <span className="text-red-500">
+                      {errors.chequeIssuingBank.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
               <Controller

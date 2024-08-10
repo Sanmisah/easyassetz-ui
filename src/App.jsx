@@ -2,6 +2,8 @@ import { useState } from "react";
 import Loginpage from "@/Pages/Login/LoginPage";
 import Personalpage from "@/Pages/personaldetailpage/Personalpage";
 import { Routes, Route } from "react-router-dom";
+import ForgetPassword from "./components/Forgetpassword/ForgetPassword";
+import ForgetPasswordEmail from "./components/Forgetpassword/ForgetPasswordEmail";
 import { Toaster, toast } from "sonner";
 function App() {
   return (
@@ -181,9 +183,13 @@ function App() {
         <Route path="/jwellery/add" element={<Personalpage />} />
         <Route path="/jwellery/edit" element={<Personalpage />} />
         <Route path="/assetdistribution" element={<Personalpage />} />
-
+        <Route path="/forgetpassword" element={<ForgetPassword />} />
         <Route path="/assetallocation" element={<Personalpage />} />
         <Route path="/summery" element={<Personalpage />} />
+        <Route path="/forgetpasswordEmail" element={<ForgetPasswordEmail />} />
+        <Route path="/other-deposits" element={<Personalpage />} />
+        <Route path="/other-deposits/add" element={<Personalpage />} />
+        <Route path="/other-deposits/edit" element={<Personalpage />} />
       </Routes>
     </div>
   );

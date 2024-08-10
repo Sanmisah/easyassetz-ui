@@ -32,15 +32,13 @@ import cross from "@/components/image/close.png";
 
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
-  companyAddress: z
-    .string()
-    .nonempty({ message: "Company Address is required" }),
+  companyAddress: z.string().optional(),
   firmsRegistrationNumber: z
     .string()
     .min(2, { message: " Company Registration is required" }),
 
-  myStatus: z.string().nonempty({ message: "My Status is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+  myStatus: z.string().optional(),
+  holdingType: z.string().optional(),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z
@@ -48,9 +46,9 @@ const schema = z.object({
   //   .nonempty({ message: "Document Availability is required" }),
   additionalInformation: z.string().optional(),
   typeOfInvestment: z.string().optional(),
-  name: z.string().nonempty({ message: "Name is required" }),
-  mobile: z.string().nonempty({ message: "Mobile is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  name: z.string().optional(),
+  mobile: z.string().optional(),
+  email: z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -116,7 +114,7 @@ const CompanyForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Other Insurance added successfully!");
+      toast.success("Company added successfully!");
       navigate("/company");
     },
     onError: (error) => {
@@ -162,13 +160,16 @@ const CompanyForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Company Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Company.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/businessasset")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Company Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Company.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -179,6 +180,7 @@ const CompanyForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="companyName"
                 control={control}
@@ -244,6 +246,7 @@ const CompanyForm = () => {
                 <Label htmlFor="firmsRegistrationNumber">
                   Company Registration
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumberType"
                   control={control}
@@ -278,7 +281,7 @@ const CompanyForm = () => {
                       <Input
                         {...field}
                         className="mt-2"
-                        value={field.value || ""}
+                        value={field.value?.toUpperCase() || ""}
                         onChange={field.onChange}
                       />
                     )}

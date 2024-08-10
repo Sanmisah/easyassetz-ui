@@ -37,28 +37,26 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  cryptoWalletType: z
-    .string()
-    .nonempty({ message: "Wallet type is required required" }),
-  otherCryptoWalletType: z.string().optional(),
+  cryptoWalletType: z.any().optional(),
+  otherCryptoWalletType: z.any().optional(),
   cryptoWalletAddress: z
     .string()
     .nonempty({ message: "Crypto Wallet Address is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
-  exchange: z.string().nonempty({ message: "exchange is required required" }),
-  otherExchange: z.string().optional(),
+  holdingType: z.any().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
+  exchange: z.any().optional(),
+  otherExchange: z.any().optional(),
   tradingAccount: z
     .string()
     .nonempty({ message: "Trading Account is required" }),
-  typeOfCurrency: z.string().optional(),
-  otherTypeOfCurrency: z.string().optional(),
-  holdingQty: z.string().optional(),
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z.string().optional(),
-  additionalDetails: z.string().optional(),
+  typeOfCurrency: z.any().optional(),
+  otherTypeOfCurrency: z.any().optional(),
+  holdingQty: z.any().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
+  additionalDetails: z.any().optional(),
 });
 
 const EditCryptoForm = () => {
@@ -233,7 +231,7 @@ const EditCryptoForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("lifeinsurance added successfully!");
+      toast.success("Crypto added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -279,13 +277,16 @@ const EditCryptoForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the insurance policy details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/crypto")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the insurance policy details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -352,6 +353,7 @@ const EditCryptoForm = () => {
                 <Label htmlFor="cryptoWalletAddress">
                   Crypto Wallet Address
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="cryptoWalletAddress"
                   control={control}
@@ -432,6 +434,7 @@ const EditCryptoForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="tradingAccount">Trading Account</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="tradingAccount"
                   defaultValue={new Date(Benifyciary?.tradingAccount) || ""}

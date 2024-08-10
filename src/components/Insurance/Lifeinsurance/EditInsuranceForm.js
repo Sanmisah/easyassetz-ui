@@ -41,52 +41,26 @@ const schema = z.object({
   insuranceType: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  policyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  policyNumber: z.string().min(2, { message: "Policy Number is required" }),
   maturityDate: z.any().optional(),
-  premium: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Premium must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
-  sumInsured: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Sum Insured must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
+  premium: z.string().optional(),
+  sumInsured: z.string().optional(),
   policyHolderName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
   relationship: z.string().nonempty({ message: "Relationship is required" }),
   otherRelationship: z.string().optional(),
-  modeOfPurchase: z.any().optional(),
+  modeOfPurchase: z
+    .string()
+    .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
   email: z.string().optional(),
   registeredMobile: z.string().optional(),
   registeredEmail: z.any().optional(),
   additionalDetails: z.string().optional(),
+  previousPolicyNumber: z.string().optional(),
   brokerName: z.string().optional(),
-  previousPolicyNumber: z
-    .string()
-    .transform((value) => (value === "" ? null : value))
-    .nullable()
-    .refine((value) => value === null || !isNaN(Number(value)), {
-      message: "Previous Policy Number must be a number",
-    })
-    .transform((value) => (value === null ? null : Number(value))),
 });
 
 const EditMotorForm = () => {
@@ -237,7 +211,7 @@ const EditMotorForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("lifeinsurance added successfully!");
+      toast.success("Life Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -268,12 +242,14 @@ const EditMotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    const date = new Date(data.maturityDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
+    if (data.maturityDate) {
+      const date = new Date(data.maturityDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.maturityDate = newdate;
+    }
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
@@ -288,13 +264,16 @@ const EditMotorForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Life Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Life Insurance Policy Details.
-              </CardDescription>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+              <Button onClick={() => navigate("/lifeinsurance")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Life Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the Life Insurance Policy Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -306,6 +285,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -358,6 +338,7 @@ const EditMotorForm = () => {
               {console.log(Benifyciary)}
               <div className="space-y-2">
                 <Label htmlFor="insuranceType">Insurance Sub Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -383,6 +364,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -406,6 +388,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   defaultValues={new Date(Benifyciary?.maturityDate) || ""}
@@ -473,6 +456,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyHolderName"
                   control={control}
@@ -497,6 +481,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="relationship">Relationship</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="relationship"
                   defaultValue={Benifyciary?.relationship || ""}

@@ -131,9 +131,12 @@ const GratuityMainForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-2xl font-bold">
-                Gratuity Details
-              </CardTitle>
+              <Button onClick={() => navigate("/gratuity")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Gratuity Details
+                </CardTitle>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -145,6 +148,7 @@ const GratuityMainForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="employerName">Employer Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="employerName"
                   control={control}
@@ -168,6 +172,7 @@ const GratuityMainForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="employerId">Employer Id</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="employerId"
                 control={control}

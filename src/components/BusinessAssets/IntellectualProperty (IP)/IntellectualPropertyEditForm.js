@@ -31,16 +31,12 @@ import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  typeOfIp: z
-    .string()
-    .min(3, { message: "Intellectual Property Type is required" }),
+  typeOfIp: z.any().optional(),
   firmsRegistrationNumber: z
     .string()
     .min(3, { message: "Registration Number is required" }),
   whetherAssigned: z.string().optional(),
-  nameOfAssignee: z
-    .string()
-    .nonempty({ message: "Name of assignee is required" }),
+  nameOfAssignee: z.any().optional(),
 });
 
 const IntellectualPropertyOtherForm = () => {
@@ -50,6 +46,7 @@ const IntellectualPropertyOtherForm = () => {
   const user = JSON.parse(getitem);
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [showOtherArticleDetails, setShowOtherArticleDetails] = useState(false);
+  const [weather, setWeather] = useState(false);
   const { lifeInsuranceEditId } = useSelector((state) => state.counterSlice);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -84,6 +81,10 @@ const IntellectualPropertyOtherForm = () => {
         },
       }
     );
+    const data = response.data.data.BusinessAsset;
+    setWeather(data.whetherAssigned === "yes");
+    setValue("nameOfAssignee", data.nameOfAssignee);
+    setValue("dateOfAssignment", data.dateOfAssignment);
 
     return response.data.data.BusinessAsset;
   };
@@ -144,7 +145,7 @@ const IntellectualPropertyOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("BullionDataUpdate", lifeInsuranceEditId);
-      toast.success("Propritership added successfully!");
+      toast.success("Intellectual Property added successfully!");
       navigate("/intellectualproperty");
     },
     onError: (error) => {
@@ -180,13 +181,18 @@ const IntellectualPropertyOtherForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Propritership Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the bullion details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/intellectualproperty")}>
+                Back
+              </Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Intellectual Property Details
+                </CardTitle>
+                <CardDescription>
+                  Edit the form to update the bullion details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -238,6 +244,7 @@ const IntellectualPropertyOtherForm = () => {
                 <Label htmlFor="firmsRegistrationNumber">
                   Registration Number
                 </Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumber"
                   control={control}
@@ -268,6 +275,7 @@ const IntellectualPropertyOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="expiryDate"
                   control={control}
@@ -302,6 +310,7 @@ const IntellectualPropertyOtherForm = () => {
                         onValueChange={(value) => {
                           field.onChange(value);
                           setShowOtherArticleDetails(value === "other");
+                          setWeather(value === "yes");
                         }}
                         className="flex items-center gap-2"
                       >
@@ -335,55 +344,63 @@ const IntellectualPropertyOtherForm = () => {
                   )}
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="nameOfAssignee">Name of Assignee</Label>
-                <Controller
-                  name="nameOfAssignee"
-                  control={control}
-                  defaultValue={Benifyciary?.nameOfAssignee || ""}
-                  render={({ field }) => (
-                    <Input
-                      id="nameOfAssignee"
-                      placeholder="Enter Name of Assignee"
-                      {...field}
-                      className={errors.nameOfAssignee ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.nameOfAssignee || ""}
-                    />
-                  )}
-                />
-                {errors.nameOfAssignee && (
-                  <span className="text-red-500">
-                    {errors.nameOfAssignee.message}
-                  </span>
-                )}
-              </div>
             </div>
-            <div className="w-full grid grid-cols-1 gap-4 mt-4">
-              <div className="space-y-2">
-                <Label htmlFor="dateOfAssignment">Date of Assignment</Label>
-                <Controller
-                  name="dateOfAssignment"
-                  control={control}
-                  defaultValue={Benifyciary?.dateOfAssignment || ""}
-                  render={({ field }) => (
-                    <Datepicker
-                      {...field}
-                      onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      defaultValue={
-                        new Date(Benifyciary?.dateOfAssignment) || ""
-                      }
-                      value={field.value || Benifyciary?.dateOfAssignment || ""}
-                    />
+            {weather && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="nameOfAssignee">Name of Assignee</Label>
+                  <Controller
+                    name="nameOfAssignee"
+                    control={control}
+                    defaultValue={Benifyciary?.nameOfAssignee || ""}
+                    render={({ field }) => (
+                      <Input
+                        id="nameOfAssignee"
+                        placeholder="Enter Name of Assignee"
+                        {...field}
+                        className={
+                          errors.nameOfAssignee ? "border-red-500" : ""
+                        }
+                        defaultValue={Benifyciary?.nameOfAssignee || ""}
+                      />
+                    )}
+                  />
+                  {errors.nameOfAssignee && (
+                    <span className="text-red-500">
+                      {errors.nameOfAssignee.message}
+                    </span>
                   )}
-                />
-                {errors.dateOfAssignment && (
-                  <span className="text-red-500">
-                    {errors.dateOfAssignment.message}
-                  </span>
-                )}
-              </div>
-            </div>
+                </div>
+                <div className="w-full grid grid-cols-1 gap-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="dateOfAssignment">Date of Assignment</Label>
+                    <Controller
+                      name="dateOfAssignment"
+                      control={control}
+                      defaultValue={Benifyciary?.dateOfAssignment || ""}
+                      render={({ field }) => (
+                        <Datepicker
+                          {...field}
+                          onChange={(date) => field.onChange(date)}
+                          selected={field.value}
+                          defaultValue={
+                            new Date(Benifyciary?.dateOfAssignment) || ""
+                          }
+                          value={
+                            field.value || Benifyciary?.dateOfAssignment || ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.dateOfAssignment && (
+                      <span className="text-red-500">
+                        {errors.dateOfAssignment.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

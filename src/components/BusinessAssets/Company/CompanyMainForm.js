@@ -67,7 +67,7 @@ const CompanyMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("   Intellectual Property deleted successfully!");
+    toast.success("Company deleted successfully!");
   };
 
   return (

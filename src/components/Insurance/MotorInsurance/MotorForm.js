@@ -50,7 +50,7 @@ const schema = z.object({
   modeOfPurchase: z.string().optional(),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }).optional(),
+  email: z.any().optional(),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
@@ -173,12 +173,14 @@ const MotorForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    const date = new Date(data.expiryDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.expiryDate = newdate;
+    if (data.expiryDate) {
+      const date = new Date(data.expiryDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.expiryDate = newdate;
+    }
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
@@ -202,13 +204,16 @@ const MotorForm = () => {
       <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Motor Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Motor Insurance Policy.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/motorinsurance")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Motor Insurance Policy Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add a new Motor Insurance Policy.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -219,7 +224,8 @@ const MotorForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label htmlFor="insurance-company">Insurance Company</Label>.
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -245,6 +251,11 @@ const MotorForm = () => {
                     </Select>
                   )}
                 />
+                {errors.companyName && (
+                  <span className="text-red-500">
+                    {errors.companyName.message}
+                  </span>
+                )}
                 {showOtherInsuranceCompany && (
                   <Controller
                     name="otherInsuranceCompany"
@@ -258,14 +269,10 @@ const MotorForm = () => {
                     )}
                   />
                 )}
-                {errors.insuranceCompany && (
-                  <span className="text-red-500">
-                    {errors.companyName.message}
-                  </span>
-                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -292,6 +299,7 @@ const MotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -311,7 +319,8 @@ const MotorForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Expiry Date</Label>
+                <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="expiryDate"
                   control={control}
@@ -332,6 +341,7 @@ const MotorForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="premium">Premium</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="premium"
                 control={control}
@@ -352,6 +362,7 @@ const MotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Insurer Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insurerName"
                   control={control}
@@ -372,6 +383,7 @@ const MotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vehicleType">Vehical Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="vehicleType"
                   control={control}

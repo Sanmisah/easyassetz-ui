@@ -67,7 +67,7 @@ const ResidentialMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("ResidentialProperty deleted successfully!");
+    toast.success("Residential Property deleted successfully!");
   };
 
   return (

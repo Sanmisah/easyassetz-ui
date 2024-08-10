@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { useSelector } from "react-redux";
 
 const schema = z.object({
   bankName: z
@@ -28,10 +29,10 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.string().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
-  duration: z.string().nonempty({ message: "Duration is required" }),
-  guarantorName: z.string().nonempty({ message: "Guarantor Name is required" }),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
+  duration: z.any().optional(),
+  guarantorName: z.any().optional(),
   guarantorMobile: z
     .string()
     .nonempty({ message: "Guarantor Mobile is required" }),
@@ -47,7 +48,6 @@ const OtherLoansEditForm = () => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
-
   const {
     handleSubmit,
     control,
@@ -67,38 +67,72 @@ const OtherLoansEditForm = () => {
       guarantorEmail: "",
     },
   });
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(
+      `/api/other-loans/${lifeInsuranceEditId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      }
+    );
+    let othertype = response.data.data.OtherLoan?.guarantorName;
+    if (othertype === "other") {
+      setShowOtherGuarantor(true);
+    }
+    const data = response.data.data.OtherLoan;
+    setValue("bankName", data.bankName);
+    setValue("loanAccountNo", data.loanAccountNo);
+    setValue("branch", data.branch);
+    setValue("emiDate", data.emiDate);
+    setValue("startDate", data.startDate);
+    setValue("duration", data.duration);
+    setValue("guarantorName", data.guarantorName);
+    setValue("guarantorMobile", data.guarantorMobile);
+    setValue("guarantorEmail", data.guarantorEmail);
+    return response.data.data.OtherLoan;
+  };
 
   const {
-    data: loanData,
+    data: Benifyciary,
     isLoading,
     isError,
-  } = useQuery(
-    ["loanData", id],
-    async () => {
-      const response = await axios.get(
-        `/api/other-loans/${lifeInsuranceEditId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
-      return response.data.data.OtherLoan;
+  } = useQuery({
+    queryKey: ["lifeInsuranceDataUpdate", lifeInsuranceEditId],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      setDefaultValues(data);
+      reset(data);
+      setValue(data);
+      setValue("bankName", data.bankName);
+      setValue("loanAccountNo", data.loanAccountNo);
+      setValue("branch", data.branch);
+      setValue("emiDate", data.emiDate);
+      setValue("startDate", data.startDate);
+      setValue("duration", data.duration);
+      setValue("guarantorName", data.guarantorName);
+      setValue("guarantorMobile", data.guarantorMobile);
+      setValue("guarantorEmail", data.guarantorEmail);
+      if (data.guarantorName === "other") {
+        setShowOtherGuarantor(true);
+      }
+      if (data.guarantorMobile === "other") {
+        setShowOtherGuarantor(true);
+      }
+      if (data.guarantorEmail === "other") {
+        setShowOtherGuarantor(true);
+      }
+      if (data.guarantorName === "other") {
+        setShowOtherGuarantor(true);
+      }
     },
-    {
-      onSuccess: (data) => {
-        Object.keys(data).forEach((key) => {
-          if (schema.shape[key]) {
-            setValue(key, data[key]);
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("Error fetching loan data:", error);
-        toast.error("Failed to fetch loan data");
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch data");
+    },
+  });
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
@@ -115,7 +149,7 @@ const OtherLoansEditForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
-      toast.success("Loan updated successfully!");
+      toast.success("Other Loans updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -134,27 +168,34 @@ const OtherLoansEditForm = () => {
       return `${month}/${day}/${year}`;
     };
 
-    data.emiDate = formatDate(data.emiDate);
-    data.startDate = formatDate(data.startDate);
+    if (data.emiDate) {
+      data.emiDate = formatDate(data.emiDate);
+    }
+    if (data.startDate) {
+      data.startDate = formatDate(data.startDate);
+    }
 
     loanMutate.mutate(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading loan data</div>;
+  if (isError) return <div>Error loading Other Loans data</div>;
 
   return (
     <div className="w-full">
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Loan Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the loan details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/loan")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Other Loan Details
+                </CardTitle>
+                <CardDescription>
+                  Update the form to edit the other loan details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -166,6 +207,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank/Institution</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -186,6 +228,7 @@ const OtherLoansEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="loanAccountNo">Loan Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="loanAccountNo"
                   control={control}
@@ -228,6 +271,7 @@ const OtherLoansEditForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -241,6 +285,7 @@ const OtherLoansEditForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}
