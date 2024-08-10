@@ -199,7 +199,6 @@ const VehicleLoanOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -213,7 +212,6 @@ const VehicleLoanOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

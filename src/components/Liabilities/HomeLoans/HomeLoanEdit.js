@@ -29,8 +29,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.any().optional(),
-  emiDate: z.string().nonempty({ message: "EMI Date is required" }),
-  startDate: z.string().nonempty({ message: "Start Date is required" }),
+  emiDate: z.any().optional(),
+  startDate: z.any().optional(),
   duration: z.any().optional(),
   guarantorName: z.any().optional(),
   guarantorMobile: z.any().optional(),

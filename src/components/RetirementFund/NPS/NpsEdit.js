@@ -33,7 +33,7 @@ import cross from "@/components/image/close.png";
 const schema = z.object({
   PRAN: z.string().nonempty({ message: "PRAN is required" }),
   natureOfHolding: z.any().optional(),
-  jointHolderName: z.string().optional(),
+  jointHolderName: z.any().optional(),
   additionalDetails: z.any().optional(),
   name: z.any().optional(),
   email: z.any().optional(),

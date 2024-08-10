@@ -164,7 +164,7 @@ const EditMotorForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("motorinsurance added successfully!");
+      toast.success("Bank Locker added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -210,13 +210,16 @@ const EditMotorForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Motor Insurance Policy Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Motor Insurance policy details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/banklocker")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Bank Locker Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to edit the bank locker details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -228,6 +231,7 @@ const EditMotorForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Bank Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -274,6 +278,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label>Branch</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="branch"
                   control={control}
@@ -292,6 +297,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label>Locker Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="lockerNumber"
                   control={control}
@@ -312,6 +318,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label>Rent Due</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="rentDueDate"
                   control={control}
@@ -331,6 +338,7 @@ const EditMotorForm = () => {
               </div>
               <div className="space-y-2 col-span-full">
                 <Label>Holding Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="natureOfHolding"
                   control={control}

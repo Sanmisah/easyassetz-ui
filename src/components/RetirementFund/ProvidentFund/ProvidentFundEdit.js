@@ -35,8 +35,10 @@ const schema = z.object({
   uanNumber: z.string().nonempty({ message: "UAN Number is required" }),
   branch: z.string().optional(),
   bankName: z.string().nonempty({ message: "Bank Name is required" }),
-  branch: z.string().optional(),
-  bankAccountNumber: z.string().optional(),
+  branch: z.any().optional(),
+  bankAccountNumber: z
+    .string()
+    .nonempty({ message: "Bank Account Number is required" }),
   additionalDetails: z.any().optional(),
   name: z.any().optional(),
   mobile: z.any().optional(),
@@ -209,6 +211,7 @@ const ProvidentFundEditForm = ({}) => {
           >
             <div className="space-y-2">
               <Label htmlFor="employerName">Employer Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="employerName"
                 control={control}
@@ -230,6 +233,7 @@ const ProvidentFundEditForm = ({}) => {
 
             <div className="space-y-2">
               <Label htmlFor="uanNumber">UAN Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="uanNumber"
                 control={control}
@@ -249,6 +253,7 @@ const ProvidentFundEditForm = ({}) => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="bankName">Bank Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="bankName"
                 control={control}
@@ -287,6 +292,7 @@ const ProvidentFundEditForm = ({}) => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="bankAccountNumber">Bank Account Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="bankAccountNumber"
                 control={control}

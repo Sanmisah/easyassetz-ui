@@ -225,13 +225,16 @@ const PSDAEditForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Postal Saving Account Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Postal Saving Account details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/psad")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Postal Saving Account Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to edit the Postal Saving Account Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -242,6 +245,7 @@ const PSDAEditForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="accountNumber">Account</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="accountNumber"
                 control={control}
@@ -331,6 +335,7 @@ const PSDAEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="holdingType">Nature of Holding</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="holdingType"
                 control={control}

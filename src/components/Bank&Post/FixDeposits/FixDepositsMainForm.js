@@ -71,7 +71,7 @@ const FixDepositsMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Motor Insurance deleted successfully!");
+    toast.success("Fix Deposit deleted successfully!");
   };
 
   return (
