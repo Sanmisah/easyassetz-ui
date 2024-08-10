@@ -38,7 +38,7 @@ const schema = z.object({
   maturityAmount: z.any().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
-  holdingType: z.string().optional(),
+  holdingType: z.any().optional(),
   additionalDetails: z.any().optional(),
   name: z.any().optional(),
   mobile: z.any().optional(),
@@ -165,7 +165,7 @@ const PpfEditForm = ({}) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("PublicProvidentFund");
-      toast.success("Public Providend Fund details updated successfully!");
+      toast.success("Other Deposit details updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -199,13 +199,16 @@ const PpfEditForm = ({}) => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Edit Other Deposits Details
-              </CardTitle>
-              <CardDescription>
-                Update the form to edit the Other Deposits details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/other-deposits")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Other Deposits Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to edit the Other Deposits Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -216,6 +219,7 @@ const PpfEditForm = ({}) => {
           >
             <div className="space-y-2">
               <Label htmlFor="fdNumber">FD Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="fdNumber"
                 control={control}
@@ -235,6 +239,7 @@ const PpfEditForm = ({}) => {
 
             <div className="space-y-2">
               <Label htmlFor="company">Company</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="company"
                 control={control}

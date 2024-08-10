@@ -41,10 +41,10 @@ const schema = z.object({
   branchName: z.string().optional(),
   maturityDate: z.any().optional(),
   maturityAmount: z.any().optional(),
-  holdingType: z.string().optional(),
+  holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
-  additionalDetails: z.string().optional(),
+  additionalDetails: z.any().optional(),
 });
 
 const BankEditForm = () => {

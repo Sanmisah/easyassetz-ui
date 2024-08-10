@@ -201,7 +201,7 @@ const EditMotorForm = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("motorinsurance added successfully!");
+      toast.success("Bank Account updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -256,13 +256,16 @@ const EditMotorForm = () => {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Bank Account Details
-              </CardTitle>
-              <CardDescription>
-                Edit the form to update the Bank Account details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/bankaccount")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Edit Bank Account Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to edit new bank account details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -422,6 +425,7 @@ const EditMotorForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="holdingType">Nature of Holding</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="holdingType"
                 control={control}

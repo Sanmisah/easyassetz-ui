@@ -35,8 +35,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.any().optional(),
-  emiDate: z.date({ message: "EMI Date is required" }),
-  startDate: z.date({ message: "Start Date is required" }),
+  emiDate: z.any({ message: "EMI Date is required" }),
+  startDate: z.any({ message: "Start Date is required" }),
   duration: z.any().optional(),
   guarantorName: z.any().optional(),
   guarantorMobile: z.any().optional(),
@@ -79,7 +79,7 @@ const OtherLoanOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LoanData");
-      toast.success("OtherLoan added successfully!");
+      toast.success("Other Loan added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -199,7 +199,6 @@ const OtherLoanOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -213,7 +212,6 @@ const OtherLoanOtherForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

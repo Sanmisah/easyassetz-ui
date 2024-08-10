@@ -34,7 +34,7 @@ const schema = z.object({
   fixDepositeNumber: z
     .string()
     .nonempty({ message: "Bank/Post Name is required" }),
-  bankName: z.string().optional(),
+  bankName: z.string().nonempty({ message: "Bank Name is required" }),
   branchName: z.string().optional(),
   maturityDate: z.any().optional(),
   maturityAmount: z.any().optional(),
@@ -93,7 +93,7 @@ const BankAccountForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("PpfData");
-      toast.success("PPF details added successfully!");
+      toast.success("Fix Deposit added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -120,13 +120,16 @@ const BankAccountForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Fix Deposit Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add new Fix Deposit Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/fixdeposit")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Fix Deposit Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add new Fix Deposit Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -138,6 +141,7 @@ const BankAccountForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="fixDepositeNumber">FD Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="fixDepositeNumber"
                   control={control}
@@ -160,6 +164,7 @@ const BankAccountForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="bankName">Name of Bank</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -200,6 +205,7 @@ const BankAccountForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturityDate">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   control={control}

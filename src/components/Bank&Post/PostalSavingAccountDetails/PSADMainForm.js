@@ -74,9 +74,9 @@ const PSADMainForm = () => {
     <div className="w-[100%] bg-white">
       <div className="flex flex-col w-[100%] ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Post Saving Scheme</h1>
+          <h1 className="text-2xl font-bold">Post Saving Account Details</h1>
           <Button onMouseDown={() => navigate("/psad/add")}>
-            Add Post Saving Scheme
+            Add Post Saving Account Details
           </Button>
           {alertDialog && (
             <DeleteAlert

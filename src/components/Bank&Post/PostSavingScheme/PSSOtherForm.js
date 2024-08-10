@@ -32,7 +32,7 @@ import cross from "@/components/image/close.png";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  type: z.string().nonempty({ message: "Type is required" }),
+  type: z.string().optional(),
   otherType: z.string().optional(),
   certificateNumber: z.string().nonempty({ message: "Bank Name is required" }),
   maturityDate: z.any().optional(),
@@ -180,13 +180,16 @@ const ppfForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Post Saving Scheme
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Post Saving Scheme.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/pss")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Post Saving Scheme
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add the Post Saving Scheme Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -246,6 +249,7 @@ const ppfForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="certificateNumber">Certificate Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="certificateNumber"
                 control={control}
@@ -326,6 +330,7 @@ const ppfForm = () => {
 
             <div className="space-y-4 flex flex-col">
               <Label className="text-lg font-bold">Holding Type</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="holdingType"
                 defaultValues="single"

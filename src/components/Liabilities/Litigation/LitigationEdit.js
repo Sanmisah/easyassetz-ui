@@ -50,8 +50,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Lawyer's Contact Number is required" }),
   caseFillingDate: z.any().optional(),
-  status: z.string().optional(),
-  additionalInformation: z.string().optional(),
+  status: z.any().optional(),
+  additionalInformation: z.any().optional(),
 });
 
 const LitigationEditForm = () => {
