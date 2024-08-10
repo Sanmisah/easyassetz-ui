@@ -42,13 +42,13 @@ const schema = z.object({
   // bankServiceProvider: z
   //   .string()
   //   .nonempty({ message: "Bank Service Provider is required" }),
-  brokerName: z
+  brokerName: z.string().nonempty({ message: "Broker Name is required" }),
+  brokingAccountNumber: z
     .string()
-    .nonempty({ message: "Wealth Manager Name is required" }),
-  brokingAccountNumber: z.string().optional(),
+    .nonempty({ message: "Broking Account Number is required" }),
   // numberOfDebentures: z
   //   .string()
-  //   .nonempty({ message: "No of Bonds is required" }),
+  //   .nonempty({ message: "No of Debentures is required" }),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
@@ -57,8 +57,8 @@ const schema = z.object({
   natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -302,6 +302,7 @@ const PSSEditForm = () => {
             </div> */}
             <div className="space-y-2">
               <Label htmlFor="brokerName">Broker Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="brokerName"
                 control={control}
@@ -324,6 +325,7 @@ const PSSEditForm = () => {
               <Label htmlFor="brokingAccountNumber">
                 Broking Account Number
               </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="brokingAccountNumber"
                 control={control}
@@ -447,6 +449,7 @@ const PSSEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 control={control}

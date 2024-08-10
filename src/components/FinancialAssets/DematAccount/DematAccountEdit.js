@@ -39,11 +39,11 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  depository: z.string().nonempty({ message: "Depository is required" }),
+  depository: z.any().optional(),
   depositoryName: z
     .string()
     .nonempty({ message: "Depository Name is required" }),
-  depositoryId: z.string().optional(),
+  depositoryId: z.string().nonempty({ message: "Depository ID is required" }),
   accountNumber: z
     .string()
     .nonempty({ message: "Account Number Vested is required" }),
@@ -55,8 +55,8 @@ const schema = z.object({
   natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -309,6 +309,7 @@ const DematAccountEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="depositoryName">Depository Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="depositoryName"
                 control={control}
@@ -329,6 +330,7 @@ const DematAccountEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="depositoryId">Depository ID</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="depositoryId"
                 control={control}
@@ -349,6 +351,7 @@ const DematAccountEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountNumber">Account Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="accountNumber"
                 control={control}
@@ -448,6 +451,7 @@ const DematAccountEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 control={control}

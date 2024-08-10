@@ -33,16 +33,14 @@ import cross from "@/components/image/close.png";
 
 const schema = z.object({
   fundName: z.string().nonempty({ message: "Company Name is required" }),
-  folioNumber: z.string().optional(),
-  numberOfUnits: z.string().nonempty({ message: "No of Shares is required" }),
+  folioNumber: z.string().nonempty({ message: "Folio Number is required" }),
+  numberOfUnits: z.any().optional(),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
   // faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
-  natureOfHolding: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
+  natureOfHolding: z.any().optional(),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z

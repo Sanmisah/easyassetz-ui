@@ -57,8 +57,8 @@ const schema = z.object({
   natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -300,6 +300,7 @@ const PSSEditForm = () => {
             </div> */}
             <div className="space-y-2">
               <Label htmlFor="wealthManagerName">Wealth Manager Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="wealthManagerName"
                 control={control}
@@ -320,6 +321,7 @@ const PSSEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountNumber">Account Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="accountNumber"
                 control={control}
@@ -441,6 +443,7 @@ const PSSEditForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="natureOfHolding">Nature of Holding</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 control={control}
