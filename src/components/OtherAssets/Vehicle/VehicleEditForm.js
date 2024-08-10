@@ -301,7 +301,7 @@ const OtherLoansEditForm = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
+                <Label htmlFor="company">Make</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="company"
@@ -344,7 +344,9 @@ const OtherLoansEditForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Label htmlFor="registrationNumber">
+                  Registration/Vehicle Number
+                </Label>
                 <Controller
                   name="registrationNumber"
                   control={control}
@@ -368,7 +370,7 @@ const OtherLoansEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
+              <Label htmlFor="yearOfManufacture">Year Of Registration</Label>
               <Controller
                 name="yearOfManufacture"
                 control={control}
