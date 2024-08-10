@@ -34,18 +34,18 @@ import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
-  companyAddress: z
+  companyAddress: z.string().optional(),
+  firmsRegistrationNumberType: z
     .string()
-    .nonempty({ message: "Company Address is required" }),
-  firmsRegistrationNumberType: z.string().optional(),
-  firmsRegistrationNumber: z.string().optional(),
-
-  myStatus: z.string().nonempty({ message: "My Status is required" }),
-  holdingType: z.string().nonempty({ message: "Holding Type is required" }),
+    .nonempty({ message: "Firm Registration Number is required" }),
+  firmsRegistrationNumber: z
+    .string()
+    .nonempty({ message: "Firm Registration Number is required" }),
+  myStatus: z.string().optional(),
+  holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
-
-  additionalInformation: z.string().optional(),
+  additionalInformation: z.any().optional(),
   typeOfInvestment: z.string().optional(),
   name: z.string().nonempty({ message: "Name is required" }),
   mobile: z.string().nonempty({ message: "Mobile is required" }),
@@ -168,7 +168,7 @@ const EditFormHealth = () => {
         "lifeInsuranceDataUpdate",
         lifeInsuranceEditId
       );
-      toast.success("Health Insurance updated successfully!");
+      toast.success("Company updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -216,6 +216,7 @@ const EditFormHealth = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="companyName"
                 control={control}
@@ -276,6 +277,7 @@ const EditFormHealth = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 col-span-full">
                 <Label>Company Registration</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="firmsRegistrationNumberType"
                   control={control}
@@ -317,6 +319,7 @@ const EditFormHealth = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
+                        value={field.value?.toUpperCase() || ""}
                         placeholder="Specify Company Registration"
                         className="mt-2"
                       />

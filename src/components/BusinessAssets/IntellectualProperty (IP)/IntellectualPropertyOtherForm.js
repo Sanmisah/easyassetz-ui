@@ -30,15 +30,13 @@ import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import { useDispatch, useSelector } from "react-redux";
 const schema = z.object({
-  typeOfIp: z
-    .string()
-    .min(3, { message: "Intellectual Property Type is required" }),
+  typeOfIp: z.string().optional(),
   firmsRegistrationNumber: z
     .string()
     .min(3, { message: "Registration Number is required" }),
   whetherAssigned: z.string().optional(),
   nameOfAssignee: z.string().optional(),
-  expiryDate: z.date().optional(),
+  expiryDate: z.any().optional(),
   dateOfAssignment: z.any().optional(),
 });
 
@@ -247,6 +245,7 @@ const IntellectualPropertyOtherForm = () => {
 
             <div className="space-y-2">
               <Label htmlFor="expiryDate">Expiry Date</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="expiryDate"
                 control={control}

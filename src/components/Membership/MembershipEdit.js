@@ -36,8 +36,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Organization Name is required" }),
   membershipId: z.string().nonempty({ message: "Membership id is required" }),
-  membershipType: z.string().optional(),
-  membershipPaymentDate: z.date().optional(),
+  membershipType: z.any().optional(),
+  membershipPaymentDate: z.any().optional(),
 });
 
 const MembershipEdit = () => {

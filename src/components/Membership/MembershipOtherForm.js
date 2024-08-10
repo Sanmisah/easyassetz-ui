@@ -136,7 +136,7 @@ const MembershipForm = () => {
               <Button onClick={() => navigate("/membership")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Membership Details
+                  Add Membership Details
                 </CardTitle>
               </div>
             </div>

@@ -68,7 +68,7 @@ const MembershipMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuranceData");
-    toast.success("Other Insurance deleted successfully!");
+    toast.success("Membership deleted successfully!");
   };
 
   return (

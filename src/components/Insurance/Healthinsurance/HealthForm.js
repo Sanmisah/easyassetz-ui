@@ -53,7 +53,7 @@ const schema = z.object({
     .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.any().optional(),
   contactNumber: z.any().optional(),
-  email: z.string().email({ message: "Invalid email address" }).optional(),
+  email: z.string().optional(),
   registeredMobile: z.any().optional(),
   registeredEmail: z.any().optional(),
   brokerName: z.string().optional(),
@@ -238,6 +238,7 @@ const HealthForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
@@ -284,6 +285,7 @@ const HealthForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
@@ -336,6 +338,7 @@ const HealthForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-number">Policy Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyNumber"
                   control={control}
@@ -356,6 +359,7 @@ const HealthForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="maturityDate"
                   control={control}
@@ -377,6 +381,7 @@ const HealthForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="premium">Premium</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="premium"
                   control={control}
@@ -395,6 +400,7 @@ const HealthForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="sum-insured">Sum Insured</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="sumInsured"
                   control={control}
@@ -417,6 +423,7 @@ const HealthForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="policyHolderName"
                   control={control}
