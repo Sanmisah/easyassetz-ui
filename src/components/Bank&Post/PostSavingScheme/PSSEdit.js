@@ -75,7 +75,7 @@ const PSSEditForm = () => {
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
-
+  const [showOtherType, setShowOtherType] = useState(false);
   const {
     handleSubmit,
     control,

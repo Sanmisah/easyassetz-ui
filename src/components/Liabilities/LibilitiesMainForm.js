@@ -112,10 +112,10 @@ const LibilitiesMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Home Loans</h1>
-            {HealthInsurance?.length > 0 && (
+            {lifeInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Loans
+                  {lifeInsuranceData?.length && lifeInsuranceData?.length} Loans
                 </p>
               </div>
             )}
@@ -128,10 +128,11 @@ const LibilitiesMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Personal Loans</h1>
-            {HealthInsurance?.length > 0 && (
+            {motorInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {HealthInsurance?.length && HealthInsurance?.length} Loans
+                  {motorInsuranceData?.length && motorInsuranceData?.length}{" "}
+                  Loans
                 </p>
               </div>
             )}
@@ -144,10 +145,10 @@ const LibilitiesMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Vehicle Loans</h1>
-            {lifeInsuranceData && lifeInsuranceData?.length > 0 && (
+            {otherInsuranceData && otherInsuranceData?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {lifeInsuranceData?.length} Vehicle Loans
+                  {otherInsuranceData?.length} Vehicle Loans
                 </p>
               </div>
             )}
@@ -176,10 +177,10 @@ const LibilitiesMainForm = () => {
           <img src={lifeInsurance} className="w-6 ml-2" />
           <div className="flex  items-center gap-2 justify-center">
             <h1 className="text-xl font-bold">Litigation</h1>
-            {otherInsuranceData && otherInsuranceData?.length > 0 && (
+            {HealthInsurance && HealthInsurance?.length > 0 && (
               <div className="flex items-center gap-2 bg-green-200 p-2 rounded-[50px] ml-2 pl-4 pr-4">
                 <p className="text-green-500 self-center dark:text-green-800 ">
-                  {otherInsuranceData && otherInsuranceData?.length} Litigation
+                  {HealthInsurance && HealthInsurance?.length} Litigation
                 </p>
               </div>
             )}
