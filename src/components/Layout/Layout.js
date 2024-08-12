@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import PersonalDetails from "@/components/Personaldetail/PersonalDetail";
 import BeneficiaryDetails from "@/components/Beneficiarydetails/Benificiarydetails";
@@ -14,6 +14,7 @@ import EditInsuranceForm from "@/components/Insurance/Lifeinsurance/EditInsuranc
 import EditCryptoForm from "@/components/DigitalAssets/crypto/EditCryptoForm";
 import ImmovableAssetsMainForm from "@/components/ImmovableAssets/contents";
 import { ScrollArea } from "@com/ui/scroll-area";
+import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -180,13 +181,20 @@ import Summery from "@/components/Assetdistribution/Summery";
 import ForgetPassword from "@/components/Forgetpassword/ForgetPassword";
 
 const Layout = () => {
+  const navigate = useNavigate();
+  const getitem = localStorage.getItem("user");
+  const user = JSON.parse(getitem);
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
     setIsOpen(!isOpen);
   };
-
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [navigate]);
   return (
     <div className="flex flex-col md:grid md:grid-cols-[300px_1fr] gap-8 p-2 sm:p-8 md:p-12 lg:p-16">
       <div className="flex flex-col">

@@ -10,11 +10,6 @@ function App() {
   const User = localStorage.getItem("user");
   const user = JSON.parse(User);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user]);
 
   return (
     <div style={{ fontFamily: "Roboto" }}>
