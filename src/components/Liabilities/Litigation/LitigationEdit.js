@@ -50,8 +50,8 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Lawyer's Contact Number is required" }),
   caseFillingDate: z.any().optional(),
-  status: z.string().optional(),
-  additionalInformation: z.string().optional(),
+  status: z.any().optional(),
+  additionalInformation: z.any().optional(),
 });
 
 const LitigationEditForm = () => {
@@ -281,24 +281,12 @@ const LitigationEditForm = () => {
                 name="city"
                 control={control}
                 render={({ field }) => (
-                  <Select
+                  <Input
                     id="city"
-                    value={field.value}
-                    onValueChange={field.onChange}
+                    placeholder="Enter City"
+                    {...field}
                     className={errors.city ? "border-red-500" : ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select City" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="new_york">New York</SelectItem>
-                      <SelectItem value="los_angeles">Los Angeles</SelectItem>
-                      <SelectItem value="chicago">Chicago</SelectItem>
-                      <SelectItem value="houston">Houston</SelectItem>
-                      <SelectItem value="phoenix">Phoenix</SelectItem>
-                      {/* Add more cities as needed */}
-                    </SelectContent>
-                  </Select>
+                  />
                 )}
               />
               {errors.city && (

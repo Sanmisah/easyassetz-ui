@@ -36,7 +36,9 @@ const schema = z.object({
   //   .string()
   //   .nonempty({ message: "Bank Service Provider is required" }),
   brokerName: z.string().nonempty({ message: "Broker Name is required" }),
-  brokingAccountNumber: z.string().optional(),
+  brokingAccountNumber: z
+    .string()
+    .nonempty({ message: "Broking Account Number is required" }),
   // numberOfDebentures: z
   //   .string()
   //   .nonempty({ message: "No of Debentures is required" }),
@@ -48,8 +50,8 @@ const schema = z.object({
   natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -137,7 +139,7 @@ const MutualFundOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Debentures added successfully!");
+      toast.success("Broking Account added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -238,6 +240,7 @@ const MutualFundOtherForm = () => {
             </div> */}
             <div className="space-y-2">
               <Label htmlFor="brokerName">Broker Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="brokerName"
                 control={control}
@@ -263,6 +266,7 @@ const MutualFundOtherForm = () => {
               <Label htmlFor="brokingAccountNumber">
                 Broking Account Number
               </Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="brokingAccountNumber"
                 control={control}
@@ -422,8 +426,9 @@ const MutualFundOtherForm = () => {
               )}
             </div> */}
 
-            <div className="space-y-4 flex flex-col">
+            <div className="space-y-4  ">
               <Label className="text-lg font-bold">Holding Type</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 defaultValues="single"

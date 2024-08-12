@@ -124,7 +124,7 @@ const PersonalLoanEdit = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("loanData");
-      toast.success("Loan updated successfully!");
+      toast.success("Personal Loan updated successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -248,7 +248,6 @@ const PersonalLoanEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emiDate">EMI Date</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="emiDate"
                   control={control}
@@ -262,7 +261,6 @@ const PersonalLoanEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start Date</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="startDate"
                   control={control}

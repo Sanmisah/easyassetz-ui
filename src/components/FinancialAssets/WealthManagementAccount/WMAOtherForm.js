@@ -143,7 +143,7 @@ const MutualFundOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Debentures added successfully!");
+      toast.success("Wealth Management Account added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -242,6 +242,7 @@ const MutualFundOtherForm = () => {
             </div> */}
             <div className="space-y-2">
               <Label htmlFor="wealthManagerName">Wealth Manager Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="wealthManagerName"
                 control={control}
@@ -265,6 +266,7 @@ const MutualFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountNumber">Account Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="accountNumber"
                 control={control}
@@ -422,8 +424,9 @@ const MutualFundOtherForm = () => {
               )}
             </div> */}
 
-            <div className="space-y-4 flex flex-col">
+            <div className="space-y-2">
               <Label className="text-lg font-bold">Holding Type</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 defaultValues="single"

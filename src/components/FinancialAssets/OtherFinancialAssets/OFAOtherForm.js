@@ -35,8 +35,8 @@ const schema = z.object({
   bankServiceProvider: z
     .string()
     .nonempty({ message: "Bank Service Provider is required" }),
-  branchName: z.string().nonempty({ message: "Broker Name is required" }),
-  folioNumber: z.string().optional(),
+  branchName: z.string().optional(),
+  folioNumber: z.string().nonempty({ message: "Folio Number is required" }),
   // numberOfDebentures: z
   //   .string()
   //   .nonempty({ message: "No of Debentures is required" }),
@@ -48,8 +48,8 @@ const schema = z.object({
   natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -211,6 +211,7 @@ const OtherFinancialAssetOtherForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="bankServiceProvider"
                 control={control}
@@ -259,6 +260,7 @@ const OtherFinancialAssetOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="folioNumber">Folio Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="folioNumber"
                 control={control}
@@ -416,8 +418,9 @@ const OtherFinancialAssetOtherForm = () => {
               )}
             </div> */}
 
-            <div className="space-y-4 flex flex-col">
+            <div className="space-y-4  ">
               <Label className="text-lg font-bold">Holding Type</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 defaultValues="single"

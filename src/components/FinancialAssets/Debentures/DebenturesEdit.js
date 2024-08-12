@@ -43,30 +43,26 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Bank Service Provider is required" }),
   companyName: z.string().nonempty({ message: "Company Name is required" }),
-  folioNumber: z.string().optional(),
-  numberOfDebentures: z
-    .string()
-    .nonempty({ message: "No of Debentures is required" }),
+  folioNumber: z.string().nonempty({ message: "Folio Number is required" }),
+  numberOfDebentures: z.any().optional(),
   certificateNumber: z.any().optional(),
   distinguishNoFrom: z.any().optional(),
   distinguishNoTo: z.any().optional(),
   faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
-  natureOfHolding: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  natureOfHolding: z.any().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
-  additionalDetails: z.string().optional(),
+  additionalDetails: z.any().optional(),
   // typeOfInvestment: z
   //   .string()
   //   .nonempty({ message: "Type of Investment is required" }),
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z.string().optional(),
+  name: z.any().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
 });
 
 const PSSEditForm = () => {
@@ -275,6 +271,7 @@ const PSSEditForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="bankServiceProvider">Bank Service Provider</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="bankServiceProvider"
                 control={control}
@@ -297,6 +294,7 @@ const PSSEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="companyName"
                 control={control}
@@ -317,6 +315,7 @@ const PSSEditForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="folioNumber">Folio Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="folioNumber"
                 control={control}

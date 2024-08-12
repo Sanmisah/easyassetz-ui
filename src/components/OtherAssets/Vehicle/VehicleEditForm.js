@@ -43,6 +43,7 @@ const schema = z.object({
   registrationNumber: z.any().optional(),
   yearOfManufacture: z.any().optional(),
   location: z.any().optional(),
+  yearOfExpiry: z.any().optional(),
 });
 
 const OtherLoansEditForm = () => {
@@ -53,6 +54,7 @@ const OtherLoansEditForm = () => {
   const queryClient = useQueryClient();
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
+  const [showVehicleType, setShowVehicleType] = useState(false);
 
   const {
     handleSubmit,
@@ -91,6 +93,10 @@ const OtherLoansEditForm = () => {
     setValue("registrationNumber", data.registrationNumber);
     setValue("yearOfManufacture", data.yearOfManufacture);
     setValue("location", data.location);
+    if (data.vehicleType === "fourwheeler") {
+      setValue("fourWheeler", data.fourWheeler);
+      setShowVehicleType(true);
+    }
     return response.data.data.OtherAsset;
   };
 
@@ -141,9 +147,22 @@ const OtherLoansEditForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-
-    data.emiDate = formatDate(data.emiDate);
-    data.startDate = formatDate(data.startDate);
+    if (data.yearOfExpiry) {
+      const date = new Date(data.yearOfExpiry);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.yearOfExpiry = newdate;
+    }
+    if (data.yearOfManufacture) {
+      const date = new Date(data.yearOfManufacture);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.yearOfManufacture = newdate;
+    }
     data.type = "vehicle";
     loanMutate.mutate(data);
   };
@@ -187,6 +206,7 @@ const OtherLoansEditForm = () => {
                       onValueChange={(value) => {
                         field.onChange(value);
                         setShowOtherMetalType(value === "other");
+                        setShowVehicleType(value === "fourwheeler");
                       }}
                       className={errors.vehicleType ? "border-red-500" : ""}
                     >
@@ -197,6 +217,9 @@ const OtherLoansEditForm = () => {
                         <SelectItem value="twowheeler">Two Wheeler</SelectItem>
                         <SelectItem value="threewheeler">
                           Three Wheeler
+                        </SelectItem>
+                        <SelectItem value="fourwheeler">
+                          Four Wheeler
                         </SelectItem>
                         <SelectItem value="tractor">Tractor</SelectItem>
                         <SelectItem value="bulldozer">Bulldozer</SelectItem>
@@ -226,57 +249,59 @@ const OtherLoansEditForm = () => {
                   )}
                 />
               )}
-              <div className="space-y-2">
-                <Label htmlFor="fourWheeler">Four Wheeler</Label>
-                <Controller
-                  name="fourWheeler"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      id="fourWheeler"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setfourWheelerStatus(value === "other");
-                      }}
-                      className={errors.fourWheeler ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="car">Car</SelectItem>
-                        <SelectItem value="truck">Truck</SelectItem>
-                        <SelectItem value="van">Van</SelectItem>
-                        <SelectItem value="bus">Bus</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {fourWheelerStatus && (
+              {showVehicleType && (
+                <div className="space-y-2">
+                  <Label htmlFor="fourWheeler">Four Wheeler</Label>
                   <Controller
-                    name="otherFourWheeler"
+                    name="fourWheeler"
                     control={control}
                     render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Type"
-                        className="mt-2"
-                      />
+                      <Select
+                        id="fourWheeler"
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setfourWheelerStatus(value === "other");
+                        }}
+                        className={errors.fourWheeler ? "border-red-500" : ""}
+                      >
+                        <FocusableSelectTrigger>
+                          <SelectValue placeholder="Select Type" />
+                        </FocusableSelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="car">Car</SelectItem>
+                          <SelectItem value="truck">Truck</SelectItem>
+                          <SelectItem value="van">Van</SelectItem>
+                          <SelectItem value="bus">Bus</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     )}
                   />
-                )}
-                {errors.fourWheeler && (
-                  <span className="text-red-500">
-                    {errors.fourWheeler.message}
-                  </span>
-                )}
-              </div>
+                  {fourWheelerStatus && (
+                    <Controller
+                      name="otherFourWheeler"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Specify Type"
+                          className="mt-2"
+                        />
+                      )}
+                    />
+                  )}
+                  {errors.fourWheeler && (
+                    <span className="text-red-500">
+                      {errors.fourWheeler.message}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
+                <Label htmlFor="company">Make</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="company"
@@ -319,7 +344,9 @@ const OtherLoansEditForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Label htmlFor="registrationNumber">
+                  Registration/Vehicle Number
+                </Label>
                 <Controller
                   name="registrationNumber"
                   control={control}
@@ -343,7 +370,7 @@ const OtherLoansEditForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="yearOfManufacture">Year Of Manufacture</Label>
+              <Label htmlFor="yearOfManufacture">Year Of Registration</Label>
               <Controller
                 name="yearOfManufacture"
                 control={control}
@@ -358,6 +385,21 @@ const OtherLoansEditForm = () => {
               {errors.yearOfManufacture && (
                 <span className="text-red-500">
                   {errors.yearOfManufacture.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="yearOfExpiry">Year Of Expiry</Label>
+              <Controller
+                name="yearOfExpiry"
+                control={control}
+                render={({ field }) => (
+                  <Datepicker value={field.value} onChange={field.onChange} />
+                )}
+              />
+              {errors.yearOfExpiry && (
+                <span className="text-red-500">
+                  {errors.yearOfExpiry.message}
                 </span>
               )}
             </div>

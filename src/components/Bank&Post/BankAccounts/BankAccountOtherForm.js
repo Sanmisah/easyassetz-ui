@@ -36,12 +36,10 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
   otherBankName: z.string().optional(),
-  accountType: z.string().optional(),
+  accountType: z.string().nonempty({ message: "Account Type is required" }),
   otherAccountType: z.string().optional(),
-  accountNumber: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
-  branchName: z.string().min(2, { message: "Policy Number is required" }),
+  accountNumber: z.string().nonempty({ message: "Account Number is required" }),
+  branchName: z.string().optional(),
   city: z.any().optional(),
   holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
@@ -174,13 +172,16 @@ const BankAccountForm = () => {
       <Card className="w-full ">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Bank Account Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Bank Account.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/bankaccount")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Bank Account Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add new bank account details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -192,6 +193,7 @@ const BankAccountForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Bank Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -239,6 +241,7 @@ const BankAccountForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="accountType">Account Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="accountType"
                   control={control}
@@ -286,6 +289,7 @@ const BankAccountForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="accountNumber">Account Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="accountNumber"
                   control={control}

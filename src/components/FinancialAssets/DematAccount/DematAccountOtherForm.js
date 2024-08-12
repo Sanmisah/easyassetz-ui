@@ -32,20 +32,18 @@ import cross from "@/components/image/close.png";
 // import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
-  depository: z.string().nonempty({ message: "Depository is required" }),
+  depository: z.string().optional(),
   depositoryName: z
     .string()
     .nonempty({ message: "Depository Name is required" }),
-  depositoryId: z.string().optional(),
+  depositoryId: z.string().nonempty({ message: "Depository ID is required" }),
   accountNumber: z.string().nonempty({ message: "Account Number is required" }),
   // certificateNumber: z.any().optional(),
   // distinguishNoFrom: z.any().optional(),
   // distinguishNoTo: z.any().optional(),
   // faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
-  natureOfHolding: z
-    .string()
-    .nonempty({ message: "Nature of Holding is required" }),
+  natureOfHolding: z.string().optional(),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z
@@ -241,6 +239,7 @@ const MutualFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="depositoryName">Depository Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="depositoryName"
                 control={control}
@@ -264,6 +263,7 @@ const MutualFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="depositoryId">Depository ID</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="depositoryId"
                 control={control}
@@ -287,6 +287,7 @@ const MutualFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountNumber">Account Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="accountNumber"
                 control={control}

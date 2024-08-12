@@ -36,7 +36,7 @@ const schema = z.object({
   //   .string()
   //   .nonempty({ message: "Bank Service Provider is required" }),
   fundName: z.string().nonempty({ message: "Broker Name is required" }),
-  folioNumber: z.string().optional(),
+  folioNumber: z.string().nonempty({ message: "Folio Number is required" }),
   // numberOfDebentures: z
   //   .string()
   //   .nonempty({ message: "No of Debentures is required" }),
@@ -48,8 +48,8 @@ const schema = z.object({
   natureOfHolding: z
     .string()
     .nonempty({ message: "Nature of Holding is required" }),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -141,7 +141,7 @@ const MutualFundOtherForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Investment Fund added successfully!");
+      toast.success("Alternate Investment Fund added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -197,7 +197,9 @@ const MutualFundOtherForm = () => {
             <div className="flex items-center gap-2">
               <Button onClick={() => navigate("/aif")}>Back</Button>
               <div>
-                <CardTitle className="text-2xl font-bold">Back</CardTitle>
+                <CardTitle className="text-2xl font-bold">
+                  Alternate Investment Fund Details
+                </CardTitle>
                 <CardDescription>
                   Fill out the form to add a new Alternate Investment Fund
                   Details.
@@ -238,6 +240,7 @@ const MutualFundOtherForm = () => {
             </div> */}
             <div className="space-y-2">
               <Label htmlFor="fundName">Fund Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="fundName"
                 control={control}
@@ -259,6 +262,7 @@ const MutualFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="folioNumber">Folio Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="folioNumber"
                 control={control}
@@ -416,8 +420,9 @@ const MutualFundOtherForm = () => {
               )}
             </div> */}
 
-            <div className="space-y-4 flex flex-col">
+            <div className="space-y-4  ">
               <Label className="text-lg font-bold">Holding Type</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 defaultValues="single"

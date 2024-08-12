@@ -67,7 +67,7 @@ const PSSMainForm = () => {
       }
     );
     queryClient.invalidateQueries("LifeInsuraQuerynceData");
-    toast.success("Public Providend Fund deleted successfully!");
+    toast.success("Post Saving Scheme deleted successfully!");
   };
 
   return (

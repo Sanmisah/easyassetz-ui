@@ -51,6 +51,7 @@ const schema = z.object({
   jointHoldersPan: z.string().optional(),
   jointHoldersAadhar: z.string().optional(),
   anyLoanLitigation: z.string().optional(),
+  anyMortgage: z.string().optional(),
 
   name: z.string().optional(),
   mobile: z.string().optional(),
@@ -683,6 +684,25 @@ const LandOtherform = () => {
                 {errors.anyLoanLitigation && (
                   <span className="text-red-500">
                     {errors.anyLoanLitigation.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2 space-x-2">
+                <Label>Any Loan/Mortgage</Label>
+                <Controller
+                  name="anyMortgage"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="anyMortgage"
+                      checked={field.value === "yes"}
+                      onCheckedChange={() => field.onChange("yes")}
+                    />
+                  )}
+                />
+                {errors.anyMortgage && (
+                  <span className="text-red-500">
+                    {errors.anyMortgage.message}
                   </span>
                 )}
               </div>

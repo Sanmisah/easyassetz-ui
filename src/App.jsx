@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loginpage from "@/Pages/Login/LoginPage";
 import Personalpage from "@/Pages/personaldetailpage/Personalpage";
 import { Routes, Route } from "react-router-dom";
 import ForgetPassword from "./components/Forgetpassword/ForgetPassword";
 import ForgetPasswordEmail from "./components/Forgetpassword/ForgetPasswordEmail";
+import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 function App() {
+  const User = localStorage.getItem("user");
+  const user = JSON.parse(User);
+  const navigate = useNavigate();
+
   return (
     <div style={{ fontFamily: "Roboto" }}>
       <Toaster position="top-center" richColors />

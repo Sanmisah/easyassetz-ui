@@ -33,7 +33,7 @@ import cross from "@/components/image/close.png";
 
 const schema = z.object({
   accountNumber: z.string().nonempty({ message: "Account Number is required" }),
-  postOfficeBranch: z.string().nonempty({ message: "Branch Name is required" }),
+  postOfficeBranch: z.string().optional(),
   // maturityDate: z.any().optional(),
   city: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
@@ -102,7 +102,6 @@ const PSADOtherForm = () => {
       jointHolderName: "",
       jointHolderPan: "",
       additionalDetails: "",
-     
     },
   });
 
@@ -175,13 +174,16 @@ const PSADOtherForm = () => {
       <Card className="w-full">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                Postal Saving Account Details
-              </CardTitle>
-              <CardDescription>
-                Fill out the form to add a new Postal Saving Account Details.
-              </CardDescription>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => navigate("/psad")}>Back</Button>
+              <div>
+                <CardTitle className="text-2xl font-bold">
+                  Postal Saving Account Details
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form to add the Postal Saving Account Details.
+                </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -193,6 +195,7 @@ const PSADOtherForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="accountNumber">Account Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="accountNumber"
                   control={control}
@@ -326,6 +329,7 @@ const PSADOtherForm = () => {
 
             <div className="space-y-4 flex flex-col">
               <Label className="text-lg font-bold">Holding Type</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="holdingType"
                 defaultValues="single"

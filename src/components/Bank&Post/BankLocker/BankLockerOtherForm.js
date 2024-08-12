@@ -169,18 +169,19 @@ const BankLockerForm = () => {
   return (
     <div className="w-full">
       <Card className="w-full ">
-        <CardHeader>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Button onClick={() => navigate("/banklocker")}>Back</Button>
             <div>
               <CardTitle className="text-2xl font-bold">
-                Bank Account Details
+                Bank Locker Details
               </CardTitle>
               <CardDescription>
-                Fill out the form to add a new Bank Account.
+                Fill out the form to add new bank locker details.
               </CardDescription>
             </div>
           </div>
-        </CardHeader>
+        </div>
         <CardContent className="grid gap-6 ">
           <form
             className="space-y-6 flex flex-col"
@@ -189,6 +190,7 @@ const BankLockerForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Bank Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="bankName"
                   control={control}
@@ -236,6 +238,7 @@ const BankLockerForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="branch">Branch Name</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="branch"
                   control={control}
@@ -255,6 +258,7 @@ const BankLockerForm = () => {
 
               <div className="space-y-2">
                 <Label>Locker Number</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="lockerNumber"
                   control={control}
@@ -276,6 +280,7 @@ const BankLockerForm = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="rentDueDate">Rent Due</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="rentDueDate"
                   control={control}
