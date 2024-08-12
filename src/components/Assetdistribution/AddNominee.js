@@ -146,7 +146,11 @@ const AddNominee = ({
           <SheetFooter>
             <Button onClick={addNominee}>Add Nominee</Button>
             <SheetClose asChild>
-              <Button onClick={handleSubmit} type="submit">
+              <Button
+                onClick={handleSubmit}
+                type="submit"
+                className="bg-green-500 text-white hover:bg-green-600"
+              >
                 Save changes
               </Button>
             </SheetClose>

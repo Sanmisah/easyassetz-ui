@@ -8,6 +8,7 @@ const Dashboard = () => {
         This is the dashboard page where you can view your profile and
         transactions.
       </p>
+      <div></div>
     </div>
   );
 };
