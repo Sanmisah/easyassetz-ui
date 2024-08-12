@@ -41,6 +41,8 @@ const Personaldetail = () => {
   const [loading, setLoading] = useState(true);
   const [specialactundermarriange, setSpecialactundermarriange] =
     useState(false);
+  //file upload
+  const [fileUrl, setFileUrl] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -160,6 +162,17 @@ const Personaldetail = () => {
       }
     }
   }, [defaultData, setValue]);
+  //file upload
+  // useEffect(() => {
+  //   axios
+  //     .get(`/api/storage/${defaultData?.aadharFile}`)
+  //     .then((response) => {
+  //       setFileUrl(response.data.url);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching file URL:", error);
+  //     });
+  // }, []);
 
   const Profilemutate = useMutation({
     mutationFn: async (data) => {
@@ -301,16 +314,16 @@ const Personaldetail = () => {
   };
 
   const handleFileUpload = () => {
-    window.open(`/storage/profiles/aadharFile/${defaultData?.aadharFile}`);
+    window.open(`/api/storage/${defaultData?.aadharFile}`);
   };
   const handleFileUploadPan = () => {
-    window.open(`/storage/profiles/panFile/${defaultData?.panFile}`);
+    window.open(`/api/storage/${defaultData?.panFile}`);
   };
   const handleFileUploadDriving = () => {
-    window.open(`/storage/profiles/drivingFile/${defaultData?.drivingFile}`);
+    window.open(`/api/storage/${defaultData?.drivingFile}`);
   };
   const handleFileUploadPassport = () => {
-    window.open(`/storage/profiles/passportFile/${defaultData?.passportFile}`);
+    window.open(`/api/storage/${defaultData?.passportFile}`);
   };
   return (
     <Suspense fallback={<Skletonpersonal />}>
@@ -320,6 +333,7 @@ const Personaldetail = () => {
         <div className="space-y-4 min-w-[300px]">
           <h2 className="text-2xl font-bold">Personal Details</h2>
           <h3 className="text-lg font-medium">Basic Details</h3>
+
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-[300px]"
