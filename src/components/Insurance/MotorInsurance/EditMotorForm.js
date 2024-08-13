@@ -289,7 +289,7 @@ const EditMotorForm = () => {
   //   }
   // }, [Benifyciary, reset]);
 
-  const onSubmit = (data) => {
+  const onSubmit = (e, data) => {
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }

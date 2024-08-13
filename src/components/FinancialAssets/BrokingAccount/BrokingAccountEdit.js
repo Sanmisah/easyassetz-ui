@@ -241,9 +241,7 @@ const PSSEditForm = () => {
     // if (data.type === "other") {
     //   data.type = data.otherType;
     // }
-    data.name = name;
-    data.email = email;
-    data.mobile = mobile;
+
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }

@@ -102,8 +102,12 @@ export default function AssetAllocation() {
       0
     );
 
-    if (sumOfPercentages > 100) {
+    if (sumOfPercentages >= 100) {
       toast.error("Sum of percentages must be less than or equal to 100");
+      return;
+    }
+    if (sumOfPercentages <= 100) {
+      toast.error("Sum of percentages must be greater than or equal to 100");
       return;
     }
     totalsplit.forEach((value, index) => {

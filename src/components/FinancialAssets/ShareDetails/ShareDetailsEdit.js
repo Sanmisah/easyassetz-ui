@@ -48,8 +48,8 @@ const schema = z.object({
   faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
   natureOfHolding: z.any().optional(),
-  jointHolderName: z.string().optional(),
-  jointHolderPan: z.string().optional(),
+  jointHolderName: z.any().optional(),
+  jointHolderPan: z.any().optional(),
   // documentAvailability: z
   //   .string()
   //   .nonempty({ message: "Document Availability is required" }),
@@ -230,9 +230,7 @@ const PSSEditForm = () => {
     // if (data.type === "other") {
     //   data.type = data.otherType;
     // }
-    data.name = name;
-    data.email = email;
-    data.mobile = mobile;
+
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }

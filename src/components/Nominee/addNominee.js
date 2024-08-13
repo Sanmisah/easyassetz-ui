@@ -16,6 +16,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@com/ui/scroll-area";
+import BeneficiaryForm from "./BeneficiaryOpen";
 
 const AddNominee = ({
   setSelectedNommie,
@@ -27,6 +28,8 @@ const AddNominee = ({
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
   const navigate = useNavigate();
+  const [AddNominee, setAddNominee] = useState(false);
+  const [benficiaryopen, setbenficiaryopen] = useState(false);
 
   useEffect(() => {
     axios
@@ -46,11 +49,7 @@ const AddNominee = ({
           Charities: res?.data?.data?.Charities,
         });
       });
-  }, []);
-
-  const addNominee = () => {
-    navigate("/benificiary");
-  };
+  }, [AddNominee]);
 
   useEffect(() => {
     // Sync state with displaynominie when it changes
@@ -83,6 +82,11 @@ const AddNominee = ({
   const handleSubmit = () => {
     setSelectedNommie(selectedNominees);
     console.log(selectedNominees);
+  };
+  const addNominee = () => {
+    setAddNominee(true);
+    setbenficiaryopen(true);
+    console.log("addNominee:", AddNominee);
   };
 
   return (
@@ -150,7 +154,7 @@ const AddNominee = ({
             </div>
           </ScrollArea>
           <SheetFooter>
-            <Button onClick={addNominee}>Add Nominee</Button>
+            <BeneficiaryForm setAddNominee={setAddNominee} />
             <SheetClose asChild>
               <Button onClick={handleSubmit} type="submit">
                 Save changes

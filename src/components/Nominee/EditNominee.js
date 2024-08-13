@@ -15,6 +15,8 @@ import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
 import cross from "@/components/image/close.png";
 import { ScrollArea } from "../../shadcncomponents/ui/scroll-area";
+import { useNavigate } from "react-router-dom";
+import BeneficiaryForm from "./BeneficiaryOpen";
 
 const AddNominee = ({
   setSelectedNommie,
@@ -27,7 +29,8 @@ const AddNominee = ({
   const user = JSON.parse(getitem);
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
-
+  const Navigate = useNavigate();
+  const [benificiaryopen, setbenficiaryopen] = useState(false);
   useEffect(() => {
     if (AllNominees) {
       setDisplaynominie(AllNominees);
@@ -77,7 +80,7 @@ const AddNominee = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     setSelectedNommie(selectedNominees);
     console.log(selectedNominees);
   };
@@ -182,6 +185,19 @@ const AddNominee = ({
               </div>
             </div>
             <SheetFooter>
+              {benificiaryopen && (
+                <BeneficiaryForm
+                  setbenficiaryopen={setbenficiaryopen}
+                  benificiaryopen={benificiaryopen}
+                />
+              )}
+              <Button
+                onClick={() => {
+                  setbenficiaryopen(true);
+                }}
+              >
+                Add Nomniee
+              </Button>
               <SheetClose asChild>
                 <Button onClick={handleSubmit} type="submit">
                   Save changes

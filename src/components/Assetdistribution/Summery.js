@@ -19,25 +19,34 @@ import lifeInsurance from "@/components/image/LifeInsurance.png";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { setLevel } from "@/Redux/sessionSlice";
+
+import { useNavigate } from "react-router-dom";
 const Summery = () => {
   const { subSelectedAsset } = useSelector((state) => state.counterSlice);
   const { level } = useSelector((state) => state.counterSlice);
   const User = localStorage.getItem("user");
+  const navigate = useNavigate();
   const user = JSON.parse(User);
   const { BenificiaryAllocation } = useSelector((state) => state.counterSlice);
   const ArrayToSubmit = BenificiaryAllocation.Benificiaries.map((data) => ({
     beneficiary_id: data.nomineeId,
-    asset_id: BenificiaryAllocation.SelectedAsset.assets[0].totalAssets[0].id,
+    asset_id: subSelectedAsset.id,
     asset_type: subSelectedAsset.type,
     level: level,
     allocation: data.percentage,
   }));
   const handleSubmit = async () => {
-    const response = await axios.post(`/api/will/allocate`, ArrayToSubmit, {
-      headers: {
-        Authorization: `Bearer ${user.data.token}`,
-      },
-    });
+    const response = await axios
+      .post(`/api/will/allocate`, ArrayToSubmit, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      })
+      .then((res) => {
+        console.log("Response:", res.data);
+        navigate("/assetdistribution");
+      });
+
     console.log("Response:", response.data);
   };
   return (

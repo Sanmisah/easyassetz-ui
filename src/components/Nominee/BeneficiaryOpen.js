@@ -27,50 +27,69 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@com/ui/sheet";
-import DropdownData from "../Personaldetail/value.json";
 import { ScrollArea } from "@com/ui/scroll-area";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
-import Datepicker from "./Datepicker";
+import Datepicker from "@/components/Beneficiarydetails/Datepicker";
 import { PhoneInput } from "react-international-phone";
 import { toast } from "sonner";
+import DropdownData from "../Personaldetail/value.json";
+import { SheetClose, SheetTrigger } from "@/shadcncomponents/ui/sheet";
+const beneficiarySchema = z
+  .object({
+    fullLegalName: z.string().nonempty("Full Legal Name is required"),
+    relationship: z.string().nonempty("Relationship is required"),
+    specificRelationship: z.string().optional(),
+    gender: z.string().nonempty("Gender is required"),
+    dob: z.any().optional(),
+    guardianName: z.string().optional(),
+    guardianMobile: z.string().optional(),
+    guardianEmail: z.string().optional(),
+    guardianCity: z.string().optional(),
+    guardianState: z.string().optional(),
+    document: z.string().optional(),
+    documentData: z.string().optional(),
+    religion: z.string().optional(),
+    guardianNationality: z.string().optional(),
+    addressLine1: z.string().optional(),
+    addressLine2: z.string().optional(),
+    pincode: z.string().optional(),
+    country: z.string().optional(),
+    mobile: z.string().nonempty("Mobile is required"),
+    email: z.any().optional(),
+    city: z.string().nonempty("City is required"),
+    state: z.string().optional(),
+    houseNo: z.string().optional(),
+    nationality: z.string().optional(),
+    addressLine1: z.string().optional(),
+    addressLine2: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.dob) {
+        const age = Math.abs(
+          new Date(Date.now() - new Date(data.dob).getTime()).getUTCFullYear() -
+            1970
+        );
+        if (age < 18) {
+          return !!(
+            data.guardianName &&
+            data.guardianMobile &&
+            data.guardianEmail
+          );
+        }
+      }
+      return true;
+    },
+    {
+      message: "Guardian fields are required for minors.",
+      path: ["guardianName"], // this will highlight the guardianName field in case of error
+    }
+  );
 
-const beneficiarySchema = z.object({
-  fullLegalName: z.string().nonempty("Full Legal Name is required"),
-  relationship: z.string().nonempty("Relationship is required"),
-  specificRelationship: z.string().optional(),
-  gender: z.string().nonempty("Gender is required"),
-  dob: z.any().optional(),
-  guardianName: z.string().optional(),
-  guardianMobile: z.string().optional(),
-  guardianEmail: z.string().optional(),
-  guardianCity: z.string().optional(),
-  guardianState: z.string().optional(),
-  document: z.string().optional(),
-  documentData: z.string().optional(),
-  guardianReligion: z.string().optional(),
-  guardianNationality: z.string().optional(),
-  addressLine1: z.string().nonempty("Address Line 1 is required"),
-  addressLine2: z.string().nonempty("Address Line 2 is required"),
-  pincode: z.string().nonempty("Pincode is required"),
-  country: z.string().nonempty("Country is required"),
-  mobile: z.string().nonempty("Mobile is required"),
-  email: z.string().email("Invalid email").nonempty("Email is required"),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  houseNo: z.string().optional(),
-  religion: z.string().optional(),
-  nationality: z.string().optional(),
-});
-
-const BeneficiaryForm = ({
-  updateBenificiaryOpen,
-  setUpdateBenificiaryOpen,
-  benificiaryId,
-}) => {
-  const [defaultData, setDefaultData] = useState({});
+const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
   const queryClient = useQueryClient();
   const {
     register,
@@ -78,21 +97,20 @@ const BeneficiaryForm = ({
     control,
     watch,
     setValue,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(beneficiarySchema),
-    defaultValues: {},
   });
 
   const [selectedDocument, setSelectedDocument] = useState("");
+  // const [dateCountryCode, setDateCountryCode] = useState("+91");
   const [relationship, setRelationship] = useState("");
-  const [isMinor, setIsMinor] = useState(true);
+  const [religion, setGuardianReligion] = useState("");
 
   const watchDOB = watch("dob", null);
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
-  //asd
+
   useEffect(() => {
     if (watchDOB) {
       const age = calculateAge(watchDOB);
@@ -100,7 +118,7 @@ const BeneficiaryForm = ({
         clearGuardianFields();
       }
       if (age < 18) {
-        toast.warning("You are a minorsa");
+        toast.warning("You are a Minor");
       }
     }
   }, [watchDOB]);
@@ -110,6 +128,18 @@ const BeneficiaryForm = ({
     const ageDiff = Date.now() - birthDate.getTime();
     const ageDate = new Date(ageDiff);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
+  };
+
+  const clearGuardianFields = () => {
+    setValue("guardianName", "");
+    setValue("guardianMobile", "");
+    setValue("guardianEmail", "");
+    setValue("guardianCity", "");
+    setValue("guardianState", "");
+    setValue("document", "");
+    setValue("documentData", "");
+    setValue("religion", "");
+    setValue("guardianNationality", "");
   };
 
   const handlePincodeChange = async (pincode) => {
@@ -127,90 +157,18 @@ const BeneficiaryForm = ({
     }
   };
 
-  const getPersonalData = async () => {
-    if (!user) return;
-    const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
-      headers: {
-        Authorization: `Bearer ${user?.data?.token}`,
-      },
-    });
-    const beneficiaryData = response.data.data.Beneficiary;
-    setDefaultData(beneficiaryData);
-    reset(beneficiaryData);
-    if (beneficiaryData?.relationship === "other") {
-      setRelationship(beneficiaryData?.specificRelationship);
-    }
-    if (calculateAge(beneficiaryData?.dob) < 18) {
-      setIsMinor(true);
-    }
-    setValue("document", beneficiaryData.document);
-    setSelectedDocument(beneficiaryData.document);
-
-    if (
-      ["child", "spouse", "self", "parent", "sibling"].includes(
-        beneficiaryData?.relationship
-      )
-    ) {
-      setValue("relationship", beneficiaryData?.relationship);
-      return;
-    } else {
-      setRelationship("other");
-      setValue("relationship", beneficiaryData?.relationship);
-    }
-  };
-
-  const {
-    data: Beneficiary,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["beneficiaryData", benificiaryId],
-    queryFn: getPersonalData,
-    enabled: !!benificiaryId,
-
-    onSuccess: (data) => {
-      reset(data);
-      setSelectedDocument(data?.document);
-      setValue("document", data?.document);
-      setValue("documentData", data?.documentData);
-    },
-
-    onError: (error) => {
-      console.error("Error submitting profile:", error);
-      toast.error("Failed to submit profile", error.message);
-    },
-  });
-
-  useEffect(() => {
-    setSelectedDocument(Beneficiary?.document);
-  }, [Beneficiary]);
-  const clearGuardianFields = () => {
-    setValue("guardianName", "");
-    setValue("guardianMobile", "");
-    setValue("guardianEmail", "");
-    setValue("guardianCity", "");
-    setValue("guardianState", "");
-    setValue("guardianReligion", "");
-    setValue("guardianNationality", "");
-  };
-
-  const beneficiaryMutate = useMutation({
+  const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
-        `/api/beneficiaries/${benificiaryId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        }
-      );
+      const response = await axios.post(`/api/beneficiaries`, data, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      });
+
       return response.data.data.profile;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("beneficiaryData");
       toast.success("Beneficiary added successfully!");
-      setUpdateBenificiaryOpen(false);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -218,7 +176,10 @@ const BeneficiaryForm = ({
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (e, data) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log(data);
     const date = new Date(data.dob);
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -229,46 +190,47 @@ const BeneficiaryForm = ({
     if (relationship === "other") {
       data.relationship = data.specificRelationship;
     }
-    delete data.specificRelationship;
+    if (religion === "other") {
+      data.religion = data.specificGuardianReligion;
+    }
+    data.document = selectedDocument;
 
-    if (calculateAge(data.dob) >= 18) {
+    delete data.specificRelationship;
+    delete data.specificGuardianReligion;
+
+    if (data.dob > new Date() === 18) {
       delete data.guardianCity;
       delete data.guardianState;
-      delete data.guardianReligion;
+      delete data.religion;
       delete data.guardianNationality;
     }
     try {
-      beneficiaryMutate.mutate(data);
+      benificiaryMutate.mutate(data);
     } catch (error) {
       toast.error("Failed to add beneficiary");
       console.error("Error adding beneficiary:", error);
     }
   };
 
-  useEffect(() => {
-    if (watchDOB) {
-      setIsMinor(calculateAge(watchDOB) < 18);
-    }
-  }, [watchDOB]);
+  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
 
   return (
     <div>
-      <Sheet
-        className="w-[800px]"
-        open={updateBenificiaryOpen}
-        onOpenChange={setUpdateBenificiaryOpen}
-      >
+      <Sheet className="w-[800px]">
+        <SheetTrigger asChild>
+          <Button>Add Nominee</Button>
+        </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Edit Beneficiary</SheetTitle>
+            <SheetTitle>Add Beneficiary</SheetTitle>
             <SheetDescription className="flex flex-col justify-center">
               <ScrollArea className="w-full h-[85vh] rounded-md">
                 <form onSubmit={handleSubmit(onSubmit)} className="scrollable">
                   <Card className="w-full max-w-3xl">
                     <CardHeader>
-                      <CardTitle>Edit Beneficiary Form</CardTitle>
+                      <CardTitle>Beneficiary Form</CardTitle>
                       <CardDescription>
-                        Kindly review and edit the following beneficiary details
+                        Please fill out the following details.
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8">
@@ -281,7 +243,6 @@ const BeneficiaryForm = ({
                             <Input
                               id="full-name"
                               placeholder="Enter your full legal name"
-                              defaultValue={defaultData?.fullLegalName}
                               {...register("fullLegalName")}
                             />
                             {errors.fullLegalName && (
@@ -296,14 +257,11 @@ const BeneficiaryForm = ({
                             <Controller
                               name="relationship"
                               control={control}
-                              defaultValues={defaultData?.relationship}
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
-                                  defaultValue={defaultData?.relationship}
                                   onValueChange={(value) => {
                                     field.onChange(value);
-
                                     setRelationship(value);
                                   }}
                                 >
@@ -342,8 +300,7 @@ const BeneficiaryForm = ({
                                 Specific Relationship
                               </Label>
                               <Input
-                                id="specificRelationship"
-                                defaultValue={defaultData?.relationship}
+                                id="specific-relationship"
                                 placeholder="Enter specific relationship"
                                 {...register("specificRelationship", {
                                   required: relationship === "other",
@@ -361,13 +318,11 @@ const BeneficiaryForm = ({
                             <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="gender"
-                              defaultValue={defaultData?.gender}
                               control={control}
                               render={({ field }) => (
                                 <Select
                                   value={field.value}
                                   onValueChange={field.onChange}
-                                  defaultValue={defaultData?.gender}
                                 >
                                   <SelectTrigger
                                     id="gender"
@@ -396,12 +351,10 @@ const BeneficiaryForm = ({
                             <Controller
                               name="dob"
                               control={control}
-                              defaultValue={defaultData?.dob}
                               render={({ field }) => (
                                 <Datepicker
                                   value={field.value}
                                   onChange={field.onChange}
-                                  defaultValues={defaultData?.dob}
                                   className="min-w-[190rem]"
                                 />
                               )}
@@ -417,7 +370,6 @@ const BeneficiaryForm = ({
                             <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="mobile"
-                              defaultValue={defaultData?.mobile}
                               control={control}
                               render={({ field }) => (
                                 <PhoneInput
@@ -425,11 +377,8 @@ const BeneficiaryForm = ({
                                   type="tel"
                                   placeholder="Enter mobile number"
                                   defaultCountry="in"
-                                  value={
-                                    field.value || defaultData?.mobile || ""
-                                  }
-                                  defaultValue={defaultData?.mobile}
                                   inputStyle={{ minWidth: "15.5rem" }}
+                                  value={field.value}
                                   onChange={field.onChange}
                                 />
                               )}
@@ -445,7 +394,6 @@ const BeneficiaryForm = ({
                             <Input
                               id="email"
                               type="email"
-                              defaultValue={defaultData?.email}
                               placeholder="Enter email"
                               {...register("email")}
                             />
@@ -465,33 +413,23 @@ const BeneficiaryForm = ({
                         <Controller
                           name="document"
                           control={control}
-                          defaultValue={defaultData?.document}
                           render={({ field }) => (
                             <Select
-                              name="document"
-                              defaultValue={defaultData?.document}
+                              value={field.value}
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
                                 field.onChange(value);
                               }}
                             >
                               <SelectTrigger
-                                id="document"
+                                id="guardian-document"
                                 aria-label="Identification Document"
                               >
                                 <SelectValue placeholder="Select document" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem
-                                  defaultValue={defaultData?.document}
-                                  value="aadhar"
-                                >
-                                  Aadhaar
-                                </SelectItem>
-                                <SelectItem
-                                  defaultValue={defaultData?.document}
-                                  value="passport"
-                                >
+                                <SelectItem value="aadhar">Aadhaar</SelectItem>
+                                <SelectItem value="passport">
                                   Passport
                                 </SelectItem>
                                 <SelectItem value="driving-license">
@@ -512,15 +450,19 @@ const BeneficiaryForm = ({
                       </div>
                       {selectedDocument && (
                         <div className="space-y-2">
-                          <Label htmlFor="document-data">
+                          <Label htmlFor="guardian-document-data">
                             {selectedDocument} Number
                           </Label>
                           <Input
-                            id="documentData"
+                            id="guardian-document-data"
                             placeholder={`Enter ${selectedDocument} number`}
-                            defaultValue={defaultData?.documentData}
                             {...register("documentData")}
                           />
+                          {errors.documentData && (
+                            <p className="text-red-500">
+                              {errors.documentData.message}
+                            </p>
+                          )}
                         </div>
                       )}
                       <div className="space-y-2">
@@ -528,26 +470,31 @@ const BeneficiaryForm = ({
                         <Controller
                           name="religion"
                           control={control}
-                          defaultValue={defaultData?.religion}
                           render={({ field }) => (
                             <Select
-                              id="religion"
                               value={field.value}
                               onValueChange={(value) => {
                                 field.onChange(value);
                               }}
                             >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select religion">
-                                  {field.value || "Select religion"}
-                                </SelectValue>
+                              <SelectTrigger
+                                id="religion"
+                                aria-label="religion"
+                              >
+                                <SelectValue placeholder="Select Religion" />
                               </SelectTrigger>
                               <SelectContent>
-                                {DropdownData.religions?.map((religion) => (
-                                  <SelectItem key={religion} value={religion}>
-                                    {religion.charAt(0) + religion.slice(1)}
-                                  </SelectItem>
-                                ))}
+                                <SelectItem value="Christian">
+                                  Christian
+                                </SelectItem>
+                                <SelectItem value="Muslim">Muslim</SelectItem>
+                                <SelectItem value="Hindu">Hindu</SelectItem>
+                                <SelectItem value="Sikh">Sikh</SelectItem>
+                                <SelectItem value="Buddhist">
+                                  Buddhist
+                                </SelectItem>
+                                <SelectItem value="Jain">Jain</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
                               </SelectContent>
                             </Select>
                           )}
@@ -558,15 +505,33 @@ const BeneficiaryForm = ({
                           </p>
                         )}
                       </div>
+                      {religion === "other" && (
+                        <div className="space-y-2">
+                          <Label htmlFor="">Religion</Label>
+                          <Input
+                            id="specificGuardianReligion"
+                            placeholder="Enter Religion"
+                            {...register("specificGuardianReligion", {
+                              required: religion === "other",
+                            })}
+                          />
+                          {errors.specificGuardianReligion && (
+                            <p className="text-red-500">
+                              {errors.specificGuardianReligion.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
                       <div className="space-y-2">
-                        <Label htmlFor="nationality">Nationality</Label>
+                        <Label htmlFor="guardian-nationality">
+                          Nationality
+                        </Label>
                         <Controller
                           name="nationality"
                           control={control}
-                          defaultValue={defaultData?.nationality}
                           render={({ field }) => (
                             <Select
-                              id="nationality"
+                              id="guardian-nationality"
                               value={field.value}
                               onValueChange={(value) => {
                                 field.onChange(value);
@@ -598,18 +563,19 @@ const BeneficiaryForm = ({
                             </Select>
                           )}
                         />
-                        {errors.nationality && (
+                        {errors.guardianNationality && (
                           <p className="text-red-500">
-                            {errors.nationality.message}
+                            {errors.guardianNationality.message}
                           </p>
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="house-no">House/Flat No.</Label>
+                        <Label htmlFor="guardian-house-no">
+                          House/Flat No.
+                        </Label>
                         <Input
-                          id="house-no"
-                          placeholder="Enter house/flat number"
-                          defaultValue={defaultData?.houseNo}
+                          id="guardian-house-no"
+                          placeholder="Enter House/Flat Number"
                           {...register("houseNo")}
                         />
                         {errors.houseNo && (
@@ -619,11 +585,12 @@ const BeneficiaryForm = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="address-line1">Address Line 1</Label>
+                        <Label htmlFor="guardian-address1">
+                          Address Line 1
+                        </Label>
                         <Input
-                          id="address-line1"
-                          placeholder="Enter address line 1"
-                          defaultValue={defaultData?.addressLine1}
+                          id="guardian-address1"
+                          placeholder="Enter Address line 1"
                           {...register("addressLine1")}
                         />
                         {errors.addressLine1 && (
@@ -633,11 +600,12 @@ const BeneficiaryForm = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="address-line2">Address Line 2</Label>
+                        <Label htmlFor="guardian-address2">
+                          Address Line 2
+                        </Label>
                         <Input
-                          id="address-line2"
-                          placeholder="Enter address line 2"
-                          defaultValue={defaultData?.addressLine2}
+                          id="guardian-address2"
+                          placeholder="Enter Address line 2"
                           {...register("addressLine2")}
                         />
                         {errors.addressLine2 && (
@@ -647,12 +615,10 @@ const BeneficiaryForm = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="pincode">Pincode</Label>
+                        <Label htmlFor="guardian-pincode">Pincode</Label>
                         <Input
-                          id="pincode"
-                          placeholder="Enter pincode"
-                          defaultValue={defaultData?.pincode}
-                          // {...register("pincode")}
+                          id="guardian-pincode"
+                          placeholder="Enter Pincode"
                           onChange={(e) => handlePincodeChange(e.target.value)}
                         />
                         {errors.pincode && (
@@ -662,11 +628,10 @@ const BeneficiaryForm = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="country">Country</Label>
+                        <Label htmlFor="guardian-country">Country</Label>
                         <Input
-                          id="country"
-                          placeholder="Enter country"
-                          defaultValue={defaultData?.country}
+                          id="guardian-country"
+                          placeholder="Enter Country"
                           {...register("country")}
                         />
                         {errors.country && (
@@ -677,12 +642,11 @@ const BeneficiaryForm = ({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="city">City</Label>
+                        <Label htmlFor="guardian-city">City</Label>
                         <Label style={{ color: "red" }}>*</Label>
                         <Input
-                          id="city"
-                          placeholder="Enter city"
-                          defaultValue={defaultData?.city}
+                          id="guardian-city"
+                          placeholder="Enter City"
                           {...register("city", { required: true })}
                         />
                         {errors.city && (
@@ -690,11 +654,10 @@ const BeneficiaryForm = ({
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="state">State</Label>
+                        <Label htmlFor="guardian-state">State</Label>
                         <Input
-                          id="state"
-                          placeholder="Enter state"
-                          defaultValue={defaultData?.state}
+                          id="guardian-state"
+                          placeholder="Enter State"
                           {...register("state", { required: true })}
                         />
                         {errors.state && (
@@ -713,8 +676,7 @@ const BeneficiaryForm = ({
                               </Label>
                               <Input
                                 id="guardian-name"
-                                placeholder="Enter guardian's full legal name"
-                                defaultValue={defaultData?.guardianName}
+                                placeholder="Enter Full Legal Name"
                                 {...register("guardianName")}
                               />
                               {errors.guardianName && (
@@ -729,16 +691,14 @@ const BeneficiaryForm = ({
                               </Label>
                               <Controller
                                 name="guardianMobile"
-                                defaultValue={defaultData?.guardianMobile}
                                 control={control}
                                 render={({ field }) => (
                                   <PhoneInput
                                     id="guardian-mobile"
                                     type="tel"
-                                    placeholder="Enter guardian's mobile number"
+                                    placeholder="Enter Mobile Number"
                                     defaultCountry="in"
-                                    defaultValue={defaultData?.guardianMobile}
-                                    value={field.value || ""}
+                                    value={field.value}
                                     inputStyle={{ minWidth: "15.5rem" }}
                                     onChange={field.onChange}
                                   />
@@ -755,8 +715,7 @@ const BeneficiaryForm = ({
                               <Input
                                 id="guardian-email"
                                 type="email"
-                                defaultValue={defaultData?.guardianEmail}
-                                placeholder="Enter guardian's email"
+                                placeholder="Enter Email"
                                 {...register("guardianEmail")}
                               />
                               {errors.guardianEmail && (
@@ -769,8 +728,7 @@ const BeneficiaryForm = ({
                               <Label htmlFor="guardian-city">City</Label>
                               <Input
                                 id="guardian-city"
-                                defaultValue={defaultData?.guardianCity}
-                                placeholder="Enter guardian's city"
+                                placeholder="Enter City"
                                 {...register("guardianCity")}
                               />
                               {errors.guardianCity && (
@@ -783,8 +741,7 @@ const BeneficiaryForm = ({
                               <Label htmlFor="guardian-state">State</Label>
                               <Input
                                 id="guardian-state"
-                                defaultValue={defaultData?.guardianState}
-                                placeholder="Enter guardian's state"
+                                placeholder="Enter State"
                                 {...register("guardianState")}
                               />
                               {errors.guardianState && (
@@ -799,13 +756,6 @@ const BeneficiaryForm = ({
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
                       <Button type="submit">Submit</Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setUpdateBenificiaryOpen(false)}
-                      >
-                        Cancel
-                      </Button>
                     </CardFooter>
                   </Card>
                 </form>
@@ -818,4 +768,4 @@ const BeneficiaryForm = ({
   );
 };
 
-export default BeneficiaryForm;
+export default Benificiaryform;

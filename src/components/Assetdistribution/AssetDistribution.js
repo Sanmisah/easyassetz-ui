@@ -8,9 +8,23 @@ import {
 import { Button } from "@com/ui/button";
 import axios from "axios";
 import cross from "@/components/image/close.png";
+
 import lifeInsurance from "@/components/image/LifeInsurance.png";
+import {
+  Bell,
+  CircleUser,
+  Home,
+  LineChart,
+  Menu,
+  Package,
+  Package2,
+  Search,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import HoverCard from "./HoverCard";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -114,6 +128,9 @@ const AssetDistribution = () => {
         <h1 className="text-2xl font-bold">
           Select the asset you want to distribute
         </h1>
+        <div className="flex items-center gap-2 mt-4 ">
+          <Button className="w-full">Summery</Button>
+        </div>
         <div>
           {otherassets &&
             otherassets?.map((data, index) => (
@@ -163,17 +180,18 @@ const AssetDistribution = () => {
                                       </p>
                                     </div>
                                   </div>
-                                  <div className="flex items-center justify-center gap-2 ">
+                                  <div className="flex flex-col items-center justify-center gap-2 ">
                                     {/* <Button onClick={() => handleSelect(asset)}>
                                       Distribute
                                     </Button> */}
 
                                     <Breadcrumb>
-                                      <BreadcrumbList>
+                                      <BreadcrumbList className="flex flex-col">
                                         <BreadcrumbItem>
                                           <BreadcrumbLink
                                             onClick={() => {
                                               dispatch(setLevel("Primary"));
+                                              console.log(asset);
                                               dispatch(
                                                 setSubSelectedAsset(asset)
                                               );
@@ -182,10 +200,12 @@ const AssetDistribution = () => {
                                           >
                                             Primary
                                           </BreadcrumbLink>
+                                          {asset.primary.length > 0 && (
+                                            <HoverCard asset={asset.primary} />
+                                          )}
                                         </BreadcrumbItem>
-                                        <BreadcrumbSeparator />
 
-                                        {asset.primary === true && (
+                                        {asset.primary.length > 0 && (
                                           <BreadcrumbItem>
                                             <BreadcrumbLink
                                               onClick={() => {
@@ -198,12 +218,16 @@ const AssetDistribution = () => {
                                             >
                                               Secondary
                                             </BreadcrumbLink>
+                                            {asset.secondary.length > 0 && (
+                                              <HoverCard
+                                                asset={asset.secondary}
+                                              />
+                                            )}
                                           </BreadcrumbItem>
                                         )}
-                                        {asset.primary === true &&
-                                          asset.secondary === true && (
+                                        {asset.primary.length > 0 &&
+                                          asset.secondary.length > 0 && (
                                             <>
-                                              <BreadcrumbSeparator />
                                               <BreadcrumbItem>
                                                 <BreadcrumbLink
                                                   onClick={() => {
@@ -220,6 +244,11 @@ const AssetDistribution = () => {
                                                 >
                                                   Tertiary
                                                 </BreadcrumbLink>
+                                                {asset.tertiary.length > 0 && (
+                                                  <HoverCard
+                                                    asset={asset.tertiary}
+                                                  />
+                                                )}
                                               </BreadcrumbItem>
                                             </>
                                           )}

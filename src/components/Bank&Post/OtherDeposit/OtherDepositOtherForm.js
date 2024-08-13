@@ -33,7 +33,6 @@ import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
   fdNumber: z.string().nonempty({ message: "FD Number is required" }),
-  company: z.string().nonempty({ message: "Company is required" }),
   branchName: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
   maturityDate: z.any().optional(),
@@ -194,7 +193,7 @@ const OtherDepositForm = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-2">
-              <Label htmlFor="fdNumber">FD Number</Label>
+              <Label htmlFor="fdNumber">Bank Name/ Company</Label>
               <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="fdNumber"
@@ -213,43 +212,6 @@ const OtherDepositForm = () => {
 
               {errors.fdNumber && (
                 <span className="text-red-500">{errors.fdNumber.message}</span>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="company">Company</Label>
-              <Label style={{ color: "red" }}>*</Label>
-              <Controller
-                name="company"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="company"
-                    placeholder="Enter Company"
-                    {...field}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className={errors.company ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {showOtherPPFAccountNo && (
-                <Controller
-                  name="otherCompany"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Company"
-                      className="mt-2"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              )}
-              {errors.company && (
-                <span className="text-red-500">{errors.company.message}</span>
               )}
             </div>
 
