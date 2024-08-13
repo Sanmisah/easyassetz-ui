@@ -314,16 +314,16 @@ const Personaldetail = () => {
   };
 
   const handleFileUpload = () => {
-    window.open(`/api/storage/${defaultData?.aadharFile}`);
+    window.open(`/api/aadhar/${defaultData?.aadharFile}`);
   };
   const handleFileUploadPan = () => {
-    window.open(`/api/storage/${defaultData?.panFile}`);
+    window.open(`/api/pan/${defaultData?.panFile}`);
   };
   const handleFileUploadDriving = () => {
-    window.open(`/api/storage/${defaultData?.drivingFile}`);
+    window.open(`/api/driving/${defaultData?.drivingFile}`);
   };
   const handleFileUploadPassport = () => {
-    window.open(`/api/storage/${defaultData?.passportFile}`);
+    window.open(`/api/passport/${defaultData?.passportFile}`);
   };
   return (
     <Suspense fallback={<Skletonpersonal />}>
