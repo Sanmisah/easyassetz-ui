@@ -47,9 +47,10 @@ const schema = z.object({
   jointHolderPan: z.any().optional(),
   additionalInformation: z.any().optional(),
   typeOfInvestment: z.string().optional(),
-  name: z.string().nonempty({ message: "Name is required" }),
-  mobile: z.string().nonempty({ message: "Mobile is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  name: z.string().optional(),
+
+  mobile: z.string().optional(),
+  email: z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -465,7 +466,7 @@ const EditFormHealth = () => {
             {jointHolderName && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="jointHolderPan">Joint Holder Name</Label>
+                  <Label htmlFor="jointHolderPan">Joint Holder Pan</Label>
                   <Controller
                     name="jointHolderPan"
                     control={control}
@@ -557,6 +558,9 @@ const EditFormHealth = () => {
                   {errors.additionalInformation.message}
                 </span>
               )}
+            </div>
+            <div className="space-y-4 flex flex-col col-span-full">
+              <h1>Point Of Contact</h1>
             </div>
             <div className="space-y-2">
               <Label>Name</Label>

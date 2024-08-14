@@ -37,6 +37,8 @@ const schema = z.object({
     .min(3, { message: "Registration Number is required" }),
   whetherAssigned: z.string().optional(),
   nameOfAssignee: z.any().optional(),
+  expiryDate: z.any().optional(),
+  dateOfAssignment: z.any().optional(),
 });
 
 const IntellectualPropertyOtherForm = () => {
@@ -82,6 +84,7 @@ const IntellectualPropertyOtherForm = () => {
       }
     );
     const data = response.data.data.BusinessAsset;
+    setValue("dateOfAssignment", data.dateOfAssignment);
     setWeather(data.whetherAssigned === "yes");
     setValue("nameOfAssignee", data.nameOfAssignee);
     setValue("dateOfAssignment", data.dateOfAssignment);
@@ -158,11 +161,25 @@ const IntellectualPropertyOtherForm = () => {
   }, [control._formValues]);
 
   const onSubmit = (data) => {
+    if (data.expiryDate) {
+      const date = new Date(data.expiryDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.expiryDate = newdate;
+    }
+    if (data.dateOfAssignment) {
+      const date = new Date(data.dateOfAssignment);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.dateOfAssignment = newdate;
+    }
     console.log(data);
     data.type = "intellectualProperty";
-    data.name = name;
-    data.email = email;
-    data.phone = phone;
+
     console.log("bullion:", data.bullion);
     if (data.firmName === "other") {
       data.firmName = data.otherMetalType;
@@ -285,7 +302,6 @@ const IntellectualPropertyOtherForm = () => {
                       {...field}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={new Date(Benifyciary?.expiryDate) || ""}
                       value={field.value || Benifyciary?.expiryDate || ""}
                     />
                   )}
@@ -379,17 +395,7 @@ const IntellectualPropertyOtherForm = () => {
                       control={control}
                       defaultValue={Benifyciary?.dateOfAssignment || ""}
                       render={({ field }) => (
-                        <Datepicker
-                          {...field}
-                          onChange={(date) => field.onChange(date)}
-                          selected={field.value}
-                          defaultValue={
-                            new Date(Benifyciary?.dateOfAssignment) || ""
-                          }
-                          value={
-                            field.value || Benifyciary?.dateOfAssignment || ""
-                          }
-                        />
+                        <Datepicker {...field} selected={field.value} />
                       )}
                     />
                     {errors.dateOfAssignment && (

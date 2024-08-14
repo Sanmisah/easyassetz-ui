@@ -394,6 +394,9 @@ const JewelleryOtherForm = () => {
                 </span>
               )}
             </div>
+            <div className="col-span-full">
+              <h1>Point Of Contact</h1>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Controller
