@@ -28,7 +28,12 @@ import {
   SheetTitle,
 } from "@com/ui/sheet";
 import { ScrollArea } from "@com/ui/scroll-area";
-import { useForm, Controller } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
@@ -91,6 +96,10 @@ const beneficiarySchema = z
 
 const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
   const queryClient = useQueryClient();
+  const methods = useForm({
+    resolver: zodResolver(beneficiarySchema),
+  });
+
   const {
     register,
     handleSubmit,
@@ -98,10 +107,9 @@ const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(beneficiarySchema),
-  });
+  } = methods;
 
+  const [open, setOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState("");
   // const [dateCountryCode, setDateCountryCode] = useState("+91");
   const [relationship, setRelationship] = useState("");
@@ -169,6 +177,7 @@ const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
     },
     onSuccess: () => {
       toast.success("Beneficiary added successfully!");
+      setOpen(false);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
@@ -176,9 +185,7 @@ const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
     },
   });
 
-  const onSubmit = async (e, data) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const onSubmit = async (data) => {
     console.log(data);
     const date = new Date(data.dob);
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -216,549 +223,591 @@ const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
 
   return (
     <div>
-      <Sheet className="w-[800px]">
+      <Sheet
+        open={open}
+        onOpenChange={(e) => {
+          e.stopPropagation();
+          setOpen(e);
+        }}
+        className="w-[800px]"
+      >
         <SheetTrigger asChild>
-          <Button>Add Nominee</Button>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setOpen(true);
+            }}
+          >
+            Add Nominee
+          </Button>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Add Beneficiary</SheetTitle>
             <SheetDescription className="flex flex-col justify-center">
               <ScrollArea className="w-full h-[85vh] rounded-md">
-                <form onSubmit={handleSubmit(onSubmit)} className="scrollable">
-                  <Card className="w-full max-w-3xl">
-                    <CardHeader>
-                      <CardTitle>Beneficiary Form</CardTitle>
-                      <CardDescription>
-                        Please fill out the following details.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-8">
-                      <div>
-                        <h3 className="text-lg font-medium">Basic Details</h3>
-                        <div className="grid grid-cols-1 gap-6 mt-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="full-name">Full Legal Name</Label>
-                            <Label style={{ color: "red" }}>*</Label>
-                            <Input
-                              id="full-name"
-                              placeholder="Enter your full legal name"
-                              {...register("fullLegalName")}
-                            />
-                            {errors.fullLegalName && (
-                              <p className="text-red-500">
-                                {errors.fullLegalName.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="relationship">Relationship</Label>
-                            <Label style={{ color: "red" }}>*</Label>
-                            <Controller
-                              name="relationship"
-                              control={control}
-                              render={({ field }) => (
-                                <Select
-                                  value={field.value}
-                                  onValueChange={(value) => {
-                                    field.onChange(value);
-                                    setRelationship(value);
-                                  }}
-                                >
-                                  <SelectTrigger
-                                    id="relationship"
-                                    aria-label="Relationship"
-                                  >
-                                    <SelectValue placeholder="Select relationship" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="self">Self</SelectItem>
-                                    <SelectItem value="spouse">
-                                      Spouse
-                                    </SelectItem>
-                                    <SelectItem value="child">Child</SelectItem>
-                                    <SelectItem value="parent">
-                                      Parent
-                                    </SelectItem>
-                                    <SelectItem value="sibling">
-                                      Sibling
-                                    </SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              )}
-                            />
-                            {errors.relationship && (
-                              <p className="text-red-500">
-                                {errors.relationship.message}
-                              </p>
-                            )}
-                          </div>
-                          {relationship === "other" && (
-                            <div className="space-y-2">
-                              <Label htmlFor="specific-relationship">
-                                Specific Relationship
-                              </Label>
-                              <Input
-                                id="specific-relationship"
-                                placeholder="Enter specific relationship"
-                                {...register("specificRelationship", {
-                                  required: relationship === "other",
-                                })}
-                              />
-                              {errors.specificRelationship && (
-                                <p className="text-red-500">
-                                  {errors.specificRelationship.message}
-                                </p>
-                              )}
-                            </div>
-                          )}
-                          <div className="space-y-2">
-                            <Label htmlFor="gender">Gender</Label>
-                            <Label style={{ color: "red" }}>*</Label>
-                            <Controller
-                              name="gender"
-                              control={control}
-                              render={({ field }) => (
-                                <Select
-                                  value={field.value}
-                                  onValueChange={field.onChange}
-                                >
-                                  <SelectTrigger
-                                    id="gender"
-                                    aria-label="Gender"
-                                  >
-                                    <SelectValue placeholder="Select gender" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="male">Male</SelectItem>
-                                    <SelectItem value="female">
-                                      Female
-                                    </SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              )}
-                            />
-                            {errors.gender && (
-                              <p className="text-red-500">
-                                {errors.gender.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2 min-w-[22.5rem]">
-                            <Label htmlFor="dob">Date of Birth</Label>
-                            <Controller
-                              name="dob"
-                              control={control}
-                              render={({ field }) => (
-                                <Datepicker
-                                  value={field.value}
-                                  onChange={field.onChange}
-                                  className="min-w-[190rem]"
-                                />
-                              )}
-                            />
-                            {errors.dob && (
-                              <p className="text-red-500">
-                                {errors.dob.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2 min-w-[22.5rem]">
-                            <Label htmlFor="mobile">Mobile Number</Label>
-                            <Label style={{ color: "red" }}>*</Label>
-                            <Controller
-                              name="mobile"
-                              control={control}
-                              render={({ field }) => (
-                                <PhoneInput
-                                  id="mobile"
-                                  type="tel"
-                                  placeholder="Enter mobile number"
-                                  defaultCountry="in"
-                                  inputStyle={{ minWidth: "15.5rem" }}
-                                  value={field.value}
-                                  onChange={field.onChange}
-                                />
-                              )}
-                            />
-                            {errors.mobile && (
-                              <p className="text-red-500">
-                                {errors.mobile.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                              id="email"
-                              type="email"
-                              placeholder="Enter email"
-                              {...register("email")}
-                            />
-                            {errors.email && (
-                              <p className="text-red-500">
-                                {errors.email.message}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="document">
-                          Identification Document
-                        </Label>
-                        <Controller
-                          name="document"
-                          control={control}
-                          render={({ field }) => (
-                            <Select
-                              value={field.value}
-                              onValueChange={(value) => {
-                                setSelectedDocument(value);
-                                field.onChange(value);
-                              }}
-                            >
-                              <SelectTrigger
-                                id="guardian-document"
-                                aria-label="Identification Document"
-                              >
-                                <SelectValue placeholder="Select document" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="aadhar">Aadhaar</SelectItem>
-                                <SelectItem value="passport">
-                                  Passport
-                                </SelectItem>
-                                <SelectItem value="driving-license">
-                                  Driving License
-                                </SelectItem>
-                                <SelectItem value="voter-id">
-                                  Voter ID
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          )}
-                        />
-                        {errors.document && (
-                          <p className="text-red-500">
-                            {errors.document.message}
-                          </p>
-                        )}
-                      </div>
-                      {selectedDocument && (
-                        <div className="space-y-2">
-                          <Label htmlFor="guardian-document-data">
-                            {selectedDocument} Number
-                          </Label>
-                          <Input
-                            id="guardian-document-data"
-                            placeholder={`Enter ${selectedDocument} number`}
-                            {...register("documentData")}
-                          />
-                          {errors.documentData && (
-                            <p className="text-red-500">
-                              {errors.documentData.message}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                      <div className="space-y-2">
-                        <Label htmlFor="religion">Religion</Label>
-                        <Controller
-                          name="religion"
-                          control={control}
-                          render={({ field }) => (
-                            <Select
-                              value={field.value}
-                              onValueChange={(value) => {
-                                field.onChange(value);
-                              }}
-                            >
-                              <SelectTrigger
-                                id="religion"
-                                aria-label="religion"
-                              >
-                                <SelectValue placeholder="Select Religion" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Christian">
-                                  Christian
-                                </SelectItem>
-                                <SelectItem value="Muslim">Muslim</SelectItem>
-                                <SelectItem value="Hindu">Hindu</SelectItem>
-                                <SelectItem value="Sikh">Sikh</SelectItem>
-                                <SelectItem value="Buddhist">
-                                  Buddhist
-                                </SelectItem>
-                                <SelectItem value="Jain">Jain</SelectItem>
-                                <SelectItem value="Other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          )}
-                        />
-                        {errors.religion && (
-                          <p className="text-red-500">
-                            {errors.religion.message}
-                          </p>
-                        )}
-                      </div>
-                      {religion === "other" && (
-                        <div className="space-y-2">
-                          <Label htmlFor="">Religion</Label>
-                          <Input
-                            id="specificGuardianReligion"
-                            placeholder="Enter Religion"
-                            {...register("specificGuardianReligion", {
-                              required: religion === "other",
-                            })}
-                          />
-                          {errors.specificGuardianReligion && (
-                            <p className="text-red-500">
-                              {errors.specificGuardianReligion.message}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-nationality">
-                          Nationality
-                        </Label>
-                        <Controller
-                          name="nationality"
-                          control={control}
-                          render={({ field }) => (
-                            <Select
-                              id="guardian-nationality"
-                              value={field.value}
-                              onValueChange={(value) => {
-                                field.onChange(value);
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select nationality">
-                                  {field.value || "Select nationality"}
-                                </SelectValue>
-                              </SelectTrigger>
-                              <SelectContent>
-                                {DropdownData.specificNationalities?.map(
-                                  (nationality) => (
-                                    <SelectItem
-                                      key={nationality}
-                                      value={nationality}
-                                    >
-                                      {nationality
-                                        .split("-")
-                                        .map(
-                                          (word) =>
-                                            word.charAt(0) + word.slice(1)
-                                        )
-                                        .join(" ")}
-                                    </SelectItem>
-                                  )
-                                )}
-                              </SelectContent>
-                            </Select>
-                          )}
-                        />
-                        {errors.guardianNationality && (
-                          <p className="text-red-500">
-                            {errors.guardianNationality.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-house-no">
-                          House/Flat No.
-                        </Label>
-                        <Input
-                          id="guardian-house-no"
-                          placeholder="Enter House/Flat Number"
-                          {...register("houseNo")}
-                        />
-                        {errors.houseNo && (
-                          <p className="text-red-500">
-                            {errors.houseNo.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-address1">
-                          Address Line 1
-                        </Label>
-                        <Input
-                          id="guardian-address1"
-                          placeholder="Enter Address line 1"
-                          {...register("addressLine1")}
-                        />
-                        {errors.addressLine1 && (
-                          <p className="text-red-500">
-                            {errors.addressLine1.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-address2">
-                          Address Line 2
-                        </Label>
-                        <Input
-                          id="guardian-address2"
-                          placeholder="Enter Address line 2"
-                          {...register("addressLine2")}
-                        />
-                        {errors.addressLine2 && (
-                          <p className="text-red-500">
-                            {errors.addressLine2.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-pincode">Pincode</Label>
-                        <Input
-                          id="guardian-pincode"
-                          placeholder="Enter Pincode"
-                          onChange={(e) => handlePincodeChange(e.target.value)}
-                        />
-                        {errors.pincode && (
-                          <p className="text-red-500">
-                            {errors.pincode.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-country">Country</Label>
-                        <Input
-                          id="guardian-country"
-                          placeholder="Enter Country"
-                          {...register("country")}
-                        />
-                        {errors.country && (
-                          <p className="text-red-500">
-                            {errors.country.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-city">City</Label>
-                        <Label style={{ color: "red" }}>*</Label>
-                        <Input
-                          id="guardian-city"
-                          placeholder="Enter City"
-                          {...register("city", { required: true })}
-                        />
-                        {errors.city && (
-                          <p className="text-red-500">{errors.city.message}</p>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="guardian-state">State</Label>
-                        <Input
-                          id="guardian-state"
-                          placeholder="Enter State"
-                          {...register("state", { required: true })}
-                        />
-                        {errors.state && (
-                          <p className="text-red-500">{errors.state.message}</p>
-                        )}
-                      </div>
-                      {isMinor && (
+                <FormProvider {...methods}>
+                  <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="scrollable"
+                  >
+                    <Card className="w-full max-w-3xl">
+                      <CardHeader>
+                        <CardTitle>Beneficiary Form</CardTitle>
+                        <CardDescription>
+                          Please fill out the following details.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-8">
                         <div>
-                          <h3 className="text-lg font-medium">
-                            Guardian Details
-                          </h3>
+                          <h3 className="text-lg font-medium">Basic Details</h3>
                           <div className="grid grid-cols-1 gap-6 mt-4">
                             <div className="space-y-2">
-                              <Label htmlFor="guardian-name">
-                                Full Legal Name
-                              </Label>
+                              <Label htmlFor="full-name">Full Legal Name</Label>
+                              <Label style={{ color: "red" }}>*</Label>
                               <Input
-                                id="guardian-name"
-                                placeholder="Enter Full Legal Name"
-                                {...register("guardianName")}
+                                id="full-name"
+                                placeholder="Enter your full legal name"
+                                {...register("fullLegalName")}
                               />
-                              {errors.guardianName && (
+                              {errors.fullLegalName && (
                                 <p className="text-red-500">
-                                  {errors.guardianName.message}
+                                  {errors.fullLegalName.message}
                                 </p>
                               )}
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="guardian-mobile">
-                                Mobile Number
-                              </Label>
+                              <Label htmlFor="relationship">Relationship</Label>
+                              <Label style={{ color: "red" }}>*</Label>
                               <Controller
-                                name="guardianMobile"
+                                name="relationship"
+                                control={control}
+                                render={({ field }) => (
+                                  <Select
+                                    value={field.value}
+                                    onValueChange={(value) => {
+                                      field.onChange(value);
+                                      setRelationship(value);
+                                    }}
+                                  >
+                                    <SelectTrigger
+                                      id="relationship"
+                                      aria-label="Relationship"
+                                    >
+                                      <SelectValue placeholder="Select relationship" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="self">Self</SelectItem>
+                                      <SelectItem value="spouse">
+                                        Spouse
+                                      </SelectItem>
+                                      <SelectItem value="child">
+                                        Child
+                                      </SelectItem>
+                                      <SelectItem value="parent">
+                                        Parent
+                                      </SelectItem>
+                                      <SelectItem value="sibling">
+                                        Sibling
+                                      </SelectItem>
+                                      <SelectItem value="other">
+                                        Other
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                              {errors.relationship && (
+                                <p className="text-red-500">
+                                  {errors.relationship.message}
+                                </p>
+                              )}
+                            </div>
+                            {relationship === "other" && (
+                              <div className="space-y-2">
+                                <Label htmlFor="specific-relationship">
+                                  Specific Relationship
+                                </Label>
+                                <Input
+                                  id="specific-relationship"
+                                  placeholder="Enter specific relationship"
+                                  {...register("specificRelationship", {
+                                    required: relationship === "other",
+                                  })}
+                                />
+                                {errors.specificRelationship && (
+                                  <p className="text-red-500">
+                                    {errors.specificRelationship.message}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                            <div className="space-y-2">
+                              <Label htmlFor="gender">Gender</Label>
+                              <Label style={{ color: "red" }}>*</Label>
+                              <Controller
+                                name="gender"
+                                control={control}
+                                render={({ field }) => (
+                                  <Select
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                  >
+                                    <SelectTrigger
+                                      id="gender"
+                                      aria-label="Gender"
+                                    >
+                                      <SelectValue placeholder="Select gender" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="male">Male</SelectItem>
+                                      <SelectItem value="female">
+                                        Female
+                                      </SelectItem>
+                                      <SelectItem value="other">
+                                        Other
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                              {errors.gender && (
+                                <p className="text-red-500">
+                                  {errors.gender.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2 min-w-[22.5rem]">
+                              <Label htmlFor="dob">Date of Birth</Label>
+                              <Controller
+                                name="dob"
+                                control={control}
+                                render={({ field }) => (
+                                  <Datepicker
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    className="min-w-[190rem]"
+                                  />
+                                )}
+                              />
+                              {errors.dob && (
+                                <p className="text-red-500">
+                                  {errors.dob.message}
+                                </p>
+                              )}
+                            </div>
+                            <div className="space-y-2 min-w-[22.5rem]">
+                              <Label htmlFor="mobile">Mobile Number</Label>
+                              <Label style={{ color: "red" }}>*</Label>
+                              <Controller
+                                name="mobile"
                                 control={control}
                                 render={({ field }) => (
                                   <PhoneInput
-                                    id="guardian-mobile"
+                                    id="mobile"
                                     type="tel"
-                                    placeholder="Enter Mobile Number"
+                                    placeholder="Enter mobile number"
                                     defaultCountry="in"
-                                    value={field.value}
                                     inputStyle={{ minWidth: "15.5rem" }}
+                                    value={field.value}
                                     onChange={field.onChange}
                                   />
                                 )}
                               />
-                              {errors.guardianMobile && (
+                              {errors.mobile && (
                                 <p className="text-red-500">
-                                  {errors.guardianMobile.message}
+                                  {errors.mobile.message}
                                 </p>
                               )}
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="guardian-email">Email</Label>
+                              <Label htmlFor="email">Email</Label>
                               <Input
-                                id="guardian-email"
+                                id="email"
                                 type="email"
-                                placeholder="Enter Email"
-                                {...register("guardianEmail")}
+                                placeholder="Enter email"
+                                {...register("email")}
                               />
-                              {errors.guardianEmail && (
+                              {errors.email && (
                                 <p className="text-red-500">
-                                  {errors.guardianEmail.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-city">City</Label>
-                              <Input
-                                id="guardian-city"
-                                placeholder="Enter City"
-                                {...register("guardianCity")}
-                              />
-                              {errors.guardianCity && (
-                                <p className="text-red-500">
-                                  {errors.guardianCity.message}
-                                </p>
-                              )}
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="guardian-state">State</Label>
-                              <Input
-                                id="guardian-state"
-                                placeholder="Enter State"
-                                {...register("guardianState")}
-                              />
-                              {errors.guardianState && (
-                                <p className="text-red-500">
-                                  {errors.guardianState.message}
+                                  {errors.email.message}
                                 </p>
                               )}
                             </div>
                           </div>
                         </div>
-                      )}
-                    </CardContent>
-                    <CardFooter className="flex justify-end space-x-4">
-                      <Button type="submit">Submit</Button>
-                    </CardFooter>
-                  </Card>
-                </form>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="document">
+                            Identification Document
+                          </Label>
+                          <Controller
+                            name="document"
+                            control={control}
+                            render={({ field }) => (
+                              <Select
+                                value={field.value}
+                                onValueChange={(value) => {
+                                  setSelectedDocument(value);
+                                  field.onChange(value);
+                                }}
+                              >
+                                <SelectTrigger
+                                  id="guardian-document"
+                                  aria-label="Identification Document"
+                                >
+                                  <SelectValue placeholder="Select document" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="aadhar">
+                                    Aadhaar
+                                  </SelectItem>
+                                  <SelectItem value="passport">
+                                    Passport
+                                  </SelectItem>
+                                  <SelectItem value="driving-license">
+                                    Driving License
+                                  </SelectItem>
+                                  <SelectItem value="voter-id">
+                                    Voter ID
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                          {errors.document && (
+                            <p className="text-red-500">
+                              {errors.document.message}
+                            </p>
+                          )}
+                        </div>
+                        {selectedDocument && (
+                          <div className="space-y-2">
+                            <Label htmlFor="guardian-document-data">
+                              {selectedDocument} Number
+                            </Label>
+                            <Input
+                              id="guardian-document-data"
+                              placeholder={`Enter ${selectedDocument} number`}
+                              {...register("documentData")}
+                            />
+                            {errors.documentData && (
+                              <p className="text-red-500">
+                                {errors.documentData.message}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        <div className="space-y-2">
+                          <Label htmlFor="religion">Religion</Label>
+                          <Controller
+                            name="religion"
+                            control={control}
+                            render={({ field }) => (
+                              <Select
+                                value={field.value}
+                                onValueChange={(value) => {
+                                  field.onChange(value);
+                                }}
+                              >
+                                <SelectTrigger
+                                  id="religion"
+                                  aria-label="religion"
+                                >
+                                  <SelectValue placeholder="Select Religion" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Christian">
+                                    Christian
+                                  </SelectItem>
+                                  <SelectItem value="Muslim">Muslim</SelectItem>
+                                  <SelectItem value="Hindu">Hindu</SelectItem>
+                                  <SelectItem value="Sikh">Sikh</SelectItem>
+                                  <SelectItem value="Buddhist">
+                                    Buddhist
+                                  </SelectItem>
+                                  <SelectItem value="Jain">Jain</SelectItem>
+                                  <SelectItem value="Other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                          {errors.religion && (
+                            <p className="text-red-500">
+                              {errors.religion.message}
+                            </p>
+                          )}
+                        </div>
+                        {religion === "other" && (
+                          <div className="space-y-2">
+                            <Label htmlFor="">Religion</Label>
+                            <Input
+                              id="specificGuardianReligion"
+                              placeholder="Enter Religion"
+                              {...register("specificGuardianReligion", {
+                                required: religion === "other",
+                              })}
+                            />
+                            {errors.specificGuardianReligion && (
+                              <p className="text-red-500">
+                                {errors.specificGuardianReligion.message}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-nationality">
+                            Nationality
+                          </Label>
+                          <Controller
+                            name="nationality"
+                            control={control}
+                            render={({ field }) => (
+                              <Select
+                                id="guardian-nationality"
+                                value={field.value}
+                                onValueChange={(value) => {
+                                  field.onChange(value);
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select nationality">
+                                    {field.value || "Select nationality"}
+                                  </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {DropdownData.specificNationalities?.map(
+                                    (nationality) => (
+                                      <SelectItem
+                                        key={nationality}
+                                        value={nationality}
+                                      >
+                                        {nationality
+                                          .split("-")
+                                          .map(
+                                            (word) =>
+                                              word.charAt(0) + word.slice(1)
+                                          )
+                                          .join(" ")}
+                                      </SelectItem>
+                                    )
+                                  )}
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                          {errors.guardianNationality && (
+                            <p className="text-red-500">
+                              {errors.guardianNationality.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-house-no">
+                            House/Flat No.
+                          </Label>
+                          <Input
+                            id="guardian-house-no"
+                            placeholder="Enter House/Flat Number"
+                            {...register("houseNo")}
+                          />
+                          {errors.houseNo && (
+                            <p className="text-red-500">
+                              {errors.houseNo.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-address1">
+                            Address Line 1
+                          </Label>
+                          <Input
+                            id="guardian-address1"
+                            placeholder="Enter Address line 1"
+                            {...register("addressLine1")}
+                          />
+                          {errors.addressLine1 && (
+                            <p className="text-red-500">
+                              {errors.addressLine1.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-address2">
+                            Address Line 2
+                          </Label>
+                          <Input
+                            id="guardian-address2"
+                            placeholder="Enter Address line 2"
+                            {...register("addressLine2")}
+                          />
+                          {errors.addressLine2 && (
+                            <p className="text-red-500">
+                              {errors.addressLine2.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-pincode">Pincode</Label>
+                          <Input
+                            id="guardian-pincode"
+                            placeholder="Enter Pincode"
+                            onChange={(e) =>
+                              handlePincodeChange(e.target.value)
+                            }
+                          />
+                          {errors.pincode && (
+                            <p className="text-red-500">
+                              {errors.pincode.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-country">Country</Label>
+                          <Input
+                            id="guardian-country"
+                            placeholder="Enter Country"
+                            {...register("country")}
+                          />
+                          {errors.country && (
+                            <p className="text-red-500">
+                              {errors.country.message}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-city">City</Label>
+                          <Label style={{ color: "red" }}>*</Label>
+                          <Input
+                            id="guardian-city"
+                            placeholder="Enter City"
+                            {...register("city", { required: true })}
+                          />
+                          {errors.city && (
+                            <p className="text-red-500">
+                              {errors.city.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardian-state">State</Label>
+                          <Input
+                            id="guardian-state"
+                            placeholder="Enter State"
+                            {...register("state", { required: true })}
+                          />
+                          {errors.state && (
+                            <p className="text-red-500">
+                              {errors.state.message}
+                            </p>
+                          )}
+                        </div>
+                        {isMinor && (
+                          <div>
+                            <h3 className="text-lg font-medium">
+                              Guardian Details
+                            </h3>
+                            <div className="grid grid-cols-1 gap-6 mt-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="guardian-name">
+                                  Full Legal Name
+                                </Label>
+                                <Input
+                                  id="guardian-name"
+                                  placeholder="Enter Full Legal Name"
+                                  {...register("guardianName")}
+                                />
+                                {errors.guardianName && (
+                                  <p className="text-red-500">
+                                    {errors.guardianName.message}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="guardian-mobile">
+                                  Mobile Number
+                                </Label>
+                                <Controller
+                                  name="guardianMobile"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <PhoneInput
+                                      id="guardian-mobile"
+                                      type="tel"
+                                      placeholder="Enter Mobile Number"
+                                      defaultCountry="in"
+                                      value={field.value}
+                                      inputStyle={{ minWidth: "15.5rem" }}
+                                      onChange={field.onChange}
+                                    />
+                                  )}
+                                />
+                                {errors.guardianMobile && (
+                                  <p className="text-red-500">
+                                    {errors.guardianMobile.message}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="guardian-email">Email</Label>
+                                <Input
+                                  id="guardian-email"
+                                  type="email"
+                                  placeholder="Enter Email"
+                                  {...register("guardianEmail")}
+                                />
+                                {errors.guardianEmail && (
+                                  <p className="text-red-500">
+                                    {errors.guardianEmail.message}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="guardian-city">City</Label>
+                                <Input
+                                  id="guardian-city"
+                                  placeholder="Enter City"
+                                  {...register("guardianCity")}
+                                />
+                                {errors.guardianCity && (
+                                  <p className="text-red-500">
+                                    {errors.guardianCity.message}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="guardian-state">State</Label>
+                                <Input
+                                  id="guardian-state"
+                                  placeholder="Enter State"
+                                  {...register("guardianState")}
+                                />
+                                {errors.guardianState && (
+                                  <p className="text-red-500">
+                                    {errors.guardianState.message}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                      <CardFooter className="flex justify-end space-x-4">
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onSubmit(methods.getValues());
+                          }}
+                        >
+                          Submit
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </form>
+                </FormProvider>
               </ScrollArea>
             </SheetDescription>
           </SheetHeader>

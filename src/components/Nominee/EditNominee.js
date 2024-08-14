@@ -185,19 +185,10 @@ const AddNominee = ({
               </div>
             </div>
             <SheetFooter>
-              {benificiaryopen && (
-                <BeneficiaryForm
-                  setbenficiaryopen={setbenficiaryopen}
-                  benificiaryopen={benificiaryopen}
-                />
-              )}
-              <Button
-                onClick={() => {
-                  setbenficiaryopen(true);
-                }}
-              >
-                Add Nomniee
-              </Button>
+              <BeneficiaryForm
+                setbenficiaryopen={setbenficiaryopen}
+                benificiaryopen={benificiaryopen}
+              />
               <SheetClose asChild>
                 <Button onClick={handleSubmit} type="submit">
                   Save changes

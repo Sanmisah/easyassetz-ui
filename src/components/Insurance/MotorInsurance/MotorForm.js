@@ -488,6 +488,10 @@ const MotorForm = () => {
                 Add nominee
               </Label>
               <Addnominee
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
                 setDisplaynominie={setDisplaynominie}
                 setSelectedNommie={setSelectedNommie}
                 displaynominie={displaynominie}
