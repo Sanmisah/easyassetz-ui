@@ -30,7 +30,7 @@ const AddNominee = ({
   const navigate = useNavigate();
   const [AddNominee, setAddNominee] = useState(false);
   const [benficiaryopen, setbenficiaryopen] = useState(false);
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     axios
       .get(`/api/beneficiaries`, {
@@ -91,7 +91,12 @@ const AddNominee = ({
 
   return (
     <div>
-      <Sheet>
+      <Sheet
+        open={open}
+        onOpenChange={(e) => {
+          setOpen(e);
+        }}
+      >
         <SheetTrigger asChild>
           <div className="cursor-pointer flex border border-input bg-background p-4 justify-between pl-2 pr-2 items-center rounded-lg">
             <h1 className="ml-2 font-bold">Add Nominee</h1>
@@ -99,7 +104,15 @@ const AddNominee = ({
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Add Nominee</SheetTitle>
+            <SheetTitle
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen(true);
+              }}
+            >
+              Add Nominee
+            </SheetTitle>
             <SheetDescription>
               <p>Select nominee to add to your insurance policy</p>
             </SheetDescription>
