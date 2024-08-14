@@ -46,6 +46,7 @@ const schema = z.object({
   email: z.string().optional(),
   mobile: z.string().optional(),
   type: z.any().optional(),
+  jewelleryImages: z.any().optional(),
 });
 
 const JewelleryOtherForm = () => {
@@ -85,11 +86,18 @@ const JewelleryOtherForm = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/other-assets`, data, {
+      const Formdata = new FormData();
+      Formdata.append("jewelleryImages", data.jewelleryImages);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+      const response = await axios.post(`/api/other-assets`, Formdata, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
+
       return response.data.data.Jewellery;
     },
     onSuccess: () => {
@@ -394,6 +402,9 @@ const JewelleryOtherForm = () => {
                 </span>
               )}
             </div>
+            <div className="col-span-full">
+              <h1>Point Of Contact</h1>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Controller
@@ -452,6 +463,29 @@ const JewelleryOtherForm = () => {
                 <span className="text-red-500">{errors.mobile.message}</span>
               )}
             </div>
+            <div className="space-y-2">
+              <Label>Upload File</Label>
+              <Controller
+                name="jewelleryImages"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.file ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.file && (
+                <span className="text-red-500">{errors.file.message}</span>
+              )}
+            </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

@@ -38,6 +38,8 @@ const schema = z.object({
   membershipType: z.string().optional(),
   otherMembershipType: z.string().optional(),
   membershipPaymentDate: z.any().optional(),
+  name: z.string().optional(),
+  mobile: z.string().optional(),
   email: z.string().optional(),
 });
 
@@ -109,15 +111,18 @@ const MembershipForm = () => {
   );
 
   const onSubmit = (data) => {
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
-    const date = new Date(data.membershipPaymentDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.membershipPaymentDate = newdate;
+    if (data.membershipType === "other") {
+      data.membershipType = data.otherMembershipType;
+    }
+    if (data.membershipPaymentDate) {
+      const date = new Date(data.membershipPaymentDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.membershipPaymentDate = newdate;
+    }
+
     console.log("Nomiee:", selectedNommie.length < 1);
     if (data.membershipType === "other") {
       data.membershipType = data.otherMembershipType;
@@ -335,8 +340,6 @@ const MembershipForm = () => {
                           id="name"
                           placeholder="Enter Name"
                           {...field}
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
                           className={errors.name ? "border-red-500" : ""}
                         />
                       )}
@@ -357,8 +360,6 @@ const MembershipForm = () => {
                           id="email"
                           placeholder="Enter Email"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
                           className={errors.email ? "border-red-500" : ""}
                         />
                       )}
@@ -381,11 +382,7 @@ const MembershipForm = () => {
                           placeholder="Enter Mobile Number"
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
-                          value={field.value}
-                          onChange={(value) => {
-                            console.log(value);
-                            setPhone(value);
-                          }}
+                          {...field}
                         />
                       )}
                     />

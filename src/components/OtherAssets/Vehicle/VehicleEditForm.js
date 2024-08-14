@@ -86,7 +86,18 @@ const OtherLoansEditForm = () => {
       }
     );
     let data = response.data.data.OtherAsset;
-    setValue("vehicleType", data.vehicleType);
+    if (
+      data.vehicleType !== "fourwheeler" ||
+      data.vehicleType !== "twowheeler" ||
+      data.vehicleType !== "threewheeler" ||
+      data.vehicleType !== "tractor" ||
+      data.vehicleType !== "bulldozer" ||
+      data.vehicleType !== "crane"
+    ) {
+      setShowOtherMetalType(true);
+      setValue("vehicleType", "other");
+      setValue("otherVehicleType", data.vehicleType);
+    }
     setValue("fourWheeler", data.fourWheeler);
     setValue("company", data.company);
     setValue("model", data.model);
@@ -146,6 +157,9 @@ const OtherLoansEditForm = () => {
   };
 
   const onSubmit = (data) => {
+    if (data.vehicleType === "other") {
+      data.vehicleType = data.otherVehicleType;
+    }
     console.log(data);
     if (data.yearOfExpiry) {
       const date = new Date(data.yearOfExpiry);
@@ -230,25 +244,26 @@ const OtherLoansEditForm = () => {
                     </Select>
                   )}
                 />
+                {showOtherMetalType && (
+                  <Controller
+                    name="otherVehicleType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Vehicle Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
                 {errors.vehicleType && (
                   <span className="text-red-500">
                     {errors.vehicleType.message}
                   </span>
                 )}
               </div>
-              {showOtherMetalType && (
-                <Controller
-                  name="otherVehicleType"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Vehicle Type"
-                      className="mt-2"
-                    />
-                  )}
-                />
-              )}
+
               {showVehicleType && (
                 <div className="space-y-2">
                   <Label htmlFor="fourWheeler">Four Wheeler</Label>

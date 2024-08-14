@@ -51,6 +51,7 @@ const schema = z.object({
   name: z.string().optional(),
   mobie: z.string().optional(),
   email: z.string().optional(),
+  image: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -115,6 +116,12 @@ const ppfForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
+      const Formdata = new FormData();
+      Formdata.append("image", data.image);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
       const response = await axios.post(`/api/post-saving-schemes`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
@@ -535,6 +542,39 @@ const ppfForm = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="space-y-2 col-span-full">
+              <Label>Upload File</Label>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.file ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.file && (
+                <span className="text-red-500">{errors.file.message}</span>
+              )}
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

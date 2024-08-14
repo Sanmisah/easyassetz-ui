@@ -44,6 +44,7 @@ const schema = z.object({
   holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
+  image: z.any().optional(),
 });
 // .refine(
 //   (data) => {
@@ -810,7 +811,28 @@ const BankAccountForm = () => {
                 <span className="text-red-500">{errors.image.message}</span>
               )}
             </div> */}
-
+            <div className="space-y-2">
+              <Label>Upload File</Label>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.file ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.file && (
+                <span className="text-red-500">{errors.file.message}</span>
+              )}
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

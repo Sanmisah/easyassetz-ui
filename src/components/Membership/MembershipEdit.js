@@ -39,6 +39,9 @@ const schema = z.object({
   membershipType: z.any().optional(),
   otherMembershipType: z.any().optional(),
   membershipPaymentDate: z.any().optional(),
+  name: z.string().optional(),
+  mobile: z.string().optional(),
+  email: z.string().optional(),
 });
 
 const MembershipEdit = () => {
@@ -91,14 +94,14 @@ const MembershipEdit = () => {
       setValue("otherMembershipType", othertype);
     }
 
-    if (othertype === "annual" || othertype === "life") {
-      setShowOtherMembershipType(false);
-      setValue("membershipType", othertype);
-    } else {
-      setShowOtherMembershipType(true);
-      setValue("otherMembersipType", othertype);
-    }
-    setValue("membershipType", response.data.data.Membership?.membershipType);
+    // if (othertype === "annual" || othertype === "life") {
+    //   setShowOtherMembershipType(false);
+    //   setValue("membershipType", othertype);
+    // } else {
+    //   setShowOtherMembershipType(true);
+    //   setValue("otherMembersipType", othertype);
+    // }
+    // setValue("membershipType", response.data.data.Membership?.membershipType);
     setValue(
       "membershipPaymentDate",
       response.data.data.Membership?.membershipPaymentDate
@@ -188,20 +191,22 @@ const MembershipEdit = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    data.name = name;
-    data.email = email;
-    data.mobile = mobile;
     console.log("membership:", data.membership);
     if (data.membershipType === "other") {
       data.membersipType = data.otherMembershipType;
     }
+    if (data.membershipType === "other") {
+      data.membershipType = data.otherMembershipType;
+    }
     console.log(data);
-    const date = new Date(data.membershipPaymentDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.membershipPaymentDate = newdate;
+    if (data.membershipPaymentDate) {
+      const date = new Date(data.membershipPaymentDate);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.membershipPaymentDate = newdate;
+    }
     console.log("brokerName:", data.brokerName);
     data.nominees = selectedNommie;
 
@@ -350,9 +355,6 @@ const MembershipEdit = () => {
                       {...field}
                       onChange={(date) => field.onChange(date)}
                       selected={field.value}
-                      defaultValue={
-                        new Date(Benifyciary?.membershipPaymentDate) || ""
-                      }
                     />
                   )}
                 />
@@ -407,6 +409,9 @@ const MembershipEdit = () => {
                 setDisplaynominie={setDisplaynominie}
               />{" "}
             </div>
+            <div className="space-y-4 flex flex-col col-span-full">
+              <h1>Point Of Contact</h1>
+            </div>
             <div className="w-full grid grid-cols-1 gap-4 mt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
@@ -418,8 +423,6 @@ const MembershipEdit = () => {
                     <Input
                       id="name"
                       placeholder="Enter Name"
-                      value={field.value}
-                      onChange={(e) => setName(e.target.value)}
                       {...field}
                       className={errors.name ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.name || ""}
@@ -441,7 +444,6 @@ const MembershipEdit = () => {
                       id="email"
                       placeholder="Enter Email"
                       {...field}
-                      onChange={(e) => setEmail(e.target.value)}
                       className={errors.email ? "border-red-500" : ""}
                       defaultValue={Benifyciary?.email || ""}
                     />
@@ -464,8 +466,7 @@ const MembershipEdit = () => {
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}
-                      value={field.value}
-                      onChange={(e) => setMobile(e.target)}
+                      {...field}
                       defaultValue={Benifyciary?.mobile || ""}
                     />
                   )}

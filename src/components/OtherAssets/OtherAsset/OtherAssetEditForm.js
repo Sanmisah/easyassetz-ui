@@ -42,6 +42,7 @@ const schema = z.object({
   email: z.any().optional(),
   mobile: z.any().optional(),
   type: z.any().optional(),
+  otherAssetImages: z.any().optional(),
 });
 
 const OtherAssetEditForm = () => {
@@ -108,9 +109,16 @@ const OtherAssetEditForm = () => {
 
   const loanMutate = useMutation({
     mutationFn: async (data) => {
+      const Formdata = new FormData();
+      Formdata.append("otherAssetImages", data.otherAssetImages);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+
       const response = await axios.put(
         `/api/other-assets/${lifeInsuranceEditId}`,
-        data,
+        Formdata,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,
@@ -317,7 +325,39 @@ const OtherAssetEditForm = () => {
                 <span className="text-red-500">{errors.mobile.message}</span>
               )}
             </div>
-
+            <div className="space-y-2">
+              <Label>Upload File</Label>
+              <Controller
+                name="otherAssetImages"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.file ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.file && (
+                <span className="text-red-500">{errors.file.message}</span>
+              )}
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.otherAssetImages}`);
+                }}
+              >
+                View Attachment
+              </Button>
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

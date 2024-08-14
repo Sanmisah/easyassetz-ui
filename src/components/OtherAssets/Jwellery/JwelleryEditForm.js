@@ -141,7 +141,11 @@ const OtherLoansEditForm = () => {
     return response.data.data.OtherAsset;
   };
 
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data: Benifyciary,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["vehicleData", lifeInsuranceEditId],
     queryFn: getPersonalData,
     onSuccess: (data) => {
@@ -524,6 +528,39 @@ const OtherLoansEditForm = () => {
               {errors.mobile && (
                 <span className="text-red-500">{errors.mobile.message}</span>
               )}
+            </div>
+            <div className="space-y-2">
+              <Label>Upload File</Label>
+              <Controller
+                name="jewelleryImages"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.file ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.file && (
+                <span className="text-red-500">{errors.file.message}</span>
+              )}
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.jewelleryImages}`);
+                }}
+              >
+                View Attachment
+              </Button>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

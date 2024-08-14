@@ -359,7 +359,6 @@ const CompanyForm = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOthertypeOfInvestment(value === "other");
                       }}
                       className={
                         errors.typeOfInvestment ? "border-red-500" : ""
@@ -373,7 +372,6 @@ const CompanyForm = () => {
                         <SelectItem value="profit">Profit </SelectItem>
                         <SelectItem value="loan">Loan </SelectItem>
                         <SelectItem value="deposit">Deposit </SelectItem>
-                        <SelectItem value="other">Other </SelectItem>
                       </SelectContent>
                     </Select>
                   )}

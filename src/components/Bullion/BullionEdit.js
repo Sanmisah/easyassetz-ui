@@ -483,6 +483,17 @@ const BullionEdit = () => {
                   </span>
                 )}
               </div>
+              <div>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(`/api/file/${Benifyciary?.bullionFile}`);
+                  }}
+                >
+                  View Attachment
+                </Button>
+              </div>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

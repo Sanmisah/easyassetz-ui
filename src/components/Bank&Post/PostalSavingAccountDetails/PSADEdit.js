@@ -47,6 +47,7 @@ const schema = z.object({
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
   additionalDetails: z.any().optional(),
+  image: z.any().optional(),
 });
 
 const PSDAEditForm = () => {
@@ -457,6 +458,39 @@ const PSDAEditForm = () => {
                 displaynominie={displaynominie}
                 setDisplaynominie={setDisplaynominie}
               />{" "}
+            </div>
+            <div className="space-y-2 col-span-full">
+              <Label>Upload File</Label>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.file ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.file && (
+                <span className="text-red-500">{errors.file.message}</span>
+              )}
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
