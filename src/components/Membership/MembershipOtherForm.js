@@ -36,6 +36,7 @@ const schema = z.object({
     .nonempty({ message: "Organization Name is required" }),
   membershipId: z.string().nonempty({ message: "Membership id is required" }),
   membershipType: z.string().optional(),
+  otherMembershipType: z.string().optional(),
   membershipPaymentDate: z.any().optional(),
   email: z.string().optional(),
 });
@@ -118,6 +119,9 @@ const MembershipForm = () => {
     const newdate = `${month}/${day}/${year}`;
     data.membershipPaymentDate = newdate;
     console.log("Nomiee:", selectedNommie.length < 1);
+    if (data.membershipType === "other") {
+      data.membershipType = data.otherMembershipType;
+    }
 
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
@@ -183,7 +187,7 @@ const MembershipForm = () => {
                 render={({ field }) => (
                   <Input
                     id="membershipId"
-                    placeholder="Enter Membership id"
+                    placeholder="Enter Membership Id"
                     {...field}
                     value={field.value || ""}
                     onChange={field.onChange}
@@ -374,7 +378,7 @@ const MembershipForm = () => {
                         <PhoneInput
                           id="mobile"
                           type="tel"
-                          placeholder="Enter mobile number"
+                          placeholder="Enter Mobile Number"
                           defaultCountry="in"
                           inputStyle={{ minWidth: "15.5rem" }}
                           value={field.value}

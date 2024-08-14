@@ -231,7 +231,7 @@ const JewelleryOtherForm = () => {
                       className={errors.metal ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Select Metal Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="gold">Gold</SelectItem>
@@ -286,7 +286,7 @@ const JewelleryOtherForm = () => {
                       className={errors.preciousStone ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Select Precious Stone" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="diamond">Diamond</SelectItem>
@@ -440,7 +440,7 @@ const JewelleryOtherForm = () => {
                   <PhoneInput
                     id="mobile"
                     type="tel"
-                    placeholder="Enter mobile number"
+                    placeholder="Enter Mobile Number"
                     defaultCountry="in"
                     inputStyle={{ minWidth: "15.5rem" }}
                     value={field.value || ""}

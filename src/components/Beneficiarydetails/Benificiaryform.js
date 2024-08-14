@@ -88,6 +88,9 @@ const beneficiarySchema = z
     }
   );
 
+function capitlizeText(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
 const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
   const queryClient = useQueryClient();
   const {
@@ -242,7 +245,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             <Label style={{ color: "red" }}>*</Label>
                             <Input
                               id="full-name"
-                              placeholder="Enter your full legal name"
+                              placeholder="Enter your Full Legal Name"
                               {...register("fullLegalName")}
                             />
                             {errors.fullLegalName && (
@@ -269,7 +272,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                     id="relationship"
                                     aria-label="Relationship"
                                   >
-                                    <SelectValue placeholder="Select relationship" />
+                                    <SelectValue placeholder="Select Relationship" />
                                   </SelectTrigger>
                                   <SelectContent>
                                     <SelectItem value="self">Self</SelectItem>
@@ -301,7 +304,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               </Label>
                               <Input
                                 id="specific-relationship"
-                                placeholder="Enter specific relationship"
+                                placeholder="Enter Specific Relationship"
                                 {...register("specificRelationship", {
                                   required: relationship === "other",
                                 })}
@@ -328,7 +331,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                     id="gender"
                                     aria-label="Gender"
                                   >
-                                    <SelectValue placeholder="Select gender" />
+                                    <SelectValue placeholder="Select Gender" />
                                   </SelectTrigger>
                                   <SelectContent>
                                     <SelectItem value="male">Male</SelectItem>
@@ -347,7 +350,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                             )}
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
-                            <Label htmlFor="dob">Date of Birth</Label>
+                            <Label htmlFor="dob">Date Of Birth</Label>
                             <Controller
                               name="dob"
                               control={control}
@@ -375,7 +378,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                 <PhoneInput
                                   id="mobile"
                                   type="tel"
-                                  placeholder="Enter mobile number"
+                                  placeholder="Enter Mobile Number"
                                   defaultCountry="in"
                                   inputStyle={{ minWidth: "15.5rem" }}
                                   value={field.value}
@@ -425,7 +428,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                                 id="guardian-document"
                                 aria-label="Identification Document"
                               >
-                                <SelectValue placeholder="Select document" />
+                                <SelectValue placeholder="Select Document" />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="aadhar">Aadhaar</SelectItem>
@@ -451,11 +454,11 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       {selectedDocument && (
                         <div className="space-y-2">
                           <Label htmlFor="guardian-document-data">
-                            {selectedDocument} Number
+                            {capitlizeText(selectedDocument)} Number
                           </Label>
                           <Input
                             id="guardian-document-data"
-                            placeholder={`Enter ${selectedDocument} number`}
+                            placeholder={`Enter ${selectedDocument} Number`}
                             {...register("documentData")}
                           />
                           {errors.documentData && (
@@ -538,8 +541,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               }}
                             >
                               <SelectTrigger>
-                                <SelectValue placeholder="Select nationality">
-                                  {field.value || "Select nationality"}
+                                <SelectValue placeholder="Select Nationality">
+                                  {field.value || "Select Nationality"}
                                 </SelectValue>
                               </SelectTrigger>
                               <SelectContent>
@@ -590,7 +593,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </Label>
                         <Input
                           id="guardian-address1"
-                          placeholder="Enter Address line 1"
+                          placeholder="Enter Address Line 1"
                           {...register("addressLine1")}
                         />
                         {errors.addressLine1 && (
@@ -605,7 +608,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                         </Label>
                         <Input
                           id="guardian-address2"
-                          placeholder="Enter Address line 2"
+                          placeholder="Enter Address Line 2"
                           {...register("addressLine2")}
                         />
                         {errors.addressLine2 && (

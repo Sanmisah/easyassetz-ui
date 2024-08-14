@@ -37,6 +37,7 @@ const schema = z.object({
     .nonempty({ message: "Organization Name is required" }),
   membershipId: z.string().nonempty({ message: "Membership id is required" }),
   membershipType: z.any().optional(),
+  otherMembershipType: z.any().optional(),
   membershipPaymentDate: z.any().optional(),
 });
 
@@ -83,6 +84,13 @@ const MembershipEdit = () => {
       }
     );
     let othertype = response.data.data.Membership?.membershipType;
+
+    if (othertype !== "annual" || othertype !== "life") {
+      setShowOtherMembershipType(true);
+      setValue("membershipType", "other");
+      setValue("otherMembershipType", othertype);
+    }
+
     if (othertype === "annual" || othertype === "life") {
       setShowOtherMembershipType(false);
       setValue("membershipType", othertype);
@@ -306,7 +314,7 @@ const MembershipEdit = () => {
               />
               {showOtherMembershipType && (
                 <Controller
-                  name="otherMetalType"
+                  name="otherMembershipType"
                   control={control}
                   defaultValue={Benifyciary?.otherMembershipType || ""}
                   render={({ field }) => (

@@ -253,7 +253,7 @@ const HealthForm = () => {
                       className={errors.companyName ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Select Insurance Company" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="company1">Company 1</SelectItem>
@@ -300,8 +300,8 @@ const HealthForm = () => {
                         className={errors.insuranceType ? "border-red-500" : ""}
                       >
                         <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select insurance type">
-                            {field.value || "Select insurance type"}
+                          <SelectValue placeholder="Select Insurance Type">
+                            {field.value || "Select Insurance Type"}
                           </SelectValue>
                         </FocusableSelectTrigger>
                         <SelectContent>
@@ -345,7 +345,7 @@ const HealthForm = () => {
                   render={({ field }) => (
                     <Input
                       id="policy-number"
-                      placeholder="Enter policy number"
+                      placeholder="Enter Policy Number"
                       {...field}
                       className={errors.policyNumber ? "border-red-500" : ""}
                     />
@@ -388,7 +388,7 @@ const HealthForm = () => {
                   render={({ field }) => (
                     <Input
                       id="premium"
-                      placeholder="Enter premium amount"
+                      placeholder="Enter Premium Amount"
                       {...field}
                       className={errors.premium ? "border-red-500" : ""}
                     />
@@ -407,7 +407,7 @@ const HealthForm = () => {
                   render={({ field }) => (
                     <Input
                       id="sum-insured"
-                      placeholder="Enter sum insured"
+                      placeholder="Enter Sum Insured"
                       {...field}
                       className={errors.sumInsured ? "border-red-500" : ""}
                     />
@@ -430,7 +430,7 @@ const HealthForm = () => {
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
-                      placeholder="Enter policy holder name"
+                      placeholder="Enter Policy Holder Name"
                       {...field}
                       className={
                         errors.policyHolderName ? "border-red-500" : ""
@@ -509,7 +509,7 @@ const HealthForm = () => {
                     <Textarea
                       value={field.value}
                       id="additional-details"
-                      placeholder="Enter additional details"
+                      placeholder="Enter Additional Details"
                       {...field}
                     />
                   )}
@@ -560,7 +560,7 @@ const HealthForm = () => {
               />
               {nomineeerror && (
                 <span className="text-red-500">
-                  Please select atleast one nominee
+                  Please Select Atleast One Nominee
                 </span>
               )}
             </div>
@@ -611,7 +611,7 @@ const HealthForm = () => {
                     render={({ field }) => (
                       <Input
                         id="registered-mobile"
-                        placeholder="Enter registered mobile"
+                        placeholder="Enter Registered Mobile"
                         {...field}
                       />
                     )}
@@ -625,7 +625,7 @@ const HealthForm = () => {
                     render={({ field }) => (
                       <Input
                         id="registered-email"
-                        placeholder="Enter registered email"
+                        placeholder="Enter Registered Email"
                         type="email"
                         {...field}
                       />
@@ -646,7 +646,7 @@ const HealthForm = () => {
                       render={({ field }) => (
                         <Input
                           id="brokerName"
-                          placeholder="Enter broker name"
+                          placeholder="Enter Broker Name"
                           {...field}
                           className={errors.brokerName ? "border-red-500" : ""}
                         />
@@ -666,7 +666,7 @@ const HealthForm = () => {
                       render={({ field }) => (
                         <Input
                           id="contact-person"
-                          placeholder="Enter contact person name"
+                          placeholder="Enter Contact Person Name"
                           {...field}
                           className={
                             errors.contactPerson ? "border-red-500" : ""
@@ -689,7 +689,7 @@ const HealthForm = () => {
                         <PhoneInput
                           id="guardian-mobile"
                           type="tel"
-                          placeholder="Enter contact number"
+                          placeholder="Enter Contact Number"
                           defaultCountry="in"
                           value={field.value}
                           inputStyle={{ minWidth: "30.5rem" }}
@@ -717,7 +717,7 @@ const HealthForm = () => {
                         <Input
                           id="email"
                           type="email"
-                          placeholder="Enter email"
+                          placeholder="Enter Email"
                           {...field}
                           className={errors.email ? "border-red-500" : ""}
                         />

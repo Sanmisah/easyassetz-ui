@@ -293,7 +293,7 @@ const RecoverableOtherForm = () => {
                 render={({ field }) => (
                   <Input
                     id="registrationNumber"
-                    placeholder="Enter fourWheeler"
+                    placeholder="Enter Four Wheeler"
                     {...field}
                     className={
                       errors.registrationNumber ? "border-red-500" : ""

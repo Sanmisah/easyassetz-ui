@@ -376,8 +376,8 @@ const Personaldetail = () => {
                     value={defaultData?.gender || field.value}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select gender">
-                        {field.value || "Select gender"}
+                      <SelectValue placeholder="Select Gender">
+                        {field.value || "Select Gender"}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -504,7 +504,7 @@ const Personaldetail = () => {
             </div>
 
             <div className="space-y-2 min-w-[300px] max-md:col-span-2">
-              <Label htmlFor="country">Country of Residence</Label>
+              <Label htmlFor="country">Country Of Residence</Label>
               <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="countryOfResidence"
@@ -521,8 +521,8 @@ const Personaldetail = () => {
                     value={defaultData?.countryOfResidence}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select country of residence">
-                        {field.value || "Select country of residence"}
+                      <SelectValue placeholder="Select Country Of Residence">
+                        {field.value || "Select Country Of Residence"}
                       </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
@@ -558,8 +558,8 @@ const Personaldetail = () => {
                     value={defaultData?.religion}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select religion">
-                        {field.value || "Select religion"}
+                      <SelectValue placeholder="Select Religion">
+                        {field.value || "Select Religion"}
                       </SelectValue>{" "}
                     </SelectTrigger>
                     <SelectContent>
@@ -602,7 +602,7 @@ const Personaldetail = () => {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Marital status" />
+                      <SelectValue placeholder="Select Marital Status" />
                     </SelectTrigger>
                     <SelectContent>
                       {dropdownData.maritalStatuses?.map((status) => (
@@ -637,7 +637,7 @@ const Personaldetail = () => {
                     className="flex items-center gap-2 mt-2 mb-2"
                     htmlFor="married-under-act"
                   >
-                    Married under Special Marriage Act
+                    Married Under Special Marriage Act
                   </Label>
 
                   <button

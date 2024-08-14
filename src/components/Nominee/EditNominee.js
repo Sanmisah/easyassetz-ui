@@ -17,6 +17,8 @@ import cross from "@/components/image/close.png";
 import { ScrollArea } from "../../shadcncomponents/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import BeneficiaryForm from "./BeneficiaryOpen";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const AddNominee = ({
   setSelectedNommie,
@@ -36,21 +38,37 @@ const AddNominee = ({
       setDisplaynominie(AllNominees);
     }
   }, [AllNominees]);
-  useEffect(() => {
-    axios
-      .get(`/api/beneficiaries`, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setNominees({
-          Beneficiaries: res?.data?.data?.Beneficiaries,
-          Charities: res?.data?.data?.Charities,
-        });
-      });
-  }, []);
+
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios.get(`/api/beneficiaries`, {
+      headers: {
+        Authorization: `Bearer ${user.data.token}`,
+      },
+    });
+    console.log(response.data.data.Beneficiaries);
+    setNominees({
+      Beneficiaries: response?.data?.data?.Beneficiaries,
+      Charities: response?.data?.data?.Charities,
+    });
+  };
+
+  const {
+    data: Benifyciary,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["benificiaryData"],
+    queryFn: getPersonalData,
+
+    onSuccess: (data) => {
+      console.log("Data:", data);
+    },
+    onError: (error) => {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile", error.message);
+    },
+  });
 
   useEffect(() => {
     // Sync state with displaynominie when it changes

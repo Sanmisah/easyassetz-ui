@@ -527,6 +527,27 @@ const CommercialEditForm = () => {
                   </span>
                 )}
               </div>
+
+              <div className="space-y-2 wrap col-span-full">
+                <Label>Any Loan Litigation</Label>
+                <Controller
+                  name="anyLoanLitigation"
+                  defaultValue={Benifyciary?.anyLoanLitigation}
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="anyLoanLitigation-yes"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                {errors.anyLoanLitigation && (
+                  <span className="text-red-500">
+                    {errors.anyLoanLitigation.message}
+                  </span>
+                )}
+              </div>
               <div>
                 {Joinholder && (
                   <div className="space-y-2 wrap col-span-full">

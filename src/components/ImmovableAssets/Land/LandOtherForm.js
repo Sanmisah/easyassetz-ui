@@ -50,7 +50,7 @@ const schema = z.object({
   jointHoldersRelation: z.string().optional(),
   jointHoldersPan: z.string().optional(),
   jointHoldersAadhar: z.string().optional(),
-  anyLoanLitigation: z.string().optional(),
+  anyLoanLitigation: z.any().optional(),
   anyMortgage: z.string().optional(),
 
   name: z.string().optional(),
@@ -675,9 +675,8 @@ const LandOtherform = () => {
                   control={control}
                   render={({ field }) => (
                     <Checkbox
-                      id="anyLoanLitigation"
-                      checked={field.value === "yes"}
-                      onCheckedChange={() => field.onChange("yes")}
+                      id="anyLoanLitigation-yes"
+                      onCheckedChange={field.onChange}
                     />
                   )}
                 />
@@ -687,25 +686,7 @@ const LandOtherform = () => {
                   </span>
                 )}
               </div>
-              <div className="space-y-2 space-x-2">
-                <Label>Any Loan/Mortgage</Label>
-                <Controller
-                  name="anyMortgage"
-                  control={control}
-                  render={({ field }) => (
-                    <Checkbox
-                      id="anyMortgage"
-                      checked={field.value === "yes"}
-                      onCheckedChange={() => field.onChange("yes")}
-                    />
-                  )}
-                />
-                {errors.anyMortgage && (
-                  <span className="text-red-500">
-                    {errors.anyMortgage.message}
-                  </span>
-                )}
-              </div>
+
               {displaynominie && displaynominie.length > 0 && (
                 <div className="space-y-2">
                   <div className="grid gap-4 py-4">

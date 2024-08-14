@@ -724,7 +724,7 @@ const ResidentialOtherform = () => {
                   </div>
                 )}
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 gap-2">
                 <Label>Any Loan Litigation</Label>
                 <Controller
                   name="anyLoanLitigation"
@@ -732,8 +732,7 @@ const ResidentialOtherform = () => {
                   render={({ field }) => (
                     <Checkbox
                       id="anyLoanLitigation"
-                      checked={field.value === "yes"}
-                      onCheckedChange={() => field.onChange("yes")}
+                      onCheckedChange={field.onChange}
                     />
                   )}
                 />
