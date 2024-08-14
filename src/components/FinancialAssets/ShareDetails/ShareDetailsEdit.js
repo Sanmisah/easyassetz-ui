@@ -60,6 +60,7 @@ const schema = z.object({
   name: z.string().optional(),
   mobile: z.string().optional(),
   email: z.string().optional(),
+  image: z.any().optional(),
 });
 
 const PSSEditForm = () => {
