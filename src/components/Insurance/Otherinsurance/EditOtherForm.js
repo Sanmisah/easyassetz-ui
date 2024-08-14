@@ -101,6 +101,16 @@ const EditOtherForm = () => {
         },
       }
     );
+    const data = response.data.data.OtherInsurance;
+    if (
+      data.companyName !== "company1" ||
+      data.companyName !== "company2" ||
+      data.companyName !== "company3"
+    ) {
+      setShowOtherInsuranceCompany(true);
+      setValue("companyName", "other");
+      setValue("otherInsuranceCompany", data.companyName);
+    }
     if (response.data.data.OtherInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);

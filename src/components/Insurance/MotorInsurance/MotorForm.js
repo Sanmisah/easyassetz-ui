@@ -36,7 +36,7 @@ const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
-  othercompanyName: z.string().optional(),
+  otherInsuranceCompany: z.string().optional(),
   insuranceType: z.string().optional(),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
   expiryDate: z.any().optional(),

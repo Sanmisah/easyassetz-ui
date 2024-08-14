@@ -106,6 +106,16 @@ const EditMotorForm = () => {
         },
       }
     );
+    const data = response.data.data.LifeInsurance;
+    if (
+      data.companyName !== "company1" ||
+      data.companyName !== "company2" ||
+      data.companyName !== "company3"
+    ) {
+      setShowOtherInsuranceCompany(true);
+      setValue("companyName", "other");
+      setValue("otherInsuranceCompany", data.companyName);
+    }
     if (response.data.data.LifeInsurance?.modeOfPurchase === "broker") {
       setBrokerSelected(true);
       setHideRegisteredFields(false);
@@ -229,6 +239,9 @@ const EditMotorForm = () => {
     }
   }, [Benifyciary?.nominees]);
   const onSubmit = (data) => {
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.relationship === "other") {
       data.relationship = data.otherRelationship;
     }
@@ -615,7 +628,7 @@ const EditMotorForm = () => {
               <Controller
                 name="modeOfPurchase"
                 control={control}
-                defaultValue={Benifyciary?.modeOfPurchase || ""}
+                defaultValue={Benifyciary?.modeOfPurchase || "broker"}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}

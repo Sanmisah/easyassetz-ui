@@ -139,26 +139,26 @@ const BeneficiaryForm = ({
     const beneficiaryData = response.data.data.Beneficiary;
     setDefaultData(beneficiaryData);
     reset(beneficiaryData);
-    if (beneficiaryData?.relationship === "other") {
-      setRelationship(beneficiaryData?.specificRelationship);
+    // if (beneficiaryData?.relationship === "other") {
+    //   setRelationship(beneficiaryData?.specificRelationship);
+    // }
+    if (
+      beneficiaryData?.relationship !== "sibling" &&
+      beneficiaryData?.relationship !== "parent" &&
+      beneficiaryData?.relationship !== "child" &&
+      beneficiaryData?.relationship !== "spouse" &&
+      beneficiaryData?.relationship !== "self"
+    ) {
+      setRelationship("other");
+
+      setValue("relationship", "other");
+      setValue("specificRelationship", beneficiaryData?.relationship);
     }
     if (calculateAge(beneficiaryData?.dob) < 18) {
       setIsMinor(true);
     }
     setValue("document", beneficiaryData.document);
     setSelectedDocument(beneficiaryData.document);
-
-    if (
-      ["child", "spouse", "self", "parent", "sibling"].includes(
-        beneficiaryData?.relationship
-      )
-    ) {
-      setValue("relationship", beneficiaryData?.relationship);
-      return;
-    } else {
-      setRelationship("other");
-      setValue("relationship", beneficiaryData?.relationship);
-    }
   };
 
   const {
@@ -471,7 +471,9 @@ const BeneficiaryForm = ({
                           render={({ field }) => (
                             <Select
                               name="document"
-                              defaultValue={defaultData?.document}
+                              defaultValue={selectedDocument
+                                
+                              }
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
                                 field.onChange(value);
@@ -484,16 +486,8 @@ const BeneficiaryForm = ({
                                 <SelectValue placeholder="Select document" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem
-                                  defaultValue={defaultData?.document}
-                                  value="aadhar"
-                                >
-                                  Aadhaar
-                                </SelectItem>
-                                <SelectItem
-                                  defaultValue={defaultData?.document}
-                                  value="passport"
-                                >
+                                <SelectItem value="aadhar">Aadhaar</SelectItem>
+                                <SelectItem value="passport">
                                   Passport
                                 </SelectItem>
                                 <SelectItem value="driving-license">
