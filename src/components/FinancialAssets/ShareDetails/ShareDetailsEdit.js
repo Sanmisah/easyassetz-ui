@@ -596,6 +596,42 @@ const PSSEditForm = () => {
                 )}
               </div>
             </div>
+            <div className="space-y-2">
+              <Label>Upload Image</Label>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="imageUpload"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.imageUpload ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.imageUpload && (
+                <span className="text-red-500">
+                  {errors.imageUpload.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
+            </div>
 
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
