@@ -67,6 +67,33 @@ const Personaldetail = () => {
       "marriedUnderSpecialAct",
       response.data.data.profile?.marriedUnderSpecialAct
     );
+    const data = response.data.data.profile;
+    if (
+      data?.drivingLicenceExpiryDate ||
+      data?.drivingLicenceNumber ||
+      data?.drivingLicenceName ||
+      data?.drivingLicencePlace
+    ) {
+      setShowDLFields(true);
+      setValue("drivingLicence", "yes");
+    }
+    if (
+      data?.passportExpiryDate ||
+      data?.passportNumber ||
+      data?.passportName ||
+      data?.passportPlaceOfIssue
+    ) {
+      setShowPassportFields(true);
+      setValue("passport", "yes");
+    }
+    if (data?.aadharName || data?.aadharNumber || data?.aadharFile) {
+      setShowAdharFields(true);
+      setValue("adhar", "yes");
+    }
+    if (data?.panName || data?.panNumber || data?.panFile) {
+      setShowPANFields(true);
+      setValue("pan", "yes");
+    }
     if (
       response.data.data.profile?.nationality === "" ||
       response.data.data.profile?.nationality === null

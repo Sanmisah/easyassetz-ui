@@ -281,10 +281,10 @@ const EditCryptoForm = () => {
               <Button onClick={() => navigate("/crypto")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Insurance Policy Details
+                  Crypto Details
                 </CardTitle>
                 <CardDescription>
-                  Edit the form to update the insurance policy details.
+                  Edit the form to update the Crypto details.
                 </CardDescription>
               </div>
             </div>
