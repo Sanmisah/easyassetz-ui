@@ -382,8 +382,10 @@ const ShareDetailsOtherForm = () => {
               )}
             </div> */}
 
-            <div className="space-y-4 flex flex-col">
-              <Label className="text-lg font-bold">Holding Type</Label>
+            <div className="space-y-3  flex flex-col">
+              <Label htmlFor="holdingType" className="text-base font-bold">
+                Nature of Holding
+              </Label>
               <Controller
                 name="natureOfHolding"
                 defaultValues="single"
@@ -434,11 +436,20 @@ const ShareDetailsOtherForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Input
-                    id="jointHolderPan"
-                    placeholder="Enter Joint Holder PAN"
-                    {...register("jointHolderPan")}
-                    className={errors.jointHolderPan ? "border-red-500" : ""}
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter Joint Holder PAN"
+                        {...field}
+                        value={field.value?.toUpperCase() || ""}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
                   />
                   {errors.jointHolderPan && (
                     <span className="text-red-500">
@@ -515,7 +526,12 @@ const ShareDetailsOtherForm = () => {
             </div>
             <div className="w-full grid grid-cols-1 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="additionalDetails">Point Of Contact</Label>
+                <Label
+                  htmlFor="additionalDetails"
+                  className="text-lg font-bold"
+                >
+                  Point Of Contact
+                </Label>
                 <div className="mt-2  flex item-center  gap-2 justify-between">
                   <div className="w-[40%] space-y-2 item-center">
                     <Label htmlFor="name">Name</Label>
