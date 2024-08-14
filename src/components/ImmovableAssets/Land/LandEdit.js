@@ -129,10 +129,7 @@ const ResidentialEditForm = () => {
     if (data.ownershipType === "joint") {
       setJoinholder(true);
     }
-    if (data.anyLoanLitigation === "yes") {
-      setValue("anyLoanLitigation", data.anyLoanLitigation);
-      setLitigation(true);
-    }
+
     return response.data.data.Land;
   };
 
@@ -749,20 +746,17 @@ const ResidentialEditForm = () => {
                   displaynominie={displaynominie}
                 />
               </div>
-              <div className="space-y-2 space-x-2">
+              <div className="space-y-2 space-x-2 col-span-full">
                 <Label>Any Loan Litigation</Label>
                 <Controller
                   name="anyLoanLitigation"
-                  defaultValue={Benifyciary?.anyLoanLitigation === "yes"}
+                  defaultValue={Benifyciary?.anyLoanLitigation}
                   control={control}
                   render={({ field }) => (
                     <Checkbox
                       id="anyLoanLitigation"
-                      checked={Litigation}
-                      onCheckedChange={() => {
-                        setLitigation(!Litigation);
-                        // field.onChange("yes");
-                      }}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
                   )}
                 />

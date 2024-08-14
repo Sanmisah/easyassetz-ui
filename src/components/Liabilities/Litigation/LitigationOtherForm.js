@@ -131,7 +131,7 @@ const LitigationForm = () => {
                   Litigation Details
                 </CardTitle>
                 <CardDescription>
-                  Fill out the form to add new litigation details.
+                  Fill out the Form to Add new Litigation Details.
                 </CardDescription>
               </div>
             </div>

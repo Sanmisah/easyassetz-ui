@@ -29,6 +29,7 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import { PhoneInput } from "react-international-phone";
+import { Checkbox } from "@com/ui/checkbox";
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -528,6 +529,27 @@ const ResidentialEditForm = () => {
                 {errors.ownershipType && (
                   <span className="text-red-500">
                     {errors.ownershipType.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-2 wrap col-span-full">
+                <Label>Any Loan Litigation</Label>
+                <Controller
+                  name="anyLoanLitigation"
+                  defaultValue={Benifyciary?.anyLoanLitigation}
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="anyLoanLitigation-yes"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                {errors.anyLoanLitigation && (
+                  <span className="text-red-500">
+                    {errors.anyLoanLitigation.message}
                   </span>
                 )}
               </div>

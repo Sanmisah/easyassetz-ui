@@ -40,29 +40,29 @@ import { toast } from "sonner";
 const beneficiarySchema = z.object({
   fullLegalName: z.string().nonempty("Full Legal Name is required"),
   relationship: z.string().nonempty("Relationship is required"),
-  specificRelationship: z.string().optional(),
+  specificRelationship: z.any().optional(),
   gender: z.string().nonempty("Gender is required"),
   dob: z.any().optional(),
-  guardianName: z.string().optional(),
-  guardianMobile: z.string().optional(),
-  guardianEmail: z.string().optional(),
-  guardianCity: z.string().optional(),
-  guardianState: z.string().optional(),
-  document: z.string().optional(),
-  documentData: z.string().optional(),
-  guardianReligion: z.string().optional(),
-  guardianNationality: z.string().optional(),
+  guardianName: z.any().optional(),
+  guardianMobile: z.any().optional(),
+  guardianEmail: z.any().optional(),
+  guardianCity: z.any().optional(),
+  guardianState: z.any().optional(),
+  document: z.any().optional(),
+  documentData: z.any().optional(),
+  guardianReligion: z.any().optional(),
+  guardianNationality: z.any().optional(),
   addressLine1: z.string().nonempty("Address Line 1 is required"),
-  addressLine2: z.string().nonempty("Address Line 2 is required"),
+  addressLine2: z.string().optional(),
   pincode: z.string().nonempty("Pincode is required"),
   country: z.string().nonempty("Country is required"),
   mobile: z.string().nonempty("Mobile is required"),
   email: z.string().email("Invalid email").nonempty("Email is required"),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  houseNo: z.string().optional(),
-  religion: z.string().optional(),
-  nationality: z.string().optional(),
+  city: z.any().optional(),
+  state: z.any().optional(),
+  houseNo: z.any().optional(),
+  religion: z.any().optional(),
+  nationality: z.any().optional(),
 });
 
 const BeneficiaryForm = ({
@@ -126,7 +126,9 @@ const BeneficiaryForm = ({
       console.error("Failed to fetch pincode details:", error);
     }
   };
-
+  const CapitalizeWord = (word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  };
   const getPersonalData = async () => {
     if (!user) return;
     const response = await axios.get(`/api/beneficiaries/${benificiaryId}`, {
@@ -513,7 +515,7 @@ const BeneficiaryForm = ({
                       {selectedDocument && (
                         <div className="space-y-2">
                           <Label htmlFor="document-data">
-                            {selectedDocument} Number
+                            {CapitalizeWord(selectedDocument)} Number
                           </Label>
                           <Input
                             id="documentData"

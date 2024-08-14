@@ -731,8 +731,7 @@ const CommercialOtherForm = () => {
                   render={({ field }) => (
                     <Checkbox
                       id="anyLoanLitigation"
-                      checked={field.value === "yes"}
-                      onCheckedChange={() => field.onChange("yes")}
+                      onCheckedChange={field.onChange}
                     />
                   )}
                 />

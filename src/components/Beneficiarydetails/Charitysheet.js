@@ -136,7 +136,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               <Label className="text-red-500">*</Label>
               <Input
                 id="org-name"
-                placeholder="Enter organization name"
+                placeholder="Enter Organization Name"
                 {...register("charityName")}
                 className="w-full"
               />
@@ -150,7 +150,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               </Label>
               <Input
                 id="address-1"
-                placeholder="Enter address"
+                placeholder="Enter Address"
                 {...register("charityAddress1")}
                 className="w-full"
               />
@@ -164,7 +164,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
               </Label>
               <Input
                 id="address-2"
-                placeholder="Enter address"
+                placeholder="Enter Address"
                 {...register("charityAddress2")}
                 className="w-full"
               />

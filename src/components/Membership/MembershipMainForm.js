@@ -77,7 +77,7 @@ const MembershipMainForm = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Membership</h1>
           <Button onMouseDown={() => navigate("/membership/add")}>
-            Add Membership
+            Add Memberships
           </Button>
           {alertDialog && (
             <DeleteAlert

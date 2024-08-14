@@ -17,6 +17,8 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@com/ui/scroll-area";
 import BeneficiaryForm from "./BeneficiaryOpen";
+import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AddNominee = ({
   setSelectedNommie,
@@ -25,17 +27,20 @@ const AddNominee = ({
 }) => {
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
+  const queryClient = useQueryClient();
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
   const navigate = useNavigate();
   const [AddNominee, setAddNominee] = useState(false);
   const [benficiaryopen, setbenficiaryopen] = useState(false);
   const [open, setOpen] = useState(false);
-  useEffect(() => {
-    axios
+
+  const getPersonalData = async () => {
+    if (!user) return;
+    const response = await axios
       .get(`/api/beneficiaries`, {
         headers: {
-          Authorization: `Bearer ${user?.data?.token}`,
+          Authorization: `Bearer ${user.data.token}`,
         },
       })
       .then((res) => {
@@ -49,7 +54,22 @@ const AddNominee = ({
           Charities: res?.data?.data?.Charities,
         });
       });
-  }, [AddNominee]);
+    console.log(response.data.data.Beneficiaries);
+    return response.data.data.Beneficiaries;
+  };
+
+  const {
+    data: Benifyciary,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["benificiaryData"],
+    queryFn: getPersonalData,
+    onSuccess: (data) => {},
+    onError: (error) => {
+      console.error("Error fetching health insurance data", error);
+    },
+  });
 
   useEffect(() => {
     // Sync state with displaynominie when it changes

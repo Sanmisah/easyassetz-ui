@@ -217,7 +217,7 @@ const GeneralForm = () => {
                       className={errors.companyName ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Select Insurance Company" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="company1">Company 1</SelectItem>
@@ -280,7 +280,7 @@ const GeneralForm = () => {
                   render={({ field }) => (
                     <Input
                       id="policy-number"
-                      placeholder="Enter policy number"
+                      placeholder="Enter Policy Number"
                       {...field}
                       className={errors.policyNumber ? "border-red-500" : ""}
                     />
@@ -322,7 +322,7 @@ const GeneralForm = () => {
                   render={({ field }) => (
                     <Input
                       id="premium"
-                      placeholder="Enter premium amount"
+                      placeholder="Enter Premium Amount"
                       {...field}
                       className={errors.premium ? "border-red-500" : ""}
                     />
@@ -340,7 +340,7 @@ const GeneralForm = () => {
                   render={({ field }) => (
                     <Input
                       id="sum-insured"
-                      placeholder="Enter sum insured"
+                      placeholder="Enter Sum Insured"
                       {...field}
                       className={errors.sumInsured ? "border-red-500" : ""}
                     />
@@ -363,7 +363,7 @@ const GeneralForm = () => {
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
-                      placeholder="Enter policy holder name"
+                      placeholder="Enter Policy Holder Name"
                       {...field}
                       className={
                         errors.policyHolderName ? "border-red-500" : ""
@@ -388,7 +388,7 @@ const GeneralForm = () => {
                     <Textarea
                       value={field.value}
                       id="additional-details"
-                      placeholder="Enter additional details"
+                      placeholder="Enter Additional Details"
                       {...field}
                     />
                   )}
@@ -481,7 +481,7 @@ const GeneralForm = () => {
                     render={({ field }) => (
                       <Input
                         id="registered-mobile"
-                        placeholder="Enter registered mobile"
+                        placeholder="Enter Registered Mobile"
                         {...field}
                       />
                     )}
@@ -495,7 +495,7 @@ const GeneralForm = () => {
                     render={({ field }) => (
                       <Input
                         id="registered-email"
-                        placeholder="Enter registered email"
+                        placeholder="Enter Registered Email"
                         type="email"
                         {...field}
                       />
@@ -516,7 +516,7 @@ const GeneralForm = () => {
                       render={({ field }) => (
                         <Input
                           id="brokerName"
-                          placeholder="Enter broker name"
+                          placeholder="Enter Broker Name"
                           {...field}
                           className={errors.brokerName ? "border-red-500" : ""}
                         />
@@ -536,7 +536,7 @@ const GeneralForm = () => {
                       render={({ field }) => (
                         <Input
                           id="contact-person"
-                          placeholder="Enter contact person name"
+                          placeholder="Enter Contact Person Name"
                           {...field}
                           className={
                             errors.contactPerson ? "border-red-500" : ""
@@ -559,7 +559,7 @@ const GeneralForm = () => {
                         <PhoneInput
                           id="guardian-mobile"
                           type="tel"
-                          placeholder="Enter contact number"
+                          placeholder="Enter Contact Number"
                           defaultCountry="in"
                           value={field.value}
                           inputStyle={{ minWidth: "30.5rem" }}
@@ -587,7 +587,7 @@ const GeneralForm = () => {
                         <Input
                           id="email"
                           type="email"
-                          placeholder="Enter email"
+                          placeholder="Enter Email"
                           {...field}
                           className={errors.email ? "border-red-500" : ""}
                         />

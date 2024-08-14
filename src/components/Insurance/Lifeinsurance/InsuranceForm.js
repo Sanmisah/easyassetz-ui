@@ -215,7 +215,7 @@ const InsuranceForm = () => {
                       className={errors.companyName ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Select Insurance Company" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="company1">Company 1</SelectItem>
@@ -277,7 +277,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Input
                       id="policy-number"
-                      placeholder="Enter policy number"
+                      placeholder="Enter Policy Number"
                       {...field}
                       className={errors.policyNumber ? "border-red-500" : ""}
                     />
@@ -319,7 +319,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Input
                       id="premium"
-                      placeholder="Enter premium amount"
+                      placeholder="Enter Premium"
                       {...field}
                       className={errors.premium ? "border-red-500" : ""}
                     />
@@ -337,7 +337,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Input
                       id="sum-insured"
-                      placeholder="Enter sum insured"
+                      placeholder="Enter Sum Insured"
                       {...field}
                       className={errors.sumInsured ? "border-red-500" : ""}
                     />
@@ -360,7 +360,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
-                      placeholder="Enter policy holder name"
+                      placeholder="Enter Policy Holder Name"
                       {...field}
                       className={
                         errors.policyHolderName ? "border-red-500" : ""
@@ -391,7 +391,7 @@ const InsuranceForm = () => {
                       className={errors.relationship ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select relationship" />
+                        <SelectValue placeholder="Select Relationship" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="self">Self</SelectItem>
@@ -432,7 +432,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Input
                       id="previousPolicyNumber"
-                      placeholder="Enter previous policy number"
+                      placeholder="Enter Previous Policy Number"
                       {...field}
                     />
                   )}
@@ -447,7 +447,7 @@ const InsuranceForm = () => {
                     <Textarea
                       value={field.value}
                       id="additional-details"
-                      placeholder="Enter additional details"
+                      placeholder="Enter Additional Details"
                       {...field}
                     />
                   )}
@@ -498,7 +498,7 @@ const InsuranceForm = () => {
               />
               {nomineeerror && (
                 <span className="text-red-500">
-                  Please select atleast one nominee
+                  Please Select Atleast One Nominee
                 </span>
               )}
             </div>
@@ -549,7 +549,7 @@ const InsuranceForm = () => {
                     render={({ field }) => (
                       <Input
                         id="registered-mobile"
-                        placeholder="Enter registered mobile"
+                        placeholder="Enter Registered Mobile"
                         {...field}
                       />
                     )}
@@ -563,7 +563,7 @@ const InsuranceForm = () => {
                     render={({ field }) => (
                       <Input
                         id="registered-email"
-                        placeholder="Enter registered email"
+                        placeholder="Enter Registered Email"
                         type="email"
                         {...field}
                       />
@@ -584,7 +584,7 @@ const InsuranceForm = () => {
                       render={({ field }) => (
                         <Input
                           id="brokerName"
-                          placeholder="Enter broker name"
+                          placeholder="Enter Broker Name"
                           {...field}
                           className={errors.brokerName ? "border-red-500" : ""}
                         />
@@ -604,7 +604,7 @@ const InsuranceForm = () => {
                       render={({ field }) => (
                         <Input
                           id="contact-person"
-                          placeholder="Enter contact person name"
+                          placeholder="Enter Contact person Name"
                           {...field}
                           className={
                             errors.contactPerson ? "border-red-500" : ""
@@ -627,7 +627,7 @@ const InsuranceForm = () => {
                         <PhoneInput
                           id="guardian-mobile"
                           type="tel"
-                          placeholder="Enter contact number"
+                          placeholder="Enter Contact Number"
                           defaultCountry="in"
                           value={field.value}
                           inputStyle={{ minWidth: "30.5rem" }}
