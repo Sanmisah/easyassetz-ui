@@ -93,7 +93,11 @@ const OtherAssetEditForm = () => {
     return response.data.data.OtherAsset;
   };
 
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data: Benifyciary,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["vehicleData", lifeInsuranceEditId],
     queryFn: getPersonalData,
     onSuccess: (data) => {
