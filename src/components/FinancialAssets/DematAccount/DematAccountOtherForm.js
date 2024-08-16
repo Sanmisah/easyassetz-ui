@@ -56,6 +56,7 @@ const schema = z.object({
   name: z.string().optional(),
   mobile: z.string().optional(),
   email: z.string().optional(),
+  image: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -123,6 +124,12 @@ const MutualFundOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
+      const Formdata = new FormData();
+      Formdata.append("image", data.image);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
       const response = await axios.post(`/api/demat-accounts`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,

@@ -116,7 +116,7 @@ const PSADOtherForm = () => {
       }
       const response = await axios.post(
         `/api/post-saving-account-details`,
-        data,
+        Formdata,
         {
           headers: {
             Authorization: `Bearer ${user.data.token}`,

@@ -42,6 +42,7 @@ const schema = z.object({
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
   additionalDetails: z.string().optional(),
+  image: z.any().optional(),
 });
 // additionalDetails: z.string().optional(),
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -84,7 +85,11 @@ const BankAccountForm = () => {
 
   const ppfMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/fix-deposits`, data, {
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
+      const response = await axios.post(`/api/fix-deposits`, formData, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },

@@ -57,6 +57,7 @@ const schema = z.object({
   mobile: z.any().optional(),
   email: z.any().optional(),
   additionalDetails: z.any().optional(),
+  image: z.any().optional(),
 });
 
 const EditCryptoForm = () => {
@@ -215,6 +216,11 @@ const EditCryptoForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
+      formData.append("_method", "put");
       const response = await axios.put(
         `/api/cryptos/${lifeInsuranceEditId}`,
         data,

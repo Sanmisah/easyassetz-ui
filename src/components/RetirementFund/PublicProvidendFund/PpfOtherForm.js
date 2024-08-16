@@ -112,11 +112,15 @@ const ppfForm = () => {
       for (const [key, value] of Object.entries(data)) {
         Formdata.append(key, value);
       }
-      const response = await axios.post(`/api/public-provident-funds`, data, {
-        headers: {
-          Authorization: `Bearer ${user.data.token}`,
-        },
-      });
+      const response = await axios.post(
+        `/api/public-provident-funds`,
+        Formdata,
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      );
 
       return response.data.data.PublicProvidentFund;
     },
@@ -132,7 +136,7 @@ const ppfForm = () => {
   });
 
   useEffect(() => {
-    if (selectedNommie.length > 0) {
+    if (selectedNommie?.length > 0) {
       setNomineeError(false);
     }
   }, [selectedNommie]);
@@ -149,7 +153,7 @@ const ppfForm = () => {
     // if (data.typeOfInvestment === "other") {
     //   data.typeOfInvestment = data.specifyInvestment;
     // }
-    if (selectedNommie.length > 0) {
+    if (selectedNommie?.length > 0) {
       data.nominees = selectedNommie;
     }
     data.type = "company";
@@ -337,7 +341,7 @@ const ppfForm = () => {
 
               <>
                 <div>
-                  {displayFamilyMembers && displayFamilyMembers.length > 0 && (
+                  {displayFamilyMembers && displayFamilyMembers?.length > 0 && (
                     <div className="space-y-2">
                       <div className="grid gap-4 py-4">
                         <Label className="text-lg font-bold">
@@ -383,7 +387,7 @@ const ppfForm = () => {
                 </div>
               </>
             )}
-            {displaynominie && displaynominie.length > 0 && (
+            {displaynominie && displaynominie?.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
                   {console.log(displaynominie)}

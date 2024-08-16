@@ -178,7 +178,7 @@ const PpfEditForm = ({}) => {
   const onSubmit = (data) => {
     console.log(data);
     data.mobile = phone;
-    if (selectedNommie.length > 0) {
+    if (selectedNommie?.length > 0) {
       data.nominees = selectedNommie;
     }
     ppfMutate.mutate(data);
@@ -271,7 +271,7 @@ const PpfEditForm = ({}) => {
               )}
             </div>
 
-            {displaynominie && displaynominie.length > 0 && (
+            {displaynominie && displaynominie?.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
                   {console.log(displaynominie)}
@@ -351,7 +351,7 @@ const PpfEditForm = ({}) => {
             {showJointHolderName && (
               <>
                 <div>
-                  {displayFamilyMembers && displayFamilyMembers.length > 0 && (
+                  {displayFamilyMembers && displayFamilyMembers?.length > 0 && (
                     <div className="space-y-2">
                       <div className="grid gap-4 py-4">
                         <Label className="text-lg font-bold">
@@ -485,26 +485,6 @@ const PpfEditForm = ({}) => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="imageUpload">Image Upload</Label>
-              <Controller
-                name="imageUpload"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="file"
-                    id="imageUpload"
-                    {...field}
-                    className={errors.imageUpload ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
-              )}
-            </div>
             <div className="space-y-2 col-span-full">
               <Label>Upload File</Label>
               <Controller
@@ -516,7 +496,7 @@ const PpfEditForm = ({}) => {
                     type="file"
                     onChange={(event) => {
                       field.onChange(
-                        event.target.files && event.target.files[0]
+                        event?.target?.files && event?.target?.files[0]
                       );
                     }}
                     className={errors.file ? "border-red-500" : ""}

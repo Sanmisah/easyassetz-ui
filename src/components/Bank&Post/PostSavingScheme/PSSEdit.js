@@ -124,7 +124,7 @@ const PSSEditForm = () => {
     setValue("holdingType", data.holdingType);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
-    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
+    setSelectedNommie(data?.nominees?.map((nominee) => nominee?.id));
 
     return response.data.data.PostSavingScheme;
   };
