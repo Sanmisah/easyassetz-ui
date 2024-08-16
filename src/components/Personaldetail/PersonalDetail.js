@@ -431,7 +431,7 @@ const Personaldetail = () => {
                 control={control}
                 render={({ field }) => (
                   <Datepicker
-                    defaultValue={defaultDate}
+                    // defaultValue={defaultDate}
                     value={field.value}
                     onChange={field.onChange}
                   />
