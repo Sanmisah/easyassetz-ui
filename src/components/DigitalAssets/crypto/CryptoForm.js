@@ -52,6 +52,7 @@ const schema = z.object({
   mobile: z.any().optional(),
   email: z.any().optional(),
   additionalDetails: z.any().optional(),
+  image: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -120,7 +121,11 @@ const CryptoForm = () => {
 
   const cryptoMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/cryptos`, data, {
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
+      const response = await axios.post(`/api/cryptos`, formData, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
@@ -629,12 +634,27 @@ const CryptoForm = () => {
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
                 render={({ field }) => (
-                  <Input id="image-upload" type="file" {...field} />
+                  <Input
+                    id="image-upload"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.imageUpload ? "border-red-500" : ""}
+                  />
                 )}
               />
+              {errors.imageUpload && (
+                <span className="text-red-500">
+                  {errors.imageUpload.message}
+                </span>
+              )}
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

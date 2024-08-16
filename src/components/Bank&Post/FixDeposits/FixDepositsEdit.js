@@ -45,6 +45,7 @@ const schema = z.object({
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
   additionalDetails: z.any().optional(),
+  image: z.any().optional(),
 });
 
 const BankEditForm = () => {
@@ -158,6 +159,11 @@ const BankEditForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
+      formData.append("_method", "put");
       const response = await axios.put(
         `/api/fix-deposits/${lifeInsuranceEditId}`,
         data,
@@ -489,7 +495,40 @@ const BankEditForm = () => {
                 setDisplaynominie={setDisplaynominie}
               />{" "}
             </div>
-
+            <div className="space-y-2">
+              <Label>Upload File</Label>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="file"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.file ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.file && (
+                <span className="text-red-500">{errors.file.message}</span>
+              )}
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

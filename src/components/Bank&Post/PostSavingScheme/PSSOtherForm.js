@@ -122,7 +122,7 @@ const ppfForm = () => {
       for (const [key, value] of Object.entries(data)) {
         Formdata.append(key, value);
       }
-      const response = await axios.post(`/api/post-saving-schemes`, data, {
+      const response = await axios.post(`/api/post-saving-schemes`, Formdata, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },

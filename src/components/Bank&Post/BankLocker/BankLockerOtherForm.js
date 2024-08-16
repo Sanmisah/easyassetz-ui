@@ -48,6 +48,7 @@ const schema = z.object({
   additionalDetails: z.any().optional(),
   branch: z.string().min(2, { message: "Policy Number is required" }),
   holdingType: z.any().optional(),
+  image: z.any().optional(),
 });
 // .refine(
 //   (data) => {
@@ -443,7 +444,31 @@ const BankLockerForm = () => {
                 </span>
               )}
             </div>
-
+            <div className="space-y-2">
+              <Label htmlFor="image-upload">Image Upload</Label>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="image-upload"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.imageUpload ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.imageUpload && (
+                <span className="text-red-500">
+                  {errors.imageUpload.message}
+                </span>
+              )}
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

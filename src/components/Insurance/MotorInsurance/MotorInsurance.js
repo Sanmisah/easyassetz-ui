@@ -62,14 +62,15 @@ const MotorInsurance = () => {
   });
 
   const confirmDelete = async (id) => {
-    const response = await axios.delete(
-      `/api/motor-insurances/${lifeInsuranceDeleteId}`,
-      {
+    const response = await axios
+      .delete(`/api/motor-insurances/${lifeInsuranceDeleteId}`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
-      }
-    );
+      })
+      .then((res) => {
+        window.location.reload(true);
+      });
     queryClient.invalidateQueries("LifeInsuranceData");
     toast.success("Motor Insurance deleted successfully!");
   };

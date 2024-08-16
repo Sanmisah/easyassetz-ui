@@ -97,25 +97,25 @@ export default function AssetAllocation() {
   };
 
   const handleSubmit = async () => {
+    totalsplit.forEach(async (value, index) => {
+      if (value === "" || value === 0) {
+        toast.error("Please fill in all fields");
+        return;
+      }
+    });
     const sumOfPercentages = totalsplit.reduce(
       (acc, value) => acc + parseFloat(value),
       0
     );
 
-    if (sumOfPercentages >= 100) {
+    if (sumOfPercentages > 100) {
       toast.error("Sum of percentages must be less than or equal to 100");
       return;
     }
-    if (sumOfPercentages <= 100) {
+    if (sumOfPercentages < 100) {
       toast.error("Sum of percentages must be greater than or equal to 100");
       return;
     }
-    totalsplit.forEach((value, index) => {
-      if (value === "") {
-        toast.error("Please fill in all fields");
-        return;
-      }
-    });
 
     const data = displaynominie.map((nominee, index) => ({
       nomineeId: nominee.id,
@@ -252,6 +252,7 @@ export default function AssetAllocation() {
                             ref={(el) => (inputRefs.current[index] = el)}
                             className="w-[5rem] placeholder:align-right"
                             placeholder="%"
+                            defaultValue={0}
                             onChange={(e) =>
                               handleInputChange(index, e.target.value)
                             }

@@ -56,6 +56,7 @@ const schema = z.object({
   name: z.string().optional(),
   mobile: z.string().optional(),
   email: z.string().optional(),
+  image: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -123,7 +124,13 @@ const MutualFundOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/esops`, data, {
+      const Formdata = new FormData();
+      Formdata.append("image", data.image);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+      const response = await axios.post(`/api/esops`, Formdata, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
@@ -615,6 +622,31 @@ const MutualFundOtherForm = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="image-upload">Image Upload</Label>
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="image-upload"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.imageUpload ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.imageUpload && (
+                <span className="text-red-500">
+                  {errors.imageUpload.message}
+                </span>
+              )}
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

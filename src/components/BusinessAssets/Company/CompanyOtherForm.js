@@ -49,6 +49,11 @@ const schema = z.object({
   name: z.string().optional(),
   mobile: z.string().optional(),
   email: z.string().optional(),
+  shareCertificateFile: z.any().optional(),
+  partershipDeedFile: z.any().optional(),
+  jvAgreementFile: z.any().optional(),
+  loanDepositeReceipt: z.any().optional(),
+  promisoryNote: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -104,7 +109,17 @@ const CompanyForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(`/api/business-assets`, data, {
+      const Formdata = new FormData();
+      Formdata.append("shareCertificateFile", data.shareCertificateFile);
+      Formdata.append("partershipDeedFile", data.partershipDeedFile);
+      Formdata.append("jvAgreementFile", data.jvAgreementFile);
+      Formdata.append("loanDepositeReceipt", data.loanDepositeReceipt);
+      Formdata.append("promisoryNote", data.promisoryNote);
+
+      for (const [key, value] of Object.entries(data)) {
+        Formdata.append(key, value);
+      }
+      const response = await axios.post(`/api/business-assets`, Formdata, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
@@ -604,6 +619,142 @@ const CompanyForm = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="shareCertificateFile">Share Certificate</Label>
+              <Controller
+                name="shareCertificateFile"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="shareCertificateFile"
+                    placeholder="Full Name - Name as per Adhar"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={
+                      errors.shareCertificateFile ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.shareCertificateFile && (
+                <span className="text-red-500">
+                  {errors.shareCertificateFile.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="partershipDeedFile">Partnership Deed</Label>
+              <Controller
+                name="partershipDeedFile"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="partershipDeedFile"
+                    placeholder="Full Name - Name as per Adhar"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={
+                      errors.partershipDeedFile ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.partershipDeedFile && (
+                <span className="text-red-500">
+                  {errors.partershipDeedFile.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="jvAgreementFile">JV Agreement</Label>
+              <Controller
+                name="jvAgreementFile"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="jvAgreementFile"
+                    placeholder="Full Name - Name as per Adhar"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.jvAgreementFile ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.jvAgreementFile && (
+                <span className="text-red-500">
+                  {errors.jvAgreementFile.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="loanDepositeReceipt">Loan Deposite Receipt</Label>
+              <Controller
+                name="loanDepositeReceipt"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="loanDepositeReceipt"
+                    placeholder="Full Name - Name as per Adhar"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={
+                      errors.loanDepositeReceipt ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.loanDepositeReceipt && (
+                <span className="text-red-500">
+                  {errors.loanDepositeReceipt.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="promisoryNote">Promisory Note</Label>
+              <Controller
+                name="promisoryNote"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="promisoryNote"
+                    placeholder="Full Name - Name as per Adhar"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                      console.log("sadsA", event.target.files);
+                    }}
+                    className={errors.promisoryNote ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.promisoryNote && (
+                <span className="text-red-500">
+                  {errors.promisoryNote.message}
+                </span>
+              )}
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
