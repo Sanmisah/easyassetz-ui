@@ -129,7 +129,6 @@ const MotorForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      console.log("data:", data);
       const formData = new FormData();
       for (const [key, value] of Object.entries(data)) {
         formData.append(key, value);
