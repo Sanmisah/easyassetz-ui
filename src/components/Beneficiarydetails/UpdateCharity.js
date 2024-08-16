@@ -65,7 +65,7 @@ const charitySchema = z.object({
   charityCity: z.string().nonempty("City is required"),
   charityState: z.any().optional(),
   charityNumber: z.string().optional(),
-  charityEmail: z.string().email("Invalid Charity Email address"),
+  charityEmail: z.any().optional(),
   contactName: z.string().nonempty("Contact person name is required"),
   charityWebsite: z.any().optional(),
   charitySpecificInstruction: z.string().optional(),
@@ -264,12 +264,12 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
               )}
             </div>
             <div className="space-y-2 p-2">
-              <Label htmlFor="contactName" className="text-base font-medium">
+              <Label htmlFor="charityNumber" className="text-base font-medium">
                 Phone Number
               </Label>
               <Label className="text-red-500">*</Label>
               <Controller
-                name="contactName"
+                name="charityNumber"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput

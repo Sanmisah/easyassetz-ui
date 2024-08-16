@@ -41,12 +41,12 @@ const schema = z.object({
   firmsRegistrationNumber: z
     .string()
     .nonempty({ message: "Firm Registration Number is required" }),
-  myStatus: z.string().optional(),
+  myStatus: z.any().optional(),
   holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
   jointHolderPan: z.any().optional(),
   additionalInformation: z.any().optional(),
-  typeOfInvestment: z.string().optional(),
+  typeOfInvestment: z.any().optional(),
   name: z.string().optional(),
 
   mobile: z.string().optional(),

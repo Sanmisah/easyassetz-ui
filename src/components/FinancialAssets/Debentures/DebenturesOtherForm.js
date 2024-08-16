@@ -56,6 +56,7 @@ const schema = z.object({
   name: z.string().optional(),
   mobile: z.string().optional(),
   email: z.string().optional(),
+  image: z.string().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
