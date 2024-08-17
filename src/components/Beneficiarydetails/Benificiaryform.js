@@ -43,8 +43,8 @@ const beneficiarySchema = z
     specificRelationship: z.string().optional(),
     gender: z.string().nonempty("Gender is required"),
     dob: z.any().optional(),
-    guardianName: z.string().optional(),
-    guardianMobile: z.string().optional(),
+    guardianName: z.string().nonempty("Name is required"),
+    guardianMobile: z.string().nonempty("Mobile Number is required"),
     guardianEmail: z.string().optional(),
     guardianCity: z.string().optional(),
     guardianState: z.string().optional(),
@@ -58,7 +58,7 @@ const beneficiarySchema = z
     country: z.string().optional(),
     mobile: z.string().nonempty("Mobile is required"),
     email: z.any().optional(),
-    city: z.string().nonempty("City is required"),
+    city: z.any().optional(),
     state: z.string().optional(),
     houseNo: z.string().optional(),
     nationality: z.string().optional(),
@@ -351,6 +351,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="dob">Date Of Birth</Label>
+                            <Label style={{ color: "red" }}>*</Label>
+
                             <Controller
                               name="dob"
                               control={control}
@@ -677,6 +679,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Label htmlFor="guardian-name">
                                 Full Legal Name
                               </Label>
+                              <Label style={{ color: "red" }}>*</Label>
+
                               <Input
                                 id="guardian-name"
                                 placeholder="Enter Full Legal Name"
@@ -692,6 +696,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                               <Label htmlFor="guardian-mobile">
                                 Mobile Number
                               </Label>
+                              <Label style={{ color: "red" }}>*</Label>
+
                               <Controller
                                 name="guardianMobile"
                                 control={control}
