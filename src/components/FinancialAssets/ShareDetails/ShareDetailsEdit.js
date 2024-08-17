@@ -41,7 +41,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
   folioNumber: z.string().nonempty({ message: "Folio Number is required" }),
-  noOfShares: z.string().optional(),
+  noOfShares: z.any().optional(),
   certificateNumber: z.any().optional(),
   distinguishNoFrom: z.any().optional(),
   distinguishNoTo: z.any().optional(),
