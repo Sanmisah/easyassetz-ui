@@ -105,18 +105,18 @@ const EditCryptoForm = () => {
       },
     });
     let data = response.data.data.Crypto;
-    setValue("cryptoWalletType", data.cryptoWalletType);
-    setValue("cryptoWalletAddress", data.cryptoWalletAddress);
-    setValue("holdingType", data.holdingType);
-    setValue("holdingQty", data.holdingQty);
-    setValue("exchange", data.exchange);
-    setValue("tradingAccount", data.tradingAccount);
-    setValue("typeOfCurrency", data.typeOfCurrency);
-    setValue("name", data.name);
-    setValue("mobile", data.mobile);
-    setValue("email", data.email);
+    // setValue("cryptoWalletType", data.cryptoWalletType);
+    // setValue("cryptoWalletAddress", data.cryptoWalletAddress);
+    // setValue("holdingType", data.holdingType);
+    // setValue("holdingQty", data.holdingQty);
+    // setValue("exchange", data.exchange);
+    // setValue("tradingAccount", data.tradingAccount);
+    // setValue("typeOfCurrency", data.typeOfCurrency);
+    // setValue("name", data.name);
+    // setValue("mobile", data.mobile);
+    // setValue("email", data.email);
     if (data.holdingType === "joint") {
-      setShowJointHolderName(true);
+      setJoinHolder(true);
       setValue("holdingType", data.holdingType);
       setValue("jointHolderName", data.jointHolderName);
       setValue("jointHolderPan", data.jointHolderPan);
