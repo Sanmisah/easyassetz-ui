@@ -202,6 +202,7 @@ const MutualFundOtherForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="fundName">Fund Name</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="fundName"
                 control={control}
@@ -223,6 +224,7 @@ const MutualFundOtherForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="folioNumber">Folio Number</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="folioNumber"
                 control={control}

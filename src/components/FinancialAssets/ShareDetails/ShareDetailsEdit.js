@@ -252,7 +252,7 @@ const PSSEditForm = () => {
               <Button onClick={() => navigate("/share-details")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Share Details
+                  Edit Share Details
                 </CardTitle>
                 <CardDescription>
                   Edit the form to update the Share Details.
