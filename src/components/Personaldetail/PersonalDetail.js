@@ -115,6 +115,7 @@ const Personaldetail = () => {
   const { isLoading, isError } = useQuery({
     queryKey: ["personalData"],
     queryFn: getPersonalData,
+    retry: false,
     onSuccess: (data) => {
       console.log("Data:", data);
 
@@ -322,7 +323,9 @@ const Personaldetail = () => {
   const handleFileUploadDriving = () => {
     window.open(`/api/file/${defaultData?.drivingFile}`);
   };
-  const handleFileUploadPassport = () => {
+  const handleFileUploadPassport = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     window.open(`/api/file/${defaultData?.passportFile}`);
   };
   return (
@@ -1128,7 +1131,11 @@ const Personaldetail = () => {
                     <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
                       <Button
                         variant="ghost"
-                        onClick={handleFileUpload}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleFileUpload();
+                        }}
                         className="color-green-500"
                       >
                         View Uploaded Aadhar File
@@ -1274,7 +1281,11 @@ const Personaldetail = () => {
                     <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
                       <Button
                         variant="ghost"
-                        onClick={handleFileUploadPan}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleFileUploadPan();
+                        }}
                         className="color-green-500"
                       >
                         View Uploaded Pan File
@@ -1482,7 +1493,11 @@ const Personaldetail = () => {
                     <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
                       <Button
                         variant="ghost"
-                        onClick={handleFileUploadDriving}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleFileUploadDriving();
+                        }}
                         className="color-green-500"
                       >
                         View Uploaded Driving Licence File
@@ -1674,7 +1689,11 @@ const Personaldetail = () => {
                     <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
                       <Button
                         variant="ghost"
-                        onClick={handleFileUploadPassport}
+                        onClick={(e) => {
+                          handleFileUploadPassport(e);
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }}
                         className="color-green-500"
                       >
                         View Uploaded Passport File
