@@ -39,9 +39,7 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Insurance Company is required" }),
   otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
+  insuranceType: z.any().optional(),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
   expiryDate: z.date().optional(),
   premium: z.string().min(3, { message: "Premium is required" }),
@@ -107,7 +105,7 @@ const EditMotorForm = () => {
     );
     let data = response.data.data.MotorInsurance;
     if (data.modeOfPurchase === "e-insurance") {
-      setValue("modeOfPurchase", data.e - insurance);
+      setValue("modeOfPurchase", data.modeOfPurchase);
     }
     if (data.modeOfPurchase === "broker") {
       setValue("modeOfPurchase", data.broker);

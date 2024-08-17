@@ -224,14 +224,7 @@ const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
 
   return (
     <div>
-      <Sheet
-        open={open}
-        onOpenChange={(e) => {
-          e.stopPropagation();
-          setOpen(e);
-        }}
-        className="w-[800px]"
-      >
+      <Sheet open={open} onOpenChange={setOpen} className="w-[800px]">
         <SheetTrigger asChild>
           <Button
             onClick={(e) => {

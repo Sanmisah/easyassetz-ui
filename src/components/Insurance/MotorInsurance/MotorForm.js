@@ -37,7 +37,7 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Insurance Company is required" }),
   otherInsuranceCompany: z.string().optional(),
-  insuranceType: z.string().optional(),
+  insuranceType: z.any().optional(),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
   expiryDate: z.any().optional(),
   premium: z.string().min(3, { message: "Premium is required" }),
@@ -96,6 +96,7 @@ const MotorForm = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
+
   const [nomineeerror, setnomineeerror] = useState(false);
   const {
     handleSubmit,
@@ -271,7 +272,6 @@ const MotorForm = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Type</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
