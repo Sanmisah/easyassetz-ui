@@ -734,11 +734,7 @@ const Personaldetail = () => {
                   placeholder="Address Line 2"
                   defaultValue={defaultData?.permanentAddressLine2}
                   type="text"
-                  {...register("permanentAddressLine2", {
-                    required:
-                      !defaultData?.permanentAddressLine2 &&
-                      "Address Line 2 is required",
-                  })}
+                  {...register("permanentAddressLine2")}
                 />
                 {errors.permanentAddressLine2 && (
                   <span className="text-red-500">
