@@ -25,7 +25,7 @@ const schema = z.object({
   bankName: z
     .string()
     .nonempty({ message: "Bank/Institution Name is required" }),
-  loanAccountNumber: z
+  loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
   branch: z.any().optional(),
@@ -55,7 +55,7 @@ const PersonalLoanEdit = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       bankName: "",
-      loanAccountNumber: "",
+      loanAccountNo: "",
       branch: "",
       emiDate: "",
       startDate: "",
@@ -202,25 +202,23 @@ const PersonalLoanEdit = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="loanAccountNumber">Loan Account Number</Label>
+                <Label htmlFor="loanAccountNo">Loan Account Number</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
-                  name="loanAccountNumber"
+                  name="loanAccountNo"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="loanAccountNumber"
+                      id="loanAccountNo"
                       placeholder="Enter Loan Account Number"
                       {...field}
-                      className={
-                        errors.loanAccountNumber ? "border-red-500" : ""
-                      }
+                      className={errors.loanAccountNo ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.loanAccountNumber && (
+                {errors.loanAccountNo && (
                   <span className="text-red-500">
-                    {errors.loanAccountNumber.message}
+                    {errors.loanAccountNo.message}
                   </span>
                 )}
               </div>
