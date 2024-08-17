@@ -222,6 +222,7 @@ const EditMotorForm = () => {
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
       console.log("data:", data);
+
       const formData = new FormData();
       for (const [key, value] of Object.entries(data)) {
         formData.append(key, value);
@@ -268,7 +269,7 @@ const EditMotorForm = () => {
   //   }
   // }, [Benifyciary, reset]);
 
-  const onSubmit = (e, data) => {
+  const onSubmit = (data) => {
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }

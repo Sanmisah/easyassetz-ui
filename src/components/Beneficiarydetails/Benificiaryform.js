@@ -370,7 +370,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                           </div>
                           <div className="space-y-2 min-w-[22.5rem]">
                             <Label htmlFor="mobile">Mobile Number</Label>
-                            <Label style={{ color: "red" }}>*</Label>
                             <Controller
                               name="mobile"
                               control={control}
@@ -619,6 +618,8 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="guardian-pincode">Pincode</Label>
+                        <Label style={{ color: "red" }}>*</Label>
+
                         <Input
                           id="guardian-pincode"
                           placeholder="Enter Pincode"
@@ -646,7 +647,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
                       <div className="space-y-2">
                         <Label htmlFor="guardian-city">City</Label>
-                        <Label style={{ color: "red" }}>*</Label>
                         <Input
                           id="guardian-city"
                           placeholder="Enter City"
