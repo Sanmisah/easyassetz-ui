@@ -471,11 +471,20 @@ const OtherFinancialAssetOtherForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Input
-                    id="jointHolderPan"
-                    placeholder="Enter Joint Holder PAN"
-                    {...register("jointHolderPan")}
-                    className={errors.jointHolderPan ? "border-red-500" : ""}
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter Joint Holder PAN"
+                        {...field}
+                        value={field.value?.toUpperCase() || ""}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
                   />
                   {errors.jointHolderPan && (
                     <span className="text-red-500">

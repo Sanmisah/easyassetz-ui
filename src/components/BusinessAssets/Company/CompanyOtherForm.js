@@ -259,26 +259,26 @@ const CompanyForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firmsRegistrationNumber">
-                  Company Registration
+                  Registration Number
                 </Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
-                  name="firmsRegistrationNumberType"
+                  name="firmsRegistrationNumber"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      id="firmsRegistrationNumberType"
+                      id="firmsRegistrationNumber"
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherCompanyRegistration(value);
+                        setShowOtherRegistrationNumber(value);
                       }}
                       className={
                         errors.firmsRegistrationNumber ? "border-red-500" : ""
                       }
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Company Registration" />
+                        <SelectValue placeholder="Select  Registration Number" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="CIN">CIN</SelectItem>
@@ -288,16 +288,21 @@ const CompanyForm = () => {
                     </Select>
                   )}
                 />
-                {showOtherCompanyRegistration && (
+                {showOtherRegistrationNumber && (
                   <Controller
-                    name="firmsRegistrationNumber"
+                    name="otherRegistrationNumber"
                     control={control}
                     render={({ field }) => (
                       <Input
-                        {...field}
-                        className="mt-2"
+                        id="otherRegistrationNumber"
                         value={field.value?.toUpperCase() || ""}
                         onChange={field.onChange}
+                        className={
+                          errors.firmsRegistrationNumber
+                            ? "border-red-500 mt-2"
+                            : "mt-2"
+                        }
+                        placeholder="Specify Registration Number"
                       />
                     )}
                   />
@@ -461,12 +466,21 @@ const CompanyForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Input
-                    id="jointHolderPan"
-                    placeholder="Enter Joint Holder PAN"
-                    {...register("jointHolderPan")}
-                    className={errors.jointHolderPan ? "border-red-500" : ""}
-                  />
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter Joint Holder PAN"
+                        {...field}
+                        value={field.value?.toUpperCase() || ""}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  ></Controller>
                   {errors.jointHolderPan && (
                     <span className="text-red-500">
                       {errors.jointHolderPan.message}

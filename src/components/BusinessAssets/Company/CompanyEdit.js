@@ -486,6 +486,7 @@ const EditFormHealth = () => {
                         id="jointHolderPan"
                         placeholder="Enter joint holder name"
                         {...field}
+                        value={field.value}
                         className={
                           errors.jointHolderPan ? "border-red-500" : ""
                         }

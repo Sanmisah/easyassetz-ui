@@ -43,7 +43,9 @@ const schema = z.object({
   // distinguishNoTo: z.any().optional(),
   // faceValue: z.any().optional(),
   // myStatus: z.string().nonempty({ message: "My Status is required" }),
-  natureOfHolding: z.string().optional(),
+  natureOfHolding: z
+    .string()
+    .nonempty({ message: "Nature of Holding is required" }),
   jointHolderName: z.string().optional(),
   jointHolderPan: z.string().optional(),
   // documentAvailability: z
@@ -428,7 +430,8 @@ const MutualFundOtherForm = () => {
             </div> */}
 
             <div className="space-y-4 flex flex-col">
-              <Label className="text-lg font-bold">Holding Type</Label>
+              <Label className="text-base font-bold">Nature of Holding</Label>
+              <Label style={{ color: "red" }}>*</Label>
               <Controller
                 name="natureOfHolding"
                 defaultValues="single"

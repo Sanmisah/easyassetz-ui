@@ -28,10 +28,12 @@ import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
-  metalType: z.any().optional(),
-  otherMetalType: z.any().optional(),
-  articleDetails: z.any().optional(),
-  otherArticleDetails: z.any().optional(),
+  metalType: z.string().nonempty({ message: "Metal Type is required" }),
+  otherMetalType: z.string().optional(),
+  articleDetails: z
+    .string()
+    .nonempty({ message: "Article Details is required" }),
+  otherArticleDetails: z.string().optional(),
   numberOfArticles: z.any().optional(),
   weightPerArticle: z.any().optional(),
   additionalInformation: z.any().optional(),
@@ -182,15 +184,15 @@ const BullionEdit = () => {
     if (data.articleDetails === "other") {
       data.articleDetails = data.otherArticleDetails;
     }
-    if (name) {
-      data.name = name;
-    }
-    if (email) {
-      data.email = email;
-    }
-    if (mobile) {
-      data.mobile = mobile;
-    }
+    // if (name) {
+    //   data.name = name;
+    // }
+    // if (email) {
+    //   data.email = email;
+    // }
+    // if (mobile) {
+    //   data.mobile = mobile;
+    // }
     console.log("NumberOFarticles:", data.numberOfArticles);
 
     bullionMutate.mutate(data);
@@ -225,6 +227,7 @@ const BullionEdit = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="metalType">Metal Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="metalType"
                   control={control}
@@ -271,6 +274,7 @@ const BullionEdit = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="articleDetails">Article Details</Label>
+                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="articleDetails"
                   control={control}
