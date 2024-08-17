@@ -127,7 +127,8 @@ const InsuranceForm = () => {
     onError: (error) => {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
-    },_
+    },
+    _,
   });
   useEffect(() => {
     if (selectedNommie.length > 0) {

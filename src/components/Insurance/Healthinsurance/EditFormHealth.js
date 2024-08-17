@@ -54,7 +54,7 @@ const schema = z.object({
     .nonempty({ message: "Mode of Purchase is required" }),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }).optional(),
+  email: z.string().optional(),
   registeredMobile: z.string().optional(),
   registeredEmail: z.string().optional(),
   brokerName: z.string().optional(),
