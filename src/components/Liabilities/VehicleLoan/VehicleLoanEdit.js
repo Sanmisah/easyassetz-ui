@@ -76,7 +76,7 @@ const VehicleLoanEdit = () => {
     let data = response.data.data.VehicleLoan;
     setValue("bankName", data.bankName);
     setValue("loanAccountNo", data.loanAccountNo);
-    setValue("bankName", data.bankName);
+    setValue("branch", data.branch);
     setValue("emiDate", data.emiDate);
     setValue("startDate", data.startDate);
     setValue("duration", data.duration);
@@ -213,21 +213,21 @@ const VehicleLoanEdit = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bankName">bankName</Label>
+              <Label htmlFor="branch">branch</Label>
               <Controller
-                name="bankName"
+                name="branch"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="bankName"
-                    placeholder="Enter bankName"
+                    id="branch"
+                    placeholder="Enter branch"
                     {...field}
-                    className={errors.bankName ? "border-red-500" : ""}
+                    className={errors.branch ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.bankName && (
-                <span className="text-red-500">{errors.bankName.message}</span>
+              {errors.branch && (
+                <span className="text-red-500">{errors.branch.message}</span>
               )}
             </div>
 
