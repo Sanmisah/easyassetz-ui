@@ -52,8 +52,11 @@ const schema = z.object({
   jointHoldersName: z.string().optional(),
   jointHoldersRelation: z.string().optional(),
   jointHoldersPan: z.string().optional(),
-  anyLoanLitigation: z.string().optional(),
+  anyLoanLitigation: z.any().optional(),
   litigationFile: z.string().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
 });
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
@@ -791,7 +794,71 @@ const ResidentialOtherform = () => {
                 />
               </div>
             </div>
-
+            <div className="space-y-2 col-span-full">
+              <Label htmlFor="registered-mobile" className="text-lg font-bold">
+                Point Of Contact
+              </Label>
+              <div className="w-full grid grid-cols-1 gap-4 mt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Controller
+                    name="name"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="name"
+                        placeholder="Enter Name"
+                        {...field}
+                        className={errors.name ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.name && (
+                    <span className="text-red-500">{errors.name.message}</span>
+                  )}
+                </div>
+                <div className="w-[40%] space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="email"
+                        placeholder="Enter Email"
+                        {...field}
+                        className={errors.email ? "border-red-500" : ""}
+                      />
+                    )}
+                  />
+                  {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                  )}
+                </div>
+                <div className="w-[40%] space-y-2">
+                  <Label htmlFor="mobile">Mobile</Label>
+                  <Controller
+                    name="mobile"
+                    control={control}
+                    render={({ field }) => (
+                      <PhoneInput
+                        id="mobile"
+                        type="tel"
+                        placeholder="Enter mobile number"
+                        defaultCountry="in"
+                        inputStyle={{ minWidth: "15.5rem" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.mobile && (
+                    <span className="text-red-500">
+                      {errors.mobile.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

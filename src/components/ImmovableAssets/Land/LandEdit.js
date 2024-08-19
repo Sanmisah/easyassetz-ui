@@ -129,7 +129,7 @@ const ResidentialEditForm = () => {
     if (data.ownershipType === "joint") {
       setJoinholder(true);
     }
-
+    setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
     return response.data.data.Land;
   };
 

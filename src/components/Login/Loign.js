@@ -103,6 +103,7 @@ const Auth = () => {
       return response.data;
     },
     onSuccess: (data) => {
+      toast.dismiss();
       console.log("Logging in user:", data);
       localStorage.setItem("user", JSON.stringify(data));
       navigate("/personal");
@@ -118,6 +119,7 @@ const Auth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.loading("Loading data");
     if (isLogin) {
       if (validateLogin()) {
         Loginmutation.mutate({
@@ -233,12 +235,12 @@ const Auth = () => {
                       getFieldError("password") ? "border-red-500" : ""
                     }
                   />
-                   <Link
-                      to="/forgot-password"
-                      className="ml-auto inline-block text-sm underline"
-                    >
-                      Forgot your password?
-                    </Link>
+                  <Link
+                    to="/forgot-password"
+                    className="ml-auto inline-block text-sm underline"
+                  >
+                    Forgot your password?
+                  </Link>
                   {getFieldError("password") && (
                     <p className="text-red-500">{getFieldError("password")}</p>
                   )}

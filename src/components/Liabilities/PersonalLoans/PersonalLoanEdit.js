@@ -165,10 +165,10 @@ const PersonalLoanEdit = () => {
               <Button onClick={() => navigate("/loan")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Edit Loan Details
+                  Edit Personal Loan Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the loan details.
+                  Update the form to edit the personal loan details.
                 </CardDescription>
               </div>
             </div>
