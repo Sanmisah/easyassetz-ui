@@ -104,7 +104,7 @@ const GratuityEditForm = () => {
       !["CIN", "PAN", "FIRM NO"].includes(data.companyRegistration)
     );
     setJointHolderName(data.holdingType === "jointName");
-
+    setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
     return data;
   };
 
@@ -271,9 +271,7 @@ const GratuityEditForm = () => {
                             )
                           );
                           setSelectedNommie(
-                            selectedNommie.filter(
-                              (item) => item.id !== nominee.id
-                            )
+                            selectedNommie.filter((item) => item !== nominee.id)
                           );
                         }}
                         src={cross}

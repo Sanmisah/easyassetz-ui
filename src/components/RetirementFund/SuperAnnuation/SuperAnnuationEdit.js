@@ -87,6 +87,12 @@ const SuperAnnuationEditForm = () => {
     );
 
     console.log(typeof response.data.data.SuperAnnuation?.annuityAmount);
+    const data = response.data.data.SuperAnnuation;
+    setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
+
     return response.data.data.SuperAnnuation;
   };
 
@@ -173,9 +179,6 @@ const SuperAnnuationEditForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    data.name = name;
-    data.email = email;
-    data.mobile = mobile;
 
     console.log(data);
     // const date = new Date(data.membershipPaymentDate);
@@ -453,6 +456,7 @@ const SuperAnnuationEditForm = () => {
                       id="mobile"
                       type="tel"
                       {...field}
+                      value={field.value || ""}
                       placeholder="Enter mobile number"
                       defaultCountry="in"
                       inputStyle={{ minWidth: "15.5rem" }}

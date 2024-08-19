@@ -156,6 +156,9 @@ const ppfForm = () => {
     if (selectedNommie?.length > 0) {
       data.nominees = selectedNommie;
     }
+    if (selectedFamilyMembers?.length > 0) {
+      data.jointHolders = selectedFamilyMembers;
+    }
     data.type = "company";
 
     data.mobile = phone;

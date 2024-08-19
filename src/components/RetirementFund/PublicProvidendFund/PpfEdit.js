@@ -108,6 +108,13 @@ const PpfEditForm = ({}) => {
     setValue("additionalDetails", data.additionalDetails);
     setValue("name", data.name);
     setValue("mobile", data.mobile);
+    setDisplayFamilyMembers(
+      data.jointHolders?.map((nominee) => ({
+        id: nominee.id,
+        fullLegalName: nominee.fullLegalName,
+        relationship: nominee.relationship,
+      }))
+    );
     setValue("email", data.email);
     if (data.natureOfHolding === "joint") {
       setShowJointHolderName(true);
@@ -115,6 +122,7 @@ const PpfEditForm = ({}) => {
     // Assume nomineeDetails is an array of nominee objects
     setNomineeDetails(data.nomineeDetails || []);
     setSelectedNommie(data.nominees?.map((nominee) => nominee.id));
+    setSelectedFamilyMembers(data.jointHolders?.map((nominee) => nominee.id));
     return response.data.data.PublicProvidentFund;
   };
 
@@ -153,7 +161,8 @@ const PpfEditForm = ({}) => {
       for (const [key, value] of Object.entries(data)) {
         Formdata.append(key, value);
       }
-      const response = await axios.put(
+      Formdata.append("_method", "put");
+      const response = await axios.post(
         `/api/public-provident-funds/${lifeInsuranceEditId}`,
         Formdata,
         {
@@ -180,6 +189,9 @@ const PpfEditForm = ({}) => {
     data.mobile = phone;
     if (selectedNommie?.length > 0) {
       data.nominees = selectedNommie;
+    }
+    if (selectedFamilyMembers?.length > 0) {
+      data.jointHolders = selectedFamilyMembers;
     }
     ppfMutate.mutate(data);
   };
@@ -373,7 +385,7 @@ const PpfEditForm = ({}) => {
                                   );
                                   setSelectedFamilyMembers(
                                     selectedFamilyMembers.filter(
-                                      (item) => item.id !== nominee.id
+                                      (item) => item !== nominee.id
                                     )
                                   );
                                 }}
