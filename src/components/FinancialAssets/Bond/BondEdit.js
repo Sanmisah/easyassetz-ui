@@ -92,6 +92,9 @@ const PSSEditForm = () => {
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
+  useEffect(() => {
+    console.log(selectedNommie);
+  }, [selectedNommie]);
 
   const {
     handleSubmit,
@@ -133,7 +136,7 @@ const PSSEditForm = () => {
       setValue("email", data.email);
       setValue("mobile", data.mobile);
     }
-
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
     return response.data.data.Bond;
   };
 
@@ -178,6 +181,11 @@ const PSSEditForm = () => {
       toast.error("Failed to submit profile", error.message);
     },
   });
+
+  useEffect(() => {
+    console.log("nominees:", selectedNommie);
+    console.log("displaynominie:", displaynominie);
+  }, [selectedNommie, displaynominie]);
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
@@ -533,7 +541,7 @@ const PSSEditForm = () => {
                             );
                             setSelectedNommie(
                               selectedNommie.filter(
-                                (item) => item.id !== nominee.id
+                                (item) => item !== nominee.id
                               )
                             );
                           }}

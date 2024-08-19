@@ -140,6 +140,7 @@ const DematAccountEditForm = () => {
       setValue("email", data.email);
       setValue("mobile", data.mobile);
     }
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
 
     return response.data.data.DematAccount;
   };
@@ -548,7 +549,7 @@ const DematAccountEditForm = () => {
                             );
                             setSelectedNommie(
                               selectedNommie.filter(
-                                (item) => item.id !== nominee.id
+                                (item) => item !== nominee.id
                               )
                             );
                           }}

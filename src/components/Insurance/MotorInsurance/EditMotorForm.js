@@ -216,6 +216,10 @@ const EditMotorForm = () => {
       toast.error("Failed to submit profile", error.message);
     },
   });
+  useEffect(() => {
+    console.log("nominees:", selectedNommie);
+    console.log("displaynominie:", displaynominie);
+  }, [selectedNommie, displaynominie]);
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
@@ -592,20 +596,24 @@ const EditMotorForm = () => {
                   {console.log(displaynominie)}
                   {displaynominie &&
                     displaynominie.map((nominee) => (
-                      <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                      <div
+                        key={nominee.id} // Add a key for better performance
+                        className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
+                      >
                         <Label htmlFor={`nominee-${nominee?.id}`}>
                           {nominee?.fullLegalName || nominee?.charityName}
                         </Label>
                         <img
                           className="w-4 h-4 cursor-pointer"
                           onClick={() => {
-                            setDisplaynominie(
-                              displaynominie.filter(
-                                (item) => item.id !== nominee.id
-                              )
-                            );
                             setSelectedNommie(
                               selectedNommie.filter(
+                                (item) => item !== nominee.id
+                              )
+                            );
+
+                            setDisplaynominie(
+                              displaynominie.filter(
                                 (item) => item.id !== nominee.id
                               )
                             );

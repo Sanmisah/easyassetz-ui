@@ -133,6 +133,7 @@ const PSSEditForm = () => {
       setValue("email", data.email);
       setValue("mobile", data.mobile);
     }
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
 
     return response.data.data.ShareDetail;
   };
@@ -510,7 +511,7 @@ const PSSEditForm = () => {
                             );
                             setSelectedNommie(
                               selectedNommie.filter(
-                                (item) => item.id !== nominee.id
+                                (item) => item !== nominee.id
                               )
                             );
                           }}

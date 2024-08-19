@@ -512,7 +512,7 @@ const EditOtherForm = () => {
                             );
                             setSelectedNommie(
                               selectedNommie.filter(
-                                (item) => item.id !== nominee.id
+                                (item) => item !== nominee.id
                               )
                             );
                           }}

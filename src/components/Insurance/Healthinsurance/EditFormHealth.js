@@ -139,6 +139,7 @@ const EditFormHealth = () => {
       setBrokerSelected(false);
       setHideRegisteredFields(true);
     }
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
     console.log(typeof response.data.data.HealthInsurance?.premium);
     return response.data.data.HealthInsurance;
   };
@@ -629,7 +630,7 @@ const EditFormHealth = () => {
                             );
                             setSelectedNommie(
                               selectedNommie.filter(
-                                (item) => item.id !== nominee.id
+                                (item) => item !== nominee.id
                               )
                             );
                           }}

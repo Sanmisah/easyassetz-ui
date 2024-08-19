@@ -133,6 +133,7 @@ const PSSEditForm = () => {
       setValue("email", data.email);
       setValue("mobile", data.mobile);
     }
+    setSelectedNommie(data.nominees.map((nominee) => nominee.id));
 
     return response.data.data.ESOP;
   };
@@ -529,7 +530,7 @@ const PSSEditForm = () => {
                             );
                             setSelectedNommie(
                               selectedNommie.filter(
-                                (item) => item.id !== nominee.id
+                                (item) => item !== nominee.id
                               )
                             );
                           }}
@@ -648,7 +649,7 @@ const PSSEditForm = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  window.open(`/api/file/${Benifyciary?.imageUpload}`);
+                  window.open(`/api/file/${Benifyciary?.image}`);
                 }}
               >
                 View Attachment
