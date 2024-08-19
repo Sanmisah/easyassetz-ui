@@ -847,21 +847,21 @@ const EditMotorForm = () => {
                   />
                 )}
               />
-              {errors.panFile && (
-                <span className="text-red-500">{errors.panFile.message}</span>
+              {errors.image && (
+                <span className="text-red-500">{errors.image.message}</span>
               )}
             </div>
-            {Benifyciary?.panFile && (
-              <div className="space-y-2 mt-[50px] flex items-center gap-2 justify-between color-green-500">
-                <Button
-                  variant="ghost"
-                  onClick={handleUploadFile}
-                  className="color-green-500"
-                >
-                  View Uploaded Aadhar File
-                </Button>
-              </div>
-            )}
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

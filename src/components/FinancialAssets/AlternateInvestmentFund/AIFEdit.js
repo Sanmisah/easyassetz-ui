@@ -645,14 +645,12 @@ const PSSEditForm = () => {
                       );
                       console.log("sadsA", event.target.files);
                     }}
-                    className={errors.imageUpload ? "border-red-500" : ""}
+                    className={errors.image ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
+              {errors.image && (
+                <span className="text-red-500">{errors.image.message}</span>
               )}
             </div>
             <div>
@@ -660,7 +658,7 @@ const PSSEditForm = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  window.open(`/api/file/${Benifyciary?.imageUpload}`);
+                  window.open(`/api/file/${Benifyciary?.image}`);
                 }}
               >
                 View Attachment

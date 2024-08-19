@@ -106,6 +106,9 @@ const MembershipEdit = () => {
       "membershipPaymentDate",
       response.data.data.Membership?.membershipPaymentDate
     );
+    setSelectedNommie(
+      response.data.data.Membership?.nominees?.map((nominee) => nominee.id)
+    );
     console.log(typeof response.data.data.Membership?.premium);
     return response.data.data.Membership;
   };

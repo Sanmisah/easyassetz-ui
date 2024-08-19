@@ -185,7 +185,6 @@ const PartnershipEdit = () => {
     }
     // data.nominees = selectedNommie;
 
-    data.mobile = mobile;
     if (data.firmName === "other") {
       data.firmName = data.otherFirmType;
     }

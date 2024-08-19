@@ -152,6 +152,9 @@ const EditCryptoForm = () => {
       setValue("typeOfCurrency", "other");
       setValue("otherTypeOfCurrency", data.typeOfCurrency);
     }
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
     setSelectedNommie(data.nominees.map((nominee) => nominee.id));
     return response.data.data.Crypto;
   };
@@ -189,7 +192,6 @@ const EditCryptoForm = () => {
       setValue("modeOfPurchase", data.modeOfPurchase);
       setValue("contactPerson", data.contactPerson);
       setValue("contactNumber", data.contactNumber);
-      setValue("email", data.email);
       setValue("registeredMobile", data.registeredMobile);
       setValue("registeredEmail", data.registeredEmail);
       setValue("additionalDetails", data.additionalDetails);
@@ -443,7 +445,7 @@ const EditCryptoForm = () => {
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="tradingAccount"
-                  defaultValue={new Date(Benifyciary?.tradingAccount) || ""}
+                  defaultValue={Benifyciary?.tradingAccount || ""}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -688,6 +690,7 @@ const EditCryptoForm = () => {
                 <Label htmlFor="name">Name</Label>
                 <Controller
                   name="name"
+                  defaultValue={Benifyciary?.name || ""}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -707,6 +710,7 @@ const EditCryptoForm = () => {
                 <Controller
                   name="mobile"
                   control={control}
+                  defaultValue={Benifyciary?.mobile || ""}
                   render={({ field }) => (
                     <PhoneInput
                       id="mobile"
@@ -728,10 +732,12 @@ const EditCryptoForm = () => {
                 <Controller
                   name="email"
                   control={control}
+                  defaultValue={Benifyciary?.email || ""}
                   render={({ field }) => (
                     <Input
                       id="email"
                       type="email"
+                      defaultValue={Benifyciary?.email || ""}
                       placeholder="Enter email"
                       {...field}
                       className={errors.email ? "border-red-500" : ""}
@@ -747,13 +753,24 @@ const EditCryptoForm = () => {
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
-                defaultValue={Benifyciary?.imageUpload || ""}
+                defaultValue={Benifyciary?.image || ""}
                 render={({ field }) => (
                   <Input id="image-upload" type="file" {...field} />
                 )}
               />
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

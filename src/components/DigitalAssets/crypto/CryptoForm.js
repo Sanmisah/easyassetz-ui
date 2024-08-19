@@ -163,12 +163,7 @@ const CryptoForm = () => {
       data.cryptoWalletAddress = data.otherCryptoWalletAddress;
     }
     console.log(data);
-    const date = new Date(data.maturityDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.maturityDate = newdate;
+
     console.log("Nomiee:", selectedNommie.length > 0);
 
     data.nominees = selectedNommie;
@@ -492,6 +487,7 @@ const CryptoForm = () => {
                         id="jointHolderPan"
                         placeholder="Enter Joint Holder Name"
                         {...field}
+                        value={field?.value?.toUpperCase() || ""}
                         className={
                           errors.jointHolderPan ? "border-red-500" : ""
                         }
@@ -646,16 +642,15 @@ const CryptoForm = () => {
                       );
                       console.log("sadsA", event.target.files);
                     }}
-                    className={errors.imageUpload ? "border-red-500" : ""}
+                    className={errors.image ? "border-red-500" : ""}
                   />
                 )}
               />
-              {errors.imageUpload && (
-                <span className="text-red-500">
-                  {errors.imageUpload.message}
-                </span>
+              {errors.image && (
+                <span className="text-red-500">{errors.image.message}</span>
               )}
             </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>
             </CardFooter>

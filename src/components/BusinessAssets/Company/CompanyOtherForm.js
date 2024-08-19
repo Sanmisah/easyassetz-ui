@@ -33,6 +33,7 @@ import cross from "@/components/image/close.png";
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
   companyAddress: z.string().optional(),
+  otherRegistrationNumber: z.string().optional(),
   firmsRegistrationNumber: z
     .string()
     .min(2, { message: " Company Registration is required" }),
@@ -146,7 +147,9 @@ const CompanyForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    data.firmsRegistrationNumberType = showOtherCompanyRegistration;
+    console.log("Number:", data.firmsRegistrationNumber);
+    data.firmsRegistrationNumberType = data.firmsRegistrationNumber;
+    data.firmsRegistrationNumber = data.otherRegistrationNumber;
 
     // if (selectedNommie.length < 1) {
     //   toast.error("Please select atleast one nominee");

@@ -34,7 +34,7 @@ import { PhoneInput } from "react-international-phone";
 
 const schema = z.object({
   companyName: z.string().nonempty({ message: "Company Name is required" }),
-  companyAddress: z.string().optional(),
+  companyAddress: z.any().optional(),
   firmsRegistrationNumberType: z
     .string()
     .nonempty({ message: "Firm Registration Number is required" }),
@@ -47,10 +47,10 @@ const schema = z.object({
   jointHolderPan: z.any().optional(),
   additionalInformation: z.any().optional(),
   typeOfInvestment: z.any().optional(),
-  name: z.string().optional(),
+  name: z.any().optional(),
 
-  mobile: z.string().optional(),
-  email: z.string().optional(),
+  mobile: z.any().optional(),
+  email: z.any().optional(),
   shareCertificateFile: z.any().optional(),
   partershipDeedFile: z.any().optional(),
   jvAgreementFile: z.any().optional(),
@@ -299,9 +299,7 @@ const EditFormHealth = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setShowOtherCompanyRegistration(
-                          !["CIN", "PAN", "FIRM NO"].includes(value)
-                        );
+                        setShowOtherCompanyRegistration(value);
                       }}
                       className={
                         errors.firmsRegistrationNumberType

@@ -130,7 +130,9 @@ const PropritershipForm = () => {
     // if (selectedNommie.length > 0) {
     //   data.nominees = selectedNommie;
     // }
-
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
     data.type = "partnershipFirm";
     console.log(data.name, name);
     // data.name = name;

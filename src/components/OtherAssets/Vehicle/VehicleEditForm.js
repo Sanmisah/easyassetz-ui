@@ -267,45 +267,19 @@ const OtherLoansEditForm = () => {
               {showVehicleType && (
                 <div className="space-y-2">
                   <Label htmlFor="fourWheeler">Four Wheeler</Label>
+
                   <Controller
                     name="fourWheeler"
                     control={control}
                     render={({ field }) => (
-                      <Select
-                        id="fourWheeler"
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setfourWheelerStatus(value === "other");
-                        }}
-                        className={errors.fourWheeler ? "border-red-500" : ""}
-                      >
-                        <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select Type" />
-                        </FocusableSelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="car">Car</SelectItem>
-                          <SelectItem value="truck">Truck</SelectItem>
-                          <SelectItem value="van">Van</SelectItem>
-                          <SelectItem value="bus">Bus</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        {...field}
+                        placeholder="Specify Type"
+                        className="mt-2"
+                      />
                     )}
                   />
-                  {fourWheelerStatus && (
-                    <Controller
-                      name="otherFourWheeler"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          placeholder="Specify Type"
-                          className="mt-2"
-                        />
-                      )}
-                    />
-                  )}
+
                   {errors.fourWheeler && (
                     <span className="text-red-500">
                       {errors.fourWheeler.message}
@@ -409,7 +383,10 @@ const OtherLoansEditForm = () => {
                 name="yearOfExpiry"
                 control={control}
                 render={({ field }) => (
-                  <Datepicker value={field.value} onChange={field.onChange} />
+                  <Datepicker
+                    value={field.value}
+                    onChange={(date) => field.onChange(date)}
+                  />
                 )}
               />
               {errors.yearOfExpiry && (

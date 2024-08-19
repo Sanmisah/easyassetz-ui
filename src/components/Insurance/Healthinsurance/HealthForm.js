@@ -80,8 +80,11 @@ const HealthForm = () => {
   const [nomineeerror, setnomineeerror] = useState(false);
   const [showOtherInsuranceType, setShowOtherInsuranceType] = useState(false);
   const [FamilyMembersCovered, setFamilyMembersCovered] = useState([]);
-  const [showOtherFamilyMembersCovered, setShowOtherFamilyMembersCovered] =
-    useState(false);
+
+  const [familymemberNominee, setFamilymemberNominee] = useState([]);
+  const [displayfamilymemberNominee, setDisplayfamilymemberNominee] = useState(
+    []
+  );
   const {
     handleSubmit,
     control,
@@ -194,6 +197,7 @@ const HealthForm = () => {
       const newdate = `${month}/${day}/${year}`;
       data.maturityDate = newdate;
     }
+
     if (selectedNommie.length > 1) {
       setnomineeerror(false);
     }
@@ -204,8 +208,12 @@ const HealthForm = () => {
     if (data.FamilyMembersCovered === "other") {
       data.FamilyMembersCovered = data.specifyFamilyMembersCovered;
     }
-
-    data.nominees = selectedNommie;
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
+    if (familymemberNominee.length > 0) {
+      data.familyMembers = familymemberNominee;
+    }
     lifeInsuranceMutate.mutate(data);
   };
   useEffect(() => {
@@ -444,58 +452,66 @@ const HealthForm = () => {
                   </span>
                 )}
               </div>
-              <div>
-                <div className="space-y-2">
+              <div className="space-y-2 col-span-full">
+                <div className="space-y-2 ">
                   <Label htmlFor="FamilyMembersCovered">
                     Family Members Covered
                   </Label>
-                  <Controller
-                    name="FamilyMembersCovered"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setShowOtherFamilyMembersCovered(value === "other");
-                        }}
-                        className={
-                          errors.FamilyMembersCovered ? "border-red-500" : ""
-                        }
-                      >
-                        <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select Family Members Covered">
-                            {field.value || "Select Family Members Covered"}
-                          </SelectValue>
-                        </FocusableSelectTrigger>
-                        <SelectContent>
-                          {FamilyMembersCovered?.map((familyMembersCovered) => (
-                            <SelectItem
-                              key={familyMembersCovered.id}
-                              value={familyMembersCovered.fullLegalName}
-                            >
-                              {familyMembersCovered.fullLegalName}
-                            </SelectItem>
-                          ))}
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                  {displayfamilymemberNominee &&
+                    displayfamilymemberNominee.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="grid gap-4 py-4">
+                          {console.log(displayfamilymemberNominee)}
+                          <Label className="text-lg font-bold">
+                            Selected Family Members
+                          </Label>
+                          {displayfamilymemberNominee &&
+                            displayfamilymemberNominee.map((nominee) => (
+                              <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                                <Label htmlFor={`nominee-${nominee?.id}`}>
+                                  {nominee?.fullLegalName ||
+                                    nominee?.charityName}
+                                </Label>
+                                <img
+                                  className="w-4 h-4 cursor-pointer"
+                                  onClick={() => {
+                                    setDisplayfamilymemberNominee(
+                                      displayfamilymemberNominee.filter(
+                                        (item) => item.id !== nominee.id
+                                      )
+                                    );
+                                    setFamilymemberNominee(
+                                      familymemberNominee.filter(
+                                        (item) => item !== nominee.id
+                                      )
+                                    );
+                                  }}
+                                  src={cross}
+                                  alt=""
+                                />
+                              </div>
+                            ))}
+                        </div>
+                      </div>
                     )}
-                  />
-                  {showOtherFamilyMembersCovered && (
-                    <Controller
-                      name="specifyFamilyMembersCovered"
-                      control={control}
-                      render={({ field }) => (
-                        <Input {...field} placeholder="" className="mt-2" />
-                      )}
+                  <div className="space-y-2 col-span-full">
+                    <Label
+                      htmlFor="registered-mobile"
+                      className="text-lg font-bold"
+                    >
+                      Add Family Members
+                    </Label>
+                    <Addnominee
+                      setDisplaynominie={setDisplayfamilymemberNominee}
+                      setSelectedNommie={setSelectedNommie}
+                      displaynominie={displaynominie}
                     />
-                  )}
-                  {errors.FamilyMembersCovered && (
-                    <span className="text-red-500">
-                      {errors.FamilyMembersCovered.message}
-                    </span>
-                  )}
+                    {nomineeerror && (
+                      <span className="text-red-500">
+                        Please Select Atleast One Nominee
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -536,7 +552,7 @@ const HealthForm = () => {
                               )
                             );
                             setSelectedNommie(
-                              selectedNommie.filter(
+                              familymemberNominee.filter(
                                 (item) => item !== nominee.id
                               )
                             );
@@ -735,7 +751,7 @@ const HealthForm = () => {
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
                 render={({ field }) => (
                   <Input id="image-upload" type="file" {...field} />

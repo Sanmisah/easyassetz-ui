@@ -229,7 +229,9 @@ const EditOtherForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-
+    if (data.companyName === "other") {
+      data.companyName = data.otherInsuranceCompany;
+    }
     if (data.maturityDate) {
       const date = new Date(data.maturityDate);
       const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -241,7 +243,6 @@ const EditOtherForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-
     lifeInsuranceMutate.mutate(data);
   };
 
@@ -719,13 +720,24 @@ const EditOtherForm = () => {
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
-                defaultValue={Benifyciary?.imageUpload || ""}
+                defaultValue={Benifyciary?.image || ""}
                 render={({ field }) => (
                   <Input id="image-upload" type="file" {...field} />
                 )}
               />
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

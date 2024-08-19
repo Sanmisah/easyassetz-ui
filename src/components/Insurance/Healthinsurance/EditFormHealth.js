@@ -89,6 +89,10 @@ const EditFormHealth = () => {
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
+  const [familymemberNominee, setFamilymemberNominee] = useState([]);
+  const [displayfamilymemberNominee, setDisplayfamilymemberNominee] = useState(
+    []
+  );
 
   const {
     handleSubmit,
@@ -140,6 +144,7 @@ const EditFormHealth = () => {
       setHideRegisteredFields(true);
     }
     setSelectedNommie(data.nominees.map((nominee) => nominee.id));
+    setFamilymemberNominee(data.familyMembers.map((nominee) => nominee.id));
     console.log(typeof response.data.data.HealthInsurance?.premium);
     return response.data.data.HealthInsurance;
   };
@@ -267,6 +272,9 @@ const EditFormHealth = () => {
 
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
+    }
+    if (familymemberNominee.length > 0) {
+      data.familyMembers = familymemberNominee;
     }
 
     if (data.FamilyMembersCovered === "other") {
@@ -536,57 +544,51 @@ const EditFormHealth = () => {
               </div>
             </div>
             <div>
-              <div className="space-y-2">
+              <div className="space-y-2 col-span-full">
                 <Label htmlFor="FamilyMembersCovered">
                   Family Members Covered
                 </Label>
-                <Controller
-                  name="FamilyMembersCovered"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherFamilyMembersCovered(value === "other");
-                      }}
-                      className={
-                        errors.FamilyMembersCovered ? "border-red-500" : ""
-                      }
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Family Members Covered">
-                          {field.value || "Select Family Members Covered"}
-                        </SelectValue>
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        {FamilyMembersCovered?.map((familyMembersCovered) => (
-                          <SelectItem
-                            key={familyMembersCovered.id}
-                            value={familyMembersCovered.fullLegalName}
-                          >
-                            {familyMembersCovered.fullLegalName}
-                          </SelectItem>
-                        ))}
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                {displayfamilymemberNominee &&
+                  displayfamilymemberNominee.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="grid gap-4 py-4">
+                        {console.log(displayfamilymemberNominee)}
+                        {displayfamilymemberNominee &&
+                          displayfamilymemberNominee.map((nominee) => (
+                            <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
+                              <Label htmlFor={`nominee-${nominee?.id}`}>
+                                {nominee?.fullLegalName || nominee?.charityName}
+                              </Label>
+                              <img
+                                className="w-4 h-4 cursor-pointer"
+                                onClick={() => {
+                                  setDisplayfamilymemberNominee(
+                                    displayfamilymemberNominee.filter(
+                                      (item) => item.id !== nominee.id
+                                    )
+                                  );
+                                  setFamilymemberNominee(
+                                    familymemberNominee.filter(
+                                      (item) => item !== nominee.id
+                                    )
+                                  );
+                                }}
+                                src={cross}
+                                alt=""
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    </div>
                   )}
-                />
-                {showOtherFamilyMembersCovered && (
-                  <Controller
-                    name="specifyFamilyMembersCovered"
-                    control={control}
-                    render={({ field }) => (
-                      <Input {...field} placeholder="" className="mt-2" />
-                    )}
+                <div className="space-y-2 col-span-full">
+                  <Label htmlFor="registered-mobile">Add family members</Label>
+                  <Addnominee
+                    setDisplaynominie={setDisplayfamilymemberNominee}
+                    setSelectedNommie={setFamilymemberNominee}
+                    displaynominie={displayfamilymemberNominee}
                   />
-                )}
-                {errors.FamilyMembersCovered && (
-                  <span className="text-red-500">
-                    {errors.FamilyMembersCovered.message}
-                  </span>
-                )}
+                </div>
               </div>
             </div>
 
@@ -838,13 +840,24 @@ const EditFormHealth = () => {
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
-                defaultValue={Benifyciary?.imageUpload || ""}
+                defaultValue={Benifyciary?.image || ""}
                 render={({ field }) => (
                   <Input id="image-upload" type="file" {...field} />
                 )}
               />
+            </div>
+            <div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(`/api/file/${Benifyciary?.image}`);
+                }}
+              >
+                View Attachment
+              </Button>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button type="submit">Submit</Button>

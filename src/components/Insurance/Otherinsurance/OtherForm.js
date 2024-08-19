@@ -607,7 +607,7 @@ const OtherForm = () => {
             <div className="space-y-2">
               <Label htmlFor="image-upload">Image Upload</Label>
               <Controller
-                name="imageUpload"
+                name="image"
                 control={control}
                 render={({ field }) => (
                   <Input id="image-upload" type="file" {...field} />

@@ -124,6 +124,10 @@ const MutualFundOtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
       const response = await axios.post(`/api/debentures`, data, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
