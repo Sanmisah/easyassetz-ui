@@ -52,6 +52,7 @@ const schema = z.object({
   jointHoldersName: z.string().optional(),
   jointHoldersRelation: z.string().optional(),
   jointHoldersPan: z.string().optional(),
+  jointHoldersAadhar: z.string().optional(),
   anyLoanLitigation: z.any().optional(),
   litigationFile: z.string().optional(),
   name: z.any().optional(),
@@ -708,20 +709,20 @@ const ResidentialOtherform = () => {
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="jointHoldersName"
+                          id="jointHoldersAadhar"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           value={field.value || ""}
                           onChange={field.onChange}
                           className={
-                            errors.jointHoldersName ? "border-red-500" : ""
+                            errors.jointHoldersAadhar ? "border-red-500" : ""
                           }
                         />
                       )}
                     />
-                    {errors.jointHoldersName && (
+                    {errors.jointHoldersAadhar && (
                       <span className="text-red-500">
-                        {errors.jointHoldersName.message}
+                        {errors.jointHoldersAadhar.message}
                       </span>
                     )}
                   </div>

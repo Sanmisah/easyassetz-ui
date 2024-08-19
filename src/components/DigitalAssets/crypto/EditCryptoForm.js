@@ -603,6 +603,7 @@ const EditCryptoForm = () => {
                           id="jointHolderPan"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field?.value?.toUpperCase() || ""}
                           className={
                             errors.jointHolderPan ? "border-red-500" : ""
                           }

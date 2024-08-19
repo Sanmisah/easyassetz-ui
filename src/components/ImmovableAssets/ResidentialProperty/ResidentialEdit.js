@@ -169,6 +169,7 @@ const ResidentialEditForm = () => {
       setValue("jointHoldersName", data.jointHoldersName);
       setValue("jointHoldersRelation", data.jointHoldersRelation);
       setValue("jointHoldersPan", data.jointHoldersPan);
+      setValue("jointHoldersAadhar", data.jointHoldersAadhar);
       setValue("anyLoanLitigation", data.anyLoanLitigation);
       setValue("litigationFile", data.litigationFile);
       // Set fetched values to the form
