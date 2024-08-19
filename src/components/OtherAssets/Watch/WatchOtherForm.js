@@ -37,9 +37,9 @@ const schema = z.object({
   model: z.string().nonempty("Model is required"),
   // hufShare: z.string().optional(),
   // additionalInformation: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().optional(),
-  mobile: z.string().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
   type: z.any().optional(),
   watchImages: z.any().optional(),
 });

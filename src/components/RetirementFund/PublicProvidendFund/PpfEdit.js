@@ -450,7 +450,7 @@ const PpfEditForm = ({}) => {
                     type="tel"
                     placeholder="Enter Mobile"
                     defaultCountry="in"
-                    value={field.value}
+                    value={field.value || ""}
                     inputStyle={{ minWidth: "15.5rem" }}
                     onChange={(value) => {
                       console.log(value);

@@ -196,12 +196,12 @@ const RecoverableOtherForm = () => {
               <Label className="text-lg font-bold">Mode of Loan</Label>
               <Controller
                 name="modeOfLoan"
-                defaultValues="Cash"
+                defaultValues="cash"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
                     {...field}
-                    defaultValue="Cash"
+                    defaultValue="cash"
                     onValueChange={(value) => {
                       field.onChange(value);
                       // setShowOtherJointName(value === "joint");
@@ -210,8 +210,8 @@ const RecoverableOtherForm = () => {
                     className="flex items-center gap-2"
                   >
                     <div className="flex items-center gap-2 text-center">
-                      <RadioGroupItem id="Cash" value="Cash" />
-                      <Label htmlFor="Cash">Cash</Label>
+                      <RadioGroupItem id="cash" value="cash" />
+                      <Label htmlFor="cash">Cash</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem id="cheque" value="cheque" />

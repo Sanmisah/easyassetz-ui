@@ -148,8 +148,8 @@ const OtherAssetEditForm = () => {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   };
-
   const onSubmit = (data) => {
+    data.type = "otherAsset";
     console.log(data);
     // data.type = "huf";
     // data.emiDate = formatDate(data.emiDate);
