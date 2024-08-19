@@ -126,6 +126,7 @@ const ResidentialEditForm = () => {
     setValue("name", data.name);
     setValue("mobile", data.mobile);
     setValue("email", data.email);
+    setValue("anyLoanLitigation", data.anyLoanLitigation);
     if (data.ownershipType === "joint") {
       setJoinholder(true);
     }
@@ -268,14 +269,11 @@ const ResidentialEditForm = () => {
                         <SelectValue placeholder="Select Property Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="residentialApartment">
-                          Residential Apartment/Flat
+                        <SelectItem value="agriculturalLand">
+                          Agricultural Land
                         </SelectItem>
-                        <SelectItem value="residentialVilla">
-                          Residential Villa
-                        </SelectItem>
-                        <SelectItem value="residentialPlot">
-                          Residential Plot
+                        <SelectItem value="nonAgriculturalLand">
+                          Non-Agricultural Land
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -707,7 +705,17 @@ const ResidentialEditForm = () => {
                   defaultValue={Benifyciary?.anyLoanLitigation}
                   control={control}
                   render={({ field }) => (
-                    <Checkbox id="anyLoanLitigation" {...field} />
+                    <Checkbox
+                      id="anyLoanLitigation"
+                      {...field}
+                      checked={
+                        field.value !== undefined && field.value !== null
+                          ? field.value
+                          : Boolean(Benifyciary?.anyLoanLitigation)
+                      }
+                      defaultValue={Benifyciary?.anyLoanLitigation}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                    />
                   )}
                 />
                 {errors.anyLoanLitigation && (

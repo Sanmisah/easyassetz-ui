@@ -211,6 +211,7 @@ const HealthForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
+    console.log("familymemberNominee:", familymemberNominee);
     if (familymemberNominee.length > 0) {
       data.familyMembers = familymemberNominee;
     }
@@ -503,7 +504,7 @@ const HealthForm = () => {
                     </Label>
                     <Addnominee
                       setDisplaynominie={setDisplayfamilymemberNominee}
-                      setSelectedNommie={setSelectedNommie}
+                      setSelectedNommie={setFamilymemberNominee}
                       displaynominie={displaynominie}
                     />
                     {nomineeerror && (

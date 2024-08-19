@@ -246,7 +246,15 @@ const EditFormHealth = () => {
     if (Benifyciary?.nominees) {
       setDisplaynominie(Benifyciary?.nominees);
     }
-  }, [Benifyciary?.nominees]);
+    if (Benifyciary?.familyMembers) {
+      setDisplayfamilymemberNominee(Benifyciary?.familyMembers);
+    }
+  }, [Benifyciary?.nominees, Benifyciary?.familyMembers]);
+
+  useEffect(() => {
+    console.log("familymemberNominee:", familymemberNominee);
+    console.log("displayfamilymemberNominee:", displayfamilymemberNominee);
+  }, [familymemberNominee, displayfamilymemberNominee]);
   const onSubmit = (data) => {
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
@@ -273,6 +281,7 @@ const EditFormHealth = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
+
     if (familymemberNominee.length > 0) {
       data.familyMembers = familymemberNominee;
     }
