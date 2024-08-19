@@ -28,7 +28,7 @@ const schema = z.object({
   loanAccountNo: z
     .string()
     .nonempty({ message: "Loan Account Number is required" }),
-  bankName: z.any().optional(),
+  branch: z.any().optional(),
   emiDate: z.any().optional(),
   startDate: z.any().optional(),
   duration: z.any().optional(),

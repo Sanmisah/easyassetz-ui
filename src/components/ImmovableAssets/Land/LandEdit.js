@@ -53,7 +53,7 @@ const schema = z.object({
   jointHoldersRelation: z.any().optional(),
   jointHoldersPan: z.any().optional(),
   jointHoldersAadhar: z.any().optional(),
-  anyLoanLitigation: z.string().optional(),
+  anyLoanLitigation: z.any().optional(),
   name: z.any().optional(),
   mobile: z.any().optional(),
   email: z.any().optional(),
@@ -211,11 +211,7 @@ const ResidentialEditForm = () => {
 
   const onSubmit = (data) => {
     console.log("data:", data);
-    if (Litigation) {
-      data.anyLoanLitigation = "yes";
-    } else {
-      data.anyLoanLitigation = "no";
-    }
+
     bullionMutate.mutate(data);
   };
 
@@ -703,49 +699,7 @@ const ResidentialEditForm = () => {
                   </>
                 )}
               </div>
-              {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2 col-span-full">
-                  <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-              <div className="space-y-2 col-span-full">
-                <Label htmlFor="registered-mobile">Add nominee</Label>
-                <Addnominee
-                  setDisplaynominie={setDisplaynominie}
-                  setSelectedNommie={setSelectedNommie}
-                  displaynominie={displaynominie}
-                />
-              </div>
+
               <div className="space-y-2 space-x-2 col-span-full">
                 <Label>Any Loan Litigation</Label>
                 <Controller
@@ -753,11 +707,7 @@ const ResidentialEditForm = () => {
                   defaultValue={Benifyciary?.anyLoanLitigation}
                   control={control}
                   render={({ field }) => (
-                    <Checkbox
-                      id="anyLoanLitigation"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Checkbox id="anyLoanLitigation" {...field} />
                   )}
                 />
                 {errors.anyLoanLitigation && (

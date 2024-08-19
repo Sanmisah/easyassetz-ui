@@ -443,11 +443,11 @@ const LandOtherform = () => {
                   <div className="space-y-2 wrap col-span-full">
                     <Label> First Joint Holder Name</Label>
                     <Controller
-                      name="firstHolderName"
+                      name="firstHoldersName"
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="firstHoldersAadhar"
+                          id="firstHoldersName"
                           placeholder="Enter Joint Holder Name"
                           {...field}
                           value={field.value || ""}
@@ -687,54 +687,6 @@ const LandOtherform = () => {
                 )}
               </div>
 
-              {displaynominie && displaynominie.length > 0 && (
-                <div className="space-y-2">
-                  <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-              <div className="space-y-2 col-span-full">
-                <Label
-                  htmlFor="registered-mobile"
-                  className="text-lg font-bold"
-                >
-                  Add nominee
-                </Label>
-                <Addnominee
-                  setDisplaynominie={setDisplaynominie}
-                  setSelectedNommie={setSelectedNommie}
-                  displaynominie={displaynominie}
-                />
-              </div>
               <div className="space-y-2">
                 <Label>Name</Label>
                 <Controller

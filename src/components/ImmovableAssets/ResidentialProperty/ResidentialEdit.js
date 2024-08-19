@@ -56,7 +56,9 @@ const schema = z.object({
   jointHoldersName: z.any().optional(),
   jointHoldersRelation: z.any().optional(),
   jointHoldersPan: z.any().optional(),
+  jointHoldersAadhar: z.any().optional(),
   anyLoanLitigation: z.any().optional(),
+
   name: z.any().optional(),
   email: z.any().optional(),
   mobile: z.any().optional(),
@@ -133,6 +135,10 @@ const ResidentialEditForm = () => {
     setValue("name", data.name);
     setValue("email", data.email);
     setValue("mobile", data.mobile);
+    if (data.ownershipType === "joint") {
+      setValue("jointHoldersAadhar", data.jointHoldersAadhar);
+      setJoinholder(true);
+    }
     return response.data.data.ResidentialProperty;
   };
 
@@ -539,7 +545,7 @@ const ResidentialEditForm = () => {
                 )}
               </div>
 
-              <div className="space-y-2 wrap col-span-full">
+              <div className="space-y-2 wrap col-span-full gap-2">
                 <Label>Any Loan Litigation</Label>
                 <Controller
                   name="anyLoanLitigation"
@@ -762,49 +768,30 @@ const ResidentialEditForm = () => {
                     )}
                   </div>
                 )}
-              </div>
-              {displaynominie && displaynominie?.length > 0 && (
-                <div className="space-y-2 col-span-full">
-                  <div className="grid gap-4 py-4">
-                    {console.log(displaynominie)}
-                    <Label className="text-lg font-bold">
-                      Selected Nominees
-                    </Label>
-                    {displaynominie &&
-                      displaynominie.map((nominee) => (
-                        <div className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg">
-                          <Label htmlFor={`nominee-${nominee?.id}`}>
-                            {nominee?.fullLegalName || nominee?.charityName}
-                          </Label>
-                          <img
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                              setDisplaynominie(
-                                displaynominie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                              setSelectedNommie(
-                                selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
-                                )
-                              );
-                            }}
-                            src={cross}
-                            alt=""
-                          />
-                        </div>
-                      ))}
+                {Joinholder && (
+                  <div className="space-y-2 col-span-full">
+                    <Label>Joint Holders Aadhar</Label>
+                    <Controller
+                      name="jointHoldersAadhar"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="jointHoldersAadhar"
+                          placeholder="Enter joint holders Aadhar"
+                          {...field}
+                          className={
+                            errors.jointHoldersAadhar ? "border-red-500" : ""
+                          }
+                        />
+                      )}
+                    />
+                    {errors.jointHoldersAadhar && (
+                      <span className="text-red-500">
+                        {errors.jointHoldersAadhar.message}
+                      </span>
+                    )}
                   </div>
-                </div>
-              )}
-              <div className="space-y-2 col-span-full">
-                <Label htmlFor="registered-mobile">Add nominee</Label>
-                <Addnominee
-                  setDisplaynominie={setDisplaynominie}
-                  setSelectedNommie={setSelectedNommie}
-                  displaynominie={displaynominie}
-                />
+                )}
               </div>
             </div>
             <div className="space-y-2 col-span-full">

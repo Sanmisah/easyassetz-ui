@@ -109,6 +109,19 @@ const LitigationEditForm = () => {
     setValue("status", data.status);
     setValue("additionalInformation", data.additionalInformation);
     setValue("otherPartyAddress", data.otherPartyAddress);
+    if (
+      data.litigationType !== "court" &&
+      data.litigationType !== "criminal" &&
+      data.litigationType !== "arbitration" &&
+      data.litigationType !== "civilSuit" &&
+      data.litigationType !== "employment" &&
+      data.litigationType !== "professional" &&
+      data.litigationType !== "other"
+    ) {
+      setValue("litigationType", "other");
+      setValue("otherLitigationType", data.litigationType);
+      setShowOtherLitigationType(true);
+    }
 
     return response.data.data.Litigation;
   };
