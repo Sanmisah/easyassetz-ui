@@ -104,6 +104,7 @@ const OtherLoansEditForm = () => {
     setValue("registrationNumber", data.registrationNumber);
     setValue("yearOfManufacture", data.yearOfManufacture);
     setValue("location", data.location);
+    setValue("yearOfExpiry", data.yearOfExpiry);
     if (data.vehicleType === "fourwheeler") {
       setValue("fourWheeler", data.fourWheeler);
       setShowVehicleType(true);

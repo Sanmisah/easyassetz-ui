@@ -111,6 +111,7 @@ const OtherAssetOtherForm = () => {
     //   data.fourWheeler = data.otherFourWheeler;
     // }
     // data.type = "vehicle";
+    data.type = "otherAsset";
     loanMutate.mutate(data);
   };
 

@@ -553,11 +553,23 @@ const ResidentialEditForm = () => {
                   defaultValue={Benifyciary?.anyLoanLitigation}
                   control={control}
                   render={({ field }) => (
-                    <Checkbox
-                      id="anyLoanLitigation-yes"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <RadioGroup
+                      {...field}
+                      defaultValue="no"
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 text-center">
+                        <RadioGroupItem id="cash" value="yes" />
+                        <Label htmlFor="yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem id="cheque" value="no" />
+                        <Label htmlFor="no">No</Label>
+                      </div>
+                    </RadioGroup>
                   )}
                 />
                 {errors.anyLoanLitigation && (

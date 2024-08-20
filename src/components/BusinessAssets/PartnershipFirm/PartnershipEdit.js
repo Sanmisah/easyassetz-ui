@@ -44,6 +44,7 @@ const schema = z.object({
   firmsRegistrationNumberType: z.string().optional(),
   email: z.any().optional(),
   name: z.any().optional(),
+  mobile: z.any().optional(),
 });
 
 const PartnershipEdit = () => {
@@ -124,7 +125,6 @@ const PartnershipEdit = () => {
     setSelectedNommie(
       response.data.data.BusinessAsset?.nominees.map((nominee) => nominee.id)
     );
-    setmobile(response.data.data.BusinessAsset?.mobile);
     return response.data.data.BusinessAsset;
   };
 
@@ -452,9 +452,8 @@ const PartnershipEdit = () => {
                         placeholder="Enter mobile number"
                         defaultCountry="in"
                         inputStyle={{ minWidth: "15.5rem" }}
-                        onChange={(value) => setmobile(value)}
-                        value={mobile || Benifyciary?.mobile || ""}
-                        defaultValue={Benifyciary?.mobile || ""}
+                        {...field}
+                        value={field.value || ""}
                       />
                     )}
                   />

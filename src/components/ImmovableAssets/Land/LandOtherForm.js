@@ -81,6 +81,7 @@ const LandOtherform = () => {
   const {
     handleSubmit,
     control,
+    setValue,
     register,
     formState: { errors },
   } = useForm({
@@ -90,7 +91,10 @@ const LandOtherform = () => {
       otherMetalType: "",
       articleDetails: "",
       otherArticleDetails: "",
+      ownershipByVirtueOf: "selfpurchase",
       weightPerArticle: "",
+      ownershipType: "single",
+      anyLoanLitigation: "no",
       numberOfArticles: "",
       additionalInformation: "",
       name: "",
@@ -98,7 +102,9 @@ const LandOtherform = () => {
       mobile: "",
     },
   });
-
+  useEffect(() => {
+    setValue("anyLoanLitigation", "no");
+  }, []);
   const handlePincodeChange = async (pincode) => {
     try {
       setValue("pincode", pincode);
@@ -672,12 +678,26 @@ const LandOtherform = () => {
                 <Label>Any Loan Litigation</Label>
                 <Controller
                   name="anyLoanLitigation"
+                  defaultValue="no"
                   control={control}
                   render={({ field }) => (
-                    <Checkbox
-                      id="anyLoanLitigation-yes"
-                      onCheckedChange={field.onChange}
-                    />
+                    <RadioGroup
+                      {...field}
+                      defaultValue="no"
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 text-center">
+                        <RadioGroupItem id="cash" value="yes" />
+                        <Label htmlFor="yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem id="cheque" value="no" />
+                        <Label htmlFor="no">No</Label>
+                      </div>
+                    </RadioGroup>
                   )}
                 />
                 {errors.anyLoanLitigation && (

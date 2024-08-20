@@ -702,20 +702,26 @@ const ResidentialEditForm = () => {
                 <Label>Any Loan Litigation</Label>
                 <Controller
                   name="anyLoanLitigation"
-                  defaultValue={Benifyciary?.anyLoanLitigation}
+                  defaultValue="no"
                   control={control}
                   render={({ field }) => (
-                    <Checkbox
-                      id="anyLoanLitigation"
+                    <RadioGroup
                       {...field}
-                      checked={
-                        field.value !== undefined && field.value !== null
-                          ? field.value
-                          : Boolean(Benifyciary?.anyLoanLitigation)
-                      }
-                      defaultValue={Benifyciary?.anyLoanLitigation}
-                      onCheckedChange={(checked) => field.onChange(checked)}
-                    />
+                      defaultValue="no"
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 text-center">
+                        <RadioGroupItem id="cash" value="yes" />
+                        <Label htmlFor="yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem id="cheque" value="no" />
+                        <Label htmlFor="no">No</Label>
+                      </div>
+                    </RadioGroup>
                   )}
                 />
                 {errors.anyLoanLitigation && (

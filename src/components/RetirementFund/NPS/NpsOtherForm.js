@@ -101,6 +101,9 @@ const NPSOtherForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
+    if (selectedFamilyMembers.length > 0) {
+      data.familyMembers = selectedFamilyMembers;
+    }
     npsMutate.mutate(data);
   };
 

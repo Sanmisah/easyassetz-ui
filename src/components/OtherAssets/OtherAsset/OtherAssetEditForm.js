@@ -119,8 +119,8 @@ const OtherAssetEditForm = () => {
       for (const [key, value] of Object.entries(data)) {
         Formdata.append(key, value);
       }
-
-      const response = await axios.put(
+      Formdata.append("_method", "put");
+      const response = await axios.post(
         `/api/other-assets/${lifeInsuranceEditId}`,
         Formdata,
         {
@@ -155,6 +155,7 @@ const OtherAssetEditForm = () => {
     // data.emiDate = formatDate(data.emiDate);
     // data.startDate = formatDate(data.startDate);
     // data.type = "vehicle";
+
     loanMutate.mutate(data);
   };
 
