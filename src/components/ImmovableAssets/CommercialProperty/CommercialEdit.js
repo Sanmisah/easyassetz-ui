@@ -56,6 +56,7 @@ const schema = z.object({
   jointHoldersName: z.any().optional(),
   jointHoldersRelation: z.any().optional(),
   jointHoldersPan: z.any().optional(),
+  jointHoldersAadhar: z.any().optional(),
   anyLoanLitigation: z.any().optional(),
   name: z.any().optional(),
   email: z.any().optional(),
@@ -130,6 +131,10 @@ const CommercialEditForm = () => {
     setValue("name", data.name);
     setValue("email", data.email);
     setValue("mobile", data.mobile);
+    if (data.ownershipType === "joint") {
+      setValue("jointHoldersAadhar", data.jointHoldersAadhar);
+      setJoinholder(true);
+    }
     return response.data.data.CommercialProperty;
   };
 
@@ -862,6 +867,15 @@ const CommercialEditForm = () => {
               </div>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.history.back();
+                }}
+              >
+                Cancel
+              </Button>
               <Button type="submit">Submit</Button>
             </CardFooter>
           </form>

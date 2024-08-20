@@ -17,12 +17,30 @@ const Confirmagedialog = ({ onConfirm, alertDialog, setAlertDialog }) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>"By checking this box, I confirm that I am at least 18 years of age, and I have read and agree to Easy Assist's Terms of Service and Privacy Notice."
+          <AlertDialogDescription>
+            "By checking this box, I confirm that I am at least 18 years of age,
+            and I have read and agree to Easy Assist's Terms of Service and
+            Privacy Notice."
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          <AlertDialogCancel
+            onClick={() => {
+              window.location.reload(true);
+              setAlertDialog(false);
+            }}
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              window.location.reload(true);
+              onConfirm();
+            }}
+          >
+            Continue
+          </AlertDialogAction>
+          ;
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

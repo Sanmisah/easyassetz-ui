@@ -45,12 +45,14 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Ownership By Virtue Of is required" }),
   ownershipType: z.string().nonempty({ message: "Ownership Type is required" }),
+  firstHoldersName: z.string().optional(),
   firstHoldersRelation: z.string().optional(),
   firstHoldersAadhar: z.string().optional(),
   firstHoldersPan: z.string().optional(),
   jointHoldersName: z.string().optional(),
   jointHoldersRelation: z.string().optional(),
   jointHoldersPan: z.string().optional(),
+  jointHoldersAadhar: z.string().optional(),
   anyLoanLitigation: z.any().optional(),
   litigationFile: z.string().optional(),
   name: z.any().optional(),
@@ -758,8 +760,74 @@ const CommercialOtherForm = () => {
                 )}
               </div>
             </div>
-
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="name"
+                    placeholder="Enter Name"
+                    {...field}
+                    className={errors.name ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="mobile">Mobile</Label>
+              <Controller
+                name="mobile"
+                control={control}
+                render={({ field }) => (
+                  <PhoneInput
+                    id="mobile"
+                    type="tel"
+                    placeholder="Enter mobile number"
+                    defaultCountry="in"
+                    inputStyle={{ minWidth: "15.5rem" }}
+                    {...field}
+                    className={errors.mobile ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.mobile && (
+                <span className="text-red-500">{errors.mobile.message}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter email"
+                    {...field}
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
+              )}
+            </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.history.back();
+                }}
+              >
+                Cancel
+              </Button>
               <Button type="submit">Submit</Button>
             </CardFooter>
           </form>

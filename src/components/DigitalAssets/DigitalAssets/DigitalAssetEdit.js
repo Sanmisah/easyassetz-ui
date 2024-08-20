@@ -434,6 +434,15 @@ const DigitalAssetEditForm = () => {
               </div>
             </div>
             <CardFooter className="flex justify-end gap-2 mt-8">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.history.back();
+                }}
+              >
+                Cancel
+              </Button>
               <Button type="submit">Submit</Button>
             </CardFooter>
           </form>

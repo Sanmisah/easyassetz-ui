@@ -12,6 +12,15 @@ import {
 } from "@com/ui/alert-dialog";
 
 const ConfirmDelete = ({ onConfirm, alertDialog, setAlertDialog }) => {
+  <AlertDialogAction
+    onClick={() => {
+      window.location.reload(true);
+      onConfirm();
+    }}
+  >
+    Continue
+  </AlertDialogAction>;
+
   return (
     <AlertDialog open={alertDialog} onOpenChange={setAlertDialog}>
       <AlertDialogContent>
@@ -23,8 +32,23 @@ const ConfirmDelete = ({ onConfirm, alertDialog, setAlertDialog }) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          <AlertDialogCancel
+            onClick={() => {
+              window.location.reload(true);
+              setAlertDialog(false);
+            }}
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              window.location.reload(true);
+              onConfirm();
+            }}
+          >
+            Continue
+          </AlertDialogAction>
+          ;{" "}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

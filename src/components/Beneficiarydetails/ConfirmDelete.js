@@ -23,8 +23,23 @@ const ConfirmDelete = ({ onConfirm, alertDialog, setAlertDialog }) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          <AlertDialogCancel
+            onClick={() => {
+              window.location.reload(true);
+              setAlertDialog(false);
+            }}
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              window.location.reload(true);
+              onConfirm();
+            }}
+          >
+            Continue
+          </AlertDialogAction>
+          ;
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
