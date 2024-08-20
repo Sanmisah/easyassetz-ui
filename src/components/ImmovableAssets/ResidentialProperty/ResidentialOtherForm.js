@@ -729,7 +729,7 @@ const ResidentialOtherform = () => {
                 )}
               </div>
               <div className="space-y-2 gap-2">
-                <Label>Any Loan Litigation</Label>
+                <Label>Any Loan or Litigation</Label>
                 <Controller
                   name="anyLoanLitigation"
                   control={control}

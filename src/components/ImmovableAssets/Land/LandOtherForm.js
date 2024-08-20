@@ -675,7 +675,7 @@ const LandOtherform = () => {
                 )}
               </div>
               <div className="space-y-2 space-x-2">
-                <Label>Any Loan Litigation</Label>
+                <Label>Any Loan or Litigation</Label>
                 <Controller
                   name="anyLoanLitigation"
                   defaultValue="no"

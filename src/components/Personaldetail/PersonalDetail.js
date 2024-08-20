@@ -682,28 +682,17 @@ const Personaldetail = () => {
                 {showMoreInfo && (
                   <div className="min-w-[60vw] max-md:min-w-[90%] mt-2 bg-gray-100 p-4 rounded-md">
                     <p>
-                      A brief overview of the Special Marriage Act, 1954 As one
-                      of independent India’s most significant secular
-                      initiatives, the Special Marriage Act, 1954 was brought
-                      into the Indian legal system in 1954. The Act was intended
-                      to be a piece of legislation that controls weddings that
-                      could not be solemnised due to religious traditions. The
-                      Act applies to all Indian nationals, whether they live in
-                      India or outside. The State of Jammu and Kashmir is not
-                      included in the scope of this Act, although persons
-                      domiciled in other states but residing in Jammu and
-                      Kashmir would be eligible for these provisions. It is a
-                      piece of law that establishes a special type of marriage
-                      by registration. Marriage is unique in that there is no
-                      requirement to convert or reject one’s religion. Unlike
-                      conventional arranged weddings, which include two families
-                      from the same caste or community, the Act aspires to
-                      legalise interreligious or inter-caste marriages. The
-                      Act’s Certificate of Registration has been regarded as
-                      universal evidence of marriage. As stated in the Preamble,
-                      the Act allows for a special form of marriage in specific
-                      circumstances, registration of such and other marriages,
-                      and divorce. Objectives of the Special Marriage Act, 1954
+                      The Special Marriage Act, 1954, is a significant secular
+                      law in India, established to govern marriages that cannot
+                      be solemnized due to religious customs. Applicable to all
+                      Indian nationals, except those in Jammu and Kashmir (with
+                      certain exceptions), the Act allows for the registration
+                      of marriages without requiring conversion or renunciation
+                      of religion. It legalizes interreligious and inter-caste
+                      marriages, with the Certificate of Registration serving as
+                      universal proof of marriage. The Act covers special
+                      marriage circumstances, marriage registration, and
+                      divorce.
                     </p>
                   </div>
                 )}
