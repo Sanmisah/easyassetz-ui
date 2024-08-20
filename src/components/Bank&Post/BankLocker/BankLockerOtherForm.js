@@ -47,7 +47,7 @@ const schema = z.object({
   annualRent: z.any().optional(),
   additionalDetails: z.any().optional(),
   branch: z.string().min(2, { message: "Policy Number is required" }),
-  holdingType: z.any().optional(),
+  natureOfHolding: z.any().optional(),
   image: z.any().optional(),
 });
 // .refine(
@@ -67,7 +67,7 @@ const schema = z.object({
 //   },
 //   {
 //     message: "Required fields are missing",
-//     path: ["holdingType"],
+//     path: ["natureOfHolding"],
 //   }
 // );
 
@@ -103,7 +103,7 @@ const BankLockerForm = () => {
       accountNumber: "",
       branch: "",
       city: "",
-      holdingType: "",
+      natureOfHolding: "",
       jointHolderName: "",
     },
   });
@@ -336,9 +336,9 @@ const BankLockerForm = () => {
               </div>
 
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="holdingType">Nature of Holding</Label>
+                <Label htmlFor="natureOfHolding">Nature of Holding</Label>
                 <Controller
-                  name="holdingType"
+                  name="natureOfHolding"
                   control={control}
                   render={({ field }) => (
                     <RadioGroup
@@ -360,9 +360,9 @@ const BankLockerForm = () => {
                     </RadioGroup>
                   )}
                 />
-                {errors.holdingType && (
+                {errors.natureOfHolding && (
                   <span className="text-red-500">
-                    {errors.holdingType.message}
+                    {errors.natureOfHolding.message}
                   </span>
                 )}
               </div>

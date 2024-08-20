@@ -117,6 +117,9 @@ const BankAccountForm = () => {
       const newdate = `${month}/${day}/${year}`;
       data.maturityDate = newdate;
     }
+    if (selectedNommie.length > 0) {
+      data.nominees = selectedNommie;
+    }
     ppfMutate.mutate(data);
   };
 
@@ -337,6 +340,7 @@ const BankAccountForm = () => {
                         id="jointHolderPan"
                         placeholder="Enter Joint Holder PAN"
                         {...field}
+                        value={field.value?.toUpperCase() || ""}
                         className={
                           errors.jointHolderPan ? "border-red-500" : ""
                         }

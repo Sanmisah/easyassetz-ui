@@ -112,8 +112,11 @@ const PSDAEditForm = () => {
       data.accountNumber !== "KVP" ||
       data.accountNumber !== "IVP" ||
       data.accountNumber !== "savingsAccount"
-    )
-      setValue("accountNumber", data.accountNumber);
+    ) {
+      setShowOtherAccountNumber(true);
+      setValue("accountNumber", "other");
+      setValue("otherAccountNumber", data.accountNumber);
+    }
     setValue("postOfficeBranch", data.postOfficeBranch);
     setValue("city", data.city);
     setValue("holdingType", data.holdingType);

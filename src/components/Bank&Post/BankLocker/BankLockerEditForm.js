@@ -119,7 +119,9 @@ const EditMotorForm = () => {
     setValue("natureOfHolding", data.natureOfHolding);
     setValue("jointHolderName", data.jointHolderName);
     setValue("jointHolderPan", data.jointHolderPan);
-
+    if (data.natureOfHolding === "joint") {
+      setShowJointHolderName(true);
+    }
     return response.data.data.BankLocker;
   };
 
@@ -459,7 +461,7 @@ const EditMotorForm = () => {
                               );
                               setSelectedNommie(
                                 selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
+                                  (item) => item !== nominee.id
                                 )
                               );
                             }}

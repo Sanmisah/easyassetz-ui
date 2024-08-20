@@ -220,9 +220,9 @@ const PSADOtherForm = () => {
                         <SelectValue placeholder="Select Account Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
-                        <SelectItem value="nsc">NSC</SelectItem>
-                        <SelectItem value="kvp">KVP</SelectItem>
-                        <SelectItem value="ivp">IVP</SelectItem>
+                        <SelectItem value="NSC">NSC</SelectItem>
+                        <SelectItem value="KVP">KVP</SelectItem>
+                        <SelectItem value="IVP">IVP</SelectItem>
                         <SelectItem value="savingsAccount">
                           Savings Account
                         </SelectItem>

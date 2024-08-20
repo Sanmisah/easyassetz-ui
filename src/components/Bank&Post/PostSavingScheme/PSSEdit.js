@@ -44,7 +44,7 @@ const schema = z.object({
   certificateNumber: z
     .string()
     .nonempty({ message: "Insurance Sub Type is required" }),
-  maturityDate: z.string().nonempty({ message: "Policy Number is required" }),
+  maturityDate: z.any().optional(),
   amount: z.any().optional(),
   holdingType: z.any().optional(),
   jointHolderName: z.any().optional(),
@@ -332,7 +332,25 @@ const PSSEditForm = () => {
                 <span className="text-red-500">{errors.amount.message}</span>
               )}
             </div>
-
+            <div>
+              <Label>Maturity Date</Label>
+              <Controller
+                name="maturityDate"
+                control={control}
+                render={({ field }) => (
+                  <Datepicker
+                    {...field}
+                    onChange={(date) => field.onChange(date)}
+                    selected={field.value}
+                  />
+                )}
+              />
+              {errors.maturityDate && (
+                <span className="text-red-500 mt-5">
+                  {errors.maturityDate.message}
+                </span>
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="holdingType">Nature of Holding</Label>
               <Controller

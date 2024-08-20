@@ -111,20 +111,46 @@ const EditMotorForm = () => {
       setValue("jointHolderPan", data.jointHolderPan);
     }
     if (
-      data.accountType !== "saving" ||
-      data.accountType !== "current" ||
-      data.accountType !== "recurring" ||
-      data.accountType !== "nri"
+      data.accountType === "saving" ||
+      data.accountType === "current" ||
+      data.accountType === "recurring" ||
+      data.accountType === "nri"
     ) {
+      setShowOtherAccountType(false);
+      setValue("accountType", data.accountType);
+    } else {
       setShowOtherAccountType(true);
       setValue("accountType", "other");
       setValue("otherAccountType", data.accountType);
     }
+    // if (
+    //   data.accountType !== "saving" ||
+    //   data.accountType !== "current" ||
+    //   data.accountType !== "recurring" ||
+    //   data.accountType !== "nri"
+    // ) {
+    //   setShowOtherAccountType(true);
+    //   setValue("accountType", "other");
+    //   setValue("otherAccountType", data.accountType);
+    // }
+    // if (
+    //   data.bankName !== "company1" ||
+    //   data.bankName !== "company2" ||
+    //   data.bankName !== "company3"
+    // ) {
+    //   setShowOtherBankName(true);
+    //   setValue("bankName", "other");
+    //   setValue("otherBankName", data.bankName);
+    // }
+
     if (
-      data.bankName !== "company1" ||
-      data.bankName !== "company2" ||
-      data.bankName !== "company3"
+      data.bankName === "company1" ||
+      data.bankName === "company2" ||
+      data.bankName === "company3"
     ) {
+      setShowOtherBankName(false);
+      setValue("bankName", data.bankName);
+    } else {
       setShowOtherBankName(true);
       setValue("bankName", "other");
       setValue("otherBankName", data.bankName);
@@ -490,6 +516,7 @@ const EditMotorForm = () => {
                         id="jointHolderPan"
                         placeholder="Enter Joint Holder PAN"
                         {...field}
+                        value={field.value?.toUpperCase() || ""}
                         className={
                           errors.jointHolderPan ? "border-red-500" : ""
                         }

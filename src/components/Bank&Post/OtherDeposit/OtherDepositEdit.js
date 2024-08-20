@@ -29,6 +29,7 @@ import { useSelector } from "react-redux";
 import Editnominee from "@/components/Nominee/EditNominee";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
 import cross from "@/components/image/close.png";
+import Datepicker from "../../Beneficiarydetails/Datepicker";
 
 const schema = z.object({
   fdNumber: z.any().optional(),
@@ -277,7 +278,44 @@ const PpfEditForm = ({}) => {
                 </span>
               )}
             </div>
-
+            <div className="space-y-2">
+              <Label>Maturity Date</Label>
+              <Controller
+                name="maturityDate"
+                control={control}
+                render={({ field }) => (
+                  <Datepicker
+                    {...field}
+                    onChange={(date) => field.onChange(date)}
+                  />
+                )}
+              />
+              {errors.maturityDate && (
+                <span className="text-red-500">
+                  {errors.maturityDate.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <Label>Maturity Amount</Label>
+              <Controller
+                name="maturityAmount"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="maturityAmount"
+                    placeholder="Enter Maturity Amount"
+                    {...field}
+                    className={errors.maturityAmount ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.maturityAmount && (
+                <span className="text-red-500">
+                  {errors.maturityAmount.message}
+                </span>
+              )}
+            </div>
             {displaynominie && displaynominie.length > 0 && (
               <div className="space-y-2">
                 <div className="grid gap-4 py-4">
