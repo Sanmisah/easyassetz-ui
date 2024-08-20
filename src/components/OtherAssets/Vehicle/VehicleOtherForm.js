@@ -201,28 +201,15 @@ const RecoverableOtherForm = () => {
                   <Label htmlFor="fourWheeler">Four Wheeler</Label>
                   <Controller
                     name="fourWheeler"
+                    // defaultValues="Cash"
                     control={control}
                     render={({ field }) => (
-                      <Select
+                      <Input
                         id="fourWheeler"
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setfourWheelerStatus(value === "other");
-                        }}
+                        placeholder="Enter Four Wheeler"
+                        {...field}
                         className={errors.fourWheeler ? "border-red-500" : ""}
-                      >
-                        <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select Vehicle Type" />
-                        </FocusableSelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="car">Car</SelectItem>
-                          <SelectItem value="truck">Truck</SelectItem>
-                          <SelectItem value="tempo">Tempo</SelectItem>
-                          <SelectItem value="bus">Bus</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      />
                     )}
                   />
                   {fourWheelerStatus && (
