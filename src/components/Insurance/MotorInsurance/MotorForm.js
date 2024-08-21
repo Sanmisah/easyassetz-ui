@@ -31,7 +31,19 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import { Checkbox } from "@com/ui/checkbox";
+import { Check, ChevronsUpDown } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@com/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@com/ui/popover";
+import { AutoComplete } from "@com/ui/autocomplete";
 const schema = z.object({
   companyName: z
     .string()
@@ -96,6 +108,20 @@ const MotorForm = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [values, setValues] = useState("");
+  const [takeinput, setTakeinput] = useState();
+  const frameworks = [
+    { value: "company1", label: "Company1" },
+    { value: "company2", label: "Company2" },
+    { value: "company3", label: "Company3" },
+  ];
+  useEffect(() => {
+    console.log("Values:", values?.value);
+    if (takeinput !== values?.value) {
+      setValue("companyName", takeinput);
+    }
+  }, [takeinput]);
 
   const [nomineeerror, setnomineeerror] = useState(false);
   const {
@@ -230,25 +256,38 @@ const MotorForm = () => {
                   name="companyName"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="insurance-company"
-                      {...field}
+                    // <Select
+                    //   id="insurance-company"
+                    //   {...field}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setShowOtherInsuranceCompany(value === "other");
+                    //   }}
+                    //   className={errors.companyName ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Select Insurance Company" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="company1">Company 1</SelectItem>
+                    //     <SelectItem value="company2">Company 2</SelectItem>
+                    //     <SelectItem value="company3">Company 3</SelectItem>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <AutoComplete
+                      options={frameworks}
+                      placeholder="Select framework..."
+                      emptyMessage="No framework found."
+                      value={values}
+                      setTakeinput={setTakeinput}
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("companyName", value?.value);
+                        setOpen(false);
                       }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Insurance Company" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
                 {errors.companyName && (

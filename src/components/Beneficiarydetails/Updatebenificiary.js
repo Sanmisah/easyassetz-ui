@@ -55,9 +55,9 @@ const beneficiarySchema = z.object({
   addressLine1: z.string().nonempty("Address Line 1 is required"),
   addressLine2: z.string().optional(),
   pincode: z.string().nonempty("Pincode is required"),
-  country: z.string().nonempty("Country is required"),
+  country: z.any().optional(),
   mobile: z.string().nonempty("Mobile is required"),
-  email: z.string().email("Invalid email").nonempty("Email is required"),
+  email: z.any().optional(),
   city: z.any().optional(),
   state: z.any().optional(),
   houseNo: z.any().optional(),
@@ -471,9 +471,7 @@ const BeneficiaryForm = ({
                           render={({ field }) => (
                             <Select
                               name="document"
-                              defaultValue={selectedDocument
-                                
-                              }
+                              defaultValue={selectedDocument}
                               onValueChange={(value) => {
                                 setSelectedDocument(value);
                                 field.onChange(value);

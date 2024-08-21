@@ -315,10 +315,10 @@ const HealthForm = () => {
                         </FocusableSelectTrigger>
                         <SelectContent>
                           <SelectItem value="mediclaim">Mediclaim</SelectItem>
-                          <SelectItem value="criticalIllness">
+                          <SelectItem value="Critical illness">
                             Critical illness
                           </SelectItem>
-                          <SelectItem value="familyHealthPlan">
+                          <SelectItem value="Family health plan">
                             Family health plan
                           </SelectItem>
                           <SelectItem value="other">Other</SelectItem>
