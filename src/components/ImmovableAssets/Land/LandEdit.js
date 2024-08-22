@@ -405,7 +405,7 @@ const ResidentialEditForm = () => {
                             id="selfpurchase"
                             value="selfpurchase"
                           />
-                          <Label htmlFor="selfpurchase">Selfpurchase</Label>
+                          <Label htmlFor="selfpurchase">Self purchase</Label>
                         </div>
                         <div className="flex items-center gap-2">
                           <RadioGroupItem id="asagift" value="asagift" />

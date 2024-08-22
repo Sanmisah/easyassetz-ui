@@ -371,7 +371,7 @@ const LandOtherform = () => {
                           htmlFor="pan-yes"
                         >
                           <RadioGroupItem id="pan-yes" value="selfpurchase" />
-                          selfpurchase
+                          Self Purchase
                         </Label>
                         <Label
                           className="flex items-center gap-2"
