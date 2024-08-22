@@ -120,10 +120,10 @@ const MotorForm = () => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
       setValues(takeinput);
+
       setValue("companyName", takeinput);
     }
   }, [takeinput]);
-
   const [nomineeerror, setnomineeerror] = useState(false);
   const {
     handleSubmit,
@@ -280,6 +280,7 @@ const MotorForm = () => {
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
+                      takeinput={takeinput}
                       setTakeinput={setTakeinput}
                       onValueChange={(value) => {
                         setValues(value);

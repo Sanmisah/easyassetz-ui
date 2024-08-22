@@ -401,7 +401,7 @@ const EditMotorForm = () => {
                       options={frameworks}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
-                      value={values}
+                      value={takeinput}
                       takeinput={takeinput}
                       setTakeinput={setTakeinput}
                       onValueChange={(value) => {
