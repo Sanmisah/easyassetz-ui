@@ -237,14 +237,6 @@ const CommercialEditForm = () => {
         <CardHeader>
           <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
-              <Button
-                onClick={() => {
-                  navigate("/commercialproperty");
-                }}
-                className="text-sm"
-              >
-                Back
-              </Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
                   Edit Commercial Property Details

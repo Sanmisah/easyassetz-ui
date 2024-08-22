@@ -129,7 +129,6 @@ const BankAccountForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Button onClick={() => navigate("/fixdeposit")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
                   Fix Deposit Details

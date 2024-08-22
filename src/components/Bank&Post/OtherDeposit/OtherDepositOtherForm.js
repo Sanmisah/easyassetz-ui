@@ -179,8 +179,7 @@ const OtherDepositForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Button onClick={() => navigate("/other-deposits")}>Back</Button>
-              <div>
+               <div>
                 <CardTitle className="text-2xl font-bold">
                   Other Deposits
                 </CardTitle>

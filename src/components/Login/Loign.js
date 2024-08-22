@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 
@@ -68,6 +68,9 @@ const Auth = () => {
     setFormData({ ...formData, [id]: value });
   };
 
+  useEffect(() => {
+    toast.dismiss();
+  }, []);
   const validateLogin = () => {
     const result = loginSchema.safeParse({
       email: formData.email,
@@ -109,6 +112,8 @@ const Auth = () => {
       navigate("/personal");
     },
     onError: (error) => {
+      toast.dismiss();
+
       console.error("Login failed: " + error.response.data.message);
       if (error.response.data.message === "You are already logged-in.") {
         navigate("/personal");
@@ -143,23 +148,37 @@ const Auth = () => {
       }
     } else {
       if (validateRegister()) {
+        toast.dismiss();
         setAlertDialog(true);
       }
     }
   };
   const Registermutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post("/api/register", {
-        ...data,
-      });
+      const response = await axios.post(
+        "/api/register",
+        {
+          ...data,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+          },
+        }
+      );
       return response.data;
     },
     onSuccess: (data) => {
+      toast.dismiss();
+
       console.log("Registering user:", data);
       toast.success("Registered successfully!");
       setIsLogin(true);
     },
     onError: (error) => {
+      toast.dismiss();
+
       setErrorMessage(error.response.data.data);
       console.error("Error registering user:", error);
       toast.error(`Failed to register user.${error.response.data.data}`);
@@ -167,6 +186,7 @@ const Auth = () => {
   });
 
   const handleRegisterConfirm = async () => {
+    toast.dismiss();
     setAlertDialog(false);
     try {
       Registermutation.mutate(formData);
@@ -180,8 +200,10 @@ const Auth = () => {
       //     alert("Registration failed: " + response.data.message);
       //   }
     } catch (error) {
+      toast.dismiss();
+
       console.error("Error registering user:", error);
-      alert("Failed to register user.");
+      toast.error("Failed to register user.");
     }
   };
 
@@ -383,6 +405,8 @@ const Auth = () => {
                   {getFieldError("password_confirmation") && (
                     <p className="text-red-500">
                       {getFieldError("password_confirmation")}
+                      {getFieldError("password_confirmation") &&
+                        toast.dismiss()}
                     </p>
                   )}
                 </div>
