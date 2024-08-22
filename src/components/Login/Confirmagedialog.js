@@ -34,13 +34,11 @@ const Confirmagedialog = ({ onConfirm, alertDialog, setAlertDialog }) => {
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              window.location.reload(true);
               onConfirm();
             }}
           >
             Continue
           </AlertDialogAction>
-          ;
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
