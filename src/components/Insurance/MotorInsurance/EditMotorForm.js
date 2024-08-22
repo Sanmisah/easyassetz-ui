@@ -33,7 +33,6 @@ import Editnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 import { PhoneInput } from "react-international-phone";
-import { AutoComplete } from "@com/ui/autocomplete";
 
 const schema = z.object({
   companyName: z
@@ -83,18 +82,6 @@ const EditMotorForm = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [type, setType] = useState(false);
-  const [takeinput, setTakeinput] = useState();
-  const [values, setValues] = useState("");
-
-  useEffect(() => {
-    console.log("Values:", values?.value);
-    if (takeinput !== values?.value) {
-      setValues(takeinput);
-
-      setValue("companyName", takeinput);
-    }
-  }, [takeinput]);
-
   const {
     handleSubmit,
     control,
@@ -117,8 +104,6 @@ const EditMotorForm = () => {
       }
     );
     let data = response.data.data.MotorInsurance;
-    setValues(data.companyName);
-
     if (data.modeOfPurchase === "e-insurance") {
       setValue("modeOfPurchase", data.modeOfPurchase);
     }
@@ -167,7 +152,6 @@ const EditMotorForm = () => {
     setSelectedNommie(
       response.data.data.MotorInsurance?.nominees?.map((nominee) => nominee.id)
     );
-    setTakeinput(data.companyName);
     console.log(typeof response.data.data.MotorInsurance?.premium);
     return response.data.data.MotorInsurance;
   };
@@ -339,12 +323,6 @@ const EditMotorForm = () => {
   }, [Benifyciary]);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading insurance data</div>;
-
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
   return (
     <div className="w-full">
       <Card>
@@ -376,44 +354,43 @@ const EditMotorForm = () => {
                   control={control}
                   defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
-                    // <Select
-                    //   id="insurance-company"
-                    //   value={field.value}
-                    //   {...field}
-                    //   onValueChange={(value) => {
-                    //     field.onChange(value);
-                    //     setShowOtherInsuranceCompany(value === "other");
-                    //   }}
-                    //   className={errors.companyName ? "border-red-500" : ""}
-                    //   defaultValue={Benifyciary?.companyName || ""}
-                    // >
-                    //   <SelectTrigger>
-                    //     <SelectValue placeholder="Select insurance company" />
-                    //   </SelectTrigger>
-                    //   <SelectContent>
-                    //     <SelectItem value="company1">Company 1</SelectItem>
-                    //     <SelectItem value="company2">Company 2</SelectItem>
-                    //     <SelectItem value="company3">Company 3</SelectItem>
-                    //     <SelectItem value="other">Other</SelectItem>
-                    //   </SelectContent>
-                    // </Select>
-                    <AutoComplete
-                      options={frameworks}
-                      placeholder="Select Comapany Name..."
-                      emptyMessage="No Company Name Found."
-                      value={takeinput}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                    <Select
+                      id="insurance-company"
+                      value={field.value}
+                      {...field}
                       onValueChange={(value) => {
-                        setValues(value);
-                        console.log(value);
-                        setValue("companyName", value?.value);
-                        setOpen(false);
+                        field.onChange(value);
+                        setShowOtherInsuranceCompany(value === "other");
                       }}
-                    />
+                      className={errors.companyName ? "border-red-500" : ""}
+                      defaultValue={Benifyciary?.companyName || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select insurance company" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="company1">Company 1</SelectItem>
+                        <SelectItem value="company2">Company 2</SelectItem>
+                        <SelectItem value="company3">Company 3</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    //   <AutoComplete
+                    //   options={frameworks}
+                    //   placeholder="Select Comapany Name..."
+                    //   emptyMessage="No Company Name Found."
+                    //   value={values}
+                    //   setTakeinput={setTakeinput}
+                    //   onValueChange={(value) => {
+                    //     setValues(value);
+                    //     console.log(value);
+                    //     setValue("companyName", value?.value);
+                    //     setOpen(false);
+                    //   }}
+                    // />
                   )}
                 />
-                {/* {showOtherInsuranceCompany && (
+                {showOtherInsuranceCompany && (
                   <Controller
                     name="otherInsuranceCompany"
                     control={control}
@@ -427,7 +404,7 @@ const EditMotorForm = () => {
                       />
                     )}
                   />
-                )} */}
+                )}
                 {errors.companyName && (
                   <span className="text-red-500">
                     {errors.companyName.message}

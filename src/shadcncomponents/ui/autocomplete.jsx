@@ -27,17 +27,16 @@ export const AutoComplete = ({
 
   const [isOpen, setOpen] = useState(false);
   const [selected, setSelected] = useState(value);
-  // const [takeinput, setTakeinput] = useState(value?.label || takeinput || "");
+  // const [takeinput, setTakeinput] = useState(value?.label || "");
 
-  // useEffect(() => {
-  //   console.log("takle", takeinput);
-  //   setTakeinput(value);
-  // }, [value]);
   // useEffect(() => {
   //   setTakeinput(takeinput);
-
   //   console.log(takeinput);
   // }, [takeinput]);
+  useEffect(() => {
+    console.log("value:", value);
+    setSelected(value);
+  }, [value]);
 
   const handleKeyDown = useCallback(
     (event) => {
