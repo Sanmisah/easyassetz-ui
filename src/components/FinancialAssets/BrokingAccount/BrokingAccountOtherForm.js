@@ -59,9 +59,9 @@ const schema = z.object({
   // typeOfInvestment: z
   //   .string()
   //   .nonempty({ message: "Type of Investment is required" }),
-  name: z.string().optional(),
+  name: z.any().optional(),
   mobile: z.string().optional(),
-  email: z.string().optional(),
+  email: z.any().optional(),
   image: z.any().optional(),
 });
 
@@ -206,7 +206,6 @@ const MutualFundOtherForm = () => {
                 </CardTitle>
                 <CardDescription>
                   Fill out the form to add a new Broking Account Details.
-                  Details.
                 </CardDescription>
               </div>
             </div>
@@ -483,12 +482,21 @@ const MutualFundOtherForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Input
-                    id="jointHolderPan"
-                    placeholder="Enter Joint Holder PAN"
-                    {...register("jointHolderPan")}
-                    className={errors.jointHolderPan ? "border-red-500" : ""}
-                  />
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter Joint Holder PAN"
+                        {...field}
+                        value={field.value?.toUpperCase() || ""}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  ></Controller>
                   {errors.jointHolderPan && (
                     <span className="text-red-500">
                       {errors.jointHolderPan.message}

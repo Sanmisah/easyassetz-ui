@@ -429,8 +429,10 @@ const MutualFundOtherForm = () => {
             </div> */}
 
             <div className="space-y-4 flex flex-col">
-              <Label className="text-base font-bold">Nature of Holding</Label>
-              <Label style={{ color: "red" }}>*</Label>
+              <div>
+                <Label className="text-base font-bold">Nature of Holding</Label>
+                <Label style={{ color: "red" }}>*</Label>
+              </div>
               <Controller
                 name="natureOfHolding"
                 defaultValues="single"
@@ -481,12 +483,21 @@ const MutualFundOtherForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Input
-                    id="jointHolderPan"
-                    placeholder="Enter Joint Holder PAN"
-                    {...register("jointHolderPan")}
-                    className={errors.jointHolderPan ? "border-red-500" : ""}
-                  />
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter Joint Holder PAN"
+                        {...field}
+                        value={field.value?.toUpperCase() || ""}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
+                  ></Controller>
                   {errors.jointHolderPan && (
                     <span className="text-red-500">
                       {errors.jointHolderPan.message}

@@ -66,9 +66,9 @@ const schema = z.object({
   // typeOfInvestment: z
   //   .string()
   //   .nonempty({ message: "Type of Investment is required" }),
-  name: z.string().optional(),
+  name: z.any().optional(),
   mobile: z.string().optional(),
-  email: z.string().optional(),
+  email: z.any().optional(),
   image: z.any().optional(),
 });
 

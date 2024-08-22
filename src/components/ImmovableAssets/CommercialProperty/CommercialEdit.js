@@ -476,7 +476,7 @@ const CommercialEditForm = () => {
                             id="selfpurchase"
                             value="selfpurchase"
                           />
-                          <Label htmlFor="selfpurchase">Selfpurchase</Label>
+                          <Label htmlFor="selfpurchase">Self Purchase</Label>
                         </div>
                         <div className="flex items-center gap-2">
                           <RadioGroupItem id="asagift" value="asagift" />
@@ -640,6 +640,7 @@ const CommercialEditForm = () => {
                           id="firstHoldersPan"
                           placeholder="Enter Joint Holder Name"
                           {...field}
+                          value={field.value?.toUpperCase() || ""}
                           className={
                             errors.firstHoldersPan ? "border-red-500" : ""
                           }
@@ -751,6 +752,7 @@ const CommercialEditForm = () => {
                           id="jointHoldersName"
                           placeholder="Enter Joint Holder Aadhar"
                           {...field}
+                          value={field.value?.toUpperCase() || ""}
                           className={
                             errors.jointHoldersName ? "border-red-500" : ""
                           }

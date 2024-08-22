@@ -37,7 +37,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 const schema = z.object({
   propertyType: z.any().optional(),
   houseNumber: z.string().nonempty({ message: "House Number is required" }),
-  address1: z.string().nonempty({ message: "Address Line 1 is required" }),
+  address1: z.string().nonempty({ message: "Address is required" }),
   pincode: z.string().nonempty({ message: "Pincode is required" }),
   area: z.string().nonempty({ message: "Area is required" }),
   city: z.string().optional(),
@@ -248,7 +248,7 @@ const ResidentialEditForm = () => {
                   Residential Property Details
                 </CardTitle>
                 <CardDescription>
-                  Fill out the form to add a new Residential Property Details.
+                  Fill out the form to edit Residential Property Details.
                 </CardDescription>
               </div>
             </div>
@@ -321,7 +321,7 @@ const ResidentialEditForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address1">Address Line 1</Label>
+                <Label htmlFor="address1">Address</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address1"
@@ -329,7 +329,7 @@ const ResidentialEditForm = () => {
                   render={({ field }) => (
                     <Input
                       id="address1"
-                      placeholder="Enter Address Line 1"
+                      placeholder="Enter Address"
                       {...field}
                       className={errors.address1 ? "border-red-500" : ""}
                     />
@@ -482,7 +482,7 @@ const ResidentialEditForm = () => {
                             id="selfpurchase"
                             value="selfpurchase"
                           />
-                          <Label htmlFor="selfpurchase">Selfpurchase</Label>
+                          <Label htmlFor="selfpurchase">Self Purchase</Label>
                         </div>
                         <div className="flex items-center gap-2">
                           <RadioGroupItem id="asagift" value="asagift" />

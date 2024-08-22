@@ -196,8 +196,7 @@ const OtherFinancialAssetOtherForm = () => {
                   Other Financial Asset Details
                 </CardTitle>
                 <CardDescription>
-                  Fill out the form to add a new Other Financial Asset. Service
-                  Details.
+                  Fill out the form to add a new Other Financial Asset.
                 </CardDescription>
               </div>
             </div>

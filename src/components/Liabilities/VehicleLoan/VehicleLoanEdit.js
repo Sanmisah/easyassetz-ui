@@ -155,7 +155,7 @@ const VehicleLoanEdit = () => {
                   Edit Vehicle Loan Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the vehicle loan details.
+                  Edit the form to update the vehicle loan details.
                 </CardDescription>
               </div>
             </div>

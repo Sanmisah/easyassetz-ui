@@ -185,7 +185,7 @@ const NPSOtherForm = () => {
 
             {showJointHolderName && (
               <div className="space-y-2">
-                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                <Label htmlFor="jointHolderName">Select/Add Joint Holder</Label>
                 <div>
                   {displayFamilyMembers && displayFamilyMembers?.length > 0 && (
                     <div className="space-y-2">

@@ -256,7 +256,7 @@ const ProvidentFundOtherForm = () => {
                 render={({ field }) => (
                   <Input
                     id="bankAccountNumber"
-                    placeholder="Enter Bank Account Number</Label>"
+                    placeholder="Enter Bank Account Number"
                     {...field}
                     value={field.value || ""}
                     onChange={field.onChange}

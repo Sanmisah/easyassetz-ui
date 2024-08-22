@@ -194,7 +194,7 @@ const NPSEditForm = ({}) => {
                 Edit NPS Details
               </CardTitle>
               <CardDescription>
-                Update the form to edit the NPS details.
+                Edit the form to update the NPS details.
               </CardDescription>
             </div>
           </div>
@@ -260,7 +260,7 @@ const NPSEditForm = ({}) => {
 
             {showJointHolderName && (
               <div className="space-y-2">
-                <Label htmlFor="jointHolderName">Joint Holder Name</Label>
+                <Label htmlFor="jointHolderName">Select/Add Joint Holder</Label>
                 <>
                   {displayFamilyMembers && displayFamilyMembers?.length > 0 && (
                     <div className="space-y-2">

@@ -176,7 +176,7 @@ const JewelleryOtherForm = () => {
                       className={errors.jewelleryType ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Type of Jewellery" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="necklace">Necklace</SelectItem>

@@ -162,12 +162,12 @@ const PersonalLoanEdit = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Edit Personal Loan Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the personal loan details.
+                  Edit the form to update the personal loan details.
                 </CardDescription>
               </div>
             </div>
