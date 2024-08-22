@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 
@@ -67,10 +67,11 @@ const Auth = () => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
-
-  useEffect(() => {
-    toast.dismiss();
-  }, []);
+  const HandleConfirm = () => {
+    setTimeout(() => {
+      handleRegisterConfirm();
+    }, 1000);
+  };
   const validateLogin = () => {
     const result = loginSchema.safeParse({
       email: formData.email,
@@ -112,8 +113,6 @@ const Auth = () => {
       navigate("/personal");
     },
     onError: (error) => {
-      toast.dismiss();
-
       console.error("Login failed: " + error.response.data.message);
       if (error.response.data.message === "You are already logged-in.") {
         navigate("/personal");
@@ -148,37 +147,25 @@ const Auth = () => {
       }
     } else {
       if (validateRegister()) {
-        toast.dismiss();
         setAlertDialog(true);
       }
     }
   };
   const Registermutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(
-        "/api/register",
-        {
-          ...data,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-          },
-        }
-      );
+      const response = await axios.post("/api/register", {
+        ...data,
+      });
       return response.data;
     },
     onSuccess: (data) => {
-      toast.dismiss();
-
       console.log("Registering user:", data);
       toast.success("Registered successfully!");
-      setIsLogin(true);
+      setTimeout(() => {
+        setIsLogin(true);
+      }, 1000);
     },
     onError: (error) => {
-      toast.dismiss();
-
       setErrorMessage(error.response.data.data);
       console.error("Error registering user:", error);
       toast.error(`Failed to register user.${error.response.data.data}`);
@@ -186,7 +173,6 @@ const Auth = () => {
   });
 
   const handleRegisterConfirm = async () => {
-    toast.dismiss();
     setAlertDialog(false);
     try {
       Registermutation.mutate(formData);
@@ -200,10 +186,8 @@ const Auth = () => {
       //     alert("Registration failed: " + response.data.message);
       //   }
     } catch (error) {
-      toast.dismiss();
-
       console.error("Error registering user:", error);
-      toast.error("Failed to register user.");
+      alert("Failed to register user.");
     }
   };
 
@@ -211,6 +195,14 @@ const Auth = () => {
 
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+      {alertDialog && (
+        <Confirmagedialog
+          alertDialog={alertDialog}
+          setAlertDialog={setAlertDialog}
+          onConfirm={HandleConfirm}
+          onCancel={() => setAlertDialog(false)}
+        />
+      )}
       <div className="hidden bg-muted lg:block max-h-[930px] item-center object-contain">
         <img
           src={Background}
@@ -294,14 +286,6 @@ const Auth = () => {
             <>
               <img className="w-[300px]" src={Logo} alt="" />
 
-              {alertDialog && (
-                <Confirmagedialog
-                  alertDialog={alertDialog}
-                  setAlertDialog={setAlertDialog}
-                  onConfirm={handleRegisterConfirm}
-                  onCancel={() => setAlertDialog(false)}
-                />
-              )}
               <div className="grid gap-2 text-center">
                 <h1 className="text-3xl font-bold">Sign Up</h1>
                 <p className="text-balance text-muted-foreground">
@@ -405,8 +389,6 @@ const Auth = () => {
                   {getFieldError("password_confirmation") && (
                     <p className="text-red-500">
                       {getFieldError("password_confirmation")}
-                      {getFieldError("password_confirmation") &&
-                        toast.dismiss()}
                     </p>
                   )}
                 </div>
