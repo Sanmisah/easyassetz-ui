@@ -195,6 +195,7 @@ function App() {
         <Route path="/other-deposits" element={<Personalpage />} />
         <Route path="/other-deposits/add" element={<Personalpage />} />
         <Route path="/other-deposits/edit" element={<Personalpage />} />
+        <Route path="/generatewill" element={<Personalpage />} />
       </Routes>
     </div>
   );

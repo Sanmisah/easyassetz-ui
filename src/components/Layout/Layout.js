@@ -179,9 +179,13 @@ import AssetDistribution from "@/components/Assetdistribution/AssetDistribution"
 import AssetAllocation from "@/components/Assetdistribution/AssetAllocation";
 import Summery from "@/components/Assetdistribution/Summery";
 import ForgetPassword from "@/components/Forgetpassword/ForgetPassword";
+import GenerateWill from "./GenerateWill";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setWilldata } from "@/Redux/sessionSlice";
 import { Button } from "@/shadcncomponents/ui/button";
 const Layout = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -315,7 +319,7 @@ const Layout = () => {
             <UserIcon className="h-5 w-5" />
             Asset Distribution+
           </NavLink>
-          <NavLink
+          <Button
             onClick={() => {
               axios
                 .get("/api/generate-will", {
@@ -326,13 +330,14 @@ const Layout = () => {
                 })
                 .then((response) => {
                   const FileName = response.data.fileName;
-                  window.open(`/api/file/${FileName}`);
+                  dispatch(setWilldata(response.data));
                 });
+              navigate("/generatewill");
             }}
-            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
+            className="flex  pl-2 pr-2 w-full items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors  focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-800 dark:focus:bg-gray-800 aria-[current=page]:bg-[#069bb3] aria-[current=page]:text-white"
           >
             Generate Will
-          </NavLink>
+          </Button>
         </nav>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -655,6 +660,7 @@ const Layout = () => {
 
       {location.pathname === "/assetallocation" && <AssetAllocation />}
       {location.pathname === "/summery" && <Summery />}
+      {location.pathname === "/generatewill" && <GenerateWill />}
     </div>
   );
 };

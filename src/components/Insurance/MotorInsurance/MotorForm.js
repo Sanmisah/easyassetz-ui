@@ -119,6 +119,7 @@ const MotorForm = () => {
   useEffect(() => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
+      setValues(takeinput);
       setValue("companyName", takeinput);
     }
   }, [takeinput]);
@@ -276,8 +277,8 @@ const MotorForm = () => {
                     // </Select>
                     <AutoComplete
                       options={frameworks}
-                      placeholder="Select framework..."
-                      emptyMessage="No framework found."
+                      placeholder="Select Comapany Name..."
+                      emptyMessage="No Company Name Found."
                       value={values}
                       setTakeinput={setTakeinput}
                       onValueChange={(value) => {

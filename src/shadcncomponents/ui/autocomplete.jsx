@@ -3,7 +3,7 @@ import {
   CommandItem,
   CommandList,
   CommandInput,
-} from "@com/ui/command";
+} from "@com/ui/commandfor";
 import { Command as CommandPrimitive } from "cmdk";
 import { useState, useEffect, useRef, useCallback } from "react";
 
@@ -19,6 +19,7 @@ export const AutoComplete = ({
   value,
   onValueChange,
   disabled,
+  takeinput,
   setTakeinput,
   isLoading = false,
 }) => {
@@ -26,11 +27,17 @@ export const AutoComplete = ({
 
   const [isOpen, setOpen] = useState(false);
   const [selected, setSelected] = useState(value);
-  const [inputValue, setInputValue] = useState(value?.label || "");
-  useEffect(() => {
-    setTakeinput(inputValue);
-    console.log(inputValue);
-  }, [inputValue]);
+  // const [takeinput, setTakeinput] = useState(value?.label || takeinput || "");
+
+  // useEffect(() => {
+  //   console.log("takle", takeinput);
+  //   setTakeinput(value);
+  // }, [value]);
+  // useEffect(() => {
+  //   setTakeinput(takeinput);
+
+  //   console.log(takeinput);
+  // }, [takeinput]);
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -64,12 +71,12 @@ export const AutoComplete = ({
 
   const handleBlur = useCallback(() => {
     setOpen(false);
-    setInputValue(selected?.label);
+    setTakeinput(selected?.label);
   }, [selected]);
 
   const handleSelectOption = useCallback(
     (selectedOption) => {
-      setInputValue(selectedOption.label);
+      setTakeinput(selectedOption.label);
 
       setSelected(selectedOption);
       onValueChange?.(selectedOption);
@@ -88,8 +95,8 @@ export const AutoComplete = ({
       <div>
         <CommandInput
           ref={inputRef}
-          value={inputValue}
-          onValueChange={isLoading ? undefined : setInputValue}
+          value={takeinput}
+          onValueChange={isLoading ? undefined : setTakeinput}
           onBlur={handleBlur}
           onFocus={() => setOpen(true)}
           placeholder={placeholder}
