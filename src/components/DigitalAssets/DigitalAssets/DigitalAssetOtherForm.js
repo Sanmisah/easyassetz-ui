@@ -117,7 +117,6 @@ const DigitalAssetOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Button onClick={() => navigate("/digitalassets")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
                   Digital Assets

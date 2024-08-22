@@ -180,7 +180,6 @@ const InsuranceForm = () => {
         <CardHeader>
           <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex md:flex-row items-start md:items-center justify-between gap-2">
-              <Button onClick={() => navigate("/lifeinsurance")}>Back</Button>
               <div>
                 <CardTitle className="text-2xl font-bold">
                   Life Insurance Policy Details
