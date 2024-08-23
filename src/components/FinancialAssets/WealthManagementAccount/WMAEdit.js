@@ -66,9 +66,9 @@ const schema = z.object({
   // typeOfInvestment: z
   //   .string()
   //   .nonempty({ message: "Type of Investment is required" }),
-  name: z.string().optional(),
+  name: z.any().optional(),
   mobile: z.string().optional(),
-  email: z.string().optional(),
+  email: z.any().optional(),
   image: z.any().optional(),
 });
 
@@ -507,6 +507,7 @@ const PSSEditForm = () => {
                         id="jointHolderPan"
                         placeholder="Enter Joint Holder PAN"
                         {...field}
+                        value={field.value?.toUpperCase() || ""}
                         className={
                           errors.jointHolderPan ? "border-red-500" : ""
                         }

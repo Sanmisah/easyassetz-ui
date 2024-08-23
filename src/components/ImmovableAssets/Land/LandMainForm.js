@@ -92,8 +92,8 @@ const LandMainForm = () => {
                 className="flex border border-input p-4 justify-between pl-2 pr-2 items-center rounded-md drop-shadow-md"
               >
                 <div className="flex flex-col  ml-8">
-                  <h1 className="font-bold">{data.propertyType}</h1>
-                  <p className="text-sm">{data.surveyNumber}</p>
+                  <h1 className="font-bold">{data.surveyNumber}</h1>
+                  <p className="text-sm">{data.address}</p>
                 </div>
                 <div className="flex items-center mr-8">
                   <DropdownMenu>

@@ -182,7 +182,7 @@ const PSADOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Postal Saving Account Details
                 </CardTitle>
@@ -334,8 +334,10 @@ const PSADOtherForm = () => {
             </div>
 
             <div className="space-y-4 flex flex-col">
-              <Label className="text-lg font-bold">Holding Type</Label>
-              <Label style={{ color: "red" }}>*</Label>
+              <div>
+                <Label className="text-lg font-bold">Holding Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
+              </div>
               <Controller
                 name="holdingType"
                 defaultValues="single"
@@ -386,11 +388,20 @@ const PSADOtherForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jointHolderPan">Joint Holder PAN</Label>
-                  <Input
-                    id="jointHolderPan"
-                    placeholder="Enter Joint Holder PAN"
-                    {...register("jointHolderPan")}
-                    className={errors.jointHolderPan ? "border-red-500" : ""}
+                  <Controller
+                    name="jointHolderPan"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="jointHolderPan"
+                        placeholder="Enter Joint Holder PAN"
+                        {...field}
+                        value={field.value?.toUpperCase() || ""}
+                        className={
+                          errors.jointHolderPan ? "border-red-500" : ""
+                        }
+                      />
+                    )}
                   />
                   {errors.jointHolderPan && (
                     <span className="text-red-500">

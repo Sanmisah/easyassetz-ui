@@ -33,7 +33,7 @@ import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 const schema = z.object({
   propertyType: z.string().optional(),
   houseNumber: z.string().nonempty({ message: "House Number is required" }),
-  address1: z.string().nonempty({ message: "Address Line 1 is required" }),
+  address1: z.string().nonempty({ message: "Address is required" }),
   pincode: z.string().nonempty({ message: "Pincode is required" }),
   area: z.string().nonempty({ message: "Area is required" }),
   city: z.string().optional(),
@@ -258,7 +258,7 @@ const CommercialOtherForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address1">Address Line 1</Label>
+                <Label htmlFor="address1">Address</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="address1"
@@ -266,7 +266,7 @@ const CommercialOtherForm = () => {
                   render={({ field }) => (
                     <Input
                       id="address1"
-                      placeholder="Enter Address Line 1"
+                      placeholder="Enter Address"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -425,7 +425,7 @@ const CommercialOtherForm = () => {
                           htmlFor="pan-yes"
                         >
                           <RadioGroupItem id="pan-yes" value="selfpurchase" />
-                          selfpurchase
+                          Self Purchase
                         </Label>
                         <Label
                           className="flex items-center gap-2"
@@ -561,7 +561,7 @@ const CommercialOtherForm = () => {
                       render={({ field }) => (
                         <Input
                           id="firstHoldersPan"
-                          placeholder="Enter Joint Holder Name"
+                          placeholder="Enter Joint Holder Pan"
                           {...field}
                           value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
@@ -587,7 +587,7 @@ const CommercialOtherForm = () => {
                       render={({ field }) => (
                         <Input
                           id="firstHoldersAadhar"
-                          placeholder="Enter Joint Holder Name"
+                          placeholder="Enter Joint Holder Aadhar"
                           {...field}
                           value={field.value || ""}
                           onChange={field.onChange}
@@ -676,7 +676,7 @@ const CommercialOtherForm = () => {
                       render={({ field }) => (
                         <Input
                           id="jointHoldersPan"
-                          placeholder="Enter Joint Holder Name"
+                          placeholder="Enter Joint Holder Pan"
                           {...field}
                           value={field.value?.toUpperCase() || ""}
                           onChange={field.onChange}
@@ -702,7 +702,7 @@ const CommercialOtherForm = () => {
                       render={({ field }) => (
                         <Input
                           id="jointHoldersName"
-                          placeholder="Enter Joint Holder Name"
+                          placeholder="Enter Joint Holder Aadhar"
                           {...field}
                           value={field.value || ""}
                           onChange={field.onChange}
@@ -803,7 +803,7 @@ const CommercialOtherForm = () => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="Enter Email"
                     {...field}
                     className={errors.email ? "border-red-500" : ""}
                   />

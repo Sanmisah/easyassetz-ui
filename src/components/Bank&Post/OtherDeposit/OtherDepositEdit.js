@@ -206,7 +206,7 @@ const PpfEditForm = ({}) => {
                   Edit Other Deposits Details
                 </CardTitle>
                 <CardDescription>
-                  Fill out the form to edit the Other Deposits Details.
+                  Fill out the form to update the Other Deposits Details.
                 </CardDescription>
               </div>
             </div>

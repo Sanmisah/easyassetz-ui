@@ -199,7 +199,7 @@ const ProvidentFundEditForm = ({}) => {
                   Edit Providend Fund Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the Providend Fund details.
+                  Edit the form to update the Providend Fund details.
                 </CardDescription>
               </div>
             </div>
@@ -252,6 +252,7 @@ const ProvidentFundEditForm = ({}) => {
                 <span className="text-red-500">{errors.uanNumber.message}</span>
               )}
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="bankName">Bank Name</Label>
               <Label style={{ color: "red" }}>*</Label>
@@ -274,24 +275,6 @@ const ProvidentFundEditForm = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="branch">Branch</Label>
-              <Controller
-                name="branch"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="branch"
-                    placeholder="Enter Branch"
-                    {...field}
-                    className={errors.branch ? "border-red-500" : ""}
-                  />
-                )}
-              />
-              {errors.branch && (
-                <span className="text-red-500">{errors.branch.message}</span>
-              )}
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="bankAccountNumber">Bank Account Number</Label>
               <Label style={{ color: "red" }}>*</Label>
               <Controller
@@ -312,6 +295,24 @@ const ProvidentFundEditForm = ({}) => {
                 <span className="text-red-500">
                   {errors.bankAccountNumber.message}
                 </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="branch">Branch</Label>
+              <Controller
+                name="branch"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="branch"
+                    placeholder="Enter Branch"
+                    {...field}
+                    className={errors.branch ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.branch && (
+                <span className="text-red-500">{errors.branch.message}</span>
               )}
             </div>
             {displaynominie && displaynominie.length > 0 && (

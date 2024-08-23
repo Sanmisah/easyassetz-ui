@@ -219,7 +219,7 @@ const EditMotorForm = () => {
                   Edit Bank Locker Details
                 </CardTitle>
                 <CardDescription>
-                  Fill out the form to edit the bank locker details.
+                  Fill out the form to update the bank locker details.
                 </CardDescription>
               </div>
             </div>
@@ -388,6 +388,7 @@ const EditMotorForm = () => {
                       id="jointHolderPan"
                       placeholder="Enter Joint Holder PAN"
                       {...field}
+                      value={field.value?.toUpperCase() || ""}
                       className={errors.jointHolderPan ? "border-red-500" : ""}
                     />
                   )}

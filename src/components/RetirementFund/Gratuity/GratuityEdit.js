@@ -172,7 +172,7 @@ const GratuityEditForm = () => {
                   Gratuity Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the Gratuity details.
+                  Edit the form to update the Gratuity details.
                 </CardDescription>
               </div>
             </div>

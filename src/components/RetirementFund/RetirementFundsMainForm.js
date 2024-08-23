@@ -102,7 +102,7 @@ const RetirementFundMainForm = () => {
       <div>
         <h1 className="text-2xl font-bold">Retirement Fund Main Form</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Fill out the form to add a new Retirement Fund.
+          Fill out the forms to add a new Retirement Fund.
         </p>
       </div>
       <div className="mt-8 flex flex-col gap-4">

@@ -286,7 +286,7 @@ const ResidentialEditForm = () => {
                   render={({ field }) => (
                     <Input
                       id="surveyNumber"
-                      placeholder="Enter Survey Number"
+                      placeholder="Enter House Number"
                       {...field}
                       className={errors.surveyNumber ? "border-red-500" : ""}
                     />
@@ -306,7 +306,7 @@ const ResidentialEditForm = () => {
                   render={({ field }) => (
                     <Input
                       id="address"
-                      placeholder="Enter Address Line 1"
+                      placeholder="Enter Address"
                       {...field}
                       className={errors.address ? "border-red-500" : ""}
                     />
@@ -325,7 +325,7 @@ const ResidentialEditForm = () => {
                   render={({ field }) => (
                     <Input
                       id="villageName"
-                      placeholder="Enter Pincode"
+                      placeholder="Enter Village Name"
                       {...field}
                       className={errors.villageName ? "border-red-500" : ""}
                     />
@@ -346,7 +346,7 @@ const ResidentialEditForm = () => {
                   render={({ field }) => (
                     <Input
                       id="district"
-                      placeholder="Enter Area"
+                      placeholder="Enter District"
                       {...field}
                       className={errors.district ? "border-red-500" : ""}
                     />
@@ -366,7 +366,7 @@ const ResidentialEditForm = () => {
                   render={({ field }) => (
                     <Input
                       id="taluka"
-                      placeholder="Enter City"
+                      placeholder="Enter Taluka"
                       {...field}
                       className={errors.taluka ? "border-red-500" : ""}
                     />
@@ -773,7 +773,7 @@ const ResidentialEditForm = () => {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Enter email"
+                      placeholder="Enter Email"
                       {...field}
                       className={errors.email ? "border-red-500" : ""}
                     />

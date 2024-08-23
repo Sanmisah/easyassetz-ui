@@ -513,6 +513,7 @@ const DematAccountEditForm = () => {
                         id="jointHolderPan"
                         placeholder="Enter Joint Holder PAN"
                         {...field}
+                        value={field.value?.toUpperCase() || ""}
                         className={
                           errors.jointHolderPan ? "border-red-500" : ""
                         }

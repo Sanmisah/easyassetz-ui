@@ -249,7 +249,7 @@ const OtherLoansEditForm = () => {
                       className={errors.jewelleryType ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Type of Jewellery" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="necklace">Necklace</SelectItem>
@@ -311,7 +311,7 @@ const OtherLoansEditForm = () => {
                       className={errors.metal ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Select Metal Type" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="gold">Gold</SelectItem>
@@ -366,7 +366,7 @@ const OtherLoansEditForm = () => {
                       className={errors.preciousStone ? "border-red-500" : ""}
                     >
                       <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
+                        <SelectValue placeholder="Select Precious Stone" />
                       </FocusableSelectTrigger>
                       <SelectContent>
                         <SelectItem value="diamond">Diamond</SelectItem>

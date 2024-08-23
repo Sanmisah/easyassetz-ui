@@ -38,7 +38,7 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Bank/Post Name is required" }),
   bankName: z.string().optional(),
-  branchName: z.string().optional(),
+  branchName: z.any().optional(),
   maturityDate: z.any().optional(),
   maturityAmount: z.any().optional(),
   holdingType: z.any().optional(),

@@ -194,12 +194,12 @@ const LitigationEditForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Edit Litigation Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the litigation details.
+                  Edit the form to update the litigation details.
                 </CardDescription>
               </div>
             </div>

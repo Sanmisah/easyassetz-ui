@@ -210,7 +210,7 @@ const PpfEditForm = ({}) => {
                   Edit Public Providend Fund Details
                 </CardTitle>
                 <CardDescription>
-                  Update the form to edit the Public Providend Fund details.
+                  Edit the form to update the Public Providend Fund details.
                 </CardDescription>
               </div>
             </div>

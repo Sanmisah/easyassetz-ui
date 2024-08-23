@@ -243,7 +243,7 @@ const LandOtherform = () => {
                   render={({ field }) => (
                     <Input
                       id="surveyNumber"
-                      placeholder="Enter House Number"
+                      placeholder="Enter Survey Number"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -265,7 +265,7 @@ const LandOtherform = () => {
                   render={({ field }) => (
                     <Input
                       id="address"
-                      placeholder="Enter Address Line 1"
+                      placeholder="Enter Address"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -286,7 +286,7 @@ const LandOtherform = () => {
                   render={({ field }) => (
                     <Input
                       id="villageName"
-                      placeholder="Enter Pincode"
+                      placeholder="Enter Village Name"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -309,7 +309,7 @@ const LandOtherform = () => {
                   render={({ field }) => (
                     <Input
                       id="district"
-                      placeholder="Enter Area"
+                      placeholder="Enter District"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -331,7 +331,7 @@ const LandOtherform = () => {
                   render={({ field }) => (
                     <Input
                       id="taluka"
-                      placeholder="Enter City"
+                      placeholder="Enter Taluka"
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -749,7 +749,7 @@ const LandOtherform = () => {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Enter email"
+                      placeholder="Enter Email"
                       {...field}
                       className={errors.email ? "border-red-500" : ""}
                     />

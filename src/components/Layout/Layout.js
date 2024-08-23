@@ -64,7 +64,7 @@ import VehicleLoanMainForm from "@/components/Liabilities/VehicleLoan/VehicleLoa
 import VehicleLoanOtherForm from "@/components/Liabilities/VehicleLoan/VehicleLoanOtherForm";
 import VehicleLoanEdit from "@/components/Liabilities/VehicleLoan/VehicleLoanEdit";
 import LitigationMainForm from "@/components/Liabilities/Litigation/LitigationMainForm";
-import LitigationOtherForm from "@/components/Liabilities/Litigation/LitigationOtherForm";
+import LitigationOtherForm from "../Liabilities/Litigation/LitigationOtherForm";
 import LitigationEdit from "@/components/Liabilities/Litigation/LitigationEdit";
 import PpfMainForm from "@/components/RetirementFund/PublicProvidendFund/PpfMainForm";
 import PpfOtherForm from "@/components/RetirementFund/PublicProvidendFund/PpfOtherForm";
