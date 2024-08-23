@@ -175,7 +175,7 @@ const PSSEditForm = () => {
       formData.append("_method", "put");
 
       const response = await axios.post(
-        `/api/bank-accounts/${lifeInsuranceEditId}`,
+        `/api/post-saving-schemes/${lifeInsuranceEditId}`,
         formData,
         {
           headers: {
