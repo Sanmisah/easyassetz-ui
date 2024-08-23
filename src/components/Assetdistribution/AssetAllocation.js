@@ -220,7 +220,6 @@ export default function AssetAllocation() {
           <div className="flex flex-col gap-4 mt-4  p-4 ">
             {selectedNommie.length > 1 && (
               <div className="flex items-center space-x-2  justify-end ">
-                <Label htmlFor="airplane-mode">Split Equally</Label>
                 <Button onClick={setSelectedsplit}>Split Equally</Button>
               </div>
             )}
@@ -266,7 +265,7 @@ export default function AssetAllocation() {
                               );
                               setSelectedNommie(
                                 selectedNommie.filter(
-                                  (item) => item.id !== nominee.id
+                                  (item) => item !== nominee.id
                                 )
                               );
                               inputRefs.current.splice(index, 1);
