@@ -13,6 +13,7 @@ import { Button } from "@com/ui/button";
 import { Label } from "@com/ui/label";
 import { Checkbox } from "@com/ui/checkbox";
 import axios from "axios";
+import AddBeneficiary from "@/components/Nominee/BeneficiaryOpen";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +27,7 @@ const AddNominee = ({
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
   const navigate = useNavigate();
-
+  const [AddNominee, setAddNominee] = useState(false);
   useEffect(() => {
     axios
       .get(`/api/beneficiaries`, {
@@ -144,7 +145,7 @@ const AddNominee = ({
             ))}
           </div>
           <SheetFooter>
-            <Button onClick={addNominee}>Add Nominee</Button>
+            <AddBeneficiary setAddNominee={setAddNominee} />
             <SheetClose asChild>
               <Button
                 onClick={handleSubmit}
