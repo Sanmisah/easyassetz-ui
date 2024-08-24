@@ -16,6 +16,7 @@ export const AutoComplete = ({
   options,
   placeholder,
   emptyMessage,
+  defautValue,
   value,
   onValueChange,
   disabled,
@@ -33,6 +34,25 @@ export const AutoComplete = ({
   //   setTakeinput(takeinput);
   //   console.log(takeinput);
   // }, [takeinput]);
+
+  useEffect(() => {
+    setSelected(defautValue);
+    setTakeinput(defautValue || "");
+    console.log("defautValue:", defautValue);
+  }, [defautValue]);
+
+  useEffect(() => {
+    if (takeinput !== selected.label) {
+      setSelected(takeinput);
+      const value = {
+        value: takeinput,
+        label: takeinput,
+      };
+
+      onValueChange(value);
+    }
+  }, [value, selected, takeinput]);
+
   useEffect(() => {
     console.log("value:", value);
     setSelected(value);

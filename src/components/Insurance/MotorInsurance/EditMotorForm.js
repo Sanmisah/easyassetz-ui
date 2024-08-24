@@ -33,6 +33,7 @@ import Editnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 import { PhoneInput } from "react-international-phone";
+import { AutoComplete } from "@com/ui/autocomplete";
 
 const schema = z.object({
   companyName: z
@@ -81,6 +82,14 @@ const EditMotorForm = () => {
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
+  const [defautValue, setdefaultValue] = useState("");
+  const [takeinput, setTakeinput] = useState();
+  const frameworks = [
+    { value: "company1", label: "Company1" },
+    { value: "company2", label: "Company2" },
+    { value: "company3", label: "Company3" },
+  ];
+  const [values, setValues] = useState("");
   const [type, setType] = useState(false);
   const {
     handleSubmit,
@@ -103,6 +112,7 @@ const EditMotorForm = () => {
         },
       }
     );
+    setdefaultValue(response.data.data.MotorInsurance?.companyName);
     let data = response.data.data.MotorInsurance;
     if (data.modeOfPurchase === "e-insurance") {
       setValue("modeOfPurchase", data.modeOfPurchase);
@@ -206,7 +216,7 @@ const EditMotorForm = () => {
       setValue("brokerName", data.brokerName);
       setValue("contactPerson", data.contactPerson);
       setValue("contactNumber", data.contactNumber);
-
+      setValue("companyName", data.companyName);
       // Set fetched values to the form
       for (const key in data) {
         setValue(key, data[key]);
@@ -354,57 +364,44 @@ const EditMotorForm = () => {
                   control={control}
                   defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
-                    <Select
-                      id="insurance-company"
-                      value={field.value}
-                      {...field}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
-                      }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.companyName || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    //   <AutoComplete
-                    //   options={frameworks}
-                    //   placeholder="Select Comapany Name..."
-                    //   emptyMessage="No Company Name Found."
-                    //   value={values}
-                    //   setTakeinput={setTakeinput}
+                    // <Select
+                    //   id="insurance-company"
+                    //   value={field.value}
+                    //   {...field}
                     //   onValueChange={(value) => {
-                    //     setValues(value);
-                    //     console.log(value);
-                    //     setValue("companyName", value?.value);
-                    //     setOpen(false);
+                    //     field.onChange(value);
+                    //     setShowOtherInsuranceCompany(value === "other");
                     //   }}
-                    // />
+                    //   className={errors.companyName ? "border-red-500" : ""}
+                    //   defaultValue={Benifyciary?.companyName || ""}
+                    // >
+                    //   <SelectTrigger>
+                    //     <SelectValue placeholder="Select insurance company" />
+                    //   </SelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="company1">Company 1</SelectItem>
+                    //     <SelectItem value="company2">Company 2</SelectItem>
+                    //     <SelectItem value="company3">Company 3</SelectItem>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <AutoComplete
+                      options={frameworks}
+                      placeholder="Select Comapany Name..."
+                      emptyMessage="No Company Name Found."
+                      value={values}
+                      defautValue={defautValue}
+                      takeinput={takeinput}
+                      setTakeinput={setTakeinput}
+                      onValueChange={(value) => {
+                        setValues(value);
+                        console.log(value);
+                        setValue("companyName", value?.value);
+                      }}
+                    />
                   )}
                 />
-                {showOtherInsuranceCompany && (
-                  <Controller
-                    name="otherInsuranceCompany"
-                    control={control}
-                    defaultValue={Benifyciary?.otherInsuranceCompany || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Insurance Company"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherInsuranceCompany || ""}
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.companyName && (
                   <span className="text-red-500">
                     {errors.companyName.message}
