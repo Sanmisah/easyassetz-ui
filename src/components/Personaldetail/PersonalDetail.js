@@ -652,9 +652,9 @@ const Personaldetail = () => {
             </div>
             {marriedUnderAct && defaultData?.maritalStatus !== "Bachelor" && (
               <div className="space-y-2 mt-6 gap-2 flex  flex-col col-span-full">
-                <div div className="flex justify-start item-center  gap-2">
+                <div div className="flex justify-start item-center gap-2">
                   <Checkbox
-                    className="mt-2"
+                    className="mt-[6px]"
                     id="married-under-act"
                     onCheckedChange={() =>
                       setSpecialactundermarriange(!specialactundermarriange)

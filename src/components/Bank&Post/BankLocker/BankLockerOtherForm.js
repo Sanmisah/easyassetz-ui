@@ -225,6 +225,8 @@ const BankLockerForm = () => {
                         {...field}
                         placeholder="Specify Bank Name"
                         className="mt-2"
+                        value={field.value || ""}
+                        onChange={field.onChange}
                       />
                     )}
                   />
