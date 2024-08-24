@@ -30,32 +30,65 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
-import { AutoComplete } from "@com/ui/autocomplete";
+import { Checkbox } from "@com/ui/checkbox";
+import { Check, ChevronsUpDown } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@com/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@com/ui/popover";
+import { AutoComplete } from "@com/ui/autocomplete";
 const schema = z.object({
   companyName: z
     .string()
     .nonempty({ message: "Insurance Company is required" }),
   otherInsuranceCompany: z.string().optional(),
-  insuranceType: z
-    .string()
-    .nonempty({ message: "Insurance Sub Type is required" }),
+  insuranceType: z.any().optional(),
   policyNumber: z.string().min(2, { message: "Policy Number is required" }),
-  maturityDate: z.any().optional(),
-  premium: z.string().optional(),
-  sumInsured: z.string().optional(),
-  policyHolderName: z
+  expiryDate: z.any().optional(),
+  premium: z.string().min(3, { message: "Premium is required" }),
+  // sumInsured: z.string().min(3, { message: "Sum Insured is required" }),
+  insurerName: z
     .string()
     .nonempty({ message: "Policy Holder Name is required" }),
+  vehicleType: z.string().nonempty({ message: "Vehical Type is required" }),
+  specificVehicalType: z.string().optional(),
   modeOfPurchase: z.string().optional(),
   contactPerson: z.string().optional(),
   contactNumber: z.string().optional(),
-  email: z.string().optional(),
+  email: z.any().optional(),
   registeredMobile: z.string().optional(),
-  registeredEmail: z.any().optional(),
+  registeredEmail: z.string().optional(),
   additionalDetails: z.string().optional(),
   brokerName: z.string().optional(),
+  image: z.any().optional(),
 });
+// .refine(
+//   (data) => {
+//     if (data.modeOfPurchase === "broker") {
+//       return (
+//         !!data.brokerName &&
+//         !!data.contactPerson &&
+//         !!data.contactNumber &&
+//         !!data.email
+//       );
+//     }
+//     if (data.modeOfPurchase === "e-insurance") {
+//       return !!data.registeredMobile && !!data.registeredEmail;
+//     }
+//     return true;
+//   },
+//   {
+//     message: "Required fields are missing",
+//     path: ["modeOfPurchase"],
+//   }
+// );
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -63,7 +96,7 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 
 FocusableSelectTrigger.displayName = "FocusableSelectTrigger";
 
-const OtherForm = () => {
+const MotorForm = () => {
   const navigate = useNavigate();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
@@ -75,7 +108,8 @@ const OtherForm = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
-  const [nomineeerror, setnomineeerror] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [values, setValues] = useState("");
   const [takeinput, setTakeinput] = useState();
   const frameworks = [
     { value: "company1", label: "Company1" },
@@ -86,10 +120,11 @@ const OtherForm = () => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
       setValues(takeinput);
+
       setValue("companyName", takeinput);
     }
   }, [takeinput]);
-  const [values, setValues] = useState("");
+  const [nomineeerror, setnomineeerror] = useState(false);
   const {
     handleSubmit,
     control,
@@ -102,10 +137,10 @@ const OtherForm = () => {
       otherInsuranceCompany: "",
       insuranceType: "",
       policyNumber: "",
-      maturityDate: "",
+      expiryDate: "",
       premium: "",
-      sumInsured: "",
-      policyHolderName: "",
+      // sumInsured: "",
+      insurerName: "",
       vehicleType: "",
       otherRelationship: "",
       modeOfPurchase: "broker",
@@ -122,18 +157,21 @@ const OtherForm = () => {
 
   const lifeInsuranceMutate = useMutation({
     mutationFn: async (data) => {
-      console.log("data:", process.env.API_URL);
-      const response = await axios.post(`/api/other-insurances`, data, {
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+      }
+      const response = await axios.post(`/api/motor-insurances`, formData, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
       });
 
-      return response.data.data.OtherInsurance;
+      return response.data.data.MotorInsurances;
     },
     onSuccess: () => {
       queryClient.invalidateQueries("LifeInsuranceData");
-      toast.success("Other Insurance added successfully!");
+      toast.success("Motor Insurance added successfully!");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -148,6 +186,7 @@ const OtherForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
+    console.log(data);
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }
@@ -161,26 +200,28 @@ const OtherForm = () => {
       data.contactNumber = null;
       data.email = null;
     }
-    console.log(data);
-    if (data.maturityDate) {
-      const date = new Date(data.maturityDate);
+    if (data.expiryDate) {
+      const date = new Date(data.expiryDate);
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       const year = date.getFullYear();
       const newdate = `${month}/${day}/${year}`;
-      data.maturityDate = newdate;
-    }
-    console.log("Nomiee:", selectedNommie.length < 1);
-
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
+      data.expiryDate = newdate;
     }
     if (data.vehicleType === "other") {
       data.vehicleType = data.specificVehicalType;
     }
+    // if (selectedNommie.length < 1) {
+    //   setnomineeerror(true);
+    //   return;
+    // }
+    // if (selectedNommie.length > 1) {
+    //   setnomineeerror(false);
+    // }
     data.nominees = selectedNommie;
     lifeInsuranceMutate.mutate(data);
   };
+
   useEffect(() => {
     console.log("displaynominie:", displaynominie);
   }, [displaynominie]);
@@ -193,10 +234,10 @@ const OtherForm = () => {
             <div className="flex items-center gap-2">
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Other Insurance Policy Details
+                  Motor Insurance Policy Details
                 </CardTitle>
                 <CardDescription>
-                  Fill out the form to add a new Other Insurance Policy Details.
+                  Fill out the form to add a new Motor Insurance Policy.
                 </CardDescription>
               </div>
             </div>
@@ -209,12 +250,31 @@ const OtherForm = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="insurance-company">Insurance Company</Label>
+                <Label htmlFor="insurance-company">Insurance Company</Label>.
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="companyName"
                   control={control}
                   render={({ field }) => (
+                    // <Select
+                    //   id="insurance-company"
+                    //   {...field}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setShowOtherInsuranceCompany(value === "other");
+                    //   }}
+                    //   className={errors.companyName ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Select Insurance Company" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="company1">Company 1</SelectItem>
+                    //     <SelectItem value="company2">Company 2</SelectItem>
+                    //     <SelectItem value="company3">Company 3</SelectItem>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
                     <AutoComplete
                       options={frameworks}
                       placeholder="Select Comapany Name..."
@@ -230,6 +290,11 @@ const OtherForm = () => {
                     />
                   )}
                 />
+                {errors.companyName && (
+                  <span className="text-red-500">
+                    {errors.companyName.message}
+                  </span>
+                )}
                 {showOtherInsuranceCompany && (
                   <Controller
                     name="otherInsuranceCompany"
@@ -243,25 +308,22 @@ const OtherForm = () => {
                     )}
                   />
                 )}
-                {errors.insuranceCompany && (
-                  <span className="text-red-500">
-                    {errors.companyName.message}
-                  </span>
-                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="insurance-subtype">Insurance Type</Label>
-                <Label style={{ color: "red" }}>*</Label>
                 <Controller
                   name="insuranceType"
                   control={control}
+                  // defaultValue="comprehensive"
                   render={({ field }) => (
-                    <div className="flex items-center gap-2 mt-2">
-                      <Input
-                        {...field}
-                        placeholder="Select Insurance Type"
-                        className={errors.policyNumber ? "border-red-500" : ""}
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="comprehensive"
+                        // checked={field.value === "comprehensive"}
+                        value="comprehensive"
+                        onCheckedChange={() => field.onChange("comprehensive")}
                       />
+                      <Label htmlFor="comprehensive">Comprehensive</Label>
                     </div>
                   )}
                 />
@@ -295,10 +357,10 @@ const OtherForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="maturity-date">Maturity Date</Label>
+                <Label htmlFor="expiryDate">Expiry Date</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
-                  name="maturityDate"
+                  name="expiryDate"
                   control={control}
                   render={({ field }) => (
                     <Datepicker
@@ -308,74 +370,103 @@ const OtherForm = () => {
                     />
                   )}
                 />
-                {errors.maturityDate && (
+                {errors.expiryDate && (
                   <span className="text-red-500 mt-5">
-                    {errors.maturityDate.message}
+                    {errors.expiryDate.message}
                   </span>
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="premium">Premium</Label>
-                <Controller
-                  name="premium"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="premium"
-                      placeholder="Enter Premium Amount"
-                      {...field}
-                      className={errors.premium ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.premium && (
-                  <span className="text-red-500">{errors.premium.message}</span>
+            <div className="space-y-2">
+              <Label htmlFor="premium">Premium</Label>
+              <Label style={{ color: "red" }}>*</Label>
+              <Controller
+                name="premium"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="premium"
+                    placeholder="Enter Premium Amount"
+                    {...field}
+                    className={errors.premium ? "border-red-500" : ""}
+                  />
                 )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sum-insured">Sum Insured</Label>
-                <Controller
-                  name="sumInsured"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="sum-insured"
-                      placeholder="Enter Sum Insured"
-                      {...field}
-                      className={errors.sumInsured ? "border-red-500" : ""}
-                    />
-                  )}
-                />
-                {errors.sumInsured && (
-                  <span className="text-red-500">
-                    {errors.sumInsured.message}
-                  </span>
-                )}
-              </div>
+              />
+              {errors.premium && (
+                <span className="text-red-500">{errors.premium.message}</span>
+              )}
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="policy-holder">Policy Holder Name</Label>
+                <Label htmlFor="policy-holder">Insurer Name</Label>
                 <Label style={{ color: "red" }}>*</Label>
                 <Controller
-                  name="policyHolderName"
+                  name="insurerName"
                   control={control}
                   render={({ field }) => (
                     <Input
                       id="policy-holder"
                       placeholder="Enter Policy Holder Name"
                       {...field}
-                      className={
-                        errors.policyHolderName ? "border-red-500" : ""
-                      }
+                      className={errors.insurerName ? "border-red-500" : ""}
                     />
                   )}
                 />
-                {errors.policyHolderName && (
+                {errors.insurerName && (
                   <span className="text-red-500">
-                    {errors.policyHolderName.message}
+                    {errors.insurerName.message}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="vehicleType">Vehical Type</Label>
+                <Label style={{ color: "red" }}>*</Label>
+                <Controller
+                  name="vehicleType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="vehicleType"
+                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setShowOtherRelationship(value === "other");
+                      }}
+                      className={errors.vehicleType ? "border-red-500" : ""}
+                    >
+                      <FocusableSelectTrigger>
+                        <SelectValue placeholder="Select VehicleType" />
+                      </FocusableSelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
+                        <SelectItem value="threewheeler">
+                          Three Wheeler
+                        </SelectItem>
+                        <SelectItem value="fourwheeler">
+                          Four Wheeler
+                        </SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {showOtherRelationship && (
+                  <Controller
+                    name="specificVehicalType"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Specify Vehical Type"
+                        className="mt-2"
+                      />
+                    )}
+                  />
+                )}
+                {errors.vehicleType && (
+                  <span className="text-red-500">
+                    {errors.vehicleType.message}
                   </span>
                 )}
               </div>
@@ -435,6 +526,10 @@ const OtherForm = () => {
                 Add nominee
               </Label>
               <Addnominee
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
                 setDisplaynominie={setDisplaynominie}
                 setSelectedNommie={setSelectedNommie}
                 displaynominie={displaynominie}
@@ -614,15 +709,28 @@ const OtherForm = () => {
               </>
             )}
             <div className="space-y-2">
-              <Label htmlFor="image-upload">Image Upload</Label>
+              <Label htmlFor="bullionFile">Upload Image</Label>
               <Controller
                 name="image"
                 control={control}
                 render={({ field }) => (
-                  <Input id="image-upload" type="file" {...field} />
+                  <Input
+                    id="image"
+                    type="file"
+                    onChange={(event) => {
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      );
+                    }}
+                    className={errors.image ? "border-red-500" : ""}
+                  />
                 )}
               />
+              {errors.image && (
+                <span className="text-red-500">{errors.image.message}</span>
+              )}
             </div>
+
             <CardFooter className="flex justify-end gap-2 mt-8">
               <Button
                 onClick={(e) => {
@@ -642,4 +750,4 @@ const OtherForm = () => {
   );
 };
 
-export default OtherForm;
+export default MotorForm;

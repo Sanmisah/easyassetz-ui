@@ -16,7 +16,7 @@ export const AutoComplete = ({
   options,
   placeholder,
   emptyMessage,
-  defautValue,
+  defaultValue,
   value,
   onValueChange,
   disabled,
@@ -36,27 +36,42 @@ export const AutoComplete = ({
   // }, [takeinput]);
 
   useEffect(() => {
-    setSelected(defautValue);
-    setTakeinput(defautValue || "");
-    console.log("defautValue:", defautValue);
-  }, [defautValue]);
+    setSelected(defaultValue);
+    setTakeinput(defaultValue || "");
+    console.log("defaultValue:", defaultValue);
+  }, [defaultValue]);
 
-  useEffect(() => {
-    if (takeinput !== selected.label) {
-      setSelected(takeinput);
-      const value = {
+  const updateSelectedValue = useCallback(() => {
+    if (takeinput !== selected?.label) {
+      const newValue = {
         value: takeinput,
         label: takeinput,
       };
 
-      onValueChange(value);
+      setSelected(newValue);
+      onValueChange(newValue);
     }
-  }, [value, selected, takeinput]);
+  }, [takeinput, onValueChange]);
 
   useEffect(() => {
-    console.log("value:", value);
-    setSelected(value);
-  }, [value]);
+    updateSelectedValue();
+  }, [updateSelectedValue]);
+  // useEffect(() => {
+  //   if (takeinput !== selected.label) {
+  //     const value = {
+  //       value: takeinput,
+  //       label: takeinput,
+  //     };
+  //     setSelected(takeinput);
+
+  //     onValueChange(value);
+  //   }
+  // }, [selected, takeinput]);
+
+  // useEffect(() => {
+  //   console.log("value:", value);
+  //   setSelected(value);
+  // }, [value]);
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -72,7 +87,7 @@ export const AutoComplete = ({
 
       // This is not a default behaviour of the <input /> field
       if (event.key === "Enter" && input.value !== "") {
-        const optionToSelect = options.find(
+        const optionToSelect = options?.find(
           (option) => option.label === input.value
         );
         if (optionToSelect) {
@@ -138,7 +153,7 @@ export const AutoComplete = ({
                 </div>
               </CommandPrimitive.Loading>
             ) : null}
-            {options.length > 0 && !isLoading ? (
+            {options?.length > 0 && !isLoading ? (
               <CommandGroup>
                 {options.map((option) => {
                   const isSelected = selected?.value === option.value;

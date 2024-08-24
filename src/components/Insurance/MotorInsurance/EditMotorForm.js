@@ -34,6 +34,7 @@ import cross from "@/components/image/close.png";
 import { Checkbox } from "@/shadcncomponents/ui/checkbox";
 import { PhoneInput } from "react-international-phone";
 import { AutoComplete } from "@com/ui/autocomplete";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   companyName: z
@@ -84,11 +85,20 @@ const EditMotorForm = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [defautValue, setdefaultValue] = useState("");
   const [takeinput, setTakeinput] = useState();
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
+
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    vehicleType: [
+      { value: "twowheeler", label: "Two Wheeler" },
+      { value: "threewheeler", label: "Three Wheeler" },
+      { value: "fourwheeler", label: "Four Wheeler" },
+    ],
+  };
   const [values, setValues] = useState("");
   const [type, setType] = useState(false);
   const {
@@ -112,7 +122,11 @@ const EditMotorForm = () => {
         },
       }
     );
-    setdefaultValue(response.data.data.MotorInsurance?.companyName);
+    setdefaultValue({
+      companyName: response.data.data.MotorInsurance?.companyName,
+      vehicleType: response.data.data.MotorInsurance?.vehicleType,
+    });
+
     let data = response.data.data.MotorInsurance;
     if (data.modeOfPurchase === "e-insurance") {
       setValue("modeOfPurchase", data.modeOfPurchase);
@@ -385,14 +399,15 @@ const EditMotorForm = () => {
                     //     <SelectItem value="other">Other</SelectItem>
                     //   </SelectContent>
                     // </Select>
-                    <AutoComplete
-                      options={frameworks}
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
-                      defautValue={defautValue}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.companyName}
+                      variable="companyName"
                       onValueChange={(value) => {
                         setValues(value);
                         console.log(value);
@@ -561,30 +576,21 @@ const EditMotorForm = () => {
                   defaultValue={Benifyciary?.vehicleType || ""}
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="vehicleType"
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.vehicleType}
+                      placeholder="Select Comapany Name..."
+                      emptyMessage="No Company Name Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.vehicleType}
+                      variable="vehicleType"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRelationship(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("vehicleType", value?.value);
                       }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.vehicleType || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select vehicleType" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
-                        <SelectItem value="threewheeler">
-                          Three Wheeler
-                        </SelectItem>
-                        <SelectItem value="fourwheeler">
-                          Four Wheeler
-                        </SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
                 {showOtherRelationship && (

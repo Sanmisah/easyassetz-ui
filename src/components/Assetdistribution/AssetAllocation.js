@@ -28,14 +28,72 @@ import { useNavigate } from "react-router-dom";
 
 export default function AssetAllocation() {
   const { SelectedAsset } = useSelector((state) => state.counterSlice);
+  const { subSelectedAsset } = useSelector((state) => state.counterSlice);
+  const { level } = useSelector((state) => state.counterSlice);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [totalsplit, setTotalsplit] = useState([]);
   const [Selectedsplit, setSelectedsplit] = useState(false);
+  const [inputValues, setInputValues] = useState(() => {
+    if (subSelectedAsset) {
+      if (level === "Primary") {
+        return subSelectedAsset.primary?.map(
+          (nominee) => nominee.Allocation || ""
+        );
+      } else if (level === "Secondary") {
+        return subSelectedAsset.secondary?.map(
+          (nominee) => nominee.Allocation || ""
+        );
+      } else if (level === "Tertiary") {
+        return subSelectedAsset.tertiary?.map(
+          (nominee) => nominee.Allocation || ""
+        );
+      }
+    }
+    return [];
+  });
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
   const inputRefs = useRef([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let totalPercentage = 100;
+
+  useEffect(() => {
+    if (subSelectedAsset) {
+      if (level === "Primary") {
+        setSelectedNommie(
+          subSelectedAsset?.primary?.map((nominee) => nominee?.id)
+        );
+        setDisplaynominie(subSelectedAsset?.primary?.map((nominee) => nominee));
+      }
+      if (level === "Secondary") {
+        setSelectedNommie(
+          subSelectedAsset?.secondary?.map((nominee) => nominee?.id)
+        );
+        setDisplaynominie(
+          subSelectedAsset?.secondary?.map((nominee) => nominee)
+        );
+        setInputValues(
+          subSelectedAsset?.secondary?.map(
+            (nominee) => nominee.Allocation || ""
+          )
+        );
+      }
+      if (level === "Tertiary") {
+        setSelectedNommie(
+          subSelectedAsset?.tertiary?.map((nominee) => nominee?.id)
+        );
+        setDisplaynominie(
+          subSelectedAsset?.tertiary?.map((nominee) => nominee)
+        );
+        setInputValues(
+          subSelectedAsset?.tertiary?.map((nominee) => nominee.Allocation || "")
+        );
+      }
+      setIsDataLoaded(true);
+    }
+  }, [subSelectedAsset]);
 
   useEffect(() => {
     const response = async () => {
@@ -90,9 +148,14 @@ export default function AssetAllocation() {
     }
   }, [Selectedsplit, selectedNommie]);
 
-  const handleInputChange = (index, value) => {
+  const handleInputChange = (index, value, nominee) => {
     const newTotalsplit = [...totalsplit];
-    newTotalsplit[index] = value;
+    if (nominee?.Allocation !== 0 || value !== "" || value !== 0) {
+      newTotalsplit[index] = nominee.Allocation;
+    }
+    if (value !== "" || value !== 0) {
+      newTotalsplit[index] = value;
+    }
     setTotalsplit(newTotalsplit);
   };
 
@@ -230,7 +293,7 @@ export default function AssetAllocation() {
                 <Label>Will Recieve</Label>
               </div>
 
-              {displaynominie && displaynominie.length > 0 && (
+              {isDataLoaded && displaynominie && displaynominie.length > 0 && (
                 <div className="space-y-2">
                   <div className="grid gap-4 py-4">
                     {displaynominie.map((nominee, index) => (
@@ -247,13 +310,16 @@ export default function AssetAllocation() {
                           </Label>
                         </div>
                         <div className="flex items-center gap-2 ">
+                          {console.log(nominee?.Allocation)}
                           <Input
                             ref={(el) => (inputRefs.current[index] = el)}
                             className="w-[5rem] placeholder:align-right"
                             placeholder="%"
-                            defaultValue={0}
+                            value={
+                              totalsplit[index] || nominee?.Allocation || 0
+                            }
                             onChange={(e) =>
-                              handleInputChange(index, e.target.value)
+                              handleInputChange(index, e.target.value, nominee)
                             }
                           />
                           <Button

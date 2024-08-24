@@ -44,6 +44,7 @@ import {
 } from "@com/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@com/ui/popover";
 import { AutoComplete } from "@com/ui/autocomplete";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 const schema = z.object({
   companyName: z
     .string()
@@ -109,13 +110,22 @@ const MotorForm = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
   const [open, setOpen] = useState(false);
-  const [values, setValues] = useState("");
+  const [values, setValues] = useState([]);
   const [takeinput, setTakeinput] = useState();
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    vehicleType: [
+      { value: "twowheeler", label: "Two Wheeler" },
+      { value: "threewheeler", label: "Three Wheeler" },
+      { value: "fourwheeler", label: "Four Wheeler" },
+    ],
+  };
+
   useEffect(() => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
@@ -124,6 +134,7 @@ const MotorForm = () => {
       setValue("companyName", takeinput);
     }
   }, [takeinput]);
+
   const [nomineeerror, setnomineeerror] = useState(false);
   const {
     handleSubmit,
@@ -275,18 +286,31 @@ const MotorForm = () => {
                     //     <SelectItem value="other">Other</SelectItem>
                     //   </SelectContent>
                     // </Select>
-                    <AutoComplete
-                      options={frameworks}
+                    // <AutoComplete
+                    //   options={frameworks}
+                    //   placeholder="Select Comapany Name..."
+                    //   emptyMessage="No Company Name Found."
+                    //   value={values}
+                    //   takeinput={takeinput}
+                    //   setTakeinput={setTakeinput}
+                    //   onValueChange={(value) => {
+                    //     setValues(value);
+                    //     console.log(value);
+                    //     setValue("companyName", value?.value);
+                    //   }}
+                    // />
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="companyName"
                       onValueChange={(value) => {
                         setValues(value);
                         console.log(value);
                         setValue("companyName", value?.value);
-                        setOpen(false);
                       }}
                     />
                   )}
@@ -427,29 +451,43 @@ const MotorForm = () => {
                   name="vehicleType"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="vehicleType"
-                      {...field}
+                    // <Select
+                    //   id="vehicleType"
+                    //   {...field}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setShowOtherRelationship(value === "other");
+                    //   }}
+                    //   className={errors.vehicleType ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Select VehicleType" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="twowheeler">Two Wheeler</SelectItem>
+                    //     <SelectItem value="threewheeler">
+                    //       Three Wheeler
+                    //     </SelectItem>
+                    //     <SelectItem value="fourwheeler">
+                    //       Four Wheeler
+                    //     </SelectItem>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <Autocompeleteadd
+                      options={frameworks?.vehicleType}
+                      placeholder="Select Comapany Name..."
+                      emptyMessage="No Company Name Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="vehicleType"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRelationship(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("vehicleType", value?.value);
                       }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select VehicleType" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
-                        <SelectItem value="threewheeler">
-                          Three Wheeler
-                        </SelectItem>
-                        <SelectItem value="fourwheeler">
-                          Four Wheeler
-                        </SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
                 {showOtherRelationship && (

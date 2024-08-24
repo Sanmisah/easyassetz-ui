@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
+import { AutoComplete } from "@com/ui/autocomplete";
 
 const schema = z.object({
   companyName: z
@@ -80,14 +81,29 @@ const HealthForm = () => {
   const [nomineeerror, setnomineeerror] = useState(false);
   const [showOtherInsuranceType, setShowOtherInsuranceType] = useState(false);
   const [FamilyMembersCovered, setFamilyMembersCovered] = useState([]);
-
+  const [values, setValues] = useState("");
   const [familymemberNominee, setFamilymemberNominee] = useState([]);
   const [displayfamilymemberNominee, setDisplayfamilymemberNominee] = useState(
     []
   );
+  const [takeinput, setTakeinput] = useState();
+  const frameworks = [
+    { value: "company1", label: "Company1" },
+    { value: "company2", label: "Company2" },
+    { value: "company3", label: "Company3" },
+  ];
+  useEffect(() => {
+    console.log("Values:", values?.value);
+    if (takeinput !== values?.value) {
+      setValues(takeinput);
+
+      setValue("companyName", takeinput);
+    }
+  }, [takeinput]);
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -251,25 +267,19 @@ const HealthForm = () => {
                   name="companyName"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="companyName"
-                      {...field}
+                    <AutoComplete
+                      options={frameworks}
+                      placeholder="Select Comapany Name..."
+                      emptyMessage="No Company Name Found."
+                      value={values}
+                      takeinput={takeinput}
+                      setTakeinput={setTakeinput}
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("companyName", value?.value);
                       }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Insurance Company" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
                 {showOtherInsuranceCompany && (
