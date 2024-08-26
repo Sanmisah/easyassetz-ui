@@ -39,7 +39,6 @@ const ConfirmDelete = ({ onConfirm, alertDialog, setAlertDialog }) => {
           >
             Continue
           </AlertDialogAction>
-          ;
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
