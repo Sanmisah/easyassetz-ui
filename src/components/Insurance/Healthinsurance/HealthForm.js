@@ -30,7 +30,7 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
-import { AutoComplete } from "@com/ui/autocomplete";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   companyName: z
@@ -87,11 +87,20 @@ const HealthForm = () => {
     []
   );
   const [takeinput, setTakeinput] = useState();
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    insuranceType: [
+      { value: "mediclaim", label: "Mediclaim" },
+      { value: "criticalIllness", label: "Critical Illness" },
+      { value: "familyHealthPlan", label: "Family Health Plan" },
+      { value: "other", label: "Other" },
+    ],
+  };
   useEffect(() => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
@@ -267,13 +276,14 @@ const HealthForm = () => {
                   name="companyName"
                   control={control}
                   render={({ field }) => (
-                    <AutoComplete
-                      options={frameworks}
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="companyName"
                       onValueChange={(value) => {
                         setValues(value);
                         console.log(value);
@@ -309,30 +319,20 @@ const HealthForm = () => {
                   control={control}
                   render={({ field }) => (
                     <div className="flex items-center gap-2 mt-2">
-                      <Select
-                        {...field}
+                      <Autocompeleteadd
+                        options={frameworks.insuranceType}
+                        placeholder="Select Insurance Type..."
+                        emptyMessage="No Insurance Type Found."
+                        value={values}
+                        array={inputvaluearray}
+                        setarray={setInputvaluearray}
+                        variable="insuranceType"
                         onValueChange={(value) => {
-                          field.onChange(value);
-                          setShowOtherInsuranceType(value === "other");
+                          setValues(value);
+                          console.log(value);
+                          setValue("insuranceType", value?.value);
                         }}
-                        className={errors.insuranceType ? "border-red-500" : ""}
-                      >
-                        <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select Insurance Type">
-                            {field.value || "Select Insurance Type"}
-                          </SelectValue>
-                        </FocusableSelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="mediclaim">Mediclaim</SelectItem>
-                          <SelectItem value="Critical illness">
-                            Critical illness
-                          </SelectItem>
-                          <SelectItem value="Family health plan">
-                            Family health plan
-                          </SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      />
                     </div>
                   )}
                 />

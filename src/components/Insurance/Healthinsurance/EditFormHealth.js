@@ -33,6 +33,7 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import { AutoComplete } from "@com/ui/autocomplete";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 const schema = z.object({
   companyName: z
     .string()
@@ -91,15 +92,23 @@ const EditFormHealth = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [familymemberNominee, setFamilymemberNominee] = useState([]);
+  const [inputvaluearray, setInputvaluearray] = useState({});
   const [displayfamilymemberNominee, setDisplayfamilymemberNominee] = useState(
     []
   );
   const [takeinput, setTakeinput] = useState();
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    insuranceType: [
+      { value: "healthInsurance", label: "Health Insurance" },
+      { value: "medicalInsurance", label: "Medical Insurance" },
+      { value: "other", label: "Other" },
+    ],
+  };
   useEffect(() => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
@@ -382,31 +391,20 @@ const EditFormHealth = () => {
                   defaultValue={Benifyciary?.insuranceType}
                   render={({ field }) => (
                     <div className="flex items-center gap-2 mt-2">
-                      <Select
-                        {...field}
-                        defaultValue={Benifyciary?.insuranceType}
+                      <Autocompeleteadd
+                        options={frameworks.insuranceType}
+                        placeholder="Select Insurance Type..."
+                        emptyMessage="No Insurance Type Found."
+                        value={values}
+                        array={inputvaluearray}
+                        setarray={setInputvaluearray}
+                        variable="insuranceType"
                         onValueChange={(value) => {
-                          field.onChange(value);
-                          setShowOtherInsuranceType(value === "other");
+                          setValues(value);
+                          console.log(value);
+                          setValue("insuranceType", value?.value);
                         }}
-                        className={errors.insuranceType ? "border-red-500" : ""}
-                      >
-                        <FocusableSelectTrigger>
-                          <SelectValue placeholder="Select insurance type">
-                            {field.value || "Select insurance type"}
-                          </SelectValue>
-                        </FocusableSelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="mediclaim">Mediclaim</SelectItem>
-                          <SelectItem value="criticalIllness">
-                            Critical illness
-                          </SelectItem>
-                          <SelectItem value="familyHealthPlan">
-                            Family health plan
-                          </SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      />
                     </div>
                   )}
                 />

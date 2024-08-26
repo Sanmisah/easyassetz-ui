@@ -28,8 +28,8 @@ export const Autocompeleteadd = ({
   return (
     <AutoComplete
       options={memoizedOptions}
-      placeholder="Select Comapany Name..."
-      emptyMessage="No Company Name Found."
+      placeholder={placeholder}
+      emptyMessage={emptyMessage}
       value={value}
       defaultValue={defautValues}
       takeinput={takeinput}
