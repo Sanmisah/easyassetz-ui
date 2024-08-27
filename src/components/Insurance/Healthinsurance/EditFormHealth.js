@@ -141,7 +141,10 @@ const EditFormHealth = () => {
     );
     let data = response.data.data.HealthInsurance;
     setValue("maturityDate", data.maturityDate);
-    setdefaultValue(data.companyName);
+    setdefaultValue({
+      companyName: data.companyName,
+      insuranceType: data.insuranceType,
+    });
     if (
       data.companyName !== "company1" &&
       data.companyName !== "company2" &&
@@ -191,7 +194,6 @@ const EditFormHealth = () => {
         setBrokerSelected(false);
         setHideRegisteredFields(true);
       }
-      setDefaultValues(data);
       reset({
         ...data,
         maturityDate: data.maturityDate ? new Date(data.maturityDate) : null,
@@ -358,14 +360,15 @@ const EditFormHealth = () => {
                   control={control}
                   defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
-                    <AutoComplete
-                      options={frameworks}
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
-                      defautValue={defautValue}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.companyName}
+                      variable="companyName"
                       onValueChange={(value) => {
                         setValues(value);
                         console.log(value);
@@ -396,6 +399,7 @@ const EditFormHealth = () => {
                         placeholder="Select Insurance Type..."
                         emptyMessage="No Insurance Type Found."
                         value={values}
+                        defautValues={defautValue?.insuranceType}
                         array={inputvaluearray}
                         setarray={setInputvaluearray}
                         variable="insuranceType"
@@ -408,20 +412,6 @@ const EditFormHealth = () => {
                     </div>
                   )}
                 />
-                {showOtherInsuranceType && (
-                  <Controller
-                    name="specifyInsuranceType"
-                    defaultValue={Benifyciary?.insuranceType}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Insurance Type"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

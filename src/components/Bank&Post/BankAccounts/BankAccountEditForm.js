@@ -33,6 +33,7 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import Editnominee from "@/components/Nominee/EditNominee";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const FocusableSelectTrigger = forwardRef((props, ref) => (
   <SelectTrigger ref={ref} {...props} />
@@ -78,6 +79,22 @@ const EditMotorForm = () => {
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const [values, setValues] = useState("");
+  const frameworks = {
+    bankName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    accountType: [
+      { value: "savings", label: "Savings Account" },
+      { value: "current", label: "Current Account" },
+      { value: "recurring", label: "Recurring Account" },
+      { value: "nri", label: "NRI Account" },
+    ],
+  };
+  const [defaultValue, setdefaultValue] = useState();
 
   const {
     handleSubmit,
@@ -123,26 +140,10 @@ const EditMotorForm = () => {
       setValue("accountType", "other");
       setValue("otherAccountType", data.accountType);
     }
-    // if (
-    //   data.accountType !== "saving" ||
-    //   data.accountType !== "current" ||
-    //   data.accountType !== "recurring" ||
-    //   data.accountType !== "nri"
-    // ) {
-    //   setShowOtherAccountType(true);
-    //   setValue("accountType", "other");
-    //   setValue("otherAccountType", data.accountType);
-    // }
-    // if (
-    //   data.bankName !== "company1" ||
-    //   data.bankName !== "company2" ||
-    //   data.bankName !== "company3"
-    // ) {
-    //   setShowOtherBankName(true);
-    //   setValue("bankName", "other");
-    //   setValue("otherBankName", data.bankName);
-    // }
-
+    setdefaultValue({
+      bankName: data.bankName,
+      accountType: data.accountType,
+    });
     if (
       data.bankName === "company1" ||
       data.bankName === "company2" ||
@@ -240,18 +241,6 @@ const EditMotorForm = () => {
     console.log("Form values:", control._formValues);
   }, [control._formValues]);
 
-  // useEffect(() => {
-  //   if (Benifyciary) {
-  //     const defaultValues = {
-  //       ...Benifyciary,
-  //       expiryDate: new Date(Benifyciary.expiryDate)
-  //     };
-  //     reset(defaultValues);
-  //     setShowOtherInsuranceCompany(Benifyciary.companyName === "other");
-  //     setShowOtherRelationship(Benifyciary.vehicleType === "other");
-  //   }
-  // }, [Benifyciary, reset]);
-
   const onSubmit = (data) => {
     if (data.bankName === "other") {
       data.bankName = data.otherBankName;
@@ -284,7 +273,7 @@ const EditMotorForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Edit Bank Account Details
                 </CardTitle>
@@ -306,25 +295,20 @@ const EditMotorForm = () => {
                 name="bankName"
                 control={control}
                 render={({ field }) => (
-                  <Select
-                    id="bankName"
-                    value={field.value}
+                  <Autocompeleteadd
+                    options={frameworks.bankName}
+                    placeholder="Select Bank Name..."
+                    emptyMessage="No Bank Name Found."
+                    value={values}
+                    array={inputvaluearray}
+                    setarray={setInputvaluearray}
+                    variable="bankName"
                     onValueChange={(value) => {
-                      field.onChange(value);
-                      setShowOtherBankName(value === "other");
+                      setValues(value);
+                      console.log(value);
+                      setValue("bankName", value?.value);
                     }}
-                    className={errors.bankName ? "border-red-500" : ""}
-                  >
-                    <FocusableSelectTrigger>
-                      <SelectValue placeholder="Select Bank Name" />
-                    </FocusableSelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="company1">Company 1</SelectItem>
-                      <SelectItem value="company2">Company 2</SelectItem>
-                      <SelectItem value="company3">Company 3</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 )}
               />
               {showOtherBankName && (
@@ -350,41 +334,23 @@ const EditMotorForm = () => {
                 name="accountType"
                 control={control}
                 render={({ field }) => (
-                  <Select
-                    id="accountType"
-                    value={field.value}
+                  <Autocompeleteadd
+                    options={frameworks.accountType}
+                    placeholder="Select Account Type..."
+                    emptyMessage="No Account Type Found."
+                    value={values}
+                    array={inputvaluearray}
+                    setarray={setInputvaluearray}
+                    variable="accountType"
                     onValueChange={(value) => {
-                      field.onChange(value);
-                      setShowOtherAccountType(value === "other");
+                      setValues(value);
+                      console.log(value);
+                      setValue("accountType", value?.value);
                     }}
-                    className={errors.accountType ? "border-red-500" : ""}
-                  >
-                    <FocusableSelectTrigger>
-                      <SelectValue placeholder="Select Account Type" />
-                    </FocusableSelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="saving">Saving</SelectItem>
-                      <SelectItem value="current">Current</SelectItem>
-                      <SelectItem value="recurring">Recurring</SelectItem>
-                      <SelectItem value="nri">NRI</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 )}
               />
-              {showOtherAccountType && (
-                <Controller
-                  name="otherAccountType"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Specify Account Type"
-                      className="mt-2"
-                    />
-                  )}
-                />
-              )}
+
               {errors.accountType && (
                 <span className="text-red-500">
                   {errors.accountType.message}

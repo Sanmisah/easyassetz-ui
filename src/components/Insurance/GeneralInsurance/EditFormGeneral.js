@@ -33,7 +33,7 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import { AutoComplete } from "@com/ui/autocomplete";
-
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 const schema = z.object({
   companyName: z
     .string()
@@ -82,12 +82,25 @@ const EditFormGeneral = () => {
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    relationship: [
+      { value: "self", label: "Self" },
+      { value: "spouse", label: "Spouse" },
+      { value: "child", label: "Child" },
+      { value: "parent", label: "Parent" },
+      { value: "sibling", label: "Sibling" },
+      { value: "other", label: "Other" },
+    ],
+  };
+  const [defautValues, setdefaultValues] = useState();
   const [takeinput, setTakeinput] = useState();
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
+
   useEffect(() => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
@@ -134,6 +147,10 @@ const EditFormGeneral = () => {
       setValue("companyName", "other");
       setValue("otherInsuranceCompany", companyname);
     }
+    setdefaultValues({
+      companyName: response.data.data.GeneralInsurance?.companyName,
+      relationship: response.data.data.GeneralInsurance?.relationship,
+    });
     setValue("maturityDate", response.data.data.GeneralInsurance?.maturityDate);
     setdefaultValue(response.data.data.GeneralInsurance?.companyName);
     const nomie = response.data.data.GeneralInsurance?.nominees;
@@ -294,14 +311,15 @@ const EditFormGeneral = () => {
                   control={control}
                   defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
-                    <AutoComplete
-                      options={frameworks}
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
-                      defautValue={defautValue}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValues?.companyName}
+                      variable="companyName"
                       onValueChange={(value) => {
                         setValues(value);
                         console.log(value);

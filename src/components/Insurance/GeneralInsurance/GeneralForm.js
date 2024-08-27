@@ -31,6 +31,7 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import { AutoComplete } from "@com/ui/autocomplete";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   companyName: z
@@ -79,11 +80,23 @@ const GeneralForm = () => {
   const [brokerSelected, setBrokerSelected] = useState(true);
   const [nomineeerror, setnomineeerror] = useState(false);
   const [takeinput, setTakeinput] = useState();
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    relationship: [
+      { value: "self", label: "Self" },
+      { value: "spouse", label: "Spouse" },
+      { value: "child", label: "Child" },
+      { value: "parent", label: "Parent" },
+      { value: "sibling", label: "Sibling" },
+      { value: "other", label: "Other" },
+    ],
+  };
+
   useEffect(() => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
@@ -224,13 +237,14 @@ const GeneralForm = () => {
                   name="companyName"
                   control={control}
                   render={({ field }) => (
-                    <AutoComplete
-                      options={frameworks}
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="companyName"
                       onValueChange={(value) => {
                         setValues(value);
                         console.log(value);

@@ -33,6 +33,7 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import { AutoComplete } from "@com/ui/autocomplete";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 const schema = z.object({
   companyName: z
     .string()
@@ -85,11 +86,7 @@ const EditMotorForm = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [takeinput, setTakeinput] = useState();
-  const frameworks = [
-    { value: "company1", label: "Company1" },
-    { value: "company2", label: "Company2" },
-    { value: "company3", label: "Company3" },
-  ];
+
   useEffect(() => {
     console.log("Values:", values?.value);
     if (takeinput !== values?.value) {
@@ -97,8 +94,24 @@ const EditMotorForm = () => {
       setValue("companyName", takeinput);
     }
   }, [takeinput]);
-  const [defautValue, setdefaultValue] = useState("");
+  const [defautValue, setdefaultValue] = useState();
   const [values, setValues] = useState("");
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    relationship: [
+      { value: "self", label: "Self" },
+      { value: "spouse", label: "Spouse" },
+      { value: "child", label: "Child" },
+      { value: "parent", label: "Parent" },
+      { value: "sibling", label: "Sibling" },
+      { value: "other", label: "Other" },
+    ],
+  };
 
   const {
     handleSubmit,
@@ -122,6 +135,10 @@ const EditMotorForm = () => {
       }
     );
     const data = response.data.data.LifeInsurance;
+    setdefaultValue({
+      companyName: data.companyName,
+      relationship: data.relationship,
+    });
     if (
       data.companyName !== "company1" ||
       data.companyName !== "company2" ||
@@ -156,7 +173,6 @@ const EditMotorForm = () => {
         response.data.data.LifeInsurance?.relationship
       );
     }
-    setdefaultValue(response.data.data.LifeInsurance?.companyName);
     setSelectedNommie(
       response.data.data.LifeInsurance?.nominees?.map((nominee) => nominee.id)
     );
@@ -319,14 +335,15 @@ const EditMotorForm = () => {
                   control={control}
                   defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
-                    <AutoComplete
-                      options={frameworks}
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
                       placeholder="Select Comapany Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
-                      defautValue={defautValue}
-                      takeinput={takeinput}
-                      setTakeinput={setTakeinput}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.companyName}
+                      variable="companyName"
                       onValueChange={(value) => {
                         setValues(value);
                         console.log(value);
@@ -494,44 +511,24 @@ const EditMotorForm = () => {
                   defaultValue={Benifyciary?.relationship || ""}
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="relationship"
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.relationship}
+                      placeholder="Select Relationship..."
+                      emptyMessage="No Relationship Found."
+                      value={values}
+                      array={inputvaluearray}
+                      defautValues={defautValue?.relationship}
+                      setarray={setInputvaluearray}
+                      variable="relationship"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherRelationship(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("relationship", value?.value);
                       }}
-                      className={errors.relationship ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.relationship || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select relationship" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="self">Self</SelectItem>
-                        <SelectItem value="spouse">Spouse</SelectItem>
-                        <SelectItem value="parent">Parent</SelectItem>
-                        <SelectItem value="child">Child</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherRelationship && (
-                  <Controller
-                    name="otherRelationship"
-                    control={control}
-                    defaultValue={Benifyciary?.relationship || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Relationship"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.relationship || ""}
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.relationship && (
                   <span className="text-red-500">
                     {errors.relationship.message}

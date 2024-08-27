@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   companyName: z
@@ -79,7 +80,24 @@ const EditOtherForm = () => {
   const [brokerSelected, setBrokerSelected] = useState(false);
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
-
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const [values, setValues] = useState("");
+  const frameworks = {
+    companyName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+    relationship: [
+      { value: "self", label: "Self" },
+      { value: "spouse", label: "Spouse" },
+      { value: "child", label: "Child" },
+      { value: "parent", label: "Parent" },
+      { value: "sibling", label: "Sibling" },
+      { value: "other", label: "Other" },
+    ],
+  };
+  const [defautValues, setdefaultValues] = useState();
   const {
     handleSubmit,
     control,
@@ -102,6 +120,10 @@ const EditOtherForm = () => {
       }
     );
     const data = response.data.data.OtherInsurance;
+    setdefaultValues({
+      companyName: data.companyName,
+      relationship: data.relationship,
+    });
     if (
       data.companyName !== "company1" ||
       data.companyName !== "company2" ||
@@ -143,7 +165,6 @@ const EditOtherForm = () => {
         setBrokerSelected(false);
         setHideRegisteredFields(true);
       }
-      setDefaultValues(data);
       reset(data);
       setValue(data);
       setValue("specificVehicalType", data.specificVehicalType);
@@ -282,44 +303,24 @@ const EditOtherForm = () => {
                   control={control}
                   defaultValue={Benifyciary?.companyName}
                   render={({ field }) => (
-                    <Select
-                      id="insurance-company"
-                      value={field.value}
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.companyName}
+                      placeholder="Select Comapany Name..."
+                      emptyMessage="No Company Name Found."
+                      value={values}
+                      defautValues={defautValues?.companyName}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="companyName"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherInsuranceCompany(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("companyName", value?.value);
                       }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                      defaultValue={Benifyciary?.companyName || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select insurance company" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherInsuranceCompany && (
-                  <Controller
-                    name="otherInsuranceCompany"
-                    control={control}
-                    defaultValue={Benifyciary?.otherInsuranceCompany || ""}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Insurance Company"
-                        className="mt-2"
-                        defaultValue={Benifyciary?.otherInsuranceCompany || ""}
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.companyName && (
                   <span className="text-red-500">
                     {errors.companyName.message}
