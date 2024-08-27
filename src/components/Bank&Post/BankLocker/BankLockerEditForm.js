@@ -33,6 +33,7 @@ import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import AddNominee from "@/components/Nominee/EditNominee";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Insurance Company is required" }),
@@ -76,6 +77,18 @@ const EditMotorForm = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [showJointHolderName, setShowJointHolderName] = useState(false);
+  const [defautValue, setdefaultValue] = useState("");
+  const [takeinput, setTakeinput] = useState();
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    bankName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+  };
+  const [values, setValues] = useState("");
+  const [type, setType] = useState(false);
 
   const {
     handleSubmit,
@@ -98,6 +111,11 @@ const EditMotorForm = () => {
         },
       }
     );
+
+    setdefaultValue({
+      bankName: response.data.data.BankLocker?.bankName,
+    });
+
     let data = response.data.data.BankLocker;
     setSelectedNommie(data?.nominees?.map((nominee) => nominee?.id));
     console.log("Data:", data);
@@ -238,40 +256,24 @@ const EditMotorForm = () => {
                   name="bankName"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="bankName"
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.bankName}
+                      placeholder="Select Bank Name..."
+                      emptyMessage="No Bank Name Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.bankName}
+                      variable="bankName"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setshowOtherBankName(true);
+                        setValues(value);
+                        console.log(value);
+                        setValue("bankName", value?.value);
                       }}
-                      className={errors.bankName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Bank Name" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherBankName && (
-                  <Controller
-                    name="otherBankName"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Bank Name"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
+  
                 {errors.bankName && (
                   <span className="text-red-500">
                     {errors.bankName.message}

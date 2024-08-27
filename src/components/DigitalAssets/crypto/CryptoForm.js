@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   cryptoWalletType: z.any().optional(),
@@ -78,9 +79,34 @@ const CryptoForm = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
   const [nomineeerror, setnomineeerror] = useState(false);
+  const [values, setValues] = useState([]);
+  const [takeinput, setTakeinput] = useState();
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    cryptoWalletType: [
+      { value: "cryptoExchange", label: "Crypto Exchange" },
+      { value: "digitalWallet", label: "Digital Wallet" },
+      { value: "coldWallet", label: "Cold Wallet" },
+    ],
+    exchange: [
+      { value: "WazirX", label: "WazirX" },
+      { value: "UnoCoin", label: "UnoCoin" },
+      { value: "CoinDCX", label: "CoinDCX" },
+      { value: "CoinSwitchKuber", label: "CoinSwitchKuber" },
+      { value: "BuyUCoin", label: "BuyUCoin" },
+      { value: "Giottus", label: "Giottus" },
+      { value: "MUDRAX", label: "MUDRAX" },
+    ],
+    typeOfCurrency: [
+      { value: "apeMax", label: "ApeMax" },
+      { value: "Bitcoin", label: "Bitcoin" },
+      { value: "Etherium", label: "Etherium" },
+    ],
+  };
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -202,34 +228,23 @@ const CryptoForm = () => {
                   name="cryptoWalletType"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="cryptoWalletType"
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.cryptoWalletType}
+                      placeholder="Select Type of Crypto Wallet..."
+                      emptyMessage="No Type of Crypto Wallet Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="cryptoWalletType"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setOtherCryptoWalletType(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("cryptoWalletType", value?.value);
                       }}
-                      className={
-                        errors.cryptoWalletType ? "border-red-500" : ""
-                      }
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Wallet Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cryptoExchange">
-                          Crypto Exchange
-                        </SelectItem>
-                        <SelectItem value="digitalWallet">
-                          Digital Wallet
-                        </SelectItem>
-                        <SelectItem value="coldWallet">Cold Wallet</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {otherCryptoWalletType && (
+                {/* {otherCryptoWalletType && (
                   <Controller
                     name="otherCryptoWalletType"
                     control={control}
@@ -241,7 +256,7 @@ const CryptoForm = () => {
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors.cryptoWalletType && (
                   <span className="text-red-500">
                     {errors.cryptoWalletType.message}
@@ -281,46 +296,23 @@ const CryptoForm = () => {
                   name="exchange"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="exchange"
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.exchange}
+                      placeholder="Select Exchange..."
+                      emptyMessage="No Exchange Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="exchange"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setOtherExchange(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("exchange", value?.value);
                       }}
-                      className={errors.exchange ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="wazirX">Wazir X</SelectItem>
-                        <SelectItem value="unoCoin">UnoCoin</SelectItem>
-                        <SelectItem value="coinDCX">Coin DCX</SelectItem>
-                        <SelectItem value="coinSwitchKuber">
-                          Coin Switch Kuber
-                        </SelectItem>
-                        <SelectItem value="buyUCoin">BuyUCoin</SelectItem>
-                        <SelectItem value="giottus">Giottus</SelectItem>
-                        <SelectItem value="mudrax">MUDRAX</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {otherExchange && (
-                  <Controller
-                    name="otherExchange"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify other Exchange"
-                        className="mt-2"
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.exchange && (
                   <span className="text-red-500">
                     {errors.exchange.message}
@@ -356,25 +348,20 @@ const CryptoForm = () => {
                   name="typeOfCurrency"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="typeOfCurrency"
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.typeOfCurrency}
+                      placeholder="Select Type of Currency..."
+                      emptyMessage="No Type of Currency Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="typeOfCurrency"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setOtherTypeOfCurrency(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("typeOfCurrency", value?.value);
                       }}
-                      className={errors.typeOfCurrency ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select currency Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cryptoExchange">ApeMax</SelectItem>
-                        <SelectItem value="digitalWallet">Bitcoin</SelectItem>
-                        <SelectItem value="coldWallet">Etherium</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
                 {otherTypeOfCurrency && (

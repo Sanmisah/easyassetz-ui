@@ -101,6 +101,7 @@ const EditMotorForm = () => {
   };
   const [values, setValues] = useState("");
   const [type, setType] = useState(false);
+
   const {
     handleSubmit,
     control,
@@ -401,7 +402,7 @@ const EditMotorForm = () => {
                     // </Select>
                     <Autocompeleteadd
                       options={frameworks.companyName}
-                      placeholder="Select Comapany Name..."
+                      placeholder="Select Company Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
                       array={inputvaluearray}
@@ -593,7 +594,7 @@ const EditMotorForm = () => {
                     />
                   )}
                 />
-                {showOtherRelationship && (
+                {/* {showOtherRelationship && (
                   <Controller
                     name="specificVehicalType"
                     control={control}
@@ -607,7 +608,7 @@ const EditMotorForm = () => {
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors.vehicleType && (
                   <span className="text-red-500">
                     {errors.vehicleType.message}

@@ -20,6 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
+
 import {
   Select,
   SelectTrigger,
@@ -34,18 +36,15 @@ const FocusableSelectTrigger = forwardRef((props, ref) => (
 ));
 
 const schema = z.object({
-  jewelleryType: z.string().optional(),
-  otherJewellery: z.string().optional(),
-  metal: z.string().optional(),
-  otherMetal: z.string().optional(),
-  preciousStone: z.string().optional(),
-  otherPreciousStone: z.string().optional(),
-  weightPerJewellery: z.string().optional(),
-  quantity: z.string().optional(),
-  additionalInformation: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().email().optional(),
-  mobile: z.string().optional(),
+  jewelleryType: z.string().nonempty("Jewellery Type is required"),
+  metal: z.string().nonempty("Metal is required"),
+  preciousStone: z.string().nonempty("Precious Stone is required"),
+  weightPerJewellery: z.any().optional(),
+  quantity: z.any().optional(),
+  additionalInformation: z.any().optional(),
+  name: z.any().optional(),
+  email: z.any().optional(),
+  mobile: z.any().optional(),
   type: z.any().optional(),
 });
 
@@ -61,6 +60,38 @@ const OtherLoansEditForm = () => {
   const [OthermetalSelected, setOthermetalSelected] = useState(false);
   const [OtherPreciousStoneSelected, setOtherPreciousStoneSelected] =
     useState(false);
+  const [defautValue, setdefaultValue] = useState("");
+  const [takeinput, setTakeinput] = useState();
+
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    jewelleryType: [
+      { value: "necklace", label: "Necklace" },
+      { value: "earrings", label: "Earrings" },
+      { value: "bracelet", label: "Bracelet" },
+      { value: "bangles", label: "Bangles" },
+      { value: "cuffLinks", label: "Cuff Links" },
+      { value: "chain", label: "Chain" },
+      { value: "ring", label: "Ring" },
+      { value: "other", label: "Other" },
+    ],
+    metal: [
+      { value: "gold", label: "Gold" },
+      { value: "silver", label: "Silver" },
+      { value: "copper", label: "Copper" },
+      { value: "whiteGold", label: "White Gold" },
+      { value: "diamond", label: "Diamond" },
+      { value: "other", label: "Other" },
+    ],
+    preciousStone: [
+      { value: "diamond", label: "Diamond" },
+      { value: "ruby", label: "Ruby" },
+      { value: "saffron", label: "Safron" },
+      { value: "other", label: "Other" },
+    ],
+  };
+  const [values, setValues] = useState("");
+  const [type, setType] = useState(false);
 
   const {
     handleSubmit,
@@ -95,6 +126,13 @@ const OtherLoansEditForm = () => {
         },
       }
     );
+
+    setdefaultValue({
+      jewelleryType: response.data.data.OtherAsset?.jewelleryType,
+      metal: response.data.data.OtherAsset?.metal,
+      preciousStone: response.data.data.OtherAsset?.preciousStone,
+    });
+
     let data = response.data.data.OtherAsset;
     if (
       data.jewelleryType !== "necklace" &&
@@ -238,33 +276,48 @@ const OtherLoansEditForm = () => {
                   name="jewelleryType"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="jewelleryType"
-                      placeholder="Enter Type of Jewellery"
-                      {...field}
+                    // <Select
+                    //   id="jewelleryType"
+                    //   placeholder="Enter Type of Jewellery"
+                    //   {...field}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setOtherJwelleryType(value === "other");
+                    //   }}
+                    //   className={errors.jewelleryType ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Type of Jewellery" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="necklace">Necklace</SelectItem>
+                    //     <SelectItem value="earrings">Earrings</SelectItem>
+                    //     <SelectItem value="bracelet">Bracelet</SelectItem>
+                    //     <SelectItem value="bangles">Bangles</SelectItem>
+                    //     <SelectItem value="cuffLinks">Cuff Links</SelectItem>
+                    //     <SelectItem value="chain">Chain</SelectItem>
+                    //     <SelectItem value="ring">Ring</SelectItem>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <Autocompeleteadd
+                      options={frameworks.jewelleryType}
+                      placeholder="Select Jewellery Type..."
+                      emptyMessage="No Jewellery Type Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.jewelleryType}
+                      variable="jewelleryType"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setOtherJwelleryType(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("jewelleryType", value?.value);
                       }}
-                      className={errors.jewelleryType ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Type of Jewellery" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="necklace">Necklace</SelectItem>
-                        <SelectItem value="earrings">Earrings</SelectItem>
-                        <SelectItem value="bracelet">Bracelet</SelectItem>
-                        <SelectItem value="bangles">Bangles</SelectItem>
-                        <SelectItem value="cuffLinks">Cuff Links</SelectItem>
-                        <SelectItem value="chain">Chain</SelectItem>
-                        <SelectItem value="ring">Ring</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {OtherJwelleryType && (
+                {/* {OtherJwelleryType && (
                   <div className="space-y-2">
                     <Controller
                       name="otherJewellery"
@@ -286,7 +339,7 @@ const OtherLoansEditForm = () => {
                       </span>
                     )}
                   </div>
-                )}
+                )} */}
                 {errors.jewelleryType && (
                   <span className="text-red-500">
                     {errors.jewelleryType.message}
@@ -300,31 +353,46 @@ const OtherLoansEditForm = () => {
                   name="metal"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="metal"
-                      placeholder="Enter Metal"
-                      {...field}
+                    // <Select
+                    //   id="metal"
+                    //   placeholder="Enter Metal"
+                    //   {...field}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setOthermetalSelected(value === "other");
+                    //   }}
+                    //   className={errors.metal ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Select Metal Type" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="gold">Gold</SelectItem>
+                    //     <SelectItem value="silver">Silver</SelectItem>
+                    //     <SelectItem value="copper">Copper</SelectItem>
+                    //     <SelectItem value="whiteGold">White Gold</SelectItem>
+                    //     <SelectItem value="diamond">Diamond</SelectItem>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <Autocompeleteadd
+                      options={frameworks.metal}
+                      placeholder="Select Metal Name..."
+                      emptyMessage="No Metal Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.metal}
+                      variable="metal"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setOthermetalSelected(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("metal", value?.value);
                       }}
-                      className={errors.metal ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
-                        <SelectItem value="whiteGold">White Gold</SelectItem>
-                        <SelectItem value="diamond">Diamond</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {OthermetalSelected && (
+                {/* {OthermetalSelected && (
                   <div className="space-y-2">
                     <Controller
                       name="otherMetal"
@@ -344,7 +412,7 @@ const OtherLoansEditForm = () => {
                       </span>
                     )}
                   </div>
-                )}
+                )} */}
                 {errors.metal && (
                   <span className="text-red-500">{errors.metal.message}</span>
                 )}
@@ -356,28 +424,43 @@ const OtherLoansEditForm = () => {
                   name="preciousStone"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="preciousStone"
-                      {...field}
+                    // <Select
+                    //   id="preciousStone"
+                    //   {...field}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setOtherPreciousStoneSelected(value === "other");
+                    //   }}
+                    //   className={errors.preciousStone ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Select Precious Stone" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="diamond">Diamond</SelectItem>
+                    //     <SelectItem value="ruby">Ruby</SelectItem>
+                    //     <SelectItem value="saffron">Safron</SelectItem>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <Autocompeleteadd
+                      options={frameworks.preciousStone}
+                      placeholder="Select Precious Stone..."
+                      emptyMessage="No Precious Stone Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.preciousStone}
+                      variable="preciousStone"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setOtherPreciousStoneSelected(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("preciousStone", value?.value);
                       }}
-                      className={errors.preciousStone ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Precious Stone" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="diamond">Diamond</SelectItem>
-                        <SelectItem value="ruby">Ruby</SelectItem>
-                        <SelectItem value="saffron">Safron</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {OtherPreciousStoneSelected && (
+                {/* {OtherPreciousStoneSelected && (
                   <div className="space-y-2">
                     <Controller
                       name="otherPreciousStone"
@@ -399,7 +482,7 @@ const OtherLoansEditForm = () => {
                       </span>
                     )}
                   </div>
-                )}
+                )} */}
                 {errors.preciousStone && (
                   <span className="text-red-500">
                     {errors.preciousStone.message}

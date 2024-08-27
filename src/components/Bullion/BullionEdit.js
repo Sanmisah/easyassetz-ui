@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
+import { Autocompeleteadd } from "../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   metalType: z.string().nonempty({ message: "Metal Type is required" }),
@@ -56,6 +57,26 @@ const BullionEdit = () => {
   const [mobile, setMobile] = useState(null);
   const [defaultValues, setDefaultValues] = useState(null);
   const [numberOfArticles, setNumberOfArticles] = useState(null);
+  const [takeinput, setTakeinput] = useState();
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const [defautValue, setdefaultValue] = useState("");
+
+  const frameworks = {
+    metalType: [
+      { value: "gold", label: "Gold" },
+      { value: "silver", label: "Silver" },
+      { value: "copper", label: "Copper" },
+    ],
+    articleDetails: [
+      { value: "plates", label: "Plates" },
+      { value: "glass", label: "Glass" },
+      { value: "bowl", label: "Bowl" },
+      { value: "bar", label: "Bar" },
+      { value: "utensils", label: "Utensils" },
+    ],
+  };
+  const [values, setValues] = useState("");
+  const [type, setType] = useState(false);
 
   useEffect(() => {
     if (lifeInsuranceEditId) {
@@ -87,6 +108,10 @@ const BullionEdit = () => {
     setValue("name", bullion.name);
     setValue("email", bullion.email);
     setValue("mobile", bullion.mobile);
+    setdefaultValue({
+      metalType: response.data.data.Bullion?.metalType,
+      articleDetails: response.data.data.Bullion?.articleDetails,
+    });
     if (["gold", "silver", "copper"].includes(metalType)) {
       setShowOtherMetalType(false);
       setValue("metalType", metalType);
@@ -231,28 +256,44 @@ const BullionEdit = () => {
                   name="metalType"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="metalType"
-                      value={field.value}
+                    //   <Select
+                    //     id="metalType"
+                    //     value={field.value}
+                    //     onValueChange={(value) => {
+                    //       field.onChange(value);
+                    //       setShowOtherMetalType(value === "other");
+                    //     }}
+                    //     className={errors.metalType ? "border-red-500" : ""}
+                    //   >
+                    //     <SelectTrigger>
+                    //       <SelectValue placeholder="Select Metal Type" />
+                    //     </SelectTrigger>
+                    //     <SelectContent>
+                    //       <SelectItem value="gold">Gold</SelectItem>
+                    //       <SelectItem value="silver">Silver</SelectItem>
+                    //       <SelectItem value="copper">Copper</SelectItem>
+                    //       <SelectItem value="other">Other</SelectItem>
+                    //     </SelectContent>
+                    //   </Select>
+                    // )}
+                    <Autocompeleteadd
+                      options={frameworks.metalType}
+                      placeholder="Select Metal Type..."
+                      emptyMessage="No Metal Type Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.metalType}
+                      variable="metalType"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherMetalType(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("metalType", value?.value);
                       }}
-                      className={errors.metalType ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Metal Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gold">Gold</SelectItem>
-                        <SelectItem value="silver">Silver</SelectItem>
-                        <SelectItem value="copper">Copper</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherMetalType && (
+                {/* {showOtherMetalType && (
                   <Controller
                     name="otherMetalType"
                     control={control}
@@ -264,7 +305,7 @@ const BullionEdit = () => {
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors.metalType && (
                   <span className="text-red-500">
                     {errors.metalType.message}
@@ -278,30 +319,46 @@ const BullionEdit = () => {
                   name="articleDetails"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="articleDetails"
-                      value={field.value}
+                    //   <Select
+                    //     id="articleDetails"
+                    //     value={field.value}
+                    //     onValueChange={(value) => {
+                    //       field.onChange(value);
+                    //       setShowOtherArticleDetails(value === "other");
+                    //     }}
+                    //     className={errors.articleDetails ? "border-red-500" : ""}
+                    //   >
+                    //     <SelectTrigger>
+                    //       <SelectValue placeholder="Select Article Type" />
+                    //     </SelectTrigger>
+                    //     <SelectContent>
+                    //       <SelectItem value="plates">Plates</SelectItem>
+                    //       <SelectItem value="glass">Glass</SelectItem>
+                    //       <SelectItem value="bowl">Bowl</SelectItem>
+                    //       <SelectItem value="bar">Bar</SelectItem>
+                    //       <SelectItem value="utensils">Utensils</SelectItem>
+                    //       <SelectItem value="other">Other</SelectItem>
+                    //     </SelectContent>
+                    //   </Select>
+                    // )}
+                    <Autocompeleteadd
+                      options={frameworks.articleDetails}
+                      placeholder="Select Article Details..."
+                      emptyMessage="No Article Details Found..."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.articleDetails}
+                      variable="articleDetails"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherArticleDetails(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("articleDetails", value?.value);
                       }}
-                      className={errors.articleDetails ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Article Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="plates">Plates</SelectItem>
-                        <SelectItem value="glass">Glass</SelectItem>
-                        <SelectItem value="bowl">Bowl</SelectItem>
-                        <SelectItem value="bar">Bar</SelectItem>
-                        <SelectItem value="utensils">Utensils</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherArticleDetails && (
+                {/* {showOtherArticleDetails && (
                   <Controller
                     name="otherArticleDetails"
                     control={control}
@@ -313,7 +370,7 @@ const BullionEdit = () => {
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors.articleDetails && (
                   <span className="text-red-500">
                     {errors.articleDetails.message}
