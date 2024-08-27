@@ -579,7 +579,7 @@ const EditMotorForm = () => {
                   render={({ field }) => (
                     <Autocompeleteadd
                       options={frameworks.vehicleType}
-                      placeholder="Select Comapany Name..."
+                      placeholder="Select Company Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
                       array={inputvaluearray}

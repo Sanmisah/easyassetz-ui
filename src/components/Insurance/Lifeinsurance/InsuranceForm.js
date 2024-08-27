@@ -96,7 +96,6 @@ const InsuranceForm = () => {
       { value: "child", label: "Child" },
       { value: "parent", label: "Parent" },
       { value: "sibling", label: "Sibling" },
-      { value: "other", label: "Other" },
     ],
   };
   const [defautValue, setdefaultValue] = useState("");
@@ -236,7 +235,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Autocompeleteadd
                       options={frameworks.companyName}
-                      placeholder="Select Comapany Name..."
+                      placeholder="Select Company Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
                       defautValues={defautValue?.companyName}
@@ -267,7 +266,7 @@ const InsuranceForm = () => {
                   render={({ field }) => (
                     <Input
                       id="insuranceType"
-                      placeholder="Enter  type"
+                      placeholder="Enter Insurance Type"
                       {...field}
                       className={errors.insuranceType ? "border-red-500" : ""}
                     />

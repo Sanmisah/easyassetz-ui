@@ -27,6 +27,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
 import { useSelector } from "react-redux";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   litigationType: z.any().optional(),
@@ -61,7 +62,22 @@ const LitigationEditForm = () => {
   const user = JSON.parse(getitem);
   const queryClient = useQueryClient();
   const [showOtherLitigationType, setShowOtherLitigationType] = useState(false);
+  const [defautValue, setdefaultValue] = useState("");
+  const [takeinput, setTakeinput] = useState();
 
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    litigationType: [
+      { value: "court", label: "Court/Tribunal Case" },
+      { value: "criminal", label: "Criminal" },
+      { value: "civilSuit", label: "Civil Suit" },
+      { value: "arbitration", label: "Arbitration" },
+      { value: "employment", label: "Employment Litigation" },
+      { value: "professional", label: "Professional Case" },
+    ],
+  };
+  const [values, setValues] = useState("");
+  const [type, setType] = useState(false);
   const {
     handleSubmit,
     control,
@@ -95,6 +111,11 @@ const LitigationEditForm = () => {
         },
       }
     );
+
+    setdefaultValue({
+      litigationType: response.data.data.Litigation?.litigationType,
+    });
+
     let data = response.data.data.Litigation;
     setValue("litigationType", data.litigationType);
     setValue("otherLitigationType", data.otherLitigationType);
@@ -216,32 +237,21 @@ const LitigationEditForm = () => {
                 name="litigationType"
                 control={control}
                 render={({ field }) => (
-                  <Select
-                    id="litigationType"
-                    value={field.value}
+                  <Autocompeleteadd
+                    options={frameworks.litigationType}
+                    placeholder="Select Type of Litigation..."
+                    emptyMessage="No Type of Litigation Found."
+                    value={values}
+                    array={inputvaluearray}
+                    setarray={setInputvaluearray}
+                    defautValues={defautValue?.litigationType}
+                    variable="litigationType"
                     onValueChange={(value) => {
-                      field.onChange(value);
-                      setShowOtherLitigationType(value === "other");
+                      setValues(value);
+                      console.log(value);
+                      setValue("litigationType", value?.value);
                     }}
-                    className={errors.litigationType ? "border-red-500" : ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Type of Litigation" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="court">Court/Tribunal Case</SelectItem>
-                      <SelectItem value="criminal">Criminal</SelectItem>
-                      <SelectItem value="arbitration">Arbitration</SelectItem>
-                      <SelectItem value="civilSuit">Civil Suit</SelectItem>
-                      <SelectItem value="employment">
-                        Employment Litigation
-                      </SelectItem>
-                      <SelectItem value="professional">
-                        Professional Case
-                      </SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 )}
               />
               {showOtherLitigationType && (
