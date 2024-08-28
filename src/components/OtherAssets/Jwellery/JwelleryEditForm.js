@@ -73,7 +73,6 @@ const OtherLoansEditForm = () => {
       { value: "cuffLinks", label: "Cuff Links" },
       { value: "chain", label: "Chain" },
       { value: "ring", label: "Ring" },
-      { value: "other", label: "Other" },
     ],
     metal: [
       { value: "gold", label: "Gold" },
@@ -81,13 +80,11 @@ const OtherLoansEditForm = () => {
       { value: "copper", label: "Copper" },
       { value: "whiteGold", label: "White Gold" },
       { value: "diamond", label: "Diamond" },
-      { value: "other", label: "Other" },
     ],
     preciousStone: [
       { value: "diamond", label: "Diamond" },
       { value: "ruby", label: "Ruby" },
       { value: "saffron", label: "Safron" },
-      { value: "other", label: "Other" },
     ],
   };
   const [values, setValues] = useState("");
