@@ -157,7 +157,6 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
       console.error("Failed to fetch pincode details:", error);
     }
   };
-
   const benificiaryMutate = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(`/api/beneficiaries`, data, {
@@ -181,39 +180,51 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    const date = new Date(data.dob);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-    const newdate = `${month}/${day}/${year}`;
-    data.dob = newdate;
-    data.type = "beneficiary";
-    if (relationship === "other") {
-      data.relationship = data.specificRelationship;
-    }
-    if (religion === "other") {
-      data.religion = data.specificGuardianReligion;
-    }
-    data.document = selectedDocument;
 
-    delete data.specificRelationship;
-    delete data.specificGuardianReligion;
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
 
-    if (data.dob > new Date() === 18) {
-      delete data.guardianCity;
-      delete data.guardianState;
-      delete data.religion;
-      delete data.guardianNationality;
-    }
     try {
-      benificiaryMutate.mutate(data);
+      // Process the form data
+      const date = new Date(data.dob);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const year = date.getFullYear();
+      const newdate = `${month}/${day}/${year}`;
+      data.dob = newdate;
+      data.type = "beneficiary";
+
+      if (relationship === "other") {
+        data.relationship = data.specificRelationship;
+      }
+      if (religion === "other") {
+        data.religion = data.specificGuardianReligion;
+      }
+      data.document = selectedDocument;
+
+      delete data.specificRelationship;
+      delete data.specificGuardianReligion;
+
+      if (data.dob > new Date() === 18) {
+        delete data.guardianCity;
+        delete data.guardianState;
+        delete data.religion;
+        delete data.guardianNationality;
+      }
+
+      // Mutate asynchronously and handle submission
+      await benificiaryMutate.mutateAsync(data);
     } catch (error) {
       toast.error("Failed to add beneficiary");
       console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
   };
 
-  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
+  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;  
 
   return (
     <div>
@@ -763,7 +774,9 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
                       )}
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
-                      <Button type="submit">Submit</Button>
+                      <Button type="submit" id="submitButton">
+                        Submit
+                      </Button>
                       <Button
                         type="button"
                         variant="outline"
