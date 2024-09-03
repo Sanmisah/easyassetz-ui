@@ -175,26 +175,42 @@ const CryptoForm = () => {
     }
   }, [selectedNommie, nomineeerror]);
 
-  const onSubmit = (data) => {
-    if (data.typeOfCurrency === "other") {
-      data.typeOfCurrency = data.otherTypeOfCurrency;
-    }
-    if (data.exchange === "other") {
-      data.exchange = data.otherExchange;
-    }
-    if (data.cryptoWalletType === "other") {
-      data.cryptoWalletType = data.otherCryptoWalletType;
-    }
-    if (data.cryptoWalletAddress === "other") {
-      data.cryptoWalletAddress = data.otherCryptoWalletAddress;
-    }
+  const onSubmit = async (data) => {
     console.log(data);
 
-    console.log("Nomiee:", selectedNommie.length > 0);
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
 
-    data.nominees = selectedNommie;
-    cryptoMutate.mutate(data);
+    try {
+      if (data.typeOfCurrency === "other") {
+        data.typeOfCurrency = data.otherTypeOfCurrency;
+      }
+      if (data.exchange === "other") {
+        data.exchange = data.otherExchange;
+      }
+      if (data.cryptoWalletType === "other") {
+        data.cryptoWalletType = data.otherCryptoWalletType;
+      }
+      if (data.cryptoWalletAddress === "other") {
+        data.cryptoWalletAddress = data.otherCryptoWalletAddress;
+      }
+      console.log(data);
+
+      console.log("Nomiee:", selectedNommie.length > 0);
+
+      data.nominees = selectedNommie;
+      // Mutate asynchronously and handle submission
+      await cryptoMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
+
   useEffect(() => {
     console.log("displaynominie:", displaynominie);
   }, [displaynominie]);
@@ -384,7 +400,7 @@ const CryptoForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="holdingQty">holdingQty</Label>
+                <Label htmlFor="holdingQty">HoldingQty</Label>
                 <Controller
                   name="holdingQty"
                   control={control}
@@ -647,7 +663,9 @@ const CryptoForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

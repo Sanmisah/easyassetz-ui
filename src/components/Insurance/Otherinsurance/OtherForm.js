@@ -158,40 +158,56 @@ const OtherForm = () => {
     }
   }, [selectedNommie, nomineeerror]);
 
-  const onSubmit = (data) => {
-    if (data.companyName === "other") {
-      data.companyName = data.otherInsuranceCompany;
-    }
-    if (data.modeOfPurchase === "broker") {
-      data.registeredMobile = null;
-      data.registeredEmail = null;
-    }
-    if (data.modeOfPurchase === "e-insurance") {
-      data.brokerName = null;
-      data.contactPerson = null;
-      data.contactNumber = null;
-      data.email = null;
-    }
+  const onSubmit = async (data) => {
     console.log(data);
-    if (data.maturityDate) {
-      const date = new Date(data.maturityDate);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.maturityDate = newdate;
-    }
-    console.log("Nomiee:", selectedNommie.length < 1);
 
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      if (data.companyName === "other") {
+        data.companyName = data.otherInsuranceCompany;
+      }
+      if (data.modeOfPurchase === "broker") {
+        data.registeredMobile = null;
+        data.registeredEmail = null;
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        data.brokerName = null;
+        data.contactPerson = null;
+        data.contactNumber = null;
+        data.email = null;
+      }
+      console.log(data);
+      if (data.maturityDate) {
+        const date = new Date(data.maturityDate);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.maturityDate = newdate;
+      }
+      console.log("Nomiee:", selectedNommie.length < 1);
+
+      if (selectedNommie.length > 1) {
+        setnomineeerror(false);
+      }
+      if (data.vehicleType === "other") {
+        data.vehicleType = data.specificVehicalType;
+      }
+      data.nominees = selectedNommie;
+      // Mutate asynchronously and handle submission
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.specificVehicalType;
-    }
-    data.nominees = selectedNommie;
-    lifeInsuranceMutate.mutate(data);
   };
+
   useEffect(() => {
     console.log("displaynominie:", displaynominie);
   }, [displaynominie]);
@@ -633,7 +649,9 @@ const OtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

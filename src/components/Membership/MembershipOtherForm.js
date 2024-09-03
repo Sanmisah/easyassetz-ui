@@ -129,30 +129,46 @@ const MembershipForm = () => {
     [nomineeerror]
   );
 
-  const onSubmit = (data) => {
-    if (data.membershipType === "other") {
-      data.membershipType = data.otherMembershipType;
-    }
-    if (data.membershipPaymentDate) {
-      const date = new Date(data.membershipPaymentDate);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.membershipPaymentDate = newdate;
-    }
+  const onSubmit = async (data) => {
+    console.log(data);
 
-    console.log("Nomiee:", selectedNommie.length < 1);
-    if (data.membershipType === "other") {
-      data.membershipType = data.otherMembershipType;
-    }
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
 
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
-    }
+    try {
+      if (data.membershipType === "other") {
+        data.membershipType = data.otherMembershipType;
+      }
+      if (data.membershipPaymentDate) {
+        const date = new Date(data.membershipPaymentDate);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.membershipPaymentDate = newdate;
+      }
 
-    data.nominees = selectedNommie;
-    lifeInsuranceMutate.mutate(data);
+      console.log("Nomiee:", selectedNommie.length < 1);
+      if (data.membershipType === "other") {
+        data.membershipType = data.otherMembershipType;
+      }
+
+      if (selectedNommie.length > 1) {
+        setnomineeerror(false);
+      }
+
+      data.nominees = selectedNommie;
+
+      // Assuming lifeInsuranceMutate.mutate and benificiaryMutate.mutateAsync are defined
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
 
   return (
@@ -438,7 +454,9 @@ const MembershipForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" id="submitButton">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

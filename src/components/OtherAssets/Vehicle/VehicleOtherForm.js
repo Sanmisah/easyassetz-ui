@@ -116,32 +116,48 @@ const RecoverableOtherForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    if (data.yearOfExpiry) {
-      const date = new Date(data.yearOfExpiry);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.yearOfExpiry = newdate;
+
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      // Process the form data
+      if (data.yearOfExpiry) {
+        const date = new Date(data.yearOfExpiry);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.yearOfExpiry = newdate;
+      }
+      if (data.yearOfManufacture) {
+        const date = new Date(data.yearOfManufacture);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.yearOfManufacture = newdate;
+      }
+      if (data.vehicleType === "other") {
+        data.vehicleType = data.otherVehicleType;
+      }
+      if (data.fourWheeler === "other") {
+        data.fourWheeler = data.otherFourWheeler;
+      }
+      data.type = "vehicle";
+
+      // Mutate asynchronously and handle submission
+      await loanMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    if (data.yearOfManufacture) {
-      const date = new Date(data.yearOfManufacture);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.yearOfManufacture = newdate;
-    }
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.otherVehicleType;
-    }
-    if (data.fourWheeler === "other") {
-      data.fourWheeler = data.otherFourWheeler;
-    }
-    data.type = "vehicle";
-    loanMutate.mutate(data);
   };
 
   return (
@@ -395,7 +411,9 @@ const RecoverableOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

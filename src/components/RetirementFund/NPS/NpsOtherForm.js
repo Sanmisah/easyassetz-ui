@@ -96,15 +96,29 @@ const NPSOtherForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
+
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      if (selectedNommie.length > 0) {
+        data.nominees = selectedNommie;
+      }
+      if (selectedFamilyMembers.length > 0) {
+        data.familyMembers = selectedFamilyMembers;
+      }
+      // Mutate asynchronously and handle submission
+      await npsMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    if (selectedFamilyMembers.length > 0) {
-      data.familyMembers = selectedFamilyMembers;
-    }
-    npsMutate.mutate(data);
   };
 
   return (
@@ -367,7 +381,9 @@ const NPSOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

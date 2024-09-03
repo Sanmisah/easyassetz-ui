@@ -156,21 +156,34 @@ const CommercialOtherForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    if (data.metalType === "other") {
-      data.metalType = data.otherMetalType;
-    }
-    if (data.articleDetails === "other") {
-      data.articleDetails = data.otherArticleDetails;
-    }
-    // data.name = name;
-    // data.email = email;
-    // data.mobile = mobile;
-    delete data.otherMetalType;
-    delete data.otherArticleDetails;
 
-    lifeInsuranceMutate.mutate(data);
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      if (data.metalType === "other") {
+        data.metalType = data.otherMetalType;
+      }
+      if (data.articleDetails === "other") {
+        data.articleDetails = data.otherArticleDetails;
+      }
+      // data.name = name;
+      // data.email = email;
+      // data.mobile = mobile;
+      delete data.otherMetalType;
+      delete data.otherArticleDetails;
+      // Mutate asynchronously and handle submission
+      await benificiaryMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
 
   return (
@@ -823,7 +836,9 @@ const CommercialOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -224,7 +224,7 @@ const Benificiaryform = ({ benficiaryopen, setbenficiaryopen }) => {
     }
   };
 
-  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;  
+  const isMinor = watchDOB ? calculateAge(watchDOB) < 18 : true;
 
   return (
     <div>

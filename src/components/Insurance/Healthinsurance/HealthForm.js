@@ -184,63 +184,73 @@ const HealthForm = () => {
     }
   }, [selectedNommie, nomineeerror]);
 
-  const onSubmit = (data) => {
-    // if (selectedNommie.length < 1) {
-    //   console.log("Nomiee:", selectedNommie.length < 1);
-
-    //   setnomineeerror(true);
-    //   return;
-    // }
-    if (data.companyName === "other") {
-      data.companyName = data.otherInsuranceCompany;
-    }
-    if (data.modeOfPurchase === "broker") {
-      data.registeredMobile = null;
-      data.registeredEmail = null;
-    }
-    if (data.modeOfPurchase === "e-insurance") {
-      data.brokerName = null;
-      data.contactPerson = null;
-      data.contactNumber = null;
-      data.email = null;
-    }
+  const onSubmit = async (data) => {
     console.log(data);
-    console.log("Nomiee:", data.companyName, data.otherInsuranceCompany);
 
-    if (data.insuranceType === "other") {
-      data.insuranceType = data.specifyInsuranceType;
-    }
-    if (data.companyName === "other") {
-      data.companyName = data.otherInsuranceCompany;
-    }
-    if (data.maturityDate) {
-      const date = new Date(data.maturityDate);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.maturityDate = newdate;
-    }
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
 
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
-    }
+    try {
+      if (data.companyName === "other") {
+        data.companyName = data.otherInsuranceCompany;
+      }
+      if (data.modeOfPurchase === "broker") {
+        data.registeredMobile = null;
+        data.registeredEmail = null;
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        data.brokerName = null;
+        data.contactPerson = null;
+        data.contactNumber = null;
+        data.email = null;
+      }
+      console.log(data);
+      console.log("Nomiee:", data.companyName, data.otherInsuranceCompany);
 
-    if (data.insuranceType === "other") {
-      data.insuranceType = data.specifyInsuranceType;
+      if (data.insuranceType === "other") {
+        data.insuranceType = data.specifyInsuranceType;
+      }
+      if (data.companyName === "other") {
+        data.companyName = data.otherInsuranceCompany;
+      }
+      if (data.maturityDate) {
+        const date = new Date(data.maturityDate);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.maturityDate = newdate;
+      }
+
+      if (selectedNommie.length > 1) {
+        setnomineeerror(false);
+      }
+
+      if (data.insuranceType === "other") {
+        data.insuranceType = data.specifyInsuranceType;
+      }
+      if (data.FamilyMembersCovered === "other") {
+        data.FamilyMembersCovered = data.specifyFamilyMembersCovered;
+      }
+      if (selectedNommie.length > 0) {
+        data.nominees = selectedNommie;
+      }
+      console.log("familymemberNominee:", familymemberNominee);
+      if (familymemberNominee.length > 0) {
+        data.familyMembers = familymemberNominee;
+      }
+      // Mutate asynchronously and handle submission
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    if (data.FamilyMembersCovered === "other") {
-      data.FamilyMembersCovered = data.specifyFamilyMembersCovered;
-    }
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
-    }
-    console.log("familymemberNominee:", familymemberNominee);
-    if (familymemberNominee.length > 0) {
-      data.familyMembers = familymemberNominee;
-    }
-    lifeInsuranceMutate.mutate(data);
   };
+
   useEffect(() => {
     console.log("displaynominie:", displaynominie);
   }, [displaynominie]);
@@ -777,7 +787,9 @@ const HealthForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

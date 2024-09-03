@@ -121,22 +121,30 @@ const ProvidentFundOtherForm = () => {
     [nomineeerror]
   );
 
-  const onSubmit = (data) => {
-    // data.name = name;
-    // data.email = email;
-    data.mobile = phone;
-    // const date = new Date(data.membershipPaymentDate);
-    // const month = String(date.getMonth() + 1).padStart(2, "0");
-    // const day = String(date.getDate()).padStart(2, "0");
-    // const year = date.getFullYear();
-    // const newdate = `${month}/${day}/${year}`;
-    // data.membershipPaymentDate = newdate;
-    console.log("Nomiee:", selectedNommie.length < 1);
+  const onSubmit = async (data) => {
+    console.log(data);
 
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      data.mobile = phone;
+
+      console.log("Nomiee:", selectedNommie.length < 1);
+
+      if (selectedNommie.length > 0) {
+        data.nominees = selectedNommie;
+      }
+      // Mutate asynchronously and handle submission
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    lifeInsuranceMutate.mutate(data);
   };
 
   return (
@@ -449,7 +457,9 @@ const ProvidentFundOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

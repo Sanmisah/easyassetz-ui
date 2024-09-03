@@ -196,41 +196,50 @@ const MotorForm = () => {
     }
   }, [selectedNommie, nomineeerror]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    if (data.companyName === "other") {
-      data.companyName = data.otherInsuranceCompany;
+
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      if (data.companyName === "other") {
+        data.companyName = data.otherInsuranceCompany;
+      }
+      if (data.modeOfPurchase === "broker") {
+        data.registeredMobile = null;
+        data.registeredEmail = null;
+      }
+      if (data.modeOfPurchase === "e-insurance") {
+        data.brokerName = null;
+        data.contactPerson = null;
+        data.contactNumber = null;
+        data.email = null;
+      }
+      if (data.expiryDate) {
+        const date = new Date(data.expiryDate);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.expiryDate = newdate;
+      }
+      if (data.vehicleType === "other") {
+        data.vehicleType = data.specificVehicalType;
+      }
+
+      data.nominees = selectedNommie;
+
+      // Mutate asynchronously and handle submission
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    if (data.modeOfPurchase === "broker") {
-      data.registeredMobile = null;
-      data.registeredEmail = null;
-    }
-    if (data.modeOfPurchase === "e-insurance") {
-      data.brokerName = null;
-      data.contactPerson = null;
-      data.contactNumber = null;
-      data.email = null;
-    }
-    if (data.expiryDate) {
-      const date = new Date(data.expiryDate);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.expiryDate = newdate;
-    }
-    if (data.vehicleType === "other") {
-      data.vehicleType = data.specificVehicalType;
-    }
-    // if (selectedNommie.length < 1) {
-    //   setnomineeerror(true);
-    //   return;
-    // }
-    // if (selectedNommie.length > 1) {
-    //   setnomineeerror(false);
-    // }
-    data.nominees = selectedNommie;
-    lifeInsuranceMutate.mutate(data);
   };
 
   useEffect(() => {
@@ -780,7 +789,9 @@ const MotorForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

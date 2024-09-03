@@ -141,33 +141,36 @@ const ppfForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    // data.firmsRegistrationNumberType = showOtherCompanyRegistration;
 
-    // if (selectedNommie.length < 1) {
-    //   toast.error("Please select atleast one nominee");
-    //   setNomineeError(true);
-    //   return;
-    // }
-    // if (data.typeOfInvestment === "other") {
-    //   data.typeOfInvestment = data.specifyInvestment;
-    // }
-    if (selectedNommie?.length > 0) {
-      data.nominees = selectedNommie;
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      if (selectedNommie?.length > 0) {
+        data.nominees = selectedNommie;
+      }
+      if (selectedFamilyMembers?.length > 0) {
+        data.jointHolders = selectedFamilyMembers;
+      }
+      data.type = "company";
+
+      data.mobile = phone;
+      // if (data) {
+      //   data.firmName = data.otherFirmName;
+      // }
+      data.jointHoldersName = selectedFamilyMembers;
+      // Mutate asynchronously and handle submission
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    if (selectedFamilyMembers?.length > 0) {
-      data.jointHolders = selectedFamilyMembers;
-    }
-    data.type = "company";
-
-    data.mobile = phone;
-    // if (data) {
-    //   data.firmName = data.otherFirmName;
-    // }
-    data.jointHoldersName = selectedFamilyMembers;
-
-    lifeInsuranceMutate.mutate(data);
   };
 
   return (
@@ -176,7 +179,7 @@ const ppfForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div>
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Public Providend Fund
                 </CardTitle>
@@ -563,7 +566,9 @@ const ppfForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

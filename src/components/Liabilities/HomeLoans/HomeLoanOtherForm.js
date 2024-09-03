@@ -88,26 +88,40 @@ const HomeLoanOtherForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    if (data.emiDate) {
-      const date = new Date(data.emiDate);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.emiDate = newdate;
-    }
-    if (data.startDate) {
-      const date1 = new Date(data.startDate);
-      const month1 = String(date1.getMonth() + 1).padStart(2, "0");
-      const day1 = String(date1.getDate()).padStart(2, "0");
-      const year1 = date1.getFullYear();
-      const newdate1 = `${month1}/${day1}/${year1}`;
-      data.startDate = newdate1;
-    }
 
-    loanMutate.mutate(data);
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      if (data.emiDate) {
+        const date = new Date(data.emiDate);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.emiDate = newdate;
+      }
+      if (data.startDate) {
+        const date1 = new Date(data.startDate);
+        const month1 = String(date1.getMonth() + 1).padStart(2, "0");
+        const day1 = String(date1.getDate()).padStart(2, "0");
+        const year1 = date1.getFullYear();
+        const newdate1 = `${month1}/${day1}/${year1}`;
+        data.startDate = newdate1;
+      }
+
+      // Mutate asynchronously and handle submission
+      await loanMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
 
   return (
@@ -116,7 +130,7 @@ const HomeLoanOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Home Loan Details
                 </CardTitle>
@@ -320,7 +334,9 @@ const HomeLoanOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

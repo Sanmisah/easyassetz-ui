@@ -125,21 +125,36 @@ const LitigationForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    if (data.litigationType === "other") {
-      data.litigationType = data.otherLitigationType;
-    }
-    if (data.caseFillingDate) {
-      const date = new Date(data.caseFillingDate);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.caseFillingDate = newdate;
-    }
-    delete data.otherLitigationType;
+  const onSubmit = async (data) => {
+    console.log(data);
 
-    litigationMutate.mutate(data);
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    try {
+      if (data.litigationType === "other") {
+        data.litigationType = data.otherLitigationType;
+      }
+      if (data.caseFillingDate) {
+        const date = new Date(data.caseFillingDate);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.caseFillingDate = newdate;
+      }
+      delete data.otherLitigationType;
+
+      // Mutate asynchronously and handle submission
+      await litigationMutate.mutateAsync(data);
+    } catch (error) {
+      toast.error("Failed to add beneficiary");
+      console.error("Error adding beneficiary:", error);
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
 
   return (
@@ -465,7 +480,9 @@ const LitigationForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>
