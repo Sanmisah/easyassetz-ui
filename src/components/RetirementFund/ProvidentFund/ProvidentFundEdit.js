@@ -177,12 +177,12 @@ const ProvidentFundEditForm = ({}) => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    pfMutate.mutate(data);
+    await pfMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -485,7 +485,9 @@ const ProvidentFundEditForm = ({}) => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

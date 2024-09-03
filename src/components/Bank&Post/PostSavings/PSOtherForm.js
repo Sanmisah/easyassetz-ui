@@ -133,7 +133,7 @@ const BankLockerForm = () => {
     }
   }, [selectedNommie, nomineeerror]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Disable the submit button
     const submitButton = document.getElementById("submitButton");
     console.log(submitButton);
@@ -166,7 +166,7 @@ const BankLockerForm = () => {
         setnomineeerror(false);
       }
       data.nominees = selectedNommie;
-      bankAccountMutate.mutate(data);
+      await bankAccountMutate.mutateAsync(data);
     } catch (error) {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
@@ -828,7 +828,9 @@ const BankLockerForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

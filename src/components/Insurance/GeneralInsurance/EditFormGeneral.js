@@ -242,7 +242,7 @@ const EditFormGeneral = () => {
       setDisplaynominie(Benifyciary?.nominees);
     }
   }, [Benifyciary?.nominees]);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Handling company name
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
@@ -274,7 +274,7 @@ const EditFormGeneral = () => {
     }
 
     console.log("Prepared data for submission:", data);
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -784,7 +784,9 @@ const EditFormGeneral = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

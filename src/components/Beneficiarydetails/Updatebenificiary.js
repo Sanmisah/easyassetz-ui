@@ -240,7 +240,7 @@ const BeneficiaryForm = ({
       delete data.guardianNationality;
     }
     try {
-      beneficiaryMutate.mutate(data);
+      await beneficiaryMutate.mutateAsync(data);
     } catch (error) {
       toast.error("Failed to add beneficiary");
       console.error("Error adding beneficiary:", error);
@@ -792,7 +792,9 @@ const BeneficiaryForm = ({
                       )}
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
-                      <Button type="submit">Submit</Button>
+                      <Button id="submitButton" type="submit">
+                        Submit
+                      </Button>
                       <Button
                         type="button"
                         variant="outline"

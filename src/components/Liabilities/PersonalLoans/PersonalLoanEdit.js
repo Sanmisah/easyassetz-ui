@@ -133,7 +133,7 @@ const PersonalLoanEdit = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     const formatDate = (date) => {
       const d = new Date(date);
@@ -150,7 +150,7 @@ const PersonalLoanEdit = () => {
       data.startDate = formatDate(data.startDate);
     }
 
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -366,7 +366,9 @@ const PersonalLoanEdit = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

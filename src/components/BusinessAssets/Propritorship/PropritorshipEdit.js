@@ -161,7 +161,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     data.type = "propritorship";
     // if (!name && name !== "") {
@@ -176,7 +176,7 @@ const PropritorshipEdit = ({ benificiaryId }) => {
       data.firmName = data.otherFirmType;
     }
 
-    bullionMutate.mutate(data);
+    await bullionMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -440,7 +440,9 @@ const PropritorshipEdit = ({ benificiaryId }) => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

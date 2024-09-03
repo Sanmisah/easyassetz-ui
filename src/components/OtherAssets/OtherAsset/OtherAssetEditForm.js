@@ -148,7 +148,7 @@ const OtherAssetEditForm = () => {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   };
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     data.type = "otherAsset";
     console.log(data);
     // data.type = "huf";
@@ -156,7 +156,7 @@ const OtherAssetEditForm = () => {
     // data.startDate = formatDate(data.startDate);
     // data.type = "vehicle";
 
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -372,7 +372,9 @@ const OtherAssetEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

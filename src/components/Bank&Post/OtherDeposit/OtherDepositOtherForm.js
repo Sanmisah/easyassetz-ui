@@ -139,7 +139,7 @@ const OtherDepositForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Disable the submit button
     const submitButton = document.getElementById("submitButton");
     console.log(submitButton);
@@ -174,7 +174,7 @@ const OtherDepositForm = () => {
         data.nominees = selectedNommie;
       }
 
-      lifeInsuranceMutate.mutate(data);
+      await lifeInsuranceMutate.mutateAsync(data);
     } catch (error) {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
@@ -463,7 +463,9 @@ const OtherDepositForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

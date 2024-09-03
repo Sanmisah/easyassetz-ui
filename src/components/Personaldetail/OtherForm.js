@@ -137,7 +137,7 @@ const OtherForm = () => {
     }
   }, [selectedNommie, nomineeerror]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     console.log("Nomiee:", selectedNommie.length < 1);
     if (selectedNommie.length < 1) {
@@ -154,7 +154,7 @@ const OtherForm = () => {
       data.vehicleType = data.specificVehicalType;
     }
     data.nominees = selectedNommie;
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
   useEffect(() => {
     console.log("displaynominie:", displaynominie);
@@ -644,7 +644,9 @@ const OtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -190,7 +190,7 @@ const LitigationEditForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.litigationType === "other") {
       data.litigationType = data.otherLitigationType;
     }
@@ -203,7 +203,7 @@ const LitigationEditForm = () => {
       const newdate = `${month}/${day}/${year}`;
       data.caseFillingDate = newdate;
     }
-    litigationMutate.mutate(data);
+    await litigationMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -536,7 +536,9 @@ const LitigationEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

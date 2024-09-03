@@ -121,7 +121,7 @@ const VehicleLoanEdit = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     const formatDate = (date) => {
       const d = new Date(date);
@@ -138,7 +138,7 @@ const VehicleLoanEdit = () => {
       data.startDate = formatDate(data.startDate);
     }
 
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -150,7 +150,7 @@ const VehicleLoanEdit = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Edit Vehicle Loan Details
                 </CardTitle>
@@ -354,7 +354,9 @@ const VehicleLoanEdit = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

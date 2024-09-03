@@ -184,7 +184,7 @@ const PpfEditForm = ({}) => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     data.mobile = phone;
     if (selectedNommie?.length > 0) {
@@ -193,7 +193,7 @@ const PpfEditForm = ({}) => {
     if (selectedFamilyMembers?.length > 0) {
       data.jointHolders = selectedFamilyMembers;
     }
-    ppfMutate.mutate(data);
+    await ppfMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -539,7 +539,9 @@ const PpfEditForm = ({}) => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

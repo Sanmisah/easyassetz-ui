@@ -269,7 +269,7 @@ const EditMotorForm = () => {
       setDisplaynominie(Benifyciary?.nominees);
     }
   }, [Benifyciary?.nominees]);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }
@@ -295,7 +295,7 @@ const EditMotorForm = () => {
       data.maturityDate = newdate;
     }
     data.nominees = selectedNommie;
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -828,7 +828,9 @@ const EditMotorForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

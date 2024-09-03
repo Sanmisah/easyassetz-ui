@@ -108,7 +108,7 @@ const Charitysheet = ({ charityopen, setcharityopen }) => {
   const onSubmit = async (data) => {
     try {
       data.type = "charity";
-      charityMutate.mutate(data);
+      await charityMutate.mutateAsync(data);
     } catch (error) {
       console.error("Error submitting charity details:", error);
       toast.error("Failed to submit charity details.");

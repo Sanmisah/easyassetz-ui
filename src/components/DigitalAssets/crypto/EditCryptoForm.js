@@ -290,7 +290,7 @@ const EditCryptoForm = () => {
       setDisplaynominie(Benifyciary?.nominees);
     }
   }, [Benifyciary?.nominees]);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.cryptoWalletType === "other") {
       data.cryptoWalletType = data.otherCryptoWalletType;
     }
@@ -303,7 +303,7 @@ const EditCryptoForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
   useEffect(() => {
     console.log("displaynominie:", displaynominie);
@@ -756,7 +756,9 @@ const EditCryptoForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

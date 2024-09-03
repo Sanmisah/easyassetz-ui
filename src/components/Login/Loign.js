@@ -175,7 +175,7 @@ const Auth = () => {
   const handleRegisterConfirm = async () => {
     setAlertDialog(false);
     try {
-      Registermutation.mutate(formData);
+      await Registermutation.mutateAsync(data);
       //   const response = await axios.post("/api/register", {
       //     ...formData,
       //   });

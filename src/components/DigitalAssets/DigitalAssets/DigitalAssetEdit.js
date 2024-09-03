@@ -186,12 +186,12 @@ const DigitalAssetEditForm = () => {
     }
   }, [Benifyciary?.nominees]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     if (data.digitalAsset === "other") {
       data.digitalAsset = data.otherDigitalAsset;
     }
-    DigitalAssetMutate.mutate(data);
+    await DigitalAssetMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -442,7 +442,9 @@ const DigitalAssetEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

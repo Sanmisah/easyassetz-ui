@@ -151,11 +151,11 @@ const GratuityEditForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -371,7 +371,9 @@ const GratuityEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -188,7 +188,7 @@ const EditFormHealth = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
@@ -199,7 +199,7 @@ const EditFormHealth = () => {
       data.companyAddress = data.specifycompanyAddress;
     }
     data.type = "company";
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -778,7 +778,9 @@ const EditFormHealth = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

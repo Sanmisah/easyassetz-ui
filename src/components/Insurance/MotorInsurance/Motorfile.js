@@ -185,7 +185,7 @@ const MotorForm = () => {
     }
   }, [selectedNommie, nomineeerror]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
@@ -219,7 +219,7 @@ const MotorForm = () => {
     //   setnomineeerror(false);
     // }
     data.nominees = selectedNommie;
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -741,7 +741,9 @@ const MotorForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

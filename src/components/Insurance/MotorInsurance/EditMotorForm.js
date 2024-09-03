@@ -302,7 +302,7 @@ const EditMotorForm = () => {
   //   }
   // }, [Benifyciary, reset]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (type === true) {
       data.insuranceType = "comprehensive";
     } else {
@@ -335,7 +335,7 @@ const EditMotorForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   const handleUploadFile = () => {
@@ -899,7 +899,9 @@ const EditMotorForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

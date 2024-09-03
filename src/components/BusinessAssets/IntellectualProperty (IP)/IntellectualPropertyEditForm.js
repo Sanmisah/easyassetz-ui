@@ -160,7 +160,7 @@ const IntellectualPropertyOtherForm = () => {
     console.log("Form values:", control._formValues);
   }, [control._formValues]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.expiryDate) {
       const date = new Date(data.expiryDate);
       const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -185,7 +185,7 @@ const IntellectualPropertyOtherForm = () => {
       data.firmName = data.otherMetalType;
     }
 
-    bullionMutate.mutate(data);
+    await bullionMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -414,7 +414,9 @@ const IntellectualPropertyOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

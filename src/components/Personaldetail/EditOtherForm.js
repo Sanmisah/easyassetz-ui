@@ -222,14 +222,14 @@ const EditOtherForm = () => {
       setDisplaynominie(Benifyciary?.nominees);
     }
   }, [Benifyciary?.nominees]);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     console.log("brokerName:", data.brokerName);
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
 
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -741,7 +741,9 @@ const EditOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

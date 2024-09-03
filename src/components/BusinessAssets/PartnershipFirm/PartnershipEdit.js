@@ -177,7 +177,7 @@ const PartnershipEdit = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     data.type = "partnershipFirm";
 
     if (selectedNommie.length > 0) {
@@ -191,7 +191,7 @@ const PartnershipEdit = () => {
     if (["CIN", "PAN", "FIRM NO"].includes(data.firmsRegistrationNumber)) {
       data.firmsRegistrationNumber = data.otherRegistrationNumber;
     }
-    mutateData.mutate(data);
+    await mutateData.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -475,7 +475,9 @@ const PartnershipEdit = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

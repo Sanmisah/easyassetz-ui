@@ -104,11 +104,11 @@ const DigitalAssetOtherForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.digitalAsset === "other") {
       data.digitalAsset = data.otherDigitalAsset;
     }
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   return (
@@ -367,7 +367,9 @@ const DigitalAssetOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

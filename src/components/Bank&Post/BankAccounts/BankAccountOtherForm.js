@@ -151,8 +151,9 @@ const BankAccountForm = () => {
       setnomineeerror(false);
     }
   }, [selectedNommie, nomineeerror]);
+  // const onSubmit\s*=\s*\(data\)\s*=>\s*\{([\s\S]*?)\}
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Disable the submit button
     const submitButton = document.getElementById("submitButton");
     console.log(submitButton);
@@ -181,7 +182,7 @@ const BankAccountForm = () => {
       // const newdate = `${month}/${day}/${year}`;
       // data.expiryDate = newdate;
       data.nominees = selectedNommie;
-      bankAccountMutate.mutate(data);
+      await bankAccountMutate.mutateAsync(data);
     } catch (error) {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
@@ -482,7 +483,9 @@ const BankAccountForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

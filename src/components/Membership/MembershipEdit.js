@@ -207,7 +207,7 @@ const MembershipEdit = () => {
     }
   }, [Benifyciary?.nominees]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     console.log("membership:", data.membership);
     if (data.membershipType === "other") {
@@ -228,7 +228,7 @@ const MembershipEdit = () => {
     console.log("brokerName:", data.brokerName);
     data.nominees = selectedNommie;
 
-    membershipMutate.mutate(data);
+    await membershipMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -519,7 +519,9 @@ const MembershipEdit = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -177,7 +177,7 @@ const SuperAnnuationEditForm = () => {
     }
   }, [Benifyciary?.nominees]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
 
     console.log(data);
@@ -190,7 +190,7 @@ const SuperAnnuationEditForm = () => {
     console.log("brokerName:", data.brokerName);
     data.nominees = selectedNommie;
 
-    superannuationMutate.mutate(data);
+    await superannuationMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -478,7 +478,9 @@ const SuperAnnuationEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

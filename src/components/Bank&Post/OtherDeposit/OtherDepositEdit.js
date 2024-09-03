@@ -175,7 +175,7 @@ const PpfEditForm = ({}) => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     data.mobile = phone;
     if (data.maturityDate) {
@@ -189,7 +189,7 @@ const PpfEditForm = ({}) => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    ppfMutate.mutate(data);
+    await ppfMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -486,7 +486,9 @@ const PpfEditForm = ({}) => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

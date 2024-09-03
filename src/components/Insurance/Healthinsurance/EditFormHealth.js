@@ -282,7 +282,7 @@ const EditFormHealth = () => {
     console.log("familymemberNominee:", familymemberNominee);
     console.log("displayfamilymemberNominee:", displayfamilymemberNominee);
   }, [familymemberNominee, displayfamilymemberNominee]);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.companyName === "other") {
       data.companyName = data.otherInsuranceCompany;
     }
@@ -320,7 +320,7 @@ const EditFormHealth = () => {
       data.insuranceType = data.specifyInsuranceType;
     }
 
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -860,7 +860,9 @@ const EditFormHealth = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -214,7 +214,7 @@ const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
       delete data.guardianNationality;
     }
     try {
-      benificiaryMutate.mutate(data);
+      await benificiaryMutate.mutateAsync(data);
     } catch (error) {
       toast.error("Failed to add beneficiary");
       console.error("Error adding beneficiary:", error);

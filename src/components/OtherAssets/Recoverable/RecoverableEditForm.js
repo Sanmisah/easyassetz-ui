@@ -163,7 +163,7 @@ const RecoverableEditForm = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     // data.type = "huf";
     if (data.dueDate) {
@@ -171,7 +171,7 @@ const RecoverableEditForm = () => {
     }
     // data.startDate = formatDate(data.startDate);
     // data.type = "vehicle";
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -479,7 +479,9 @@ const RecoverableEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

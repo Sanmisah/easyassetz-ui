@@ -143,13 +143,13 @@ const ArtifactsEditForm = () => {
   //   return `${month}/${day}/${year}`;
   // };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
 
     // data.emiDate = formatDate(data.emiDate);
     // data.startDate = formatDate(data.startDate);
     data.type = "artifact";
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -389,7 +389,9 @@ const ArtifactsEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -150,9 +150,9 @@ const Charitysheet = ({ charityopen, setcharityopen, charityId }) => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     data.type = "charity";
-    benificiaryMutate.mutate(data);
+    await benificiaryMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;

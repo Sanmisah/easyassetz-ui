@@ -299,7 +299,7 @@ const Personaldetail = () => {
     delete data.specificNationality;
     data.marriedUnderSpecialAct = specialactundermarriange;
     console.log("FIAL", data);
-    Profilemutate.mutate(data);
+    await Profilemutate.mutateAsync(data);
   };
 
   const permanentAddress = watch([

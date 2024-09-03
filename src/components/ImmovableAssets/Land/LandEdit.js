@@ -210,10 +210,10 @@ const ResidentialEditForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("data:", data);
 
-    bullionMutate.mutate(data);
+    await bullionMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -794,7 +794,9 @@ const ResidentialEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -123,7 +123,7 @@ const PropritershipForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Disable the submit button
     const submitButton = document.getElementById("submitButton");
     console.log(submitButton);
@@ -144,7 +144,7 @@ const PropritershipForm = () => {
       // data.email = email;
       // data.mobile = phone;
 
-      lifeInsuranceMutate.mutate(data);
+      await lifeInsuranceMutate.mutateAsync(data);
     } catch (error) {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
@@ -496,7 +496,9 @@ const PropritershipForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -169,7 +169,7 @@ const NPSEditForm = ({}) => {
     }
   }, [Benifyciary?.nominees]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     if (selectedNommie?.length > 0) {
       data.nominees = selectedNommie;
@@ -178,7 +178,7 @@ const NPSEditForm = ({}) => {
       data.jointHolders = selectedFamilyMembers;
     }
 
-    npsMutate.mutate(data);
+    await npsMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -441,7 +441,9 @@ const NPSEditForm = ({}) => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

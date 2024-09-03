@@ -180,7 +180,7 @@ const OtherLoansEditForm = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.vehicleType === "other") {
       data.vehicleType = data.otherVehicleType;
     }
@@ -202,7 +202,7 @@ const OtherLoansEditForm = () => {
       data.yearOfManufacture = newdate;
     }
     data.type = "vehicle";
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -462,7 +462,9 @@ const OtherLoansEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

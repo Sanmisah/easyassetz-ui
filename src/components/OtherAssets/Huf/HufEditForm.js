@@ -137,12 +137,12 @@ const OtherLoansEditForm = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     data.type = "huf";
     data.emiDate = formatDate(data.emiDate);
     data.startDate = formatDate(data.startDate);
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -323,7 +323,9 @@ const OtherLoansEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

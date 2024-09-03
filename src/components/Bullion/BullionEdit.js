@@ -201,7 +201,7 @@ const BullionEdit = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("data:", data);
     if (data.metalType === "other") {
       data.metalType = data.otherMetalType;
@@ -220,7 +220,7 @@ const BullionEdit = () => {
     // }
     console.log("NumberOFarticles:", data.numberOfArticles);
 
-    bullionMutate.mutate(data);
+    await bullionMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -565,7 +565,9 @@ const BullionEdit = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

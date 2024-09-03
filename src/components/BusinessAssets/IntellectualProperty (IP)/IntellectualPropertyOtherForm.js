@@ -115,7 +115,7 @@ const IntellectualPropertyOtherForm = () => {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   };
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Disable the submit button
     const submitButton = document.getElementById("submitButton");
     console.log(submitButton);
@@ -138,7 +138,7 @@ const IntellectualPropertyOtherForm = () => {
       //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
       // }
 
-      lifeInsuranceMutate.mutate(data);
+      await lifeInsuranceMutate.mutateAsync(data);
     } catch (error) {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
@@ -355,7 +355,9 @@ const IntellectualPropertyOtherForm = () => {
             )}
 
             <CardFooter className="flex justify-end gap-2 mt-8">
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

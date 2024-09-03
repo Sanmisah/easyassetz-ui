@@ -198,7 +198,7 @@ const BankEditForm = () => {
       setDisplaynominie(Benifyciary?.nominees);
     }
   }, [Benifyciary?.nominees]);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.holdingType === "single") {
       data.jointHolderName = null;
       data.jointHolderPan = null;
@@ -220,7 +220,7 @@ const BankEditForm = () => {
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -540,7 +540,9 @@ const BankEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

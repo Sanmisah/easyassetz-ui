@@ -210,14 +210,14 @@ const PSDAEditForm = () => {
   //   }
   // }, [Benifyciary, reset]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.accountNumber === "other") {
       data.accountNumber = data.otherAccountNumber;
     }
     if (selectedNommie.length > 0) {
       data.nominees = selectedNommie;
     }
-    lifeInsuranceMutate.mutate(data);
+    await lifeInsuranceMutate.mutateAsync(data);
   };
   useEffect(() => {
     console.log(Benifyciary);
@@ -504,7 +504,9 @@ const PSDAEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

@@ -157,7 +157,7 @@ const MutualFundOtherForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Disable the submit button
     const submitButton = document.getElementById("submitButton");
     console.log(submitButton);
@@ -192,7 +192,7 @@ const MutualFundOtherForm = () => {
       //   data.firmName = data.otherFirmName;
       // }
 
-      lifeInsuranceMutate.mutate(data);
+      await lifeInsuranceMutate.mutateAsync(data);
     } catch (error) {
       console.error("Error submitting profile:", error);
       toast.error("Failed to submit profile");
@@ -669,7 +669,9 @@ const MutualFundOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

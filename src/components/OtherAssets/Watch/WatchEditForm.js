@@ -148,14 +148,14 @@ const WatchEditForm = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     // data.type = "huf";
     // data.emiDate = formatDate(data.emiDate);
     // data.startDate = formatDate(data.startDate);
     data.type = "watch";
     // data.type = "vehicle";
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -363,7 +363,9 @@ const WatchEditForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

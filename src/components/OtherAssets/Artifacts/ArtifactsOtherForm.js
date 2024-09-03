@@ -96,7 +96,7 @@ const ArtifactsOtherForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // console.log(data);
     // const date = new Date(data.yearOfManufacture);
     // const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -117,7 +117,7 @@ const ArtifactsOtherForm = () => {
     delete data.othertypeOfArtifacts;
     // delete data.otherPaintings;
     // data.type = "vehicle";
-    loanMutate.mutate(data);
+    await loanMutate.mutateAsync(data);
   };
 
   return (
@@ -345,7 +345,9 @@ const ArtifactsOtherForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>
