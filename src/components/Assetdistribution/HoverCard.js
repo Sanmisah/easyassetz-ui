@@ -31,7 +31,7 @@ const HoverCardComponent = ({ asset }) => {
               <div className="flex flex-col gap-1">
                 {asset?.map((data) => (
                   <div className="flex items-center gap-2 p-2 rounded-[2px] justify-between text-white bg-[#1ea5ba] w-full">
-                    <p>{data.fullName}</p>
+                    <p>{data.fullLegalName}</p>
                     <p>{data.Allocation}%</p>
                   </div>
                 ))}
