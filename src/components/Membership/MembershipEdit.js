@@ -30,6 +30,7 @@ import { PhoneInput } from "react-international-phone";
 import Datepicker from "../Beneficiarydetails/Datepicker";
 import Addnominee from "@/components/Nominee/EditNominee";
 import cross from "@/components/image/close.png";
+import { Autocompeleteadd } from "../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   organizationName: z
@@ -64,6 +65,17 @@ const MembershipEdit = () => {
   const [showOtherMembership, setShowOtherMembership] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
   const [selectedNommie, setSelectedNommie] = useState([]);
+  const frameworks = {
+    membershipType: [
+      { value: "annual", label: "Annual" },
+      { value: "life", label: "Life" },
+    ],
+  };
+  const [defautValue, setdefaultValue] = useState("");
+  const [takeinput, setTakeinput] = useState();
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const [values, setValues] = useState("");
+  const [type, setType] = useState(false);
 
   const {
     handleSubmit,
@@ -87,6 +99,9 @@ const MembershipEdit = () => {
       }
     );
     let othertype = response.data.data.Membership?.membershipType;
+    setdefaultValue({
+      membershipType: response.data.data.Membership?.membershipType,
+    });
 
     if (othertype !== "annual" || othertype !== "life") {
       setShowOtherMembershipType(true);
@@ -298,29 +313,44 @@ const MembershipEdit = () => {
                 control={control}
                 defaultValue={Benifyciary?.membershipType}
                 render={({ field }) => (
-                  <Select
-                    id="membershipType"
-                    value={field.value}
-                    {...field}
+                  // <Select
+                  //   id="membershipType"
+                  //   value={field.value}
+                  //   {...field}
+                  //   onValueChange={(value) => {
+                  //     field.onChange(value);
+                  //     setShowOtherMembershipType(value === "other");
+                  //   }}
+                  //   className={errors.membershipType ? "border-red-500" : ""}
+                  //   defaultValue={Benifyciary?.membershipType || ""}
+                  // >
+                  //   <SelectTrigger>
+                  //     <SelectValue placeholder="Select Membership Type" />
+                  //   </SelectTrigger>
+                  //   <SelectContent>
+                  //     <SelectItem value="annual">Annual</SelectItem>
+                  //     <SelectItem value="life">Life</SelectItem>
+                  //     <SelectItem value="other">Other</SelectItem>
+                  //   </SelectContent>
+                  // </Select>
+                  <Autocompeleteadd
+                    options={frameworks.membershipType}
+                    placeholder="Select Membership Type..."
+                    emptyMessage="No Membership Type Found."
+                    value={values}
+                    array={inputvaluearray}
+                    setarray={setInputvaluearray}
+                    defautValues={defautValue?.membershipType}
+                    variable="membershipType"
                     onValueChange={(value) => {
-                      field.onChange(value);
-                      setShowOtherMembershipType(value === "other");
+                      setValues(value);
+                      console.log(value);
+                      setValue("membershipType", value?.value);
                     }}
-                    className={errors.membershipType ? "border-red-500" : ""}
-                    defaultValue={Benifyciary?.membershipType || ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Membership Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="annual">Annual</SelectItem>
-                      <SelectItem value="life">Life</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 )}
               />
-              {showOtherMembershipType && (
+              {/* {showOtherMembershipType && (
                 <Controller
                   name="otherMembershipType"
                   control={control}
@@ -334,7 +364,7 @@ const MembershipEdit = () => {
                     />
                   )}
                 />
-              )}
+              )} */}
               {errors.membershipType && (
                 <span className="text-red-500">
                   {errors.membershipType.message}

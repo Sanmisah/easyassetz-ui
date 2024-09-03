@@ -227,7 +227,6 @@ const ppfForm = () => {
                         <SelectItem value="nsc">NSC</SelectItem>
                         <SelectItem value="kvp">KVP</SelectItem>
                         <SelectItem value="ivp">IVP</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

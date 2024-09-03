@@ -80,6 +80,7 @@ const EditMotorForm = () => {
   const [selectedNommie, setSelectedNommie] = useState([]);
   const [displaynominie, setDisplaynominie] = useState([]);
   const [inputvaluearray, setInputvaluearray] = useState({});
+  const [defautValue, setdefaultValue] = useState();
   const [values, setValues] = useState("");
   const frameworks = {
     bankName: [
@@ -94,7 +95,6 @@ const EditMotorForm = () => {
       { value: "nri", label: "NRI Account" },
     ],
   };
-  const [defaultValue, setdefaultValue] = useState();
 
   const {
     handleSubmit,
@@ -117,6 +117,11 @@ const EditMotorForm = () => {
         },
       }
     );
+
+    setdefaultValue({
+      bankName: response.data.data.BankAccount?.bankName,
+      accountType: response.data.data.BankAccount?.accountType,
+    });
 
     let data = response.data.data.BankAccount;
     setValue("bankName", data.bankName);
@@ -297,11 +302,12 @@ const EditMotorForm = () => {
                 render={({ field }) => (
                   <Autocompeleteadd
                     options={frameworks.bankName}
-                    placeholder="Select Bank Name..."
-                    emptyMessage="No Bank Name Found."
+                    placeholder="Select Company Name..."
+                    emptyMessage="No Company Name Found."
                     value={values}
                     array={inputvaluearray}
                     setarray={setInputvaluearray}
+                    defautValues={defautValue?.bankName}
                     variable="bankName"
                     onValueChange={(value) => {
                       setValues(value);
@@ -341,6 +347,7 @@ const EditMotorForm = () => {
                     value={values}
                     array={inputvaluearray}
                     setarray={setInputvaluearray}
+                    defautValues={defautValue?.bankName}
                     variable="accountType"
                     onValueChange={(value) => {
                       setValues(value);

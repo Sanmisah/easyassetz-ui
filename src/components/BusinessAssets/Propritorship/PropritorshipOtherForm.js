@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import cross from "@/components/image/close.png";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: " Firm Name is required" }),
@@ -66,11 +67,30 @@ const PropritershipForm = () => {
     showOtherFirmsRegistrationNumber,
     setShowOtherFirmsRegistrationNumber,
   ] = useState();
+  const [values, setValues] = useState([]);
+  const [takeinput, setTakeinput] = useState();
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    firmName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+  };
+  useEffect(() => {
+    console.log("Values:", values?.value);
+    if (takeinput !== values?.value) {
+      setValues(takeinput);
+
+      setValue("firmName", takeinput);
+    }
+  }, [takeinput]);
 
   const {
     handleSubmit,
     control,
     register,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -153,25 +173,39 @@ const PropritershipForm = () => {
                   name="firmName"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="firmName"
-                      value={field.value}
+                    // <Select
+                    //   id="firmName"
+                    //   value={field.value}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setShowOtherMetalType(value === "other");
+                    //   }}
+                    //   className={errors.firmName ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Select Firm Type" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="company1">Company 1</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <Autocompeleteadd
+                      options={frameworks.firmName}
+                      placeholder="Select Firm Name..."
+                      emptyMessage="No Firm Name Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="firmName"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherMetalType(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("firmName", value?.value);
                       }}
-                      className={errors.firmName ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Firm Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherMetalType && (
+                {/* {showOtherMetalType && (
                   <Controller
                     name="otherMetalType"
                     control={control}
@@ -185,7 +219,7 @@ const PropritershipForm = () => {
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors.firmName && (
                   <span className="text-red-500">
                     {errors.firmName.message}

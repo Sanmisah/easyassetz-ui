@@ -109,7 +109,6 @@ const EditMotorForm = () => {
       { value: "child", label: "Child" },
       { value: "parent", label: "Parent" },
       { value: "sibling", label: "Sibling" },
-      { value: "other", label: "Other" },
     ],
   };
 

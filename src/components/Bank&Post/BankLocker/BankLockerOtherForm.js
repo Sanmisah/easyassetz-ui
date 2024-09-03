@@ -31,6 +31,7 @@ import Addnominee from "@/components/Nominee/addNominee";
 import cross from "@/components/image/close.png";
 import { PhoneInput } from "react-international-phone";
 import Datepicker from "../../Beneficiarydetails/Datepicker";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   bankName: z.string().nonempty({ message: "Insurance Company is required" }),
@@ -91,9 +92,20 @@ const BankLockerForm = () => {
   const [displaynominie, setDisplaynominie] = useState([]);
   const [brokerSelected, setBrokerSelected] = useState(true);
   const [nomineeerror, setnomineeerror] = useState(false);
+  const [values, setValues] = useState([]);
+  const [takeinput, setTakeinput] = useState();
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    bankName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+  };
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -195,42 +207,23 @@ const BankLockerForm = () => {
                   name="bankName"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="bankName"
-                      {...field}
+                    <Autocompeleteadd
+                      options={frameworks.bankName}
+                      placeholder="Select Bank Name..."
+                      emptyMessage="No Bank Name Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      variable="bankName"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherBankName(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("bankName", value?.value);
                       }}
-                      className={errors.companyName ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Bank Name" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">Company 1</SelectItem>
-                        <SelectItem value="company2">Company 2</SelectItem>
-                        <SelectItem value="company3">Company 3</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
-                {showOtherBankName && (
-                  <Controller
-                    name="otherBankName"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder="Specify Bank Name"
-                        className="mt-2"
-                        value={field.value || ""}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                )}
+
                 {errors.bankName && (
                   <span className="text-red-500">
                     {errors.bankName.message}

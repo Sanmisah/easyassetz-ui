@@ -301,7 +301,7 @@ const MotorForm = () => {
                     // />
                     <Autocompeleteadd
                       options={frameworks.companyName}
-                      placeholder="Select Comapany Name..."
+                      placeholder="Select Company Name..."
                       emptyMessage="No Company Name Found."
                       value={values}
                       array={inputvaluearray}
@@ -476,8 +476,8 @@ const MotorForm = () => {
                     // </Select>
                     <Autocompeleteadd
                       options={frameworks?.vehicleType}
-                      placeholder="Select Comapany Name..."
-                      emptyMessage="No Company Name Found."
+                      placeholder="Select Company Name..."
+                      emptyMessage="No Vehical Type Found."
                       value={values}
                       array={inputvaluearray}
                       setarray={setInputvaluearray}

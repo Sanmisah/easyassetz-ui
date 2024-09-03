@@ -272,7 +272,6 @@ const PSDAEditForm = () => {
                       <SelectItem value="savingsAccount">
                         Savings Account
                       </SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
                 )}

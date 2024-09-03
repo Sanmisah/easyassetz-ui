@@ -28,6 +28,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import cross from "@/components/image/close.png";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
 
 const schema = z.object({
   firmName: z.string().nonempty({ message: "Firm Name is required" }),
@@ -67,10 +68,20 @@ const PropritorshipEdit = ({ benificiaryId }) => {
   ] = useState(true);
   const [mobile, setmobile] = useState();
   console.log(lifeInsuranceEditId);
-
-  const [showOtherBullion, setShowOtherBullion] = useState(false);
   const [defaultValues, setDefaultValues] = useState(null);
 
+  const [showOtherBullion, setShowOtherBullion] = useState(false);
+  const [values, setValues] = useState("");
+  const [takeinput, setTakeinput] = useState();
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const [defautValue, setdefaultValue] = useState("");
+  const frameworks = {
+    firmName: [
+      { value: "company1", label: "Company1" },
+      { value: "company2", label: "Company2" },
+      { value: "company3", label: "Company3" },
+    ],
+  };
   const {
     handleSubmit,
     control,
@@ -97,6 +108,9 @@ const PropritorshipEdit = ({ benificiaryId }) => {
     console.log(response.data.data.BusinessAsset);
     reset(response.data.data.BusinessAsset);
     setmobile(response.data.data.BusinessAsset?.mobile);
+    setdefaultValue({
+      firmName: response.data.data.BusinessAsset?.firmName,
+    });
 
     return response.data.data.BusinessAsset;
   };
@@ -199,22 +213,37 @@ const PropritorshipEdit = ({ benificiaryId }) => {
                   defaultValue={Benifyciary?.firmName}
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="firmName"
-                      value={field.value}
+                    // <Select
+                    //   id="firmName"
+                    //   value={field.value}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setShowOtherMetalType(value === "other");
+                    //   }}
+                    //   className={errors.firmName ? "border-red-500" : ""}
+                    // >
+                    //   <SelectTrigger>
+                    //     <SelectValue placeholder="Select Firm Type" />
+                    //   </SelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="company1">company1</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <Autocompeleteadd
+                      options={frameworks.firmName}
+                      placeholder="Select Firm Name..."
+                      emptyMessage="No Firm Name Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.firmName}
+                      variable="firmName"
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherMetalType(value === "other");
+                        setValues(value);
+                        console.log(value);
+                        setValue("firmName", value?.value);
                       }}
-                      className={errors.firmName ? "border-red-500" : ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Firm Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="company1">company1</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
 

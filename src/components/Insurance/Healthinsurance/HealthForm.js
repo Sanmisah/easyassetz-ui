@@ -98,7 +98,6 @@ const HealthForm = () => {
       { value: "mediclaim", label: "Mediclaim" },
       { value: "criticalIllness", label: "Critical Illness" },
       { value: "familyHealthPlan", label: "Family Health Plan" },
-      { value: "other", label: "Other" },
     ],
   };
   useEffect(() => {

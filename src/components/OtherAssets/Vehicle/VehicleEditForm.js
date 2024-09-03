@@ -20,6 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@com/ui/radio-group";
+import { Autocompeleteadd } from "../../Reuseablecomponent/Autocompeleteadd";
+
 import {
   Select,
   SelectTrigger,
@@ -55,6 +57,22 @@ const OtherLoansEditForm = () => {
   const [showOtherMetalType, setShowOtherMetalType] = useState(false);
   const [fourWheelerStatus, setfourWheelerStatus] = useState(false);
   const [showVehicleType, setShowVehicleType] = useState(false);
+  const [defautValue, setdefaultValue] = useState("");
+  const [takeinput, setTakeinput] = useState();
+
+  const [inputvaluearray, setInputvaluearray] = useState({});
+  const frameworks = {
+    vehicleType: [
+      { value: "twowheeler", label: "Two Wheeler" },
+      { value: "threewheeler", label: "Three Wheeler" },
+      { value: "fourwheeler", label: "Four Wheeler" },
+      { value: "tractor", label: "Tractor" },
+      { value: "bulldozer", label: "Bulldozer" },
+      { value: "crane", label: "Crane" },
+    ],
+  };
+  const [values, setValues] = useState("");
+  const [type, setType] = useState(false);
 
   const {
     handleSubmit,
@@ -85,6 +103,11 @@ const OtherLoansEditForm = () => {
         },
       }
     );
+
+    setdefaultValue({
+      vehicleType: response.data.data.OtherAsset?.vehicleType,
+    });
+
     let data = response.data.data.OtherAsset;
     if (
       data.vehicleType !== "fourwheeler" ||
@@ -214,37 +237,52 @@ const OtherLoansEditForm = () => {
                   name="vehicleType"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      id="vehicleType"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setShowOtherMetalType(value === "other");
-                        setShowVehicleType(value === "fourwheeler");
-                      }}
-                      className={errors.vehicleType ? "border-red-500" : ""}
-                    >
-                      <FocusableSelectTrigger>
-                        <SelectValue placeholder="Select Vehicle Type" />
-                      </FocusableSelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="twowheeler">Two Wheeler</SelectItem>
-                        <SelectItem value="threewheeler">
-                          Three Wheeler
-                        </SelectItem>
-                        <SelectItem value="fourwheeler">
-                          Four Wheeler
-                        </SelectItem>
-                        <SelectItem value="tractor">Tractor</SelectItem>
-                        <SelectItem value="bulldozer">Bulldozer</SelectItem>
-                        <SelectItem value="crane">Crane</SelectItem>
+                    // <Select
+                    //   id="vehicleType"
+                    //   value={field.value}
+                    //   onValueChange={(value) => {
+                    //     field.onChange(value);
+                    //     setShowOtherMetalType(value === "other");
+                    //     setShowVehicleType(value === "fourwheeler");
+                    //   }}
+                    //   className={errors.vehicleType ? "border-red-500" : ""}
+                    // >
+                    //   <FocusableSelectTrigger>
+                    //     <SelectValue placeholder="Select Vehicle Type" />
+                    //   </FocusableSelectTrigger>
+                    //   <SelectContent>
+                    //     <SelectItem value="twowheeler">Two Wheeler</SelectItem>
+                    //     <SelectItem value="threewheeler">
+                    //       Three Wheeler
+                    //     </SelectItem>
+                    //     <SelectItem value="fourwheeler">
+                    //       Four Wheeler
+                    //     </SelectItem>
+                    //     <SelectItem value="tractor">Tractor</SelectItem>
+                    //     <SelectItem value="bulldozer">Bulldozer</SelectItem>
+                    //     <SelectItem value="crane">Crane</SelectItem>
 
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    //     <SelectItem value="other">Other</SelectItem>
+                    //   </SelectContent>
+                    // </Select>
+                    <Autocompeleteadd
+                      options={frameworks.vehicleType}
+                      placeholder="Select Vehicle Type..."
+                      emptyMessage="No Vehicle Type Found."
+                      value={values}
+                      array={inputvaluearray}
+                      setarray={setInputvaluearray}
+                      defautValues={defautValue?.vehicleType}
+                      variable="vehicleType"
+                      onValueChange={(value) => {
+                        setValues(value);
+                        console.log(value);
+                        setValue("vehicleType", value?.value);
+                      }}
+                    />
                   )}
                 />
-                {showOtherMetalType && (
+                {/* {showOtherMetalType && (
                   <Controller
                     name="otherVehicleType"
                     control={control}
@@ -256,7 +294,7 @@ const OtherLoansEditForm = () => {
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors.vehicleType && (
                   <span className="text-red-500">
                     {errors.vehicleType.message}
