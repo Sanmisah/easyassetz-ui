@@ -124,22 +124,34 @@ const PropritershipForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    data.firmsRegistrationNumberType = showOtherRegistrationNumber;
-    data.firmsRegistrationNumber = data.otherRegistrationNumber;
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      data.firmsRegistrationNumberType = showOtherRegistrationNumber;
+      data.firmsRegistrationNumber = data.otherRegistrationNumber;
 
-    // if (selectedNommie.length > 0) {
-    //   data.nominees = selectedNommie;
-    // }
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
+      // if (selectedNommie.length > 0) {
+      //   data.nominees = selectedNommie;
+      // }
+      if (selectedNommie.length > 0) {
+        data.nominees = selectedNommie;
+      }
+      data.type = "partnershipFirm";
+      console.log(data.name, name);
+      // data.name = name;
+      // data.email = email;
+      // data.mobile = phone;
+
+      lifeInsuranceMutate.mutate(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    data.type = "partnershipFirm";
-    console.log(data.name, name);
-    // data.name = name;
-    // data.email = email;
-    // data.mobile = phone;
-
-    lifeInsuranceMutate.mutate(data);
   };
 
   return (

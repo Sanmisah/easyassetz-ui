@@ -108,19 +108,30 @@ const BankAccountForm = () => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
-    if (data.maturityDate) {
-      const date = new Date(data.maturityDate);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const year = date.getFullYear();
-      const newdate = `${month}/${day}/${year}`;
-      data.maturityDate = newdate;
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      if (data.maturityDate) {
+        const date = new Date(data.maturityDate);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const year = date.getFullYear();
+        const newdate = `${month}/${day}/${year}`;
+        data.maturityDate = newdate;
+      }
+      if (selectedNommie.length > 0) {
+        data.nominees = selectedNommie;
+      }
+      ppfMutate.mutate(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
-    }
-    ppfMutate.mutate(data);
   };
 
   return (

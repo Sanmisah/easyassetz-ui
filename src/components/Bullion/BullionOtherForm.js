@@ -151,21 +151,32 @@ const BullionForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
-    console.log(data);
-    if (data.metalType === "other") {
-      data.metalType = data.otherMetalType;
-    }
-    if (data.articleDetails === "other") {
-      data.articleDetails = data.otherArticleDetails;
-    }
-    // data.name = name;
-    // data.email = email;
-    // data.mobile = mobile;
-    delete data.otherMetalType;
-    delete data.otherArticleDetails;
+  const onSubmit = async (data) => {
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      if (data.metalType === "other") {
+        data.metalType = data.otherMetalType;
+      }
+      if (data.articleDetails === "other") {
+        data.articleDetails = data.otherArticleDetails;
+      }
+      // data.name = name;
+      // data.email = email;
+      // data.mobile = mobile;
+      delete data.otherMetalType;
+      delete data.otherArticleDetails;
 
-    lifeInsuranceMutate.mutate(data);
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
 
   return (
@@ -511,7 +522,9 @@ const BullionForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>

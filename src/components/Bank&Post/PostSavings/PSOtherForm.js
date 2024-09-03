@@ -134,34 +134,46 @@ const BankLockerForm = () => {
   }, [selectedNommie, nomineeerror]);
 
   const onSubmit = (data) => {
-    if (data.bankName === "other") {
-      data.bankName = data.otherBankName;
-    }
-    // if (data.modeOfPurchase === "single") {
-    //   data.jointHolderName = null;
-    //   data.jointHolderPan = null;
-    // }
-    // if (data.modeOfPurchase === "joint") {
-    //   data.brokerName = null;
-    //   data.contactPerson = null;
-    //   data.contactNumber = null;
-    //   data.email = null;
-    // }
-    // const date = new Date(data.expiryDate);
-    // const month = String(date.getMonth() + 1).padStart(2, "0");
-    // const day = String(date.getDate()).padStart(2, "0");
-    // const year = date.getFullYear();
-    // const newdate = `${month}/${day}/${year}`;
-    // data.expiryDate = newdate;
-    if (data.accountType === "other") {
-      data.accountType = data.otherAccountType;
-    }
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      if (data.bankName === "other") {
+        data.bankName = data.otherBankName;
+      }
+      // if (data.modeOfPurchase === "single") {
+      //   data.jointHolderName = null;
+      //   data.jointHolderPan = null;
+      // }
+      // if (data.modeOfPurchase === "joint") {
+      //   data.brokerName = null;
+      //   data.contactPerson = null;
+      //   data.contactNumber = null;
+      //   data.email = null;
+      // }
+      // const date = new Date(data.expiryDate);
+      // const month = String(date.getMonth() + 1).padStart(2, "0");
+      // const day = String(date.getDate()).padStart(2, "0");
+      // const year = date.getFullYear();
+      // const newdate = `${month}/${day}/${year}`;
+      // data.expiryDate = newdate;
+      if (data.accountType === "other") {
+        data.accountType = data.otherAccountType;
+      }
 
-    if (selectedNommie.length > 1) {
-      setnomineeerror(false);
+      if (selectedNommie.length > 1) {
+        setnomineeerror(false);
+      }
+      data.nominees = selectedNommie;
+      bankAccountMutate.mutate(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    data.nominees = selectedNommie;
-    bankAccountMutate.mutate(data);
   };
 
   useEffect(() => {

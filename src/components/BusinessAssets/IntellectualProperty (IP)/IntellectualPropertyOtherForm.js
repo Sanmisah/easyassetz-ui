@@ -116,25 +116,36 @@ const IntellectualPropertyOtherForm = () => {
     return `${month}/${day}/${year}`;
   };
   const onSubmit = (data) => {
-    console.log(data);
-    data.expiryDate = ConverDate(data.expiryDate);
-    if (data.dateOfAssignment) {
-      data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      data.expiryDate = ConverDate(data.expiryDate);
+      if (data.dateOfAssignment) {
+        data.dateOfAssignment = ConverDate(data.dateOfAssignment);
+      }
+      data.type = "intellectualProperty";
+      // data.name = name;
+      // data.email = email;
+      // data.mobile = phone;
+      // if (showOtherFirmsRegistrationNumber) {
+      //   data.firmRegistrationNumberType = showOtherFirmsRegistrationNumber;
+      //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+      // }
+
+      // if (data.firmRegistrationNumber === "other") {
+      //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
+      // }
+
+      lifeInsuranceMutate.mutate(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-    data.type = "intellectualProperty";
-    // data.name = name;
-    // data.email = email;
-    // data.mobile = phone;
-    // if (showOtherFirmsRegistrationNumber) {
-    //   data.firmRegistrationNumberType = showOtherFirmsRegistrationNumber;
-    //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
-    // }
-
-    // if (data.firmRegistrationNumber === "other") {
-    //   data.firmRegistrationNumber = data.otherFirmRegistrationNumber;
-    // }
-
-    lifeInsuranceMutate.mutate(data);
   };
   return (
     <div className="w-full">

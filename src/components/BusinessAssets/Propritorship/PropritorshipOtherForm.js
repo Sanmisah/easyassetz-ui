@@ -133,14 +133,26 @@ const PropritershipForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    data.type = "propritorship";
-    data.name = name;
-    data.email = email;
-    data.mobile = phone;
-    data.firmsRegistrationNumberType = showOtherFirmsRegistrationNumber;
-    data.firmsRegistrationNumber = data.otherFirmsRegistrationNumber;
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      data.type = "propritorship";
+      data.name = name;
+      data.email = email;
+      data.mobile = phone;
+      data.firmsRegistrationNumberType = showOtherFirmsRegistrationNumber;
+      data.firmsRegistrationNumber = data.otherFirmsRegistrationNumber;
 
-    lifeInsuranceMutate.mutate(data);
+      lifeInsuranceMutate.mutate(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
 
   return (

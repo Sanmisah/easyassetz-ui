@@ -145,36 +145,47 @@ const MutualFundOtherForm = () => {
   }, [selectedNommie]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    // const date = new Date(data.maturityDate);
-    // const month = String(date.getMonth() + 1).padStart(2, "0");
-    // const day = String(date.getDate()).padStart(2, "0");
-    // const year = date.getFullYear();
-    // const newdate = `${month}/${day}/${year}`;
-    // data.maturityDate = newdate;
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      // const date = new Date(data.maturityDate);
+      // const month = String(date.getMonth() + 1).padStart(2, "0");
+      // const day = String(date.getDate()).padStart(2, "0");
+      // const year = date.getFullYear();
+      // const newdate = `${month}/${day}/${year}`;
+      // data.maturityDate = newdate;
 
-    // data.firmsRegistrationNumberType = showOtherCompanyRegistration;
-    // if (selectedNommie.length < 1) {
-    //   toast.error("Please select atleast one nominee");
-    //   setNomineeError(true);
-    //   return;
-    // }
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
+      // data.firmsRegistrationNumberType = showOtherCompanyRegistration;
+      // if (selectedNommie.length < 1) {
+      //   toast.error("Please select atleast one nominee");
+      //   setNomineeError(true);
+      //   return;
+      // }
+      if (selectedNommie.length > 0) {
+        data.nominees = selectedNommie;
+      }
+
+      if (data.type === "other") {
+        data.type = data.otherType;
+      }
+      delete data.otherType;
+
+      // data.type = "company";
+      data.mobile = phone;
+      // if (data) {
+      //   data.firmName = data.otherFirmName;
+      // }
+
+      lifeInsuranceMutate.mutate(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
     }
-
-    if (data.type === "other") {
-      data.type = data.otherType;
-    }
-    delete data.otherType;
-
-    // data.type = "company";
-    data.mobile = phone;
-    // if (data) {
-    //   data.firmName = data.otherFirmName;
-    // }
-
-    lifeInsuranceMutate.mutate(data);
   };
 
   return (
@@ -183,7 +194,7 @@ const MutualFundOtherForm = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-               <div>
+              <div>
                 <CardTitle className="text-2xl font-bold">
                   Mutual Fund Details
                 </CardTitle>

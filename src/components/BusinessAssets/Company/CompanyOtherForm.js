@@ -145,32 +145,44 @@ const CompanyForm = () => {
     }
   }, [selectedNommie]);
 
-  const onSubmit = (data) => {
-    console.log(data);
-    console.log("Number:", data.firmsRegistrationNumber);
-    data.firmsRegistrationNumberType = data.firmsRegistrationNumber;
-    data.firmsRegistrationNumber = data.otherRegistrationNumber;
+  const onSubmit = async (data) => {
+    // Disable the submit button
+    const submitButton = document.getElementById("submitButton");
+    console.log(submitButton);
+    submitButton.disabled = true;
+    try {
+      console.log(data);
+      console.log("Number:", data.firmsRegistrationNumber);
+      data.firmsRegistrationNumberType = data.firmsRegistrationNumber;
+      data.firmsRegistrationNumber = data.otherRegistrationNumber;
 
-    // if (selectedNommie.length < 1) {
-    //   toast.error("Please select atleast one nominee");
-    //   setNomineeError(true);
-    //   return;
-    // }
-    if (data.typeOfInvestment === "other") {
-      data.typeOfInvestment = data.specifyInvestment;
-    }
-    if (selectedNommie.length > 0) {
-      data.nominees = selectedNommie;
-    }
-    data.type = "company";
-    // data.name = name;
-    // data.email = email;
-    // data.mobile = phone;
-    if (data) {
-      data.firmName = data.otherFirmName;
-    }
+      // if (selectedNommie.length < 1) {
+      //   toast.error("Please select atleast one nominee");
+      //   setNomineeError(true);
+      //   return;
+      // }
+      if (data.typeOfInvestment === "other") {
+        data.typeOfInvestment = data.specifyInvestment;
+      }
+      if (selectedNommie.length > 0) {
+        data.nominees = selectedNommie;
+      }
+      data.type = "company";
+      // data.name = name;
+      // data.email = email;
+      // data.mobile = phone;
+      if (data) {
+        data.firmName = data.otherFirmName;
+      }
 
-    lifeInsuranceMutate.mutate(data);
+      await lifeInsuranceMutate.mutateAsync(data);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+      toast.error("Failed to submit profile");
+    } finally {
+      // Re-enable the submit button after submission attempt
+      submitButton.disabled = false;
+    }
   };
 
   return (
@@ -782,7 +794,9 @@ const CompanyForm = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button id="submitButton" type="submit">
+                Submit
+              </Button>
             </CardFooter>
           </form>
         </CardContent>
