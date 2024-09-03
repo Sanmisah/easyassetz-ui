@@ -151,7 +151,6 @@ const BankAccountForm = () => {
       setnomineeerror(false);
     }
   }, [selectedNommie, nomineeerror]);
-  const onSubmit\s*=\s*\(data\)\s*=>\s*\{([\s\S]*?)\}
 
   const onSubmit = (data) => {
     // Disable the submit button
