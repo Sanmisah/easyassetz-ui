@@ -16,37 +16,78 @@ import axios from "axios";
 import AddBeneficiary from "@/components/Nominee/BeneficiaryOpen";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { ScrollArea } from "@com/ui/scroll-area";
+import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const AddNominee = ({
   setSelectedNommie,
   setDisplaynominie,
   displaynominie,
 }) => {
+  const queryClient = useQueryClient();
   const getitem = localStorage.getItem("user");
   const user = JSON.parse(getitem);
   const [nominees, setNominees] = useState([]);
   const [selectedNominees, setSelectedNominees] = useState([]);
   const navigate = useNavigate();
   const [AddNominee, setAddNominee] = useState(false);
-  useEffect(() => {
-    axios
-      .get(`/api/beneficiaries`, {
-        headers: {
-          Authorization: `Bearer ${user?.data?.token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res?.data);
-        if (res?.data?.data?.Beneficiaries?.length < 1) {
-          toast.warning("please add beneficiary first");
-          return;
-        }
-        setNominees({
-          Beneficiaries: res?.data?.data?.Beneficiaries,
-          Charities: res?.data?.data?.Charities,
+  // useEffect(() => {
+  //   axios
+  //     .get(`/api/beneficiaries`, {
+  //       headers: {
+  //         Authorization: `Bearer ${user?.data?.token}`,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res?.data);
+  //       if (res?.data?.data?.Beneficiaries?.length < 1) {
+  //         toast.warning("please add beneficiary first");
+  //         return;
+  //       }
+  //       setNominees({
+  //         Beneficiaries: res?.data?.data?.Beneficiaries,
+  //         Charities: res?.data?.data?.Charities,
+  //       });
+  //     });
+  // }, []);
+  const { data: Benificiaries } = useQuery({
+    queryKey: ["Beneficiaries"],
+    queryFn: async () => {
+      const response = await axios
+        .get(`/api/beneficiaries`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res?.data);
+          // if (res?.data?.data?.Beneficiaries?.length < 1) {
+          //   toast.warning("please add beneficiary first");
+          //   return;
+          // }
+          setNominees({
+            Beneficiaries: res?.data?.data?.Beneficiaries,
+            Charities: res?.data?.data?.Charities,
+          });
         });
+
+      return response.data.data.Beneficiaries;
+    },
+
+    onError: (error) => {
+      console.error("Error fetching health insurance data", error);
+    },
+    onSuccess: (data) => {
+      console.log("Data:", data);
+      setNominees({
+        Beneficiaries: res?.data?.data?.Beneficiaries,
+        Charities: res?.data?.data?.Charities,
       });
-  }, []);
+    },
+  });
 
   const addNominee = () => {
     navigate("/benificiary");
@@ -103,28 +144,30 @@ const AddNominee = ({
             <SheetTitle>My People</SheetTitle>
           </SheetHeader>
           <div className="grid gap-4 py-4">
-            {nominees.Beneficiaries?.map((nominee) => (
-              <div
-                key={nominee.id}
-                className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg"
-              >
-                <Label htmlFor={`nominee-${nominee.id}`}>
-                  {nominee.fullLegalName}
-                </Label>
-                <Checkbox
-                  id={`nominee-${nominee.id}`}
-                  checked={selectedNominees.includes(nominee.id)}
-                  onCheckedChange={() =>
-                    handleCheckboxChange(
-                      nominee.id,
-                      nominee.fullLegalName,
-                      null,
-                      nominee.relationship
-                    )
-                  }
-                />
-              </div>
-            ))}
+            <ScrollArea className="w-full h-[76vh] rounded-md">
+              {nominees.Beneficiaries?.map((nominee) => (
+                <div
+                  key={nominee.id}
+                  className="flex space-y-2 border border-input p-4 justify-between pl-4 pr-4 items-center rounded-lg mb-2"
+                >
+                  <Label htmlFor={`nominee-${nominee.id}`}>
+                    {nominee.fullLegalName}
+                  </Label>
+                  <Checkbox
+                    id={`nominee-${nominee.id}`}
+                    checked={selectedNominees.includes(nominee.id)}
+                    onCheckedChange={() =>
+                      handleCheckboxChange(
+                        nominee.id,
+                        nominee.fullLegalName,
+                        null,
+                        nominee.relationship
+                      )
+                    }
+                  />
+                </div>
+              ))}
+            </ScrollArea>
 
             {nominees.Charities?.map((nominee) => (
               <div

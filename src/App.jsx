@@ -10,6 +10,9 @@ function App() {
   const User = localStorage.getItem("user");
   const user = JSON.parse(User);
   const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [window.location.pathname]);
 
   return (
     <div style={{ fontFamily: "Roboto" }}>

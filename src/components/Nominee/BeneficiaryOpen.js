@@ -179,6 +179,7 @@ const Benificiaryform = ({ benficiaryopen, setAddNominee }) => {
       toast.success("Beneficiary added successfully!");
       setOpen(false);
       queryClient.invalidateQueries("benificiaryData");
+      queryClient.invalidateQueries("Beneficiaries");
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);

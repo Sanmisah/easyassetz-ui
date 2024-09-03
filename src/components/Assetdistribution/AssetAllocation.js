@@ -203,7 +203,7 @@ export default function AssetAllocation() {
   };
 
   function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string?.charAt(0).toUpperCase() + string?.slice(1);
   }
 
   return (
@@ -234,42 +234,42 @@ export default function AssetAllocation() {
               <div className="flex items-center gap-2 rounded-md    text-sm font-medium           h-10 w-full">
                 <img src={lifeInsurance} className="w-6 ml-2" />
                 <h1 className="text-xl font-bold ml-2">
-                  {SelectedAsset.assetName}
+                  {capitalizeFirstLetter(subSelectedAsset.type)}
                 </h1>
               </div>
             </AccordionTrigger>
             <AccordionContent className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2  mt-4">
-                {SelectedAsset?.assets?.map((asset, index) => (
-                  <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[150px]">
-                    <div className="flex  p-4 gap-4   pl-2 pr-2 items-center rounded-lg col-span-full">
+                {/* {subSelectedAsset?.assets?.map((asset, index) => ( */}
+                <div className="flex flex-col gap-4 col-span-full border-b-2 border-input min-h-[100px]">
+                  {/* <div className="flex  p-4 gap-4   pl-2 pr-2 items-center rounded-lg col-span-full">
                       <div className="w-2 h-2 bg-[#0097b0] "></div>
                       <h1 className="font-bold  text-lg ">
                         {capitalizeFirstLetter(asset.name)}
                       </h1>
+                    </div> */}
+                  {/* {asset &&
+                      asset?.totalAssets?.map((asset, index) => ( */}
+                  <div className="flex flex justify-between  pl-2 pr-2 items-center rounded-lg col-span-full mb-2">
+                    <div className="flex flex-col">
+                      <div className="flex gap-2  ">
+                        <h1 className="font-medium text-[1rem]">
+                          {/* {index + 1}. */}
+                        </h1>
+                        <h1 className="font-semibold text-[1rem]">
+                          {subSelectedAsset?.var1}
+                        </h1>
+                      </div>{" "}
+                      <div>
+                        <p className="ml-2 text-md ml-[1rem] text-light-gray">
+                          {subSelectedAsset?.var2}
+                        </p>
+                      </div>
                     </div>
-                    {asset &&
-                      asset?.totalAssets?.map((asset, index) => (
-                        <div className="flex flex justify-between  pl-2 pr-2 items-center rounded-lg col-span-full mb-2">
-                          <div className="flex flex-col">
-                            <div className="flex gap-2  ">
-                              <h1 className="font-medium text-[1rem]">
-                                {index + 1}.
-                              </h1>
-                              <h1 className="font-semibold text-[1rem]">
-                                {asset.var1}
-                              </h1>
-                            </div>{" "}
-                            <div>
-                              <p className="ml-2 text-md ml-[1rem] text-light-gray">
-                                {asset?.var2}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
                   </div>
-                ))}
+                  {/* ))} */}
+                </div>
+                {/* ))} */}
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -312,6 +312,7 @@ export default function AssetAllocation() {
                         <div className="flex items-center gap-2 ">
                           {console.log(nominee?.Allocation)}
                           <Input
+                            autoFocus
                             ref={(el) => (inputRefs.current[index] = el)}
                             className="w-[5rem] placeholder:align-right"
                             placeholder="%"
