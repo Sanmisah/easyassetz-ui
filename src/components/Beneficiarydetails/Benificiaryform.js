@@ -52,7 +52,7 @@ const beneficiarySchema = z
     documentData: z.string().optional(),
     religion: z.string().optional(),
     guardianNationality: z.string().optional(),
-    addressLine1: z.string().optional(),
+    addressLine1: z.any().optional(),
     pincode: z.string().optional(),
     country: z.string().optional(),
     mobile: z.string().nonempty("Mobile is required"),
@@ -61,7 +61,7 @@ const beneficiarySchema = z
     state: z.string().optional(),
     houseNo: z.string().optional(),
     nationality: z.string().optional(),
-    addressLine1: z.string().optional(),
+    addressLine1: z.any().optional(),
     addressLine2: z.string().optional(),
   })
   .refine(

@@ -52,9 +52,9 @@ const beneficiarySchema = z.object({
   documentData: z.any().optional(),
   guardianReligion: z.any().optional(),
   guardianNationality: z.any().optional(),
-  addressLine1: z.string().nonempty("Address Line 1 is required"),
-  addressLine2: z.string().optional(),
-  pincode: z.string().nonempty("Pincode is required"),
+  addressLine1: z.any().optional(),
+  addressLine2: z.any().optional(),
+  pincode: z.any().optional(),
   country: z.any().optional(),
   mobile: z.string().nonempty("Mobile is required"),
   email: z.any().optional(),
@@ -213,6 +213,7 @@ const BeneficiaryForm = ({
       queryClient.invalidateQueries("beneficiaryData");
       toast.success("Beneficiary added successfully!");
       setUpdateBenificiaryOpen(false);
+      window.location.reload(true);
     },
     onError: (error) => {
       console.error("Error submitting profile:", error);
